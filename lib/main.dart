@@ -7,7 +7,7 @@ import 'package:gatello/views/create_username.dart';
 import 'package:gatello/views/invite_friends.dart';
 import 'package:gatello/views/select_birthday.dart';
 import 'package:gatello/views/set_password.dart';
-
+import 'package:gatello/views/splash_screen2.dart';
 void main(){
   runApp(MyApp());
 
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         )
       ),
       debugShowCheckedModeBanner: false,
-      home: InviteFriends(),
+      home: Splash2(),
     );
   }
 }
