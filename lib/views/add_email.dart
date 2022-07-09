@@ -1,29 +1,42 @@
 import 'package:flutter/material.dart';
 
-class SetPassword extends StatefulWidget {
-  const SetPassword({Key? key}) : super(key: key);
+class AddEmail extends StatefulWidget {
+  const AddEmail({Key? key}) : super(key: key);
 
   @override
-  State<SetPassword> createState() => _SetPasswordState();
+  State<AddEmail> createState() => _AddEmailState();
 }
 
-class _SetPasswordState extends State<SetPassword> {
+class _AddEmailState extends State<AddEmail> {
   @override
   Widget build(BuildContext context) {
+    final currentWidth = MediaQuery.of(context).size.width;
+    final currentHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        leading: Text("Back"),
+        leading: Padding(
+          padding: const EdgeInsets.only(
+            left: 10,
+            top: 15,
+          ),
+          child: Text(
+            "Back",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
         actions: [
-          Text("Gatello"),
+          Image(
+            image: AssetImage("assets/appbar_action/Rectangle 7.png"),
+          )
         ],
       ),
       body: Container(
-        padding: EdgeInsets.only(left: 15, right: 15, top: 150, bottom: 25),
+        padding: EdgeInsets.only(left: 15, right: 15, top: 120, bottom: 10),
         child: Center(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Text(
-              "Set a password",
+              "Add your email address",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -32,27 +45,25 @@ class _SetPasswordState extends State<SetPassword> {
             ),
             SizedBox(height: 10),
             Text(
-              "Just make sure it's at least 8 characters",
+              "This can help recover your account if you",
               style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: Color.fromRGBO(100, 99, 99, 1)),
             ),
             Text(
-              "long",
+              "forget your password!",
               style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: Color.fromRGBO(100, 99, 99, 1)),
             ),
+            SizedBox(height: 50),
             TextFormField(
               decoration: InputDecoration(
-                  labelText: "PASSWORD",
-                  labelStyle: TextStyle(fontSize: 12),
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.visibility),
-                    onPressed: () {},
-                  )),
+                labelStyle: TextStyle(fontSize: 12),
+                labelText: "EMAIL",
+              ),
             ),
             Spacer(),
             ElevatedButton(

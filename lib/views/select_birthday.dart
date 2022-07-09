@@ -17,13 +17,16 @@ class _SelectBirthdayState extends State<SelectBirthday> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Text("Back"),
+       leading: Padding(
+          padding: const EdgeInsets.only(left: 10,top: 15,),
+          child: Text("Back",style: TextStyle(color: Colors.black),),
+        ),
         actions: [
           Text("Gatello"),
         ],
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 150, left: 15, right: 15, bottom: 20),
+        padding: EdgeInsets.only(top: 150, left: 15, right: 15, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
