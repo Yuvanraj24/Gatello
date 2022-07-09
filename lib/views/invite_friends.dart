@@ -120,14 +120,10 @@ class _InviteFriendsState extends State<InviteFriends> {
                         ),
                         title: Text("Name"),
                         subtitle: Text("Customer"),
-                        trailing: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            primary: Color.fromRGBO(248, 206, 97, 1),
-                          ),
-                          child: Text(
-                            "Add",
-                            style: TextStyle(color: Colors.black),
+                        trailing: GestureDetector(
+                          child: Image(
+                            image: AssetImage(
+                                "assets/icons_assets/add_friends_button.png"),fit: BoxFit.fill,
                           ),
                         ),
                       ),

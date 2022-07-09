@@ -32,6 +32,7 @@ dependencies:
 
   scroll_date_picker: ^3.4.0
   flutter_holo_date_picker: ^1.0.3
+  google_fonts: ^3.0.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -73,6 +74,7 @@ flutter:
     - assets/right_arrow/Frame 226.png
     - assets/splash3_image/Group 657.png
     - assets/left_arrow/Group 659.png
+    - assets/icons_assets/add_friends_button.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
