@@ -36,32 +36,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Column(
  
         children: [
-          SizedBox(height: height*0.2),
+          SizedBox(height: height*0.195),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'What\'s Your Name?',
                 style: TextStyle(
-                    fontSize: width * 0.07,
+                    fontSize: width * 0.074,
                     fontWeight: FontWeight.w700,
                     color: Colors.black),
               ),
             ],
           ),
-          SizedBox(height: height*0.01,),
+          SizedBox(height: height*0.016,),
           Text(
             'Add your name so that your friends can find you ',
             style: TextStyle(
-                fontSize: width * 0.032,
+                fontSize: width * 0.035,
                 fontWeight: FontWeight.w500,
                 color: Colors.black),
           ),
            SizedBox(height: height*0.05),
            _firstNamecon(height, width),
-           SizedBox(height: height*0.05),
+           SizedBox(height: height*0.04),
            _lastNamecon(height, width),
-           SizedBox(height: height*0.012),
+           SizedBox(height: height*0.014),
               Text(
             'By tapping "Sign Up", you acknowledge & agree',
             style: TextStyle(
@@ -69,7 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 fontWeight: FontWeight.w400,
                 color: Colors.black),
           ),
-          SizedBox(height: height*0.0026),
+          SizedBox(height: height*0.004),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -80,7 +80,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fontSize: width * 0.035,
                 ),
               ),
-              SizedBox(width: width * 0.008),
+              SizedBox(width: width * 0.01
+              ),
            
              InkWell(
                 onTap: () {
@@ -95,14 +96,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
-               SizedBox(width: width * 0.008),
+               SizedBox(width: width * 0.01),
                 Text(
                 'and',
                 style: TextStyle(
                   fontSize: width * 0.035,
                 ),
               ),
-               SizedBox(width: width * 0.008),
+               SizedBox(width: width * 0.01),
                 InkWell(
                 onTap: () {
 
@@ -118,7 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ],
           ),
-       SizedBox(height: height*0.07),
+       SizedBox(height: height*0.235),
              ElevatedButton(
                 onPressed: () {
                   //  Navigator.push(context,
@@ -135,7 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   elevation: 5,
                     onPrimary: Colors.black,
                     padding: EdgeInsets.all(10),
-                    minimumSize: Size(width * 0.68, height * 0.09),
+                    minimumSize: Size(width * 0.68, height * 0.087),
                  
                     primary: HexColor('#F8CE61'),
                     shape: RoundedRectangleBorder(
@@ -143,7 +144,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     )),
               ),
            
-              SizedBox(height: height*0.053,),
+              SizedBox(height: height*0.052,),
               Container(
 height:height*0.007,
 width: width*0.4,
@@ -161,7 +162,7 @@ borderRadius: BorderRadius.circular(width*0.9)
   Container _lastNamecon(double height, double width) {
     
     return Container(
-        height: height * 0.07,
+        height: height * 0.052,
         width: width * 0.92,
         child: TextFormField(
           cursorColor: Colors.black,
@@ -175,13 +176,16 @@ borderRadius: BorderRadius.circular(width*0.9)
                 fontWeight: FontWeight.w400),
             focusedBorder: OutlineInputBorder(
               borderSide:
-                  BorderSide(color: Colors.black, width: width * 0.004),
+                  BorderSide(color: 
+                  Colors.black, width: width * 0.004),
             ),
             enabledBorder: OutlineInputBorder(
                 borderSide:
-                    BorderSide(color: Colors.black, width: width * 0.004),
+                    BorderSide(color:
+                     Colors.black,
+                      width: width * 0.004),
                 borderRadius: BorderRadius.circular(
-                  5,
+                    width*0.015,
                 )),
           ),
         ),
@@ -190,7 +194,7 @@ borderRadius: BorderRadius.circular(width*0.9)
 
   Container _firstNamecon(double height, double width) {
     return Container(
-          height: height * 0.07,
+          height: height * 0.052,
           width: width * 0.92,
           child: TextFormField(
             cursorColor: Colors.black,
@@ -208,9 +212,11 @@ borderRadius: BorderRadius.circular(width*0.9)
               ),
               enabledBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Colors.black, width: width * 0.004),
+                      BorderSide(color: 
+                      Colors.black, 
+                      width: width * 0.004),
                   borderRadius: BorderRadius.circular(
-                    5,
+                    width*0.015,
                   )),
             ),
           ),
