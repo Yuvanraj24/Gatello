@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen3.dart';
 
 import 'package:hexcolor/hexcolor.dart';
@@ -14,62 +15,64 @@ class _Splash2State extends State<Splash2> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Container(
-      padding: EdgeInsets.only(right: 7, left: 7, top: 10),
-      color: Colors.white,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-           GestureDetector(
-             child: Text(
-                  'Skip',
-                  style: TextStyle(
-                      decoration: TextDecoration.none,
-                      fontSize: width * 0.044,
-                      color: Colors.black45,
-                      fontWeight: FontWeight.w700),
-                ),
-                onTap: (){
-                   Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Splash3()));
-                },
-           )
-            ],
-          ),
-          SizedBox(
-            height: height * 0.015,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image(
-                image: AssetImage('assets/splash2_image/Group 651.png'),
-                width: width * 0.88,
-                height: height * 0.58,
-              ),
-            ],
-          ),
-          Spacer(),
-          
-          GestureDetector(
-            child: Row(
+    return SafeArea(
+      child: Container(
+        padding: EdgeInsets.only(right: 7, left: 7, top: 10),
+        color: Colors.white,
+        child: Column(
+          children: [
+            Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+             GestureDetector(
+               child: Text(
+                    'Skip',
+                    style: TextStyle(
+                        decoration: TextDecoration.none,
+                        fontSize: width * 0.044,
+                        color: Colors.black45,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  onTap: (){
+                    //  Navigator.push(context,
+                    //   MaterialPageRoute(builder: (context) => Splash1()));
+                  },
+             )
+              ],
+            ),
+            SizedBox(
+              height: height * 0.015,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 Image(
-                  image: AssetImage('assets/right_arrow_button/Frame 226.png'),
-                  width: width * 0.13,
-                  height: height * 0.13,
+                  image: AssetImage('assets/splash2_image/Group 651.png'),
+                  width: width * 0.88,
+                  height: height * 0.58,
                 ),
               ],
             ),
-            onTap: (){
-                     Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Splash3()));
-            },
-          ),
-        ],
+            Spacer(),
+            
+            GestureDetector(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Image(
+                    image: AssetImage('assets/right_arrow_button/Frame 226.png'),
+                    width: width * 0.13,
+                    height: height * 0.13,
+                  ),
+                ],
+              ),
+              onTap: (){
+                       Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Splash3()));
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
