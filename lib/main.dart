@@ -8,14 +8,16 @@ import 'package:gatello/views/invite_friends.dart';
 import 'package:gatello/views/otp_screen.dart';
 import 'package:gatello/views/select_birthday.dart';
 import 'package:gatello/views/set_password.dart';
+import 'package:gatello/views/tabbar/tabbar_view.dart';
+
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
-import 'package:hexcolor/hexcolor.dart';
 void main(){
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
