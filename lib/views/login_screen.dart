@@ -234,7 +234,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.black,
                       fontWeight: FontWeight.w700,
                       fontSize: width * 0.034),
+                  
                 ),
+                onTap: (){
+ Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SignUpScreen()));
+
+                },
            )
             ],
           ),

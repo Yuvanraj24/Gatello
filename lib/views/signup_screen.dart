@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gatello/views/create_username.dart';
 import 'package:gatello/views/login_screen.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -122,8 +123,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
        SizedBox(height: height*0.235),
              ElevatedButton(
                 onPressed: () {
-                  //  Navigator.push(context,
-                  //   MaterialPageRoute(builder: (context) => ()));
+                   Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CreateUsername()));
                 },
                 child: Text(
                   'Sign Up',
@@ -144,8 +145,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     )),
               ),
            
-              SizedBox(height: height*0.052,),
-              Container(
+              SizedBox(height: height*0.052,),Container(
 height:height*0.007,
 width: width*0.4,
 decoration: BoxDecoration(

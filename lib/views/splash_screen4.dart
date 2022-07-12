@@ -25,14 +25,17 @@ class _Splash4State extends State<Splash4> {
 
     return Scaffold(
       body: Container(
+       
       color: HexColor('#F8CE61'),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          SizedBox(
-            width: width * 2,
-          ),
+          // SizedBox(
+          //   width: width * 2,
+          // ),
+          
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: height*0.09),
               Text(
                 'Gatello',
                 style: TextStyle(fontSize: width * 0.15),
