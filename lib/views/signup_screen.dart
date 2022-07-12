@@ -35,42 +35,63 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       body: Column(
         children: [
+<<<<<<< HEAD
           SizedBox(height: height * 0.2),
+=======
+          SizedBox(height: height*0.195),
+>>>>>>> e8e903b05abfab64ae1843da4c4d611fe99216c6
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'What\'s Your Name?',
                 style: TextStyle(
-                    fontSize: width * 0.07,
+                    fontSize: width * 0.074,
                     fontWeight: FontWeight.w700,
                     color: Colors.black),
               ),
             ],
           ),
+<<<<<<< HEAD
           SizedBox(
             height: height * 0.01,
           ),
+=======
+          SizedBox(height: height*0.016,),
+>>>>>>> e8e903b05abfab64ae1843da4c4d611fe99216c6
           Text(
             'Add your name so that your friends can find you ',
             style: TextStyle(
-                fontSize: width * 0.032,
+                fontSize: width * 0.035,
                 fontWeight: FontWeight.w500,
                 color: Colors.black),
           ),
+<<<<<<< HEAD
           SizedBox(height: height * 0.05),
           _firstNamecon(height, width),
           SizedBox(height: height * 0.05),
           _lastNamecon(height, width),
           SizedBox(height: height * 0.012),
           Text(
+=======
+           SizedBox(height: height*0.05),
+           _firstNamecon(height, width),
+           SizedBox(height: height*0.04),
+           _lastNamecon(height, width),
+           SizedBox(height: height*0.014),
+              Text(
+>>>>>>> e8e903b05abfab64ae1843da4c4d611fe99216c6
             'By tapping "Sign Up", you acknowledge & agree',
             style: TextStyle(
                 fontSize: width * 0.035,
                 fontWeight: FontWeight.w400,
                 color: Colors.black),
           ),
+<<<<<<< HEAD
           SizedBox(height: height * 0.0026),
+=======
+          SizedBox(height: height*0.004),
+>>>>>>> e8e903b05abfab64ae1843da4c4d611fe99216c6
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -80,9 +101,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fontSize: width * 0.035,
                 ),
               ),
+<<<<<<< HEAD
               SizedBox(width: width * 0.008),
               InkWell(
                 onTap: () {},
+=======
+              SizedBox(width: width * 0.01
+              ),
+           
+             InkWell(
+                onTap: () {
+
+                },
+>>>>>>> e8e903b05abfab64ae1843da4c4d611fe99216c6
                 child: Text(
                   'Terms of service',
                   style: TextStyle(
@@ -92,16 +123,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
+<<<<<<< HEAD
               SizedBox(width: width * 0.008),
               Text(
+=======
+               SizedBox(width: width * 0.01),
+                Text(
+>>>>>>> e8e903b05abfab64ae1843da4c4d611fe99216c6
                 'and',
                 style: TextStyle(
                   fontSize: width * 0.035,
                 ),
               ),
+<<<<<<< HEAD
               SizedBox(width: width * 0.008),
               InkWell(
                 onTap: () {},
+=======
+               SizedBox(width: width * 0.01),
+                InkWell(
+                onTap: () {
+
+                },
+>>>>>>> e8e903b05abfab64ae1843da4c4d611fe99216c6
                 child: Text(
                   'Privacy Policy.',
                   style: TextStyle(
@@ -113,6 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ],
           ),
+<<<<<<< HEAD
           SizedBox(height: height * 0.07),
           ElevatedButton(
             onPressed: () {
@@ -146,6 +191,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 color: Colors.black,
                 borderRadius: BorderRadius.circular(width * 0.9)),
           ),
+=======
+       SizedBox(height: height*0.235),
+             ElevatedButton(
+                onPressed: () {
+                  //  Navigator.push(context,
+                  //   MaterialPageRoute(builder: (context) => ()));
+                },
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: width * 0.045,
+                      fontWeight: FontWeight.w700),
+                ),
+                style: ElevatedButton.styleFrom(
+                  elevation: 5,
+                    onPrimary: Colors.black,
+                    padding: EdgeInsets.all(10),
+                    minimumSize: Size(width * 0.68, height * 0.087),
+                 
+                    primary: HexColor('#F8CE61'),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(35),
+                    )),
+              ),
+           
+              SizedBox(height: height*0.052,),
+              Container(
+height:height*0.007,
+width: width*0.4,
+decoration: BoxDecoration(
+  color: Colors.black,
+borderRadius: BorderRadius.circular(width*0.9)
+),
+
+              )
+>>>>>>> e8e903b05abfab64ae1843da4c4d611fe99216c6
         ],
       ),
     );
@@ -153,6 +235,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Container _lastNamecon(double height, double width) {
     return Container(
+<<<<<<< HEAD
       height: height * 0.07,
       width: width * 0.92,
       child: TextFormField(
@@ -166,6 +249,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
               fontWeight: FontWeight.w400),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black, width: width * 0.004),
+=======
+        height: height * 0.052,
+        width: width * 0.92,
+        child: TextFormField(
+          cursorColor: Colors.black,
+      
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.only(left: 7),
+            labelText: 'LAST NAME',
+            labelStyle: TextStyle(
+                fontSize: width * 0.04,
+                color: Colors.black,
+                fontWeight: FontWeight.w400),
+            focusedBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: 
+                  Colors.black, width: width * 0.004),
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderSide:
+                    BorderSide(color:
+                     Colors.black,
+                      width: width * 0.004),
+                borderRadius: BorderRadius.circular(
+                    width*0.015,
+                )),
+>>>>>>> e8e903b05abfab64ae1843da4c4d611fe99216c6
           ),
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.black, width: width * 0.004),
@@ -179,6 +289,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Container _firstNamecon(double height, double width) {
     return Container(
+<<<<<<< HEAD
       height: height * 0.07,
       width: width * 0.92,
       child: TextFormField(
@@ -192,6 +303,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
               fontWeight: FontWeight.w400),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black, width: width * 0.004),
+=======
+          height: height * 0.052,
+          width: width * 0.92,
+          child: TextFormField(
+            cursorColor: Colors.black,
+        
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.only(left: 7),
+              labelText: 'FIRST NAME',
+              labelStyle: TextStyle(
+                  fontSize: width * 0.04,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400),
+              focusedBorder: OutlineInputBorder(
+                borderSide:
+                    BorderSide(color: Colors.black, width: width * 0.004),
+              ),
+              enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: 
+                      Colors.black, 
+                      width: width * 0.004),
+                  borderRadius: BorderRadius.circular(
+                    width*0.015,
+                  )),
+            ),
+>>>>>>> e8e903b05abfab64ae1843da4c4d611fe99216c6
           ),
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.black, width: width * 0.004),

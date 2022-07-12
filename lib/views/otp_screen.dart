@@ -21,7 +21,7 @@ OtpFieldController _otpController=OtpFieldController();
       body: Column(
         children: [
           SizedBox(
-            height: height * 0.14,
+            height: height * 0.2,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -36,7 +36,7 @@ OtpFieldController _otpController=OtpFieldController();
             ],
           ),
           SizedBox(
-            height: height * 0.015,
+            height: height * 0.013,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -51,7 +51,7 @@ OtpFieldController _otpController=OtpFieldController();
             ],
           ),
           SizedBox(
-            height: height * 0.01,
+            height: height * 0.012,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -66,18 +66,23 @@ OtpFieldController _otpController=OtpFieldController();
               ),
             ],
           ),
-SizedBox(height: height*0.000),
+//SizedBox(height: height*0.000),
 
   Container(
-  height: 42,
+   
+  //  color: Colors.pink.shade100,
+  
+  height: height*0.1,
     child: OTPTextField(
-     
+  isDense: true,
+  
      //margin: EdgeInsets.symmetric(horizontal: 4),
               controller: _otpController,
-              outlineBorderRadius: 100,
+              outlineBorderRadius:1,
              //spaceBetween: 1,
          
               length: 4,
+           
               fieldStyle: FieldStyle.underline,
              contentPadding: EdgeInsets.all(5),
              // contentPadding:EdgeInsets.symmetric(horizontal: width*0.002),
@@ -87,10 +92,16 @@ SizedBox(height: height*0.000),
          
            width: width*0.7,
               textFieldAlignment: MainAxisAlignment.spaceAround,
-              fieldWidth:25,
+              fieldWidth:width*0.136,
           
        otpFieldStyle: OtpFieldStyle(
-
+        
+  backgroundColor : Colors.transparent,
+   borderColor : Colors.pink,
+ focusBorderColor : Colors.black,
+ 
+ enabledBorderColor : Colors.black,
+ errorBorderColor : Colors.red,
        ),
              // outlineBorderRadius: 5,
               style: TextStyle(fontSize: width*0.1,

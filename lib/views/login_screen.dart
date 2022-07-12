@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.white,
+
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         BorderSide(color: Colors.black,
                          width: width * 0.004),
                     borderRadius: BorderRadius.circular(
-                      width*0.021
+                      width*0.015
                     )),
               ),
             ),
@@ -161,9 +161,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 enabledBorder: OutlineInputBorder(
                     borderSide:
-                        BorderSide(color: Colors.black, width: width * 0.004),
+                        BorderSide(
+                          color: Colors.black,
+                           width: width * 0.004),
                     borderRadius: BorderRadius.circular(
-                      width*0.022,
+                      width*0.015,
                     )),
               ),
             ),
@@ -186,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Text(
                   'Forgot Password?',
                   style: TextStyle(
-                    fontSize: width * 0.035,
+                    fontSize: width * 0.0348,
                     fontWeight: FontWeight.w400
                   ),
                 )),
@@ -213,37 +215,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 )),
           ),
           SizedBox(height: height * 0.03),
-          TextButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SignUpScreen()));
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'New to Gatello?',
-                    style: TextStyle(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'New to Gatello?',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontSize: width*0.034
+                ),
+              ),
+           SizedBox(width: width * 0.008),
+           InkWell(
+             child: Text(
+                  'Sign Up',
+                  style: TextStyle(
                       color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: width*0.034
-                    ),
-                  ),
-                  SizedBox(width: width * 0.006),
-               TextButton(onPressed: (){
-                 Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SignUpScreen()));
-               }, child:    Text(
-                    'Sign Up',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700,
-                        fontSize: width * 0.034),
-                  ))
-                ],
-              )),
+                      fontWeight: FontWeight.w700,
+                      fontSize: width * 0.034),
+                ),
+           )
+            ],
+          ),
         ],
       ),
     );

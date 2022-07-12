@@ -94,6 +94,8 @@ flutter:
     - assets/camera_icon/Group 704.png
     - assets/smiley_icon/Group 703.png
     - assets/dp_image/Ellipse 3.png
+    - assets/forgot_scren_image/Group 677.png
+    - assets/email_image/Group 680.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
