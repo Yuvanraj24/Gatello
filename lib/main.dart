@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         )
       ),
       debugShowCheckedModeBanner: false,
-      home: Splash2(),
+      home: AddMobileNumber()
     );
   }
 }

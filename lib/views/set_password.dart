@@ -29,42 +29,43 @@ class _SetPasswordState extends State<SetPassword> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.only(left: 15, right: 15, top: 150, bottom: 10),
+        padding: EdgeInsets.only(left: 10, right: 10, top: 120, bottom: 50),
         child: Center(
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              Column( children: [
             Text(
               "Set a password",
               style: TextStyle(
-                fontSize: 20,
+                fontSize: currentWidth * 0.08,
                 fontWeight: FontWeight.w700,
                 color: Color.fromRGBO(0, 0, 0, 1),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: currentHeight * 0.02),
             Text(
               "Just make sure it's at least 8 characters",
               style: TextStyle(
-                  fontSize: 12,
+                  fontSize: currentWidth * 0.04,
                   fontWeight: FontWeight.w500,
                   color: Color.fromRGBO(100, 99, 99, 1)),
             ),
             Text(
               "long",
               style: TextStyle(
-                  fontSize: 12,
+                  fontSize: currentWidth * 0.04,
                   fontWeight: FontWeight.w500,
                   color: Color.fromRGBO(100, 99, 99, 1)),
             ),
             Row(
               children: [
                 Container(
-                  width: currentWidth * 0.85,
+                  width: currentWidth * 0.82,
                   child: TextFormField(
                     decoration: InputDecoration(
                         labelText: "PASSWORD",
-                        labelStyle: TextStyle(fontSize: 12),
+                        labelStyle: TextStyle(fontSize: currentWidth * 0.04),
                         suffixIcon: IconButton(
+                          iconSize: currentWidth * 0.07,
                           icon: Icon(Icons.visibility),
                           onPressed: () {},
                         )),
@@ -72,8 +73,8 @@ class _SetPasswordState extends State<SetPassword> {
                 ),
                 Image.asset(
                   "assets/icons_assets/green_tick_icon.png",
-                  width: 18.6,
-                  height: 18.6,
+                  width: currentWidth * 0.06,
+                  height: currentHeight * 0.06,
                 ),
               ],
             ),
@@ -84,20 +85,21 @@ class _SetPasswordState extends State<SetPassword> {
                   side: BorderSide(color: Color.fromRGBO(248, 206, 97, 1)),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25)),
-                  fixedSize: Size(currentWidth - 100, 40),
+                  fixedSize: Size(currentWidth * 0.6, currentHeight * 0.06),
                   primary: Color.fromRGBO(248, 206, 97, 1),
                 ),
                 child: Text(
                   "Continue",
                   style: TextStyle(color: Colors.black),
                 )),
-            Divider(
-              color: Colors.black,
-              height: 35,
-              endIndent: 70,
-              indent: 80,
-              thickness: 3.5,
-            ),
+                 SizedBox(height: currentHeight * 0.03),
+            Container(
+            height: currentHeight * 0.007,
+            width: currentWidth * 0.4,
+            decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(currentWidth * 0.9)),
+          )
           ]),
         ),
       ),

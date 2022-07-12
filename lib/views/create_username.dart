@@ -15,7 +15,7 @@ class _CreateUsernameState extends State<CreateUsername> {
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
-          padding: const EdgeInsets.only(
+          padding: EdgeInsets.only(
             left: 10,
             top: 15,
           ),
@@ -31,44 +31,46 @@ class _CreateUsernameState extends State<CreateUsername> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.only(left: 15, right: 15, top: 120, bottom: 10),
+        padding: EdgeInsets.only(left: 10, right: 10, top: 120, bottom: 10),
         child: Center(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Text(
               "Create Username",
               style: TextStyle(
-                fontSize: 20,
+                fontSize: currentWidth * 0.08,
                 fontWeight: FontWeight.w700,
                 color: Color.fromRGBO(0, 0, 0, 1),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: currentHeight * 0.02),
             Text(
               "Your friends use your username to find you",
               style: TextStyle(
-                  fontSize: 12,
+                  fontSize: currentWidth * 0.04,
                   fontWeight: FontWeight.w500,
                   color: Color.fromRGBO(100, 99, 99, 1)),
             ),
             Text(
               "on Gatello",
               style: TextStyle(
-                  fontSize: 12,
+                  fontSize: currentWidth * 0.04,
                   fontWeight: FontWeight.w500,
                   color: Color.fromRGBO(100, 99, 99, 1)),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: currentHeight * 0.02),
             Row(
               children: [
                 Container(
-                  width: currentWidth * 0.85,
+                  width: currentWidth * 0.82,
                   child: TextFormField(
                     decoration: InputDecoration(
-                      labelStyle: TextStyle(fontSize: 12),
+                      labelStyle: TextStyle(fontSize: currentWidth * 0.04),
                       labelText: "USERNAME",
                       suffixIcon: IconButton(
+                        iconSize: currentWidth * 0.07,
                         icon: Icon(Icons.refresh),
+                        // splashRadius: 5,
                         onPressed: () {},
                       ),
                     ),
@@ -76,8 +78,8 @@ class _CreateUsernameState extends State<CreateUsername> {
                 ),
                 Image.asset(
                   "assets/icons_assets/green_tick_icon.png",
-                  width: 18.6,
-                  height: 18.6,
+                  width: currentWidth * 0.06,
+                  height: currentHeight * 0.06,
                 ),
               ],
             ),
@@ -88,7 +90,7 @@ class _CreateUsernameState extends State<CreateUsername> {
                   side: BorderSide(color: Color.fromRGBO(248, 206, 97, 1)),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25)),
-                  fixedSize: Size(180, 40),
+                  fixedSize: Size(currentWidth * 0.6, currentHeight * 0.06),
                   primary: Color.fromRGBO(248, 206, 97, 1),
                 ),
                 child: Text(

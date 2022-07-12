@@ -15,7 +15,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
     return Scaffold(
         appBar: AppBar(),
         body: Container(
-          padding: EdgeInsets.only(left: 15, right: 15, top: 120, bottom: 10),
+          padding: EdgeInsets.only(left: 10, right: 10, top: 80, bottom: 20),
           child: Column(
             children: [
               Container(
@@ -24,16 +24,16 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                     Text(
                       "Almost done!",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: currentWidth * 0.07,
                         fontWeight: FontWeight.w400,
                         color: Color.fromRGBO(0, 0, 0, 1),
                       ),
                     ),
-                    SizedBox(height: 12),
+                    SizedBox(height: currentHeight * 0.02),
                     Text(
                       "Add  your mobile",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: currentWidth * 0.08,
                         fontWeight: FontWeight.w700,
                         color: Color.fromRGBO(0, 0, 0, 1),
                       ),
@@ -41,30 +41,30 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                     Text(
                       "number?",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: currentWidth * 0.08,
                         fontWeight: FontWeight.w700,
                         color: Color.fromRGBO(0, 0, 0, 1),
                       ),
                     ),
-                    SizedBox(height: 3),
+                    SizedBox(height: currentHeight * 0.02),
                     Text(
                       "You will be using this mobile number to login into",
                       style: TextStyle(
-                          fontSize: 12,
+                          fontSize: currentWidth * 0.04,
                           fontWeight: FontWeight.w500,
                           color: Color.fromRGBO(100, 99, 99, 1)),
                     ),
                     Text(
                       "your account.",
                       style: TextStyle(
-                          fontSize: 12,
+                          fontSize: currentWidth * 0.04,
                           fontWeight: FontWeight.w500,
                           color: Color.fromRGBO(100, 99, 99, 1)),
                     )
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: currentHeight * 0.02),
               Container(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -73,7 +73,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                     Text("MOBILE NUMBER",
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: currentWidth * 0.05,
                             color: Color.fromRGBO(0, 0, 0, 1))),
                     TextFormField(
                       decoration: InputDecoration(
@@ -83,7 +83,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                             Image.asset(
                               'icons/flags/png/in.png',
                               package: 'country_icons',
-                              width: 21,
+                              width: currentWidth * 0.10,
                               //height: 21,
                             ),
                             SizedBox(width: 8),
@@ -104,7 +104,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                     Row(
                       children: [
                         Container(
-                            width: 45,
+                            width: currentWidth * 0.19,
                             child: TextFormField(
                               decoration: InputDecoration(
                                   contentPadding:
@@ -119,9 +119,9 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                                     ),
                                   ))),
                             )),
-                        SizedBox(width: 10),
+                        SizedBox(height: currentHeight * 0.02),
                         Container(
-                          width: currentWidth - 85,
+                          width: currentWidth * 0.68,
                           child: TextFormField(
                             decoration: InputDecoration(),
                           ),
@@ -131,15 +131,14 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                   ],
                 ),
               ),
-              SizedBox(height: 24),
-                    Text(
-                      "We'll send you a text verification code.",
-                      style: TextStyle(
-                        color: Color.fromRGBO(100, 99, 99, 1),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600
-                        ),
-                    ),
+              SizedBox(height: currentHeight * 0.02),
+              Text(
+                "We'll send you a text verification code.",
+                style: TextStyle(
+                    color: Color.fromRGBO(100, 99, 99, 1),
+                    fontSize: currentWidth * 0.039,
+                    fontWeight: FontWeight.w600),
+              ),
               Spacer(),
               ElevatedButton(
                   onPressed: () {},
@@ -147,23 +146,24 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                     side: BorderSide(color: Color.fromRGBO(248, 206, 97, 1)),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
-                    fixedSize: Size(currentWidth - 100, 50),
-                    padding: EdgeInsets.symmetric(horizontal: 22, vertical: 22),
+                    fixedSize: Size(currentWidth * 0.6, currentHeight * 0.06),
+                    //padding: EdgeInsets.symmetric(horizontal: 22, vertical: 22),
                     primary: Color.fromRGBO(248, 206, 97, 1),
                   ),
                   child: Text(
                     "Verify mobile number",
                     style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700
-                      ),
+                        fontSize: currentWidth * 0.04,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700),
                   )),
-              Divider(
-                color: Colors.black,
-                height: 35,
-                endIndent: 70,
-                indent: 80,
-                thickness: 3.5,
+              SizedBox(height: currentHeight * 0.02),
+              Container(
+                height: currentHeight * 0.007,
+                width: currentWidth * 0.42,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(currentWidth * 0.92)),
               ),
             ],
           ),
