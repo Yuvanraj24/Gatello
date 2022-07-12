@@ -48,20 +48,24 @@ class _Splash4State extends State<Splash4> {
                    Navigator.push(context,
                     MaterialPageRoute(builder: (context) => LoginScreen()));
                 },
-                child: Text(
-                  'Login',
-              
-                  style: TextStyle(
-                    
-                      color: Colors.black,
-                      fontSize: width * 0.045,
-                      fontWeight: FontWeight.w700),
+                child: Padding(
+                   padding: EdgeInsets.only(bottom: 0.5),
+                  child: Text(
+                    'Login',
+                              
+                    style: TextStyle(
+                      
+                        color: Colors.black,
+                        fontSize: width * 0.043,
+                        fontWeight: FontWeight.w700),
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  shadowColor:Colors.white ,
+ 
+              shadowColor:Colors.black ,
                     onPrimary: Colors.black,
                     padding: EdgeInsets.all(10),
-                    minimumSize: Size(width * 0.35, height * 0.078),
+                    minimumSize: Size(width * 0.35, height * 0.072),
                     primary: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(35),
@@ -73,16 +77,19 @@ class _Splash4State extends State<Splash4> {
                   Navigator.push(context,
                     MaterialPageRoute(builder: (context) => SignUpScreen()));
                 },
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.045,
-                      fontWeight: FontWeight.w600),
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 1),
+                  child: Text(
+                      'Sign Up',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: width * 0.043,
+                          fontWeight: FontWeight.w600),
+                    ),
                 ),
                 style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.all(10),
-                    minimumSize: Size(width * 0.35, height * 0.078),
+                    minimumSize: Size(width * 0.35, height * 0.072),
                     primary: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(35),

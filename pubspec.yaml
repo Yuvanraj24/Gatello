@@ -71,10 +71,18 @@ flutter:
     - assets/icons_assets/green_tick_icon.png
     - assets/Splash.png
     - assets/splash2_image/Group 651.png
-    - assets/right_arrow/Frame 226.png
     - assets/splash3_image/Group 657.png
-    - assets/left_arrow/Group 659.png
     - assets/icons_assets/add_friends_button.png
+    - assets/right_arrow_button/Frame 226.png
+    - assets/left_arrow_button/Group 659.png
+    - assets/left_arrow/Group 598.png
+    - assets/galetto_background/Gatello Doodle (10) 1 (1).png
+    - assets/mic_icon/Frame 74.png
+    - assets/glogo/WhatsApp Image 2022-06-30 at 1.53 1.png
+    - assets/attach_file_icon/Vector@2x.png
+    - assets/camera_icon/Group 704.png
+    - assets/smiley_icon/Group 703.png
+    - assets/dp_image/Ellipse 3.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
@@ -87,16 +95,16 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  # - family: Schyler
+  #    fonts:
+  #     - asset: fonts/Schyler-Regular.ttf
+  #     - asset: fonts/Schyler-Italic.ttf
+  #      style: italic
+  # - family: Trajan Pro
+  #  fonts:
+  #    - asset: fonts/TrajanPro.ttf
+  #     - asset: fonts/TrajanPro_Bold.ttf
+  #      weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

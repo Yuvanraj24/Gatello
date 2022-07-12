@@ -8,16 +8,16 @@ class Splash1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // decoration: BoxDecoration(
-        //     color: HexColor('#F8CE61'),
-        //     // image: DecorationImage(
-        //     //     image: AssetImage(
-        //     //         'assets/splash_screen_assets/Splash.png'),
+        decoration: BoxDecoration(
+            color: HexColor('#F8CE61'),
+            image: DecorationImage(
+                image: AssetImage(
+                    'assets/glogo/WhatsApp Image 2022-06-30 at 1.53 1.png'),
 
-        //     //    ),
+               ),
             
-        //        ),
-        child: Image(image: AssetImage('assets/splash_screen_assets/Splash.png')),
+               ),
+   
       ),
     );
   }

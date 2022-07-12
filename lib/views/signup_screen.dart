@@ -16,7 +16,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-  toolbarHeight: height*0.08,
+  //toolbarHeight: height*0.0735,
         
         leading: Center(
           child: 
@@ -24,8 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Navigator.pop(context,
                   MaterialPageRoute(builder: (context) => LoginScreen()));
          }, child: Text('Back',
-         style: TextStyle(
-           
+         style: TextStyle(          
             color: Colors.black,
             fontSize: width*0.038,
             fontWeight: FontWeight.w600            

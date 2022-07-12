@@ -27,7 +27,7 @@ class _Splash2State extends State<Splash2> {
                   'Skip',
                   style: TextStyle(
                       decoration: TextDecoration.none,
-                      fontSize: width * 0.0445,
+                      fontSize: width * 0.044,
                       color: Colors.black45,
                       fontWeight: FontWeight.w700),
                 ),
@@ -58,7 +58,7 @@ class _Splash2State extends State<Splash2> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Image(
-                  image: AssetImage('assets/right_arrow/Frame 226.png'),
+                  image: AssetImage('assets/right_arrow_button/Frame 226.png'),
                   width: width * 0.13,
                   height: height * 0.13,
                 ),
