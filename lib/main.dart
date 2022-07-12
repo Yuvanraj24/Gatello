@@ -8,6 +8,7 @@ import 'package:gatello/views/invite_friends.dart';
 import 'package:gatello/views/otp_screen.dart';
 import 'package:gatello/views/select_birthday.dart';
 import 'package:gatello/views/set_password.dart';
+import 'package:gatello/views/signup_screen.dart';
 import 'package:gatello/views/tabbar/tabbar_view.dart';
 
 import 'package:gatello/views/splash_screen1.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
 
-      home: AddMobileNumber()
+      home:  SignUpScreen()
 
     );
   }

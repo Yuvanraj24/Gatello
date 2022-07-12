@@ -36,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Column(
         children: [
           SizedBox(height: height * 0.2),
-          SizedBox(height: height*0.195),
+          SizedBox(height: height * 0.195),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -52,7 +52,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           SizedBox(
             height: height * 0.01,
           ),
-          SizedBox(height: height*0.016,),
+          SizedBox(
+            height: height * 0.016,
+          ),
           Text(
             'Add your name so that your friends can find you ',
             style: TextStyle(
@@ -60,19 +62,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 fontWeight: FontWeight.w500,
                 color: Colors.black),
           ),
-           SizedBox(height: height*0.05),
-           _firstNamecon(height, width),
-           SizedBox(height: height*0.04),
-           _lastNamecon(height, width),
-           SizedBox(height: height*0.014),
-              Text(
+          SizedBox(height: height * 0.05),
+          _firstNamecon(height, width),
+          SizedBox(height: height * 0.04),
+          _lastNamecon(height, width),
+          SizedBox(height: height * 0.014),
+          Text(
             'By tapping "Sign Up", you acknowledge & agree',
             style: TextStyle(
                 fontSize: width * 0.035,
                 fontWeight: FontWeight.w400,
                 color: Colors.black),
           ),
-          SizedBox(height: height*0.004),
+          SizedBox(height: height * 0.004),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -201,6 +203,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 5,
               )),
         ),
+        validator: (val) {
+          if (val!.isEmpty) {
+            return "Field can't be empty";
+          }
+          else{
+            return null;
+          }
+        },
       ),
     );
   }
