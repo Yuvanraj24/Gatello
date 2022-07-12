@@ -7,11 +7,12 @@ import 'package:gatello/views/create_username.dart';
 import 'package:gatello/views/invite_friends.dart';
 import 'package:gatello/views/select_birthday.dart';
 import 'package:gatello/views/set_password.dart';
+import 'package:gatello/views/tabbar/tabbar_view.dart';
 
-void main(){
+void main() {
   runApp(MyApp());
-
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -19,13 +20,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          shadowColor: Colors.transparent,
-          backgroundColor: Color.fromRGBO(248, 206, 97, 1)
-        )
-      ),
+          appBarTheme: AppBarTheme(
+              shadowColor: Colors.transparent,
+              backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
       debugShowCheckedModeBanner: false,
-      home: SelectBirthday()
+      home: Tabbar(
+        
+      ),
     );
   }
 }
