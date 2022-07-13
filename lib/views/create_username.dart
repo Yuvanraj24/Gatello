@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:gatello/views/set_password.dart';
+import 'package:sizer/sizer.dart';
 
 import 'login_screen.dart';
 
@@ -54,7 +56,7 @@ class _CreateUsernameState extends State<CreateUsername> {
                 style: TextStyle(
                     fontSize: currentWidth * 0.04,
                     fontWeight: FontWeight.w500,
-                    color: Color.fromRGBO(100, 99, 99, 1)),
+                    color: Color.fromARGB(255, 84, 37, 37)),
               ),
               Text(
                 "on Gatello",
@@ -113,8 +115,12 @@ class _CreateUsernameState extends State<CreateUsername> {
             ),
                   SizedBox(height: currentHeight*0.03,),
             Container(
-    height:currentHeight*0.007,
-    width: currentWidth*0.4,
+
+              // height: currentHeight*0.3,
+              // width: currentWidth*0.7,
+    height:6.62.h,
+    width: 6.5.w,
+  
     decoration: BoxDecoration(
       color: Colors.black,
     borderRadius: BorderRadius.circular(currentWidth*0.9)

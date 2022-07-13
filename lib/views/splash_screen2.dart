@@ -3,6 +3,7 @@ import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen3.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+import 'package:sizer/sizer.dart';
 
 
 class Splash2 extends StatefulWidget {
@@ -41,7 +42,7 @@ class _Splash2State extends State<Splash2> {
               ],
             ),
             SizedBox(
-              height: height * 0.015,
+              height: 10.h,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
