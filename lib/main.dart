@@ -28,7 +28,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
     
         appBarTheme: AppBarTheme(
-    
     toolbarHeight: 32,
           shadowColor: Colors.transparent,
           backgroundColor: Color.fromRGBO(248, 206, 97, 1)

@@ -12,6 +12,7 @@ class _InviteFriendsState extends State<InviteFriends> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+                       
         leading: Padding(
           padding: const EdgeInsets.only(
             left: 10,
