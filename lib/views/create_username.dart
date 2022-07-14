@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:gatello/views/set_password.dart';
-import 'package:sizer/sizer.dart';
+
 
 import 'login_screen.dart';
 
@@ -20,7 +21,7 @@ class _CreateUsernameState extends State<CreateUsername> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-                          toolbarHeight: currentHeight*0.07,
+                          toolbarHeight: 55.h,
           leading: Center(
             child: 
            TextButton(onPressed: (){
@@ -37,7 +38,8 @@ class _CreateUsernameState extends State<CreateUsername> {
      
         ),
         body: Container(
-          padding: EdgeInsets.only(left: 10, right: 10, top: 80, bottom: 30),
+          padding: EdgeInsets.only(left: 11.w, right: 18.w,
+           top: 163.h, bottom: 35.h),
           child: Center(
             child:
                 Column(
@@ -45,34 +47,36 @@ class _CreateUsernameState extends State<CreateUsername> {
               Text(
                 "Create Username",
                 style: TextStyle(
-                  fontSize: currentWidth * 0.08,
+                  fontSize: 34.h,
                   fontWeight: FontWeight.w700,
                   color: Color.fromRGBO(0, 0, 0, 1),
                 ),
               ),
-              SizedBox(height: currentHeight * 0.02),
+              SizedBox(height: 12.h),
               Text(
                 "Your friends use your username to find you",
                 style: TextStyle(
-                    fontSize: currentWidth * 0.04,
+                    fontSize: 13.h,
                     fontWeight: FontWeight.w500,
                     color: Color.fromARGB(255, 84, 37, 37)),
               ),
+              SizedBox(width: 5.h),
               Text(
                 "on Gatello",
                 style: TextStyle(
-                    fontSize: currentWidth * 0.04,
+                    fontSize: 13.h,
                     fontWeight: FontWeight.w500,
                     color: Color.fromRGBO(100, 99, 99, 1)),
               ),
-              SizedBox(height: currentHeight * 0.01),
+              SizedBox(height:51.h),
               Row(
                 children: [
                   Container(
                     width: currentWidth * 0.82,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        labelStyle: TextStyle(fontSize: currentWidth * 0.04),
+                        labelStyle: TextStyle(
+                          fontSize: 15.h),
                         labelText: "USERNAME",
                         suffixIcon: IconButton(
                           iconSize: currentWidth * 0.07,
@@ -100,33 +104,39 @@ class _CreateUsernameState extends State<CreateUsername> {
                 'Continue',
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: currentWidth * 0.045,
+                    fontSize: 17.h,
                     fontWeight: FontWeight.w700),
               ),
               style: ElevatedButton.styleFrom(
                   elevation: 5,
                   onPrimary: Colors.black,
                   padding: EdgeInsets.all(10),
-                  minimumSize: Size(currentWidth * 0.7, currentHeight * 0.086),
+                  minimumSize: Size(
+               //     currentWidth * 0.7, 
+               //   currentHeight * 0.086
+
+              234.w,53.h
+                  ),
+                
                 primary: Color.fromRGBO(248, 206, 97, 1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(35),
                   )),
             ),
                   SizedBox(height: currentHeight*0.03,),
-            Container(
+    //         Container(
 
-              // height: currentHeight*0.3,
-              // width: currentWidth*0.7,
-    height:6.62.h,
-    width: 6.5.w,
+    //           // height: currentHeight*0.3,
+    //           // width: currentWidth*0.7,
+    // height:6.62.h,
+    // width: 6.5.w,
   
-    decoration: BoxDecoration(
-      color: Colors.black,
-    borderRadius: BorderRadius.circular(currentWidth*0.9)
-    ),
+    // decoration: BoxDecoration(
+    //   color: Colors.black,
+    // borderRadius: BorderRadius.circular(currentWidth*0.9)
+    // ),
     
-                )
+    //             )
             ]),
           ),
         ),
