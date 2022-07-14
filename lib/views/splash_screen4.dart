@@ -1,11 +1,14 @@
 
 
-// ignore_for_file: sort_child_properties_last
+
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/signup_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+
 
 import 'login_screen.dart';
 
@@ -17,51 +20,54 @@ class Splash4 extends StatefulWidget {
 }
 
 class _Splash4State extends State<Splash4> {
- // final Color color = HexColor.fromHex('#aabbcc');
+ 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+
 
     return SafeArea(
       child: Scaffold(
         body: Container(
-         
+          
+         padding: EdgeInsets.only(
+        
+
+      top:340.h,
+       bottom:100.h
+         ),
         color: HexColor('#F8CE61'),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            // SizedBox(
-            //   width: width * 2,
-            // ),
+          child: Column(
+          children: [
+           
             
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: height*0.09),
-                Text(
-                  'Gatello',
-                  style: TextStyle(fontSize: width * 0.15),
-                ),
-              ],
+            Text(
+              'Gatello',
+             // style: TextStyle(fontSize: 77.7.h),
+              style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                         fontSize: 77.7.h,
+                         fontWeight: FontWeight.w400,
+                            color:Colors.black)),
             ),
-            SizedBox(height: height * 0.1),
+            SizedBox(height: 70.7.h),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                   onPressed: () {
                      Navigator.push(context,
                       MaterialPageRoute(builder: (context) => LoginScreen()));
                   },
-                  child: Padding(
-                     padding: EdgeInsets.only(bottom: 0.5),
+                  child: Align(
+                    alignment: Alignment.center,
                     child: Text(
                       'Login',
                                 
-                      style: TextStyle(
-                        
-                          color: Colors.black,
-                          fontSize: width * 0.043,
-                          fontWeight: FontWeight.w700),
+                                   style: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                           fontSize: 17.h,
+                           fontWeight: FontWeight.w600,
+                              color:Colors.black)),
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -69,31 +75,34 @@ class _Splash4State extends State<Splash4> {
                 shadowColor:Colors.black ,
                       onPrimary: Colors.black,
                       padding: EdgeInsets.all(10),
-                      minimumSize: Size(width * 0.35, height * 0.072),
+                      minimumSize: Size(106.w, 41.h),
                       primary: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(35),
                       )),
                 ),
-                SizedBox(width: width * 0.08),
+       SizedBox(width:22.w),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SignUpScreen()));
                   },
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 1),
+                  child: Align(
+                    alignment: Alignment.center,
                     child: Text(
                         'Sign Up',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: width * 0.043,
-                            fontWeight: FontWeight.w600),
+                           style: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                           fontSize: 17.h,
+                           fontWeight: FontWeight.w600,
+                              color:HexColor('#FFFFFF'))),
                       ),
                   ),
                   style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(10),
-                      minimumSize: Size(width * 0.35, height * 0.072),
+                     // padding: EdgeInsets.only(left: 38.w,right: 38.w,top: 17.h,bottom: 17.h),
+
+                minimumSize: Size(106.w, 41.h),
+                 
                       primary: Colors.black,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(35),
@@ -102,8 +111,7 @@ class _Splash4State extends State<Splash4> {
               ],
             )
           ]),
-    
-         
+   
         ),
       ),
     );
