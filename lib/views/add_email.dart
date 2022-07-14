@@ -3,13 +3,14 @@ import 'package:gatello/views/add_mob_no.dart';
 import 'package:gatello/views/otp_screen.dart';
 
 class AddEmail extends StatefulWidget {
-  const AddEmail({Key? key}) : super(key: key);
+  const   AddEmail({Key? key}) : super(key: key);
 
   @override
   State<AddEmail> createState() => _AddEmailState();
 }
 
 class _AddEmailState extends State<AddEmail> {
+  String? _email;
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
@@ -79,12 +80,22 @@ class _AddEmailState extends State<AddEmail> {
                   
                   labelText: "EMAIL",
                 ),
+                validator: (val){
+                  if(val!.isEmpty){
+                    return "Field cant be empty";
+                  }
+                  return null;
+                },
+                onChanged: (val){
+                  _email = val;
+                },
               ),
               Spacer(),
            ElevatedButton(
               onPressed: () {
-                 Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Otp()));
+                print("EMAIL : $_email");
+                //  Navigator.push(context,
+                //       MaterialPageRoute(builder: (context) => Otp()));
               },
               child: Text(
                 'Continue',

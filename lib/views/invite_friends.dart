@@ -10,26 +10,24 @@ class InviteFriends extends StatefulWidget {
 class _InviteFriendsState extends State<InviteFriends> {
   @override
   Widget build(BuildContext context) {
+    final currentWidth = MediaQuery.of(context).size.width;
+    final currentHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-                       
-        leading: Padding(
-          padding: const EdgeInsets.only(
-            left: 10,
-            top: 15,
-          ),
+        toolbarHeight: currentHeight * 0.07,
+        leading: Center(
+            child: TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
           child: Text(
-            "Back",
-            style: TextStyle(color: Colors.black),
+            'Back',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: currentWidth * 0.038,
+                fontWeight: FontWeight.w600),
           ),
-        ),
-        actions: [
-          Image(
-            image: AssetImage("assets/appbar_action/Rectangle 7.png"),
-            width: 50,
-            height: 50,
-          )
-        ],
+        )),
       ),
       body: Container(
         padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
@@ -124,7 +122,8 @@ class _InviteFriendsState extends State<InviteFriends> {
                         trailing: GestureDetector(
                           child: Image(
                             image: AssetImage(
-                                "assets/icons_assets/add_friends_button.png"),fit: BoxFit.fill,
+                                "assets/icons_assets/add_friends_button.png"),
+                            fit: BoxFit.fill,
                           ),
                         ),
                       ),

@@ -15,7 +15,9 @@ import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
-void main(){
+import 'package:sizer/sizer.dart';
+
+void main() {
   runApp(MyApp());
 }
 
@@ -24,19 +26,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-    
-        appBarTheme: AppBarTheme(
-    toolbarHeight: 32,
-          shadowColor: Colors.transparent,
-          backgroundColor: Color.fromRGBO(248, 206, 97, 1)
-        )
-      ),
-      debugShowCheckedModeBanner: false,
-
-      home:  SignUpScreen()
-
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return MaterialApp(
+            theme: ThemeData(
+                appBarTheme: AppBarTheme(
+                    shadowColor: Colors.black,
+                    backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
+            debugShowCheckedModeBanner: false,
+            home: InviteFriends(
+              
+            )
+            );
+      },
     );
   }
 }

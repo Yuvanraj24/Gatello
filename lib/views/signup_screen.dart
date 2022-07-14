@@ -11,6 +11,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  String? _firstName;
+  String? _lastName;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -18,26 +20,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-      toolbarHeight: height*0.07,
-          
-      leading: Center(
-            child: 
-           TextButton(onPressed: (){
+          toolbarHeight: height * 0.07,
+          leading: Center(
+              child: TextButton(
+            onPressed: () {
               Navigator.pop(context);
-           }, child: Text('Back',
-           style: TextStyle(          
-              color: Colors.black,
-              fontSize: width*0.038,
-              fontWeight: FontWeight.w600            
-           ),
-              ),
-             )
-          ),
+            },
+            child: Text(
+              'Back',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: width * 0.038,
+                  fontWeight: FontWeight.w600),
+            ),
+          )),
         ),
         body: Column(
-     
           children: [
-            SizedBox(height: height*0.195),
+            SizedBox(height: height * 0.195),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -50,7 +50,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ],
             ),
-            SizedBox(height: height*0.016,),
+            SizedBox(
+              height: height * 0.016,
+            ),
             Text(
               'Add your name so that your friends can find you ',
               style: TextStyle(
@@ -58,36 +60,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fontWeight: FontWeight.w500,
                   color: Colors.black),
             ),
-             SizedBox(height: height*0.05),
-             _firstNamecon(height, width),
-             SizedBox(height: height*0.04),
-             _lastNamecon(height, width),
-             SizedBox(height: height*0.014),
-                Text(
+            SizedBox(height: height * 0.05),
+            _firstNamecon(height, width),
+            SizedBox(height: height * 0.04),
+            _lastNamecon(height, width),
+            SizedBox(height: height * 0.014),
+            Text(
               'By tapping "Sign Up", you acknowledge & agree',
               style: TextStyle(
                   fontSize: width * 0.035,
                   fontWeight: FontWeight.w400,
                   color: Colors.black),
             ),
-            SizedBox(height: height*0.004),
+            SizedBox(height: height * 0.004),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-               
                 Text(
                   'to our',
                   style: TextStyle(
                     fontSize: width * 0.035,
                   ),
                 ),
-                SizedBox(width: width * 0.01
-                ),
-             
-               InkWell(
-                  onTap: () {
-    
-                  },
+                SizedBox(width: width * 0.01),
+                InkWell(
+                  onTap: () {},
                   child: Text(
                     'Terms of service',
                     style: TextStyle(
@@ -97,18 +94,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                 ),
-                 SizedBox(width: width * 0.01),
-                  Text(
+                SizedBox(width: width * 0.01),
+                Text(
                   'and',
                   style: TextStyle(
                     fontSize: width * 0.035,
                   ),
                 ),
-                 SizedBox(width: width * 0.01),
-                  InkWell(
-                  onTap: () {
-    
-                  },
+                SizedBox(width: width * 0.01),
+                InkWell(
+                  onTap: () {},
                   child: Text(
                     'Privacy Policy.',
                     style: TextStyle(
@@ -120,41 +115,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ],
             ),
-         SizedBox(height: height*0.235),
-               ElevatedButton(
-                  onPressed: () {
-                     Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CreateUsername()));
-                  },
-                  child: Text(
-                    'Sign Up',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: width * 0.045,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    elevation: 5,
-                      onPrimary: Colors.black,
-                      padding: EdgeInsets.all(10),
-                      minimumSize: Size(width * 0.68, height * 0.087),
-                   
-                      primary: HexColor('#F8CE61'),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(35),
-                      )),
-                ),
-             
-                SizedBox(height: height*0.052,),
-    Container(
-    height:height*0.007,
-    width: width*0.4,
-    decoration: BoxDecoration(
-      color: Colors.black,
-    borderRadius: BorderRadius.circular(width*0.9)
-    ),
-    
-                )
+            SizedBox(height: height * 0.235),
+            ElevatedButton(
+              onPressed: () {
+                print("FirstName : $_firstName");
+                print("LastName : $_lastName");
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => CreateUsername()));
+              },
+              child: Text(
+                'Sign Up',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: width * 0.045,
+                    fontWeight: FontWeight.w700),
+              ),
+              style: ElevatedButton.styleFrom(
+                  elevation: 5,
+                  onPrimary: Colors.black,
+                  padding: EdgeInsets.all(10),
+                  minimumSize: Size(width * 0.68, height * 0.087),
+                  primary: HexColor('#F8CE61'),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(35),
+                  )),
+            ),
+            SizedBox(
+              height: height * 0.052,
+            ),
+            Container(
+              height: height * 0.007,
+              width: width * 0.4,
+              decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(width * 0.9)),
+            )
           ],
         ),
       ),
@@ -162,66 +157,74 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Container _lastNamecon(double height, double width) {
-    
     return Container(
-        height: height * 0.052,
-        width: width * 0.92,
-        child: TextFormField(
-          cursorColor: Colors.black,
-      
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(left: 7),
-            labelText: 'LAST NAME',
-            labelStyle: TextStyle(
-                fontSize: width * 0.04,
-                color: Colors.black,
-                fontWeight: FontWeight.w400),
-            focusedBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: 
-                  Colors.black, width: width * 0.004),
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color:
-                     Colors.black,
-                      width: width * 0.004),
-                borderRadius: BorderRadius.circular(
-                    width*0.015,
-                )),
+      height: height * 0.052,
+      width: width * 0.92,
+      child: TextFormField(
+        cursorColor: Colors.black,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: 7),
+          labelText: 'LAST NAME',
+          labelStyle: TextStyle(
+              fontSize: width * 0.04,
+              color: Colors.black,
+              fontWeight: FontWeight.w400),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black, width: width * 0.004),
           ),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: width * 0.004),
+              borderRadius: BorderRadius.circular(
+                width * 0.015,
+              )),
         ),
-      );
+        validator: (val) {
+          if (val!.isEmpty) {
+            return "Field cant be empty";
+          }
+          return null;
+        },
+        onChanged: (val) {
+          _lastName = val;
+        },
+      ),
+    );
   }
 
   Container _firstNamecon(double height, double width) {
     return Container(
-          height: height * 0.052,
-          width: width * 0.92,
-          child: TextFormField(
-            cursorColor: Colors.black,
-        
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.only(left: 7),
-              labelText: 'FIRST NAME',
-              labelStyle: TextStyle(
-                  fontSize: width * 0.04,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400),
-              focusedBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: Colors.black, width: width * 0.004),
-              ),
-              enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: 
-                      Colors.black, 
-                      width: width * 0.004),
-                  borderRadius: BorderRadius.circular(
-                    width*0.015,
-                  )),
-            ),
+      height: height * 0.052,
+      width: width * 0.92,
+      child: TextFormField(
+        cursorColor: Colors.black,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: 7),
+          labelText: 'FIRST NAME',
+          labelStyle: TextStyle(
+              fontSize: width * 0.04,
+              color: Colors.black,
+              fontWeight: FontWeight.w400),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black, width: width * 0.004),
           ),
-        );
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: width * 0.004),
+              borderRadius: BorderRadius.circular(
+                width * 0.015,
+              )),
+        ),
+        validator: (val) {
+          if (val!.isEmpty) {
+            return "Field cant be empty";
+          }
+          return null;
+        },
+        onChanged: (val) {
+          _firstName = val;
+        },
+        textInputAction: TextInputAction.done,
+        keyboardType: TextInputType.text,
+      ),
+    );
   }
 }

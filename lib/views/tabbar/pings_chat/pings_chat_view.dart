@@ -10,7 +10,6 @@ class PingsChatView extends StatefulWidget {
 }
 
 class _PingsChatViewState extends State<PingsChatView> {
-
   List<PingsChatListModel> tileData = [];
 
   @override
@@ -19,11 +18,12 @@ class _PingsChatViewState extends State<PingsChatView> {
     super.initState();
     tileData = pingsChatListData();
   }
-  
+
   bool change = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(26, 52, 130, 0.06),
       body: change == true
           ? Container(
               padding: EdgeInsets.only(top: 110),
@@ -48,32 +48,60 @@ class _PingsChatViewState extends State<PingsChatView> {
                 ),
               ))
           : Container(
+            color: Color.fromRGBO(26, 52, 130, 0.06),
               child: ListView.builder(
                 itemCount: tileData.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    contentPadding: EdgeInsets.all(10),
-                    leading: CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage(tileData[index].dp),
-                    ),
-                    title: Text(tileData[index].name),
-                    subtitle: Text(tileData[index].lasttext),
-                    trailing: Column(
-                      children: [
-                        Text("${11}:${20} AM"),
-                        SizedBox(height: 4),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color:  Color.fromRGBO(255, 202, 40, 1)
-                          ),
-                          width: 20,
-                          height: 20,
-                          child: Center(child: Text(tileData[index].unreadMsg.toString(),
-                             style: TextStyle(color: Colors.black, fontSize: 12)),
-                        )),
-                      ],
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: ListTile(
+                      tileColor: Colors.white,
+                      contentPadding: EdgeInsets.all(10),
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: NetworkImage(tileData[index].dp),
+                      ),
+                      title: Text(
+                        tileData[index].name,
+                        style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                                fontWeight: FontWeight.w700)),
+                      ),
+                      subtitle: Text(tileData[index].lasttext,
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  color: Color.fromRGBO(12, 16, 29, 0.6),
+                                  fontWeight: FontWeight.w400))),
+                      trailing: Column(
+                        children: [
+                          Text("${11}:${20} AM",
+                              style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                    color: Color.fromRGBO(0, 0, 0, 1),
+                                    fontWeight: FontWeight.w400),
+                              )),
+                          SizedBox(height: 4),
+                          Container(
+                              decoration: BoxDecoration(
+                                  //borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                    color: Color.fromRGBO(255, 202, 40, 1),
+                                  ),
+                                  shape: BoxShape.circle,
+                                  color: Color.fromRGBO(255, 202, 40, 1)),
+                              width: 23,
+                              height: 23,
+                              child: Center(
+                                child: Text(tileData[index].unreadMsg.toString(),
+                                    style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                          color: Color.fromRGBO(0, 0, 0, 1),
+                                          fontWeight: FontWeight.w400),
+                                    )),
+                              )),
+                        ],
+                      ),
                     ),
                   );
                 },
