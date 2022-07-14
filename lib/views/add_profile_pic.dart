@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/invite_friends.dart';
 import 'package:gatello/views/otp_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class AddProfilePic extends StatefulWidget {
   const AddProfilePic({Key? key}) : super(key: key);
@@ -12,96 +15,105 @@ class AddProfilePic extends StatefulWidget {
 class _AddProfilePicState extends State<AddProfilePic> {
   @override
   Widget build(BuildContext context) {
-    final currentWidth = MediaQuery.of(context).size.width;
-    final currentHeight = MediaQuery.of(context).size.height;
+ 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-                          toolbarHeight: currentHeight*0.07,
-          leading: Center(
-              child: TextButton(
-            onPressed: () {
+
+         appBar: AppBar(
+    toolbarHeight:55.h,
+ 
+          
+      leading: Center(
+            child: 
+           TextButton(onPressed: (){
               Navigator.pop(context);
-            },
-            child: Text(
-              'Back',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: currentWidth * 0.038,
-                  fontWeight: FontWeight.w600),
-            ),
-          )),
+           }, child: Text('Back',
+         
+           style: GoogleFonts.roboto(
+                        textStyle: TextStyle(
+                            fontSize: 13.sp,
+                         fontWeight: FontWeight.w600,
+                            color:Colors.black)),
+              ),
+             )
+          ),
         ),
         body: Container(
-          padding: EdgeInsets.only(
-              left: currentWidth * 0.06,
-              right: currentWidth * 0.06,
-              top: currentHeight * 0.2,
-              bottom: currentHeight * 0.01),
-          child: Column(children: [
-            Text(
-              "Add profile photo",
-              style: TextStyle(
-                fontSize: currentHeight * 0.0345,
-                fontWeight: FontWeight.w700,
-                color: Color.fromRGBO(0, 0, 0, 1),
+          padding: EdgeInsets.only(left: 12.w, right: 12.w,
+           top: 85.h,
+            bottom: 51.h),
+          child: Center(
+            child:
+                Column(
+                //  crossAxisAlignment: CrossAxisAlignment.center,
+                   children: [
+                    Spacer(),
+              Text(
+                "Add profile photo",
+             
+                     style: GoogleFonts.fredoka(
+                        textStyle: TextStyle(
+                            fontSize: 28.sp,
+                       fontWeight: FontWeight.w500,
+                            color:Colors.black)),
               ),
-            ),
-            SizedBox(height: currentHeight * 0.01),
-            Text(
-              "Add a profile photo so that your friends know its you.",
-              style: TextStyle(
-                  fontSize: currentHeight * 0.015,
-                  fontWeight: FontWeight.w500,
-                  color: Color.fromRGBO(100, 99, 99, 1)),
-            ),
-            SizedBox(height: currentHeight * 0.09),
-            Image.asset(
+              SizedBox(height: 12.h),
+           
+               Text(
+                    'Add a profile photo so that your friends know its you.',
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 13.h,
+                            fontWeight: FontWeight.w500,
+                            color: HexColor('#646363'))),
+                  ),
+ 
+                
+             
+              SizedBox(height: 50.h,),
+                 Image.asset(
               "assets/profile_page/profile_pic_logo.png",
-              width: currentWidth * 0.48,
+              width:165.w,
             ),
-            SizedBox(height: currentHeight * 0.16),
-            ElevatedButton(
-              onPressed: () {},
+Spacer(),
+                    ElevatedButton(
+              onPressed: () {
+                 Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Otp()));
+              },
               child: Text(
                 'Add a photo',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: currentWidth * 0.045,
-                    fontWeight: FontWeight.w700),
+                style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black)),
               ),
-              style: ElevatedButton.styleFrom(
+              style: 
+              ElevatedButton.styleFrom(
                   elevation: 5,
                   onPrimary: Colors.black,
-                  padding: EdgeInsets.all(10),
-                  minimumSize: Size(currentWidth * 0.7, currentHeight * 0.086),
-                  primary: Color.fromRGBO(248, 206, 97, 1),
+                //  padding: EdgeInsets.all(10),
+                  minimumSize: Size(
+          
+
+              234.w,53.h
+                  ),
+                
+                primary: Color.fromRGBO(248, 206, 97, 1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(35),
                   )),
             ),
-            TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                    //fixedSize: Size(currentWidth*0.2, currentHeight*0.010),
-                    primary: Color.fromRGBO(0, 0, 0, 0.44)),
-                child: Text(
-                  "Skip",
-                  style: TextStyle(fontSize: currentWidth * 0.05),
-                )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: currentHeight * 0.007,
-                  width: currentWidth * 0.4,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(currentWidth * 0.9)),
-                ),
-              ],
-            )
-          ]),
+            SizedBox(height: 23.h,),
+               Text('Skip',style: GoogleFonts.inter(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: HexColor('#646363')
+
+               ),)
+            ]),
+          ),
         ),
       ),
     );

@@ -21,8 +21,12 @@ import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
 import 'package:sizer/sizer.dart';
 void main(){
+<<<<<<< HEAD
 
   runApp(MyApp());
+=======
+  runApp(MaterialApp(home:MyApp()));
+>>>>>>> bc0a8a3383c5931a3ae31fe2341132db2a264c91
 }
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/add_profile_pic.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
@@ -15,102 +17,90 @@ class _OtpState extends State<Otp> {
 OtpFieldController _otpController=OtpFieldController();
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+   // double height = MediaQuery.of(context).size.height;
+    double curWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-             toolbarHeight: height*0.07,
-           leading: Center(
+
+     appBar: AppBar(
+    toolbarHeight:55.h,
+ 
+          
+      leading: Center(
             child: 
            TextButton(onPressed: (){
               Navigator.pop(context);
            }, child: Text('Back',
-           style: TextStyle(          
-              color: Colors.black,
-              fontSize: width*0.038,
-              fontWeight: FontWeight.w600            
-           ),
+         
+           style: GoogleFonts.roboto(
+                        textStyle: TextStyle(
+                            fontSize: 13.sp,
+                         fontWeight: FontWeight.w600,
+                            color:Colors.black)),
               ),
              )
           ),
         ),
-        body: Column(
-          children: [
-            SizedBox(
-              height: height * 0.2,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Enter confirmation code',
-                  style: TextStyle(
-                      fontSize: width * 0.074,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: height * 0.013,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Enter the code we sent to',
-                  style: TextStyle(
-                      fontSize: width * 0.037,
-                      fontWeight: FontWeight.w500,
-                      color: HexColor('#646363')),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: height * 0.012,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-             //   SizedBox(width: width * 0.31),
-                Text(
-                  '98745  32789',
-                  style: TextStyle(
-                      fontSize: width * 0.055,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
-                ),
-              ],
-            ),
-    //SizedBox(height: height*0.000),
-    
-      Container(
+        body: Container(
+          padding: EdgeInsets.only(left: 12.w, 
+          right: 12.w,
+           top: 163.h, bottom: 35.h),
+          child: Center(
+            child:
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center, children: [
+              Text(
+                "Enter confirmation code",
+             
+                     style: GoogleFonts.fredoka(
+                        textStyle: TextStyle(
+                            fontSize: 28.sp,
+                       fontWeight: FontWeight.w500,
+                            color:Colors.black)),
+              ),
+              SizedBox(height: 9.h),
+           
+               Text(
+                    'Enter the code we sent to',
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 13.h,
+                            fontWeight: FontWeight.w500,
+                            color: HexColor('#646363'))),
+                  ),
+                   SizedBox(height: 16.h),
+               Text(
+                '98745 32789',
+             
+                     style: GoogleFonts.roboto(
+                        textStyle: TextStyle(
+                            fontSize: 20.sp,
+                       fontWeight: FontWeight.w700,
+                            color:Colors.black)),
+              ),
+             
+              SizedBox(height:29.h),
+              Container(
        
-      //  color: Colors.pink.shade100,
+
       
-      height: height*0.1,
+      height: 81.h,
       child: OTPTextField(
       isDense: true,
       
-       //margin: EdgeInsets.symmetric(horizontal: 4),
+   
                 controller: _otpController,
-                outlineBorderRadius:1,
-               //spaceBetween: 1,
+              
            
                 length: 4,
              
                 fieldStyle: FieldStyle.underline,
-               contentPadding: EdgeInsets.all(5),
-               // contentPadding:EdgeInsets.symmetric(horizontal: width*0.002),
-             //),
-               // width:width*0.5,
-             //  width: MediaQuery.of(context).size.width,
+               contentPadding: EdgeInsets.all(17.h),
+          
            
-             width: width*0.7,
-                textFieldAlignment: MainAxisAlignment.spaceAround,
-                fieldWidth:width*0.136,
-            
+             width: curWidth*0.68,
+
+            fieldWidth: 46.w,
          otpFieldStyle: OtpFieldStyle(
           
       backgroundColor : Colors.transparent,
@@ -121,8 +111,11 @@ OtpFieldController _otpController=OtpFieldController();
      errorBorderColor : Colors.red,
          ),
                // outlineBorderRadius: 5,
-                style: TextStyle(fontSize: width*0.1,
-                fontWeight: FontWeight.w700),
+                style:   GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 32.sp,
+                       fontWeight: FontWeight.w600,
+                            color:Colors.black)),
                 onChanged: (pin) {
                   print("Changed: " + pin);
                 },
@@ -131,47 +124,39 @@ OtpFieldController _otpController=OtpFieldController();
                 }
                 ),
       ),
-            SizedBox(
-              height: height * 0.36,
-            ),
-            ElevatedButton(
+   Spacer(),
+                    ElevatedButton(
               onPressed: () {
                  Navigator.push(context,
                       MaterialPageRoute(builder: (context) => AddProfilePic()));
               },
               child: Text(
-                'Resend in 55',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: width * 0.045,
-                    fontWeight: FontWeight.w700),
+                'Continue',
+                style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black)),
               ),
-              style: ElevatedButton.styleFrom(
+              style: 
+              ElevatedButton.styleFrom(
                   elevation: 5,
                   onPrimary: Colors.black,
-                  padding: EdgeInsets.all(10),
-                  minimumSize: Size(width * 0.7, height * 0.086),
-                  primary: HexColor('#F8CE61'),
+               
+                  minimumSize: Size(
+          
+
+              234.w,53.h
+                  ),
+                
+                primary: Color.fromRGBO(248, 206, 97, 1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(35),
                   )),
             ),
-            SizedBox(
-              height: height * 0.03,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: height * 0.007,
-                  width: width * 0.42,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(width * 0.92)),
-                ),
-              ],
-            )
-          ],
+               
+            ]),
+          ),
         ),
       ),
     );
