@@ -20,7 +20,6 @@ import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
 import 'package:sizer/sizer.dart';
 void main(){
-
   runApp(MaterialApp(home:MyApp()));
 }
 class MyApp extends StatelessWidget {

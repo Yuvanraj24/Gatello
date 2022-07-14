@@ -135,10 +135,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.black)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
+                       // borderRadius: BorderRadius.circular(5.w)
+                   borderRadius: BorderRadius.circular(6)
+                      ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
+                      //  borderRadius: BorderRadius.circular(5.w)
+                      borderRadius: BorderRadius.circular(6)
+                    ),
                   ),
                 ),
               ),
@@ -168,10 +172,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.black)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
+                         borderRadius: BorderRadius.circular(6)
+                        ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
+                        borderRadius: BorderRadius.circular(6)
+                        ),
                   ),
                 ),
               ),

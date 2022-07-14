@@ -93,10 +93,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             color: Colors.black)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
+                        borderRadius: BorderRadius.circular(6)),
                     enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
+                        borderSide: BorderSide(
+                          color: Colors.black, width: 1.w),
+                       borderRadius: BorderRadius.circular(6)),
                   ),
                 ),
               ),
@@ -122,10 +123,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             color: Colors.black)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
+                        borderRadius: BorderRadius.circular(6)),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
+                        borderRadius: BorderRadius.circular(6)),
                   ),
                 ),
               ),
@@ -226,68 +227,68 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
-
-  Container _lastNamecon(double height, double width) {
+}
+//   Container _lastNamecon(double height, double width) {
     
-    return     
-        Container(
-                height: 42.h,
-                width: 336.w,
-                child: TextFormField(
-                  style: TextStyle(
-                      fontSize:12.sp,
-                       fontWeight: FontWeight.w500),
-                  cursorColor: Colors.black,
+//     return     
+//         Container(
+//                 height: 42.h,
+//                 width: 336.w,
+//                 child: TextFormField(
+//                   style: TextStyle(
+//                       fontSize:12.sp,
+//                        fontWeight: FontWeight.w500),
+//                   cursorColor: Colors.black,
               
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 8.h),
+//                   decoration: InputDecoration(
+//                     contentPadding: EdgeInsets.only(left: 8.h),
                   
                  
-                    labelText: 'First Name',
-                    labelStyle: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
-                  ),
-                ),
-              );
-  }
+//                     labelText: 'First Name',
+//                     labelStyle: GoogleFonts.inter(
+//                         textStyle: TextStyle(
+//                             fontSize: 12.sp,
+//                             fontWeight: FontWeight.w400,
+//                             color: Colors.black)),
+//                     focusedBorder: OutlineInputBorder(
+//                         borderSide: BorderSide(color: Colors.black, width: 1.w),
+//                         borderRadius: BorderRadius.circular(5.w)),
+//                     enabledBorder: OutlineInputBorder(
+//                         borderSide: BorderSide(color: Colors.black, width: 1.w),
+//                         borderRadius: BorderRadius.circular(5.w)),
+//                   ),
+//                 ),
+//               );
+//   }
 
-  Container _firstNamecon(double height, double width) {
-    return Container(
-                height: 42.h,
-                width: 336.w,
-                child: TextFormField(
-                  style: TextStyle(
-                      fontSize:12.sp,
-                       fontWeight: FontWeight.w500),
-                  cursorColor: Colors.black,
+//   Container _firstNamecon(double height, double width) {
+//     return Container(
+//                 height: 42.h,
+//                 width: 336.w,
+//                 child: TextFormField(
+//                   style: TextStyle(
+//                       fontSize:12.sp,
+//                        fontWeight: FontWeight.w500),
+//                   cursorColor: Colors.black,
              
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 8.h),
+//                   decoration: InputDecoration(
+//                     contentPadding: EdgeInsets.only(left: 8.h),
                   
                   
-                    labelText: 'Last Name',
-                    labelStyle: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(5.w)),
-                  ),
-                ),
-              );
-  }
-}
+//                     labelText: 'Last Name',
+//                     labelStyle: GoogleFonts.inter(
+//                         textStyle: TextStyle(
+//                             fontSize: 12.sp,
+//                             fontWeight: FontWeight.w400,
+//                             color: Colors.black)),
+//                     focusedBorder: OutlineInputBorder(
+//                         borderSide: BorderSide(color: Colors.black, width: 1.w),
+//                         borderRadius: BorderRadius.circular(5.w)),
+//                     enabledBorder: OutlineInputBorder(
+//                         borderSide: BorderSide(color: Colors.black, width: 1.w),
+//                         borderRadius: BorderRadius.circular(5.w)),
+//                   ),
+//                 ),
+//               );
+//   }
+// }
