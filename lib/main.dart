@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/add_email.dart';
 import 'package:gatello/views/add_mob_no.dart';
@@ -13,6 +14,7 @@ import 'package:gatello/views/set_password.dart';
 import 'package:gatello/views/signup_screen.dart';
 import 'package:gatello/views/splash_screen3.dart';
 import 'package:gatello/views/splash_screen4.dart';
+import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
 import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
@@ -40,14 +42,13 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
        
             appBarTheme: AppBarTheme(
-                
                 shadowColor: Colors.transparent,
                 backgroundColor: Color.fromRGBO(248, 206, 97, 1))
           ),
           home: child,
         );
       },
-     child: Splash4(),
+     child: PersonalChat()
     );
   }
 }

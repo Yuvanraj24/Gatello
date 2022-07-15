@@ -14,6 +14,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  String? _firstName;
+  String? _lastName;
   @override
   Widget build(BuildContext context) {
 

@@ -14,8 +14,7 @@ class AddMobileNumber extends StatefulWidget {
 class _AddMobileNumberState extends State<AddMobileNumber> {
   @override
   Widget build(BuildContext context) {
-    final currentWidth = MediaQuery.of(context).size.width;
-    final currentHeight = MediaQuery.of(context).size.height;
+   
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

@@ -50,25 +50,26 @@ class _SelectBirthdayState extends State<SelectBirthday> {
                 child: Text("Why do I need to provide my date of birth?")),
 
             TextFormField(
-              onTap: () {
-                
-              },
+              onTap: () {},
               decoration: InputDecoration(labelText: "Birthday"),
             ),
             SizedBox(height: 30),
 
-            ElevatedButton(onPressed: (){
-              showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(1980),
-                    lastDate: DateTime(2022)).then((date) {
-                        setState(() {
-                          _dateTime = date;
-                        });
-                        print(_dateTime);
+            ElevatedButton(
+                onPressed: () {
+                  showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1980),
+                          lastDate: DateTime(2022))
+                      .then((date) {
+                    setState(() {
+                      _dateTime = date;
                     });
-            }, child: Text("Date Pick")),
+                    print(_dateTime);
+                  });
+                },
+                child: Text("Date Pick")),
             // DatePickerWidget(
             //   looping: true, // default is not looping
             //   firstDate: DateTime.now(), //DateTime(1960),

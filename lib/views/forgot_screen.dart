@@ -14,12 +14,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: height * 0.07,
+         toolbarHeight:55.h,
           leading: Center(
               child: TextButton(
             onPressed: () {

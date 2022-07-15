@@ -7,13 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class AddEmail extends StatefulWidget {
-  const AddEmail({Key? key}) : super(key: key);
+  const   AddEmail({Key? key}) : super(key: key);
 
   @override
   State<AddEmail> createState() => _AddEmailState();
 }
 
 class _AddEmailState extends State<AddEmail> {
+  String? _email;
   @override
   Widget build(BuildContext context) {
    
@@ -97,10 +98,20 @@ class _AddEmailState extends State<AddEmail> {
                    
                   ),
                 ),
+                // validator: (val){
+                //   if(val!.isEmpty){
+                //     return "Field cant be empty";
+                //   }
+                //   return null;
+                // },
+                // onChanged: (val){
+                //   _email = val;
+                // },
               ),
   Spacer(),
                     ElevatedButton(
               onPressed: () {
+                print("EMAIL : $_email");
                  Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Otp()));
               },

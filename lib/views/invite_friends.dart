@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:hexcolor/hexcolor.dart';
+
+
 
 class InviteFriends extends StatefulWidget {
   const InviteFriends({Key? key}) : super(key: key);
@@ -13,58 +16,57 @@ class InviteFriends extends StatefulWidget {
 class _InviteFriendsState extends State<InviteFriends> {
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-      toolbarHeight:55.h,
-     
-            
-        leading: Center(
-              child: 
-             TextButton(onPressed: (){
-              
-                Navigator.pop(context);
-             }, child: Text('Back',
-           
-             style: GoogleFonts.roboto(
-                          textStyle: TextStyle(
-                              fontSize: 13.sp,
-                           fontWeight: FontWeight.w600,
-                              color:Colors.black)),
-                ),
-               )
+          toolbarHeight: 58.h,
+          leading: Center(
+              child: TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Back',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w600),
             ),
-          ),
+          )),
+        ),
         body: Container(
-          padding: EdgeInsets.only(left: 12.w, right: 12.w, top: 25, 
-         // bottom: 10
-          ),
+          padding: EdgeInsets.only(left: 12.h, right: 12.h, top: 17.h, bottom: 10),
           child: Column(
             children: [
               Container(
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ClipOval(
-                        child: Image.asset(
-             "assets/invite_friends/invite_friends_logo.png",width: 48.w,),
-                      ),
-                      SizedBox(width: 25.w,),
+                      Image.asset(
+                          "assets/invite_friends/invite_friends_logo.png",width: 52.w,height: 52.h,),
+
                       Text(
                         "Invite Your Friends",
                         style: GoogleFonts.fredoka(
-                        textStyle: TextStyle(
-                            fontSize: 20.sp,
-                       fontWeight: FontWeight.w500,
-                            color:Colors.black)),
+                          textStyle: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromRGBO(0, 0, 0, 1),
+                        ),
+                        )
                       ),
-                        SizedBox(width: 56.w,),
-                    Text("Skip",
-                              style: GoogleFonts.fredoka(
-                        textStyle: TextStyle(
-                            fontSize: 12.sp,
-                       fontWeight: FontWeight.w600,
-                            color:HexColor('#646363'))),)
+                      TextButton(
+                          onPressed: () {},
+                          style: TextButton.styleFrom(
+                              primary: Color.fromRGBO(0, 0, 0, 0.44)),
+                          child: Text("Skip",
+                              style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )))
                     ]),
               ),
               SizedBox(height: 13.h),
