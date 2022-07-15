@@ -528,9 +528,8 @@ class _PersonalChatState extends State<PersonalChat> {
 
   @override
   Widget build(BuildContext context) {
-
-    double width =MediaQuery.of(context).size.width;
-     double height =MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
@@ -539,52 +538,77 @@ class _PersonalChatState extends State<PersonalChat> {
                 image: AssetImage(
                     'assets/galetto_background/Gatello Doodle (10) 1 (1).png'),
                 fit: BoxFit.cover)),
-    
         child: Scaffold(
-         resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
-           appBar: AppBar(
-            
-            leading: Transform.translate(
-              offset: Offset(6, 0),
-              child: Padding(
-                padding: EdgeInsets.only(left: 18.w,top: 14.h,bottom: 9.h,
-               // right: 18.w
-                ),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      child: Image(
-                        image: AssetImage(
-                          'assets/left_arrow/Group 598.png',
-                        ),
-                        height: height * 0.18,
-                        width: width * 0.067,
+          appBar: AppBar(
+            leading: Padding(
+              padding: EdgeInsets.only(
+                left: 18.w,bottom: 19.h,top: 24.h
+                // right: 18.w
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  InkWell(
+                    child: Image(
+                      image: AssetImage(
+                        'assets/per_chat_icons/Group 719.png',
                       ),
-                      onTap: () {},
-                    ),
-                    // SizedBox(
-                    //   width: width * 0.045,
-                    // ),
-                    CircleAvatar(
                       
-                      radius: width * 0.03,
-                      backgroundImage: AssetImage('assets/dp_image/Ellipse 3.png'),
-                      backgroundColor: Colors.black,
+                      width:16.w,
                     ),
-                  ],
-                ),
+                    onTap: () {},
+                  ),
+                  // SizedBox(
+                  //   width: 21.w,
+                  // ),
+                  // CircleAvatar(
+                  //   radius: width * 0.03,
+                  //   backgroundImage:
+                  //       AssetImage('assets/dp_image/Ellipse 3.png'),
+                  //   backgroundColor: Colors.black,
+                  // ),
+        //             Container(
+        //              //height: 30.h,
+        //               width: 30.w,
+        //    decoration: BoxDecoration(shape: BoxShape.circle,
+        //    image: DecorationImage( image: AssetImage('assets/per_chat_icons/Group 752.png'))
+        
+        // ),
+        //             )
+                ],
               ),
             ),
             centerTitle: false,
-            titleSpacing: 37.w,
+            titleSpacing: -5.5.w,
             title: Padding(
-              padding: EdgeInsets.only(left: 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              padding: EdgeInsets.only(top: 10.h,bottom: 7.h),
+              child: Row(
+            
+            
                 children: [
-            Text(
+            //SizedBox(width: 1.w,),
+                       Container(
+                      
+                      height: 35.h,
+                        width: 35.w,
+                       decoration: BoxDecoration(
+                color: Colors.black,shape: BoxShape.circle,
+                       image: DecorationImage(
+               image: 
+               AssetImage('assets/per_chat_icons/Group 752.png'),fit: BoxFit.cover)
+                    
+                    ),
+                    
+                      ),
+            
+                      SizedBox(width: 6.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
                         'Angelena',
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
@@ -592,40 +616,53 @@ class _PersonalChatState extends State<PersonalChat> {
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black)),
                       ),
-                  SizedBox(height: 3.h),
-                    Text(
+                      SizedBox(height: 3.h),
+                      Text(
                         'last seen today at 9:21 am',
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
-                                color:Colors.black)),
+                                color: Colors.black)),
                       ),
-    
-    
-    
+                    ],
+                  ),
                 ],
               ),
-    
-              
             ),
-    
             actions: [
-          Row(
-            children: [
-              Image.asset('assets/per_chat_icons/Vector (5).png'),
-              SizedBox(width: 25.w,),
-                 Image.asset('assets/per_chat_icons/Frame.png'),
-                 SizedBox(width: 21.w,),
-            Image.asset('assets/per_chat_icons/Group 600.png'),
-        SizedBox(width: 18.w,)
-            ],
-          ),
-         
+              Padding(
+                    padding: EdgeInsets.only(top: 17.h,bottom: 15.h),
+                child: Row(
+                  children: [
+                    // Image.asset(
+                    //   'assets/per_chat_icons/Vector (5).png',
+                    //   height: 0.88.h,
+                    //   width: 4.17.w,
+                    // ),
+                      Image.asset('assets/per_chat_icons/Vector (5).png'),
+                    SizedBox(
+                      width: 24.w,
+                    ),
+                    Image.asset('assets/per_chat_icons/Group 717.png'),
+                    SizedBox(
+                      width: 24.5.w,
+                    ),
+                    Image.asset('assets/per_chat_icons/Group 718.png'),
+                    SizedBox(
+                      width: 18.w,
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
           body: Container(
-            padding: EdgeInsets.only(left: 12.w,right: 12.w),
+            padding: EdgeInsets.only(
+              left: 12.w,
+              right: 8.w,
+              bottom: 8.h
+            ),
             child: Column(
               children: [
                 ListView.builder(
@@ -635,130 +672,137 @@ class _PersonalChatState extends State<PersonalChat> {
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return Container(
-                      padding:
-                          EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+                      padding: EdgeInsets.only(
+                          left: 14, right: 14, top: 10, bottom: 10),
                       child: Align(
                         alignment: (messages[index].messageType == "receiver"
                             ? Alignment.topLeft
                             : Alignment.topRight),
                         child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: 272.w,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: messages[index].messageType == "receiver"
-                                ? BorderRadius.only(
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15),
-                                    bottomRight: Radius.circular(15))
-                                : BorderRadius.only(
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15),
-                                    bottomLeft: Radius.circular(15)),
-                            color: (messages[index].messageType == "receiver"
-                                ? Colors.grey.shade200
-                                : Color.fromRGBO(248, 206, 97, 1)),
-                          ),
-                          padding: EdgeInsets.all(16),
-                          child: Text(
-                            messages[index].messageContent,
-                            style: GoogleFonts.inter(
-                              textStyle : TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color.fromRGBO(0,0,0,1)
-                              )
-                            )
-                          )
-                        ),
+                            constraints: BoxConstraints(
+                              maxWidth: 272.w,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  messages[index].messageType == "receiver"
+                                      ? BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15),
+                                          bottomRight: Radius.circular(15))
+                                      : BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15),
+                                          bottomLeft: Radius.circular(15)),
+                              color: (messages[index].messageType == "receiver"
+                                  ? Colors.grey.shade200
+                                  : Color.fromRGBO(248, 206, 97, 1)),
+                            ),
+                            padding: EdgeInsets.all(16),
+                            child: Text(messages[index].messageContent,
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1))))),
                       ),
                     );
                   },
                 ),
-      
                 Spacer(),
-         Container(
-                    padding: EdgeInsets.only(left:6,right: 4,bottom: 3),
-      
+                Container(
+                
+                  // height: 36.h,
+                  // padding: EdgeInsets.only(left: 12.w,  right: 12.w),
                   child: Row(
                     children: [
                       Expanded(
-                          child: Container(
-                            height: height*0.05,
-                            width: width*0.7,
-                         padding: EdgeInsets.all(4),
+                        child: Container(
+                        
+                          // height: height * 0.05,
+                          height: 36.h,
+                          //width: width * 0.7,
+                          width: 291.w,
+                        //  padding: EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             color: HexColor('#FFFFFF'),
                             borderRadius: BorderRadius.circular(35.0),
-                            boxShadow:  [
-                              BoxShadow(
-      
-                                  blurRadius: 0.02,
-                                  color: Colors.grey)
+                            boxShadow: [
+                              BoxShadow(blurRadius: 0.02, color: Colors.grey)
                             ],
                           ),
                           child: Row(
                             children: [
-                              SizedBox(width: width*0.02),
-                             InkWell(
-      
-                                child:  Image(image: AssetImage('assets/smiley_icon/Group 703.png'),width: width*0.06,),
-      
+                              SizedBox(width: 10.5.w),
+                              InkWell(
+                                child: Image(
+                                  image: AssetImage(
+                                      'assets/smiley_icon/Group 703.png'),
+                                  width: 20.w,
+                                ),
                                 onTap: () {},
                               ),
-                              SizedBox(width: width*0.03,),
-      
-                                Expanded(child: TextField(
-      
-                        decoration: InputDecoration(
-                    border: InputBorder.none,
-                          contentPadding:EdgeInsets.only(
-      
-                          top:25,
-      
-                          bottom: 9.7) ,
-                          hintText: 'Ping here...',hintStyle: TextStyle(fontSize: width*0.04)),
-      
+                              SizedBox(
+                                width: 10.5.w
+                              ),
+                              Expanded(
+                                  child: TextField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding:
+                          EdgeInsets.only(top: 10.h, bottom: 13.w),
+                                  hintText: 'Ping here...',
+                                  hintStyle: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: HexColor('#9A9A9A'))),
+                                ),
                               )),
                               InkWell(
-      
-                                child:  Image(image: AssetImage('assets/attach_file_icon/Vector@2x.png'),
-      
-                                width: width*0.065,
-                              ),
-      
+                                child: Image(
+                                  image: AssetImage(
+                                      'assets/attach_file_icon/Vector (7).png'),
+                                  width: 18.w,
+                                ),
                                 onTap: () {},
                               ),
-                                SizedBox(width: width*0.06,),
-                                             InkWell(
-      
-                            child: Icon(Icons.camera_alt_outlined,size: width*0.07,),
-      
-                            onTap: () {},
-                          ),
-                           SizedBox(width: width*0.02),
+                          
+                              SizedBox(width:30.w),
+                              
+                              InkWell(
+                                child: Image(
+                                  image: AssetImage(
+                                      'assets/per_chat_icons/Group 751.png'),
+                                  width: 18.w,
+                                ),
+                                onTap: () {},
+                              ),
+                              SizedBox(width:17.w),
                             ],
                           ),
                         ),
                       ),
-      
-                    SizedBox(width: width*0.014,),
-                    Container(
-      
-                      height: height*0.06,
-                      width: width*0.13,
-                      child: Image(image: AssetImage('assets/mic_icon/Frame 74.png'),
-                  height: height*0.2,
-                  width: width*0.10,),
-                    ),
-      
+                      SizedBox(
+                     width: 9.w,
+                      ),
+                      Container(
+                       
+                      
+                       height:48.h,
+                        width: 36.w,
+                        child: Image(
+                          image: AssetImage(
+                            'assets/mic_icon/Frame 74.png',
+                          ),
+                          height: 16.h,
+                          width: 18.w,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                
               ],
             ),
-            
           ),
         ),
       ),

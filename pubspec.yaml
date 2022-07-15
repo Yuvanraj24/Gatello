@@ -88,20 +88,22 @@ flutter:
     - assets/icons_assets/new_group.png
     - assets/right_arrow_button/Frame 226.png
     - assets/left_arrow_button/Group 659.png
-    - assets/left_arrow/Group 598.png
     - assets/galetto_background/Gatello Doodle (10) 1 (1).png
     - assets/mic_icon/Frame 74.png
     - assets/glogo/WhatsApp Image 2022-06-30 at 1.53 1.png
-    - assets/attach_file_icon/Vector@2x.png
+    - assets/attach_file_icon/Vector (7).png
     - assets/camera_icon/Group 704.png
     - assets/smiley_icon/Group 703.png
     - assets/dp_image/Ellipse 3.png
     - assets/forgot_scren_image/Group 677.png
     - assets/email_image/Group 680.png
     - assets/icons_assets/Vector (2).png
-    - assets/per_chat_icons/Frame.png
-    - assets/per_chat_icons/Group 600.png
+    - assets/per_chat_icons/Group 717.png
+    - assets/per_chat_icons/Group 718.png
+    - assets/per_chat_icons/Group 719.png
     - assets/per_chat_icons/Vector (5).png
+    - assets/per_chat_icons/Group 751.png
+    - assets/per_chat_icons/Group 752.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

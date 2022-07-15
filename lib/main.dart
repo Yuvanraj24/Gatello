@@ -19,8 +19,10 @@ import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
-import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
+//import '../assets/per_chat_icons/pesrsonal_chat.dart';
 import 'package:sizer/sizer.dart';
+
+import 'views/tabbar/chats/pesrsonal_chat.dart';
 void main(){
   runApp(MaterialApp(home:MyApp()));
 }
