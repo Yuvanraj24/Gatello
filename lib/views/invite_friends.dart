@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:hexcolor/hexcolor.dart';
+
+
+
 class InviteFriends extends StatefulWidget {
   const InviteFriends({Key? key}) : super(key: key);
 
@@ -12,8 +16,7 @@ class InviteFriends extends StatefulWidget {
 class _InviteFriendsState extends State<InviteFriends> {
   @override
   Widget build(BuildContext context) {
-    // final currentWidth = MediaQuery.of(context).size.width;
-    // final currentHeight = MediaQuery.of(context).size.height;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -33,7 +36,7 @@ class _InviteFriendsState extends State<InviteFriends> {
           )),
         ),
         body: Container(
-          padding: EdgeInsets.only(left: 10, right: 10, top: 17.h, bottom: 10),
+          padding: EdgeInsets.only(left: 12.h, right: 12.h, top: 17.h, bottom: 10),
           child: Column(
             children: [
               Container(
@@ -68,19 +71,27 @@ class _InviteFriendsState extends State<InviteFriends> {
               ),
               SizedBox(height: 13.h),
               Container(
-                height: 36.h,
+                height: 36.h, 
+                width: 337.w,
                 child: TextFormField(
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(top: 15, left: 15),
+           contentPadding: EdgeInsets.only(top:4, right: 10),
                     border: OutlineInputBorder(
-                        borderSide: BorderSide(),
+                     //   borderSide: BorderSide(),
                         borderRadius: BorderRadius.circular(40)),
                     prefixIcon: Icon(Icons.search),
-                    labelStyle: TextStyle(fontSize: 12),
+                  //  labelStyle: TextStyle(fontSize: 12
+                  //),
                     hintText: "Search",
+                    hintStyle: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 14.sp,
+                       fontWeight: FontWeight.w400,
+                            color:HexColor('#0C101D'))),
                   ),
                 ),
               ),
+              SizedBox(height: 21.h,),
               // Expanded(
               //   child: ListView.builder(
               //     itemCount: 5,
@@ -119,59 +130,65 @@ class _InviteFriendsState extends State<InviteFriends> {
                     return Column(
                       children: [
                         ListTile(
-                          contentPadding: EdgeInsets.all(0),
+                          //contentPadding: EdgeInsets.all(0),
                           leading: CircleAvatar(
-                            radius: 23.5.h,
+                            radius: 49,
                             backgroundImage: NetworkImage(
-                                "https://images.pexels.com/photos/733745/pexels-photo-733745.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"),
+ "https://images.pexels.com/photos/733745/pexels-photo-733745.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"),
                           ),
-                          title: Text("Name",
-                          style: GoogleFonts.inter(
-                            textStyle : TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromRGBO(0,0,0,1)
-
-                            )
-                          )),
+                          title: Text("Name",style: 
+                           GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 16.sp,
+                       fontWeight: FontWeight.w500,
+                            color:Colors.black)),),
                           subtitle: Text("Customer",
-                          style: GoogleFonts.inter(
-                            fontSize : 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color.fromRGBO(12, 16, 29, 0.6)
-                          ),),
+                          style:  GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 12.sp,
+                       fontWeight: FontWeight.w400,
+                            color:HexColor('#0C101D'))),),
                           trailing: GestureDetector(
                             child: Image(
                               image: AssetImage(
-                                  "assets/icons_assets/add_friends_button.png"),
-                              fit: BoxFit.fill,
-                            ),
+                                  "assets/icons_assets/add_friends_button.png"),fit: BoxFit.fill,
+                           
+                           
+                           width: 82.w,height: 26.h,),
                           ),
                         ),
-                        Divider(
-                          color: Color.fromRGBO(0, 0, 0, 0.14),
-                          height: 0,
-                          thickness: 0.5,
-                        )
+ 
                       ],
                     );
                   },
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    side: BorderSide(color: Color.fromRGBO(248, 206, 97, 1)),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
-                    fixedSize: Size(180, 40),
-                    primary: Color.fromRGBO(248, 206, 97, 1),
+             ElevatedButton(
+                    onPressed: () {
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => InviteFriends()));
+                    },
+                    child: Text(
+                      'Get started',
+                      style: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black)),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        elevation: 5,
+                        onPrimary: Colors.black,
+                        //  padding: EdgeInsets.all(10),
+                        minimumSize: Size(234.w, 53.h),
+                        primary: Color.fromRGBO(248, 206, 97, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(35),
+                        )),
                   ),
-                  child: Text(
-                    "Get Started",
-                    style: TextStyle(color: Colors.black),
-                  )),
-              
+             
             ],
           ),
         ),

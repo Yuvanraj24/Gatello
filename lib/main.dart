@@ -14,6 +14,7 @@ import 'package:gatello/views/set_password.dart';
 import 'package:gatello/views/signup_screen.dart';
 import 'package:gatello/views/splash_screen3.dart';
 import 'package:gatello/views/splash_screen4.dart';
+import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
 import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-    
+
 
   
 

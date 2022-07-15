@@ -186,11 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 InkWell(
                   child: Text(
                     'Forgot Password?',
-                    // style: TextStyle(
-                    //   fontSize:1.5.h,
-                    //   fontWeight: FontWeight.w400,
-                    //   color: HexColor('#00A3FF')
-                    // ),
+            
                     style: GoogleFonts.inter(
                         textStyle: TextStyle(
                             fontSize: 11.sp,

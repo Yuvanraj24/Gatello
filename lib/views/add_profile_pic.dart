@@ -15,51 +15,43 @@ class AddProfilePic extends StatefulWidget {
 class _AddProfilePicState extends State<AddProfilePic> {
   @override
   Widget build(BuildContext context) {
- 
     return SafeArea(
       child: Scaffold(
-
-         appBar: AppBar(
-    toolbarHeight:55.h,
- 
-          
-      leading: Center(
-            child: 
-           TextButton(onPressed: (){
+        appBar: AppBar(
+          toolbarHeight: 55.h,
+          leading: Center(
+              child: TextButton(
+            onPressed: () {
               Navigator.pop(context);
-           }, child: Text('Back',
-         
-           style: GoogleFonts.roboto(
-                        textStyle: TextStyle(
-                            fontSize: 13.sp,
-                         fontWeight: FontWeight.w600,
-                            color:Colors.black)),
-              ),
-             )
-          ),
+            },
+            child: Text(
+              'Back',
+              style: GoogleFonts.roboto(
+                  textStyle: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black)),
+            ),
+          )),
         ),
         body: Container(
-          padding: EdgeInsets.only(left: 12.w, right: 12.w,
-           top: 85.h,
-            bottom: 51.h),
+          padding:
+              EdgeInsets.only(left: 12.w, right: 12.w, top: 85.h, bottom: 51.h),
           child: Center(
-            child:
-                Column(
+            child: Column(
                 //  crossAxisAlignment: CrossAxisAlignment.center,
-                   children: [
-                    Spacer(),
-              Text(
-                "Add profile photo",
-             
-                     style: GoogleFonts.fredoka(
+                children: [
+                  Spacer(),
+                  Text(
+                    "Add profile photo",
+                    style: GoogleFonts.fredoka(
                         textStyle: TextStyle(
                             fontSize: 28.sp,
-                       fontWeight: FontWeight.w500,
-                            color:Colors.black)),
-              ),
-              SizedBox(height: 12.h),
-           
-               Text(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black)),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
                     'Add a profile photo so that your friends know its you.',
                     style: GoogleFonts.inter(
                         textStyle: TextStyle(
@@ -67,52 +59,50 @@ class _AddProfilePicState extends State<AddProfilePic> {
                             fontWeight: FontWeight.w500,
                             color: HexColor('#646363'))),
                   ),
- 
-                
-             
-              SizedBox(height: 50.h,),
-                 Image.asset(
-              "assets/profile_page/profile_pic_logo.png",
-              width:165.w,
-            ),
-Spacer(),
-                    ElevatedButton(
-              onPressed: () {
-                 Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Otp()));
-              },
-              child: Text(
-                'Add a photo',
-                style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black)),
-              ),
-              style: 
-              ElevatedButton.styleFrom(
-                  elevation: 5,
-                  onPrimary: Colors.black,
-                //  padding: EdgeInsets.all(10),
-                  minimumSize: Size(
-          
-
-              234.w,53.h
+                  SizedBox(
+                    height: 50.h,
                   ),
-                
-                primary: Color.fromRGBO(248, 206, 97, 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(35),
-                  )),
-            ),
-            SizedBox(height: 23.h,),
-               Text('Skip',style: GoogleFonts.inter(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: HexColor('#646363')
-
-               ),)
-            ]),
+                  Image.asset(
+                    "assets/profile_page/profile_pic_logo.png",
+                    width: 165.w,
+                  ),
+                  Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => InviteFriends()));
+                    },
+                    child: Text(
+                      'Add a photo',
+                      style: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black)),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        elevation: 5,
+                        onPrimary: Colors.black,
+                        //  padding: EdgeInsets.all(10),
+                        minimumSize: Size(234.w, 53.h),
+                        primary: Color.fromRGBO(248, 206, 97, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(35),
+                        )),
+                  ),
+                  SizedBox(
+                    height: 23.h,
+                  ),
+                  Text(
+                    'Skip',
+                    style: GoogleFonts.inter(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: HexColor('#646363')),
+                  )
+                ]),
           ),
         ),
       ),

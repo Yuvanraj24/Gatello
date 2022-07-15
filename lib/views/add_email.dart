@@ -80,7 +80,15 @@ class _AddEmailState extends State<AddEmail> {
               
                   width:310.w,
                 child: TextFormField(
+                  cursorColor: HexColor('#0B0B0B'),
                   decoration: InputDecoration(
+                     enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: HexColor('#0B0B0B'))),
+                                  focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: HexColor('#0B0B0B'))),
+                                      
                     labelStyle:   GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontSize: 12.h,
@@ -105,8 +113,8 @@ class _AddEmailState extends State<AddEmail> {
                     ElevatedButton(
               onPressed: () {
                 print("EMAIL : $_email");
-                //  Navigator.push(context,
-                //       MaterialPageRoute(builder: (context) => Otp()));
+                 Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Otp()));
               },
               child: Text(
                 'Continue',

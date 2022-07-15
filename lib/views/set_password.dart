@@ -147,7 +147,7 @@ class SetPassword extends StatefulWidget {
 class  _SetPasswordState extends State<SetPassword> {
   @override
   Widget build(BuildContext context) {
-   
+   // final currentWidth = MediaQuery.of(context).size.width;
   
     var googleFonts = GoogleFonts;
     return SafeArea(
@@ -214,7 +214,15 @@ class  _SetPasswordState extends State<SetPassword> {
                
                   width:310.w,
                     child: TextFormField(
+                      cursorColor:HexColor('#0B0B0B'),
                       decoration: InputDecoration(
+                         enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: HexColor('#0B0B0B'))),
+                                 focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: HexColor('#0B0B0B'))),
+                                      
                         labelStyle:   GoogleFonts.inter(
                         textStyle: TextStyle(
                             fontSize: 12.h,
