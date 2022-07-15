@@ -530,54 +530,135 @@ class _PersonalChatState extends State<PersonalChat> {
     return Scaffold(
       appBar: AppBar(),
       body: Container(
-        child: ListView.builder(
-          itemCount: messages.length,
-          shrinkWrap: true,
-          padding: EdgeInsets.only(top: 10, bottom: 10),
-          physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return Container(
-              padding:
-                  EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-              child: Align(
-                alignment: (messages[index].messageType == "receiver"
-                    ? Alignment.topLeft
-                    : Alignment.topRight),
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxWidth: 272.w,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: messages[index].messageType == "receiver"
-                        ? BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            topRight: Radius.circular(15),
-                            bottomRight: Radius.circular(15))
-                        : BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            topRight: Radius.circular(15),
-                            bottomLeft: Radius.circular(15)),
-                    color: (messages[index].messageType == "receiver"
-                        ? Colors.grey.shade200
-                        : Color.fromRGBO(248, 206, 97, 1)),
-                  ),
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    messages[index].messageContent,
-                    style: GoogleFonts.inter(
-                      textStyle : TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Color.fromRGBO(0,0,0,1)
+        child: Stack(
+          children: [
+            ListView.builder(
+              itemCount: messages.length,
+              shrinkWrap: true,
+              padding: EdgeInsets.only(top: 10, bottom: 10),
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Container(
+                  padding:
+                      EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+                  child: Align(
+                    alignment: (messages[index].messageType == "receiver"
+                        ? Alignment.topLeft
+                        : Alignment.topRight),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 272.w,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: messages[index].messageType == "receiver"
+                            ? BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                                bottomRight: Radius.circular(15))
+                            : BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                                bottomLeft: Radius.circular(15)),
+                        color: (messages[index].messageType == "receiver"
+                            ? Colors.grey.shade200
+                            : Color.fromRGBO(248, 206, 97, 1)),
+                      ),
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        messages[index].messageContent,
+                        style: GoogleFonts.inter(
+                          textStyle : TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Color.fromRGBO(0,0,0,1)
+                          )
+                        )
                       )
-                    )
-                  )
-                ),
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            // Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: Row(
+            //     children: [
+            //       Container(
+            //         width: MediaQuery.of(context).size.width - 55,
+            //         child: Card(
+            //           margin: EdgeInsets.only(left: 3,right: 3,bottom: 8),
+            //           shape: RoundedRectangleBorder(
+            //             borderRadius: BorderRadius.circular(25),
+            //           ),
+            //           child: TextFormField(
+            //             decoration: ,
+            //           )),
+            //       ),
+            //     ],
+            //   ),
+            // )
+
+
+            Align(
+            alignment: Alignment.bottomLeft,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(30)
               ),
-            );
-          },
+              padding: EdgeInsets.only(left: 10,bottom: 10,top: 10),
+              height: 60,
+              width: double.infinity,
+              
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: (){
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Icon(Icons.add, color: Colors.white, size: 20, ),
+                    ),
+                  ),
+                  SizedBox(width: 15,),
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Write message...",
+                        hintStyle: TextStyle(color: Colors.black54),
+                        border: InputBorder.none
+                      ),
+                    ),
+                  ),
+                  FloatingActionButton(
+                    onPressed: (){
+                      
+                    },
+                    child: Icon(Icons.send,color: Colors.white,size: 18,),
+                    backgroundColor: Colors.white,
+                    elevation: 0,
+                  ),
+                  
+                ],
+                
+              ),
+            ),
+          ),
+        
+          ],
         ),
       ),
+    );
+  }
+  Widget bottomSheet(){
+    return Container(
+    
     );
   }
 }
