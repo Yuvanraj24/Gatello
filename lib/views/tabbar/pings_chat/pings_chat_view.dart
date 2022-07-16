@@ -12,7 +12,9 @@ class PingsChatView extends StatefulWidget {
 class _PingsChatViewState extends State<PingsChatView> {
   
   
-  List<PingsChatListModel> tileData = [];
+  List<PingsChatListModel> tileData = [
+
+  ];
 
   @override
   void initState() {
@@ -61,17 +63,13 @@ class _PingsChatViewState extends State<PingsChatView> {
                         onLongPress: (){
                         },
                   child: Container(
-  color: (tileData.contains(index))
-                    ? Colors.blue.withOpacity(0.5)
-                    : Colors.transparent,
+  // color: (tileData.contains(index))
+  //                   ? Colors.blue.withOpacity(0.5)
+  //                   : Colors.transparent,
 
                     child: ListTile(
                           onLongPress: () {
-                 if (!tileData.contains(index)) {
-                      setState(() {
-                   //    tileData.add(index);
-                      });
-                    }
+                 
                   },
                   onTap: () {
                     if (tileData.contains(index)) {
