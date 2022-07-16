@@ -47,7 +47,7 @@ class _Splash3State extends State<Splash3> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image(
-                  image: AssetImage('assets/splash3_image/Group 657.png'),
+                  image: AssetImage('assets/splash3_image/splash3_image.png'),
                   width: width * 0.88,
                   height: height * 0.58,
                 ),
@@ -60,7 +60,7 @@ class _Splash3State extends State<Splash3> {
               children: [
                 GestureDetector(
                   child: Image(
-                    image: AssetImage('assets/left_arrow_button/Group 659.png'),
+                    image: AssetImage('assets/splash3_image/left_arrow.png'),
                     width: width * 0.13,
                     height: height * 0.13,
                   ),
@@ -71,7 +71,7 @@ class _Splash3State extends State<Splash3> {
                 ),
                      GestureDetector(
                        child: Image(
-                  image: AssetImage('assets/right_arrow_button/Frame 226.png'),
+                  image: AssetImage('assets/splash2_image/right_arrow.pngg'),
                   width: width * 0.13,
                   height: height * 0.13,
                 ),

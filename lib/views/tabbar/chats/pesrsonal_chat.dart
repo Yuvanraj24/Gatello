@@ -536,7 +536,7 @@ class _PersonalChatState extends State<PersonalChat> {
             color: Colors.white,
             image: DecorationImage(
                 image: AssetImage(
-                    'assets/galetto_background/Gatello Doodle (10) 1 (1).png'),
+                    'assets/per_chat_icons/chat_background_image.png'),
                 fit: BoxFit.cover)),
         child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -553,30 +553,14 @@ class _PersonalChatState extends State<PersonalChat> {
                   InkWell(
                     child: Image(
                       image: AssetImage(
-                        'assets/per_chat_icons/Group 719.png',
+                        'assets/per_chat_icons/back_icon.png',
                       ),
                       
                       width:16.w,
                     ),
                     onTap: () {},
                   ),
-                  // SizedBox(
-                  //   width: 21.w,
-                  // ),
-                  // CircleAvatar(
-                  //   radius: width * 0.03,
-                  //   backgroundImage:
-                  //       AssetImage('assets/dp_image/Ellipse 3.png'),
-                  //   backgroundColor: Colors.black,
-                  // ),
-        //             Container(
-        //              //height: 30.h,
-        //               width: 30.w,
-        //    decoration: BoxDecoration(shape: BoxShape.circle,
-        //    image: DecorationImage( image: AssetImage('assets/per_chat_icons/Group 752.png'))
-        
-        // ),
-        //             )
+                
                 ],
               ),
             ),
@@ -588,7 +572,7 @@ class _PersonalChatState extends State<PersonalChat> {
             
             
                 children: [
-            //SizedBox(width: 1.w,),
+           
                        Container(
                       
                       height: 35.h,
@@ -597,7 +581,7 @@ class _PersonalChatState extends State<PersonalChat> {
                 color: Colors.black,shape: BoxShape.circle,
                        image: DecorationImage(
                image: 
-               AssetImage('assets/per_chat_icons/Group 752.png'),fit: BoxFit.cover)
+               AssetImage('assets/per_chat_icons/dp_image.png'),fit: BoxFit.cover)
                     
                     ),
                     
@@ -640,15 +624,15 @@ class _PersonalChatState extends State<PersonalChat> {
                     //   height: 0.88.h,
                     //   width: 4.17.w,
                     // ),
-                      Image.asset('assets/per_chat_icons/Vector (5).png'),
+                      Image.asset('assets/per_chat_icons/call_icon.png'),
                     SizedBox(
                       width: 24.w,
                     ),
-                    Image.asset('assets/per_chat_icons/Group 717.png'),
+                    Image.asset('assets/per_chat_icons/video.png'),
                     SizedBox(
                       width: 24.5.w,
                     ),
-                    Image.asset('assets/per_chat_icons/Group 718.png'),
+                    Image.asset('assets/per_chat_icons/menu_icon.png'),
                     SizedBox(
                       width: 18.w,
                     )
@@ -736,7 +720,7 @@ class _PersonalChatState extends State<PersonalChat> {
                               InkWell(
                                 child: Image(
                                   image: AssetImage(
-                                      'assets/smiley_icon/Group 703.png'),
+                                      'assets/per_chat_icons/smiley_icon.png'),
                                   width: 20.w,
                                 ),
                                 onTap: () {},
@@ -761,7 +745,7 @@ class _PersonalChatState extends State<PersonalChat> {
                               InkWell(
                                 child: Image(
                                   image: AssetImage(
-                                      'assets/attach_file_icon/Vector (7).png'),
+                                      'assets/per_chat_icons/attach_file_icon.png'),
                                   width: 18.w,
                                 ),
                                 onTap: () {},
@@ -772,7 +756,7 @@ class _PersonalChatState extends State<PersonalChat> {
                               InkWell(
                                 child: Image(
                                   image: AssetImage(
-                                      'assets/per_chat_icons/Group 751.png'),
+                                      'assets/per_chat_icons/camera.png'),
                                   width: 18.w,
                                 ),
                                 onTap: () {},
@@ -792,7 +776,7 @@ class _PersonalChatState extends State<PersonalChat> {
                         width: 36.w,
                         child: Image(
                           image: AssetImage(
-                            'assets/mic_icon/Frame 74.png',
+                            'assets/per_chat_icons/mic_icon.png',
                           ),
                           height: 16.h,
                           width: 18.w,

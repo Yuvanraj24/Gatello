@@ -18,7 +18,8 @@ pingsChatListData() {
   List<PingsChatListModel> pingsListDetails = [];
 
   PingsChatListModel tileData =
-      PingsChatListModel(name: "", lasttext: "", dp: "", unreadMsg: 0);
+      PingsChatListModel(name: "", lasttext: "", 
+      dp: "", unreadMsg: 0);
 
   //1
   tileData = PingsChatListModel(

@@ -135,7 +135,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                                 ],
                               ),
                               suffixIcon: Image.asset(
-                                "assets/icons_assets/Vector (2).png",
+                                "assets/icons_assets/down_arrow.png",
                                 width: 3.w,
                               ),
                             ),

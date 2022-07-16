@@ -47,7 +47,7 @@ class _Splash2State extends State<Splash2> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image(
-                  image: AssetImage('assets/splash2_image/Group 651.png'),
+                  image: AssetImage('assets/splash2_image/splah2 _image.png'),
                   width: width * 0.88,
                   height: height * 0.58,
                 ),
@@ -60,7 +60,7 @@ class _Splash2State extends State<Splash2> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Image(
-                    image: AssetImage('assets/right_arrow_button/Frame 226.png'),
+                    image: AssetImage('assets/splash2_image/right_arrow.png'),
                     width: width * 0.13,
                     height: height * 0.13,
                   ),

@@ -74,9 +74,9 @@ flutter:
     - assets/invite_friends/invite_friends_logo.png
     - assets/birthday_image/birthday_logo.png
     - assets/icons_assets/green_tick_icon.png
-    - assets/Splash.png
-    - assets/splash2_image/Group 651.png
-    - assets/splash3_image/Group 657.png
+    - assets/splash_1/glogo.png
+    - assets/splash2_image/splah2 _image.png
+    - assets/splash3_image/splash3_image.png
     - assets/icons_assets/add_friends_button.png
     - assets/Gatello_logo/Gatello_temp_logo.png
     - assets/tabbar_icons/chats_image/chats_empty.png
@@ -86,24 +86,26 @@ flutter:
     - assets/tabbar_icons/status_icon.png
     - assets/tabbar_icons/call_icon.png
     - assets/icons_assets/new_group.png
-    - assets/right_arrow_button/Frame 226.png
-    - assets/left_arrow_button/Group 659.png
-    - assets/galetto_background/Gatello Doodle (10) 1 (1).png
-    - assets/mic_icon/Frame 74.png
-    - assets/glogo/WhatsApp Image 2022-06-30 at 1.53 1.png
-    - assets/attach_file_icon/Vector (7).png
-    - assets/camera_icon/Group 704.png
-    - assets/smiley_icon/Group 703.png
-    - assets/dp_image/Ellipse 3.png
-    - assets/forgot_scren_image/Group 677.png
-    - assets/email_image/Group 680.png
-    - assets/icons_assets/Vector (2).png
-    - assets/per_chat_icons/Group 717.png
-    - assets/per_chat_icons/Group 718.png
-    - assets/per_chat_icons/Group 719.png
-    - assets/per_chat_icons/Vector (5).png
-    - assets/per_chat_icons/Group 751.png
-    - assets/per_chat_icons/Group 752.png
+    - assets/splash2_image/right_arrow.png
+    - assets/splash3_image/left_arrow.png
+    - assets/per_chat_icons/chat_background_image.png
+    - assets/per_chat_icons/mic_icon.png
+    - assets/splash_1/glogo.png
+    - assets/per_chat_icons/attach_file_icon.png
+    - assets/camera_icon/camera.png
+    - assets/per_chat_icons/smiley_icon.png
+    - assets/dp_image/dp_icon_male.png
+    - assets/forgot_scren_image/forgot_image.png
+    - assets/email_image/email_icon.png
+    - assets/icons_assets/down_arrow.png
+    - assets/per_chat_icons/video.png
+    - assets/per_chat_icons/menu_icon.png
+    - assets/per_chat_icons/back_icon.png
+    - assets/per_chat_icons/call_icon.png
+    - assets/per_chat_icons/camera.png
+    - assets/per_chat_icons/dp_image.png
+    - assets/linked device image/Gatello_box.png
+    - assets/group_info/search.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
