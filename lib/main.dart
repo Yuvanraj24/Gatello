@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
       return ScreenUtilInit(
         
-      //designSize:  Size(360, 800),
+      designSize:  Size(360, 800),
     minTextAdapt: true,
        splitScreenMode: true,
       builder: (context , child) {
@@ -52,11 +52,9 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-     child: Group_Info()
+     child: Splash4()
     );
   }
 }
-
-
   
 
