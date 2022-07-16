@@ -25,8 +25,8 @@ class _TabbarState extends State<Tabbar> {
               shadowColor: Colors.black,
               leading: Image(
                 image: AssetImage("assets/Gatello_logo/Gatello_temp_logo.png"),
-                width: 112.72.w,
-                height: 41.63.h,
+                width: 42.w,
+                height: 41.6.h,
               ),
               actionsIconTheme:
                   IconThemeData(color: Color.fromRGBO(0, 0, 0, 1)),
@@ -36,13 +36,13 @@ class _TabbarState extends State<Tabbar> {
                     backgroundImage: NetworkImage(
                         "https://c4.wallpaperflare.com/wallpaper/611/838/413/spiderman-hd-4k-superheroes-wallpaper-preview.jpg")),
                 SizedBox(width: 25.w),
-                GestureDetector(
-                    onTap: () {},
-                    child: Image.asset(
-                      "assets/icons_assets/search_icon.png",
-                      width: 14.w,
-                      height: 13.99.h,
-                    )),
+                // GestureDetector(
+                //     onTap: () {},
+                //     child: Image.asset(
+                //       "assets/icons_assets/search_icon.png",
+                //       width: 14.w,
+                //       height: 13.99.h,
+                //     )),
                 //SizedBox(width: 25.w),
                 PopupMenuButton(
                     itemBuilder: (BuildContext context) => [

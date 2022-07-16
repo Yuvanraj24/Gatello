@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gatello/dummy.dart';
+import 'package:gatello/group_info_screen/group_info.dart';
 import 'package:gatello/views/add_email.dart';
 import 'package:gatello/views/add_mob_no.dart';
 import 'package:gatello/views/add_profile_pic.dart';
