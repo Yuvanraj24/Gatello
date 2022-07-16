@@ -97,16 +97,17 @@ class _AddEmailState extends State<AddEmail> {
                     labelText: "EMAIL",
                    
                   ),
+                  validator: (val){
+                  if(val!.isEmpty){
+                    return "Field cant be empty";
+                  }
+                  return null;
+                },
+                onChanged: (val){
+                  _email = val;
+                },
                 ),
-                // validator: (val){
-                //   if(val!.isEmpty){
-                //     return "Field cant be empty";
-                //   }
-                //   return null;
-                // },
-                // onChanged: (val){
-                //   _email = val;
-                // },
+                
               ),
   Spacer(),
                     ElevatedButton(

@@ -21,12 +21,12 @@ import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
-//import '../assets/per_chat_icons/pesrsonal_chat.dart';
+import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
+import 'package:gatello/views/tabbar/test_code/show_bottom_sheet.dart';
 import 'package:sizer/sizer.dart';
-
-import 'views/tabbar/chats/pesrsonal_chat.dart';
 void main(){
-  runApp(MaterialApp(home:MyApp()));
+
+  runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
       return ScreenUtilInit(
         
-      designSize:  Size(360, 800),
+      //designSize:  Size(360, 800),
     minTextAdapt: true,
        splitScreenMode: true,
       builder: (context , child) {

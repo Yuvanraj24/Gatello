@@ -792,4 +792,9 @@ class _PersonalChatState extends State<PersonalChat> {
       ),
     );
   }
+  Widget bottomSheet(){
+    return Container(
+    
+    );
+  }
 }
