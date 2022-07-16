@@ -693,98 +693,7 @@ class _PersonalChatState extends State<PersonalChat> {
                   },
                 ),
                 Spacer(),
-                Container(
-                
-                  // height: 36.h,
-                  // padding: EdgeInsets.only(left: 12.w,  right: 12.w),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                        
-                          // height: height * 0.05,
-                          height: 36.h,
-                          //width: width * 0.7,
-                          width: 291.w,
-                        //  padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: HexColor('#FFFFFF'),
-                            borderRadius: BorderRadius.circular(35.0),
-                            boxShadow: [
-                              BoxShadow(blurRadius: 0.02, color: Colors.grey)
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              SizedBox(width: 10.5.w),
-                              InkWell(
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/per_chat_icons/smiley_icon.png'),
-                                  width: 20.w,
-                                ),
-                                onTap: () {},
-                              ),
-                              SizedBox(
-                                width: 10.5.w
-                              ),
-                              Expanded(
-                                  child: TextField(
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding:
-                          EdgeInsets.only(top: 10.h, bottom: 13.w),
-                                  hintText: 'Ping here...',
-                                  hintStyle: GoogleFonts.inter(
-                                      textStyle: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: HexColor('#9A9A9A'))),
-                                ),
-                              )),
-                              InkWell(
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/per_chat_icons/attach_file_icon.png'),
-                                  width: 18.w,
-                                ),
-                                onTap: () {},
-                              ),
-                          
-                              SizedBox(width:30.w),
-                              
-                              InkWell(
-                                child: Image(
-                                  image: AssetImage(
-                                      'assets/per_chat_icons/camera.png'),
-                                  width: 18.w,
-                                ),
-                                onTap: () {},
-                              ),
-                              SizedBox(width:17.w),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                     width: 9.w,
-                      ),
-                      Container(
-                       
-                      
-                       height:48.h,
-                        width: 36.w,
-                        child: Image(
-                          image: AssetImage(
-                            'assets/per_chat_icons/mic_icon.png',
-                          ),
-                          height: 16.h,
-                          width: 18.w,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                chatTextBar(),
               ],
             ),
           ),
@@ -795,6 +704,108 @@ class _PersonalChatState extends State<PersonalChat> {
   Widget bottomSheet(){
     return Container(
     
+    );
+  }
+}
+
+class chatTextBar extends StatelessWidget {
+  const chatTextBar({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+    
+      // height: 36.h,
+      // padding: EdgeInsets.only(left: 12.w,  right: 12.w),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+            
+              // height: height * 0.05,
+              height: 36.h,
+              //width: width * 0.7,
+              width: 291.w,
+            //  padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: HexColor('#FFFFFF'),
+                borderRadius: BorderRadius.circular(35.0),
+                boxShadow: [
+                  BoxShadow(blurRadius: 0.02, color: Colors.grey)
+                ],
+              ),
+              child: Row(
+                children: [
+                  SizedBox(width: 10.5.w),
+                  InkWell(
+                    child: Image(
+                      image: AssetImage(
+                          'assets/per_chat_icons/smiley_icon.png'),
+                      width: 20.w,
+                    ),
+                    onTap: () {},
+                  ),
+                  SizedBox(
+                    width: 10.5.w
+                  ),
+                  Expanded(
+                      child: TextField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding:
+              EdgeInsets.only(top: 10.h, bottom: 13.w),
+                      hintText: 'Ping here...',
+                      hintStyle: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: HexColor('#9A9A9A'))),
+                    ),
+                  )),
+                  InkWell(
+                    child: Image(
+                      image: AssetImage(
+                          'assets/per_chat_icons/attach_file_icon.png'),
+                      width: 18.w,
+                    ),
+                    onTap: () {},
+                  ),
+              
+                  SizedBox(width:30.w),
+                  
+                  InkWell(
+                    child: Image(
+                      image: AssetImage(
+                          'assets/per_chat_icons/camera.png'),
+                      width: 18.w,
+                    ),
+                    onTap: () {},
+                  ),
+                  SizedBox(width:17.w),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+         width: 9.w,
+          ),
+          Container(
+           
+          
+           height:48.h,
+            width: 36.w,
+            child: Image(
+              image: AssetImage(
+                'assets/per_chat_icons/mic_icon.png',
+              ),
+              height: 16.h,
+              width: 18.w,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

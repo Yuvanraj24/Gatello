@@ -98,7 +98,8 @@ class _PingsChatViewState extends State<PingsChatView> {
                                     fontSize: 14.sp,
                                       color: Color.fromRGBO(12, 16, 29, 0.6),
                                       fontWeight: FontWeight.w400))),
-                          trailing: Column(
+                          trailing:
+                           Column(
                             children: [
                               Text("${11}:${20} AM",
                                   style: GoogleFonts.inter(
