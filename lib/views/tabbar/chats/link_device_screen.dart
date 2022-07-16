@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-
-=======
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
->>>>>>> 13e9769bb33993a872e2d1e25431711c6547fc31
 class LinkedDevices extends StatefulWidget {
   const LinkedDevices({Key? key}) : super(key: key);
 
@@ -16,11 +12,6 @@ class LinkedDevices extends StatefulWidget {
 class _LinkedDevicesState extends State<LinkedDevices> {
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return Scaffold(
-      appBar: AppBar(),
-    );
-=======
    return Scaffold(
 
     appBar: AppBar(
@@ -69,6 +60,5 @@ class _LinkedDevicesState extends State<LinkedDevices> {
       ),
     ),
    );
->>>>>>> 13e9769bb33993a872e2d1e25431711c6547fc31
   }
 }

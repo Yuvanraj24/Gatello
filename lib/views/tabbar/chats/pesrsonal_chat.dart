@@ -558,27 +558,7 @@ class _PersonalChatState extends State<PersonalChat> {
                     ),
                     onTap: () {},
                   ),
-<<<<<<< HEAD
-                  // SizedBox(
-                  //   width: 21.w,
-                  // ),
-                  // CircleAvatar(
-                  //   radius: width * 0.03,
-                  //   backgroundImage:
-                  //       AssetImage('assets/dp_image/Ellipse 3.png'),
-                  //   backgroundColor: Colors.black,
-                  // ),
-                  //             Container(
-                  //              //height: 30.h,
-                  //               width: 30.w,
-                  //    decoration: BoxDecoration(shape: BoxShape.circle,
-                  //    image: DecorationImage( image: AssetImage('assets/per_chat_icons/Group 752.png'))
-
-                  // ),
-                  //             )
-=======
                 
->>>>>>> 13e9769bb33993a872e2d1e25431711c6547fc31
                 ],
               ),
             ),
@@ -588,22 +568,6 @@ class _PersonalChatState extends State<PersonalChat> {
               padding: EdgeInsets.only(top: 10.h, bottom: 7.h),
               child: Row(
                 children: [
-<<<<<<< HEAD
-                  //SizedBox(width: 1.w,),
-                  Container(
-                    height: 35.h,
-                    width: 35.w,
-                    decoration: BoxDecoration(
-                        color: Colors.black,
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: AssetImage(
-                                'assets/per_chat_icons/Group 752.png'),
-                            fit: BoxFit.cover)),
-                  ),
-
-                  SizedBox(width: 6.w),
-=======
            
                        Container(
                       
@@ -620,7 +584,6 @@ class _PersonalChatState extends State<PersonalChat> {
                       ),
             
                       SizedBox(width: 6.w),
->>>>>>> 13e9769bb33993a872e2d1e25431711c6547fc31
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -657,11 +620,7 @@ class _PersonalChatState extends State<PersonalChat> {
                     //   height: 0.88.h,
                     //   width: 4.17.w,
                     // ),
-<<<<<<< HEAD
-                    Image.asset('assets/per_chat_icons/Vector (5).png'),
-=======
                       Image.asset('assets/per_chat_icons/call_icon.png'),
->>>>>>> 13e9769bb33993a872e2d1e25431711c6547fc31
                     SizedBox(
                       width: 24.w,
                     ),
