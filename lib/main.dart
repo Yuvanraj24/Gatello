@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-     child: ShowBottomSheet()
+    child: PersonalChat()
     );
   }
 }

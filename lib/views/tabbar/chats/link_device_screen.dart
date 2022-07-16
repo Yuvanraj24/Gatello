@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class LinkedDevices extends StatefulWidget {
   const LinkedDevices({Key? key}) : super(key: key);
 
@@ -9,12 +10,8 @@ class LinkedDevices extends StatefulWidget {
 class _LinkedDevicesState extends State<LinkedDevices> {
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-
-    appBar: AppBar(
-
-      
-    ),
-   );
+    return Scaffold(
+      appBar: AppBar(),
+    );
   }
 }
