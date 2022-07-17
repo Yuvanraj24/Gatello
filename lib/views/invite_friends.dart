@@ -165,10 +165,10 @@ class _InviteFriendsState extends State<InviteFriends> {
               ),
              ElevatedButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => InviteFriends()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => InviteFriends()));
                     },
                     child: Text(
                       'Get started',

@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/dummy.dart';
 import 'package:gatello/group_info_screen/group_info.dart';
+import 'package:gatello/reset_password.dart';
+import 'package:gatello/select_contact.dart';
 import 'package:gatello/views/add_email.dart';
 import 'package:gatello/views/add_mob_no.dart';
 import 'package:gatello/views/add_profile_pic.dart';
@@ -22,8 +24,6 @@ import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
-import 'package:gatello/views/tabbar/test_code/show_bottom_sheet.dart';
-import 'package:sizer/sizer.dart';
 void main(){
 
   runApp(MyApp());
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
       return ScreenUtilInit(
         
-      designSize:  Size(360, 800),
+     // designSize:  Size(360, 800),
     minTextAdapt: true,
        splitScreenMode: true,
       builder: (context , child) {
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           
           debugShowCheckedModeBanner: false,
         
-          theme: ThemeData(
+            theme: ThemeData(
        
             appBarTheme: AppBarTheme(
                 shadowColor: Colors.transparent,
@@ -52,9 +52,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-     child: Splash4()
+     child: SignUpScreen()
     );
   }
 }
-  
-

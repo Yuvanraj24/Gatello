@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gatello/reset_password.dart';
 import 'package:gatello/views/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -117,9 +118,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               SizedBox(height: 32.h),
               ElevatedButton(
                 onPressed: () {
-                  // Navigator.push(context,
+                  Navigator.push(context,
 
-                  //     MaterialPageRoute(builder: (context) => LoginScreen()));
+                      MaterialPageRoute(builder: (context) => ResetPassword()));
                 },
                 child: Text(
                   'Send request',

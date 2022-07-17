@@ -649,6 +649,35 @@ class _PersonalChatState extends State<PersonalChat> {
             ),
             child: Column(
               children: [
+
+SizedBox(
+  height: 2.h,
+),
+
+                            Container(
+              height: 24.h,
+              width:90.w,
+              decoration: BoxDecoration(
+
+                  //color: Colors.black.withOpacity(0.2)
+                  color: HexColor('#FCFCFC'),
+                  // border: Border.all(color:HexColor('#CACACA'),
+                  // width: 0.2)
+                  borderRadius: BorderRadius.circular(width * 0.01),
+                  boxShadow: [BoxShadow(
+                  color: Color.fromARGB(0, 0, 0, 1))]
+                 ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '20 Dec 2021',
+                    style: TextStyle(
+                        fontSize: width * 0.031, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
                 ListView.builder(
                   itemCount: messages.length,
                   shrinkWrap: true,

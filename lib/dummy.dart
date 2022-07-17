@@ -1,8 +1,5 @@
 // import 'package:flutter/material.dart';
 
-// void main(List<String> args) {
-//   runApp(MaterialApp(home: MyHomePage()));
-// }
 
 // class MyHomePage extends StatefulWidget {
 //   @override
@@ -30,6 +27,7 @@
 //                         _selectedItems.add(index);
 //                       });
 //                     }
+                    
 //                   },
 //                   onTap: () {
 //                     if (_selectedItems.contains(index)) {
@@ -43,6 +41,8 @@
 //             }));
 //   }
 // }
+
+
 
 // import 'package:flutter/material.dart';
 
@@ -176,70 +176,332 @@
 // }
 
 
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
 
 
-class WorkerDetails {
+// class WorkerDetails {
   
-  late String name;
-  late String role;
-  bool isSelected;
-WorkerDetails({required this.name,required this.role,required this.isSelected});
+//   late String name;
+//   late String role;
+//   bool isSelected;
+// WorkerDetails({required this.name,required this.role,required this.isSelected});
 
-  }
+//   }
 
-class ListScreen extends StatelessWidget {
-  const ListScreen({Key? key}) : super(key: key);
+// class ListScreen extends StatelessWidget {
+//   const ListScreen({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
+//   @override
+//   Widget build(BuildContext context) {
 
-      double width=MediaQuery.of(context).size.width;
-    List officeDetails = [
-      WorkerDetails( name: 'Dhina', role: 'Developer',isSelected: false),
-      WorkerDetails( name: 'Lotus', role: 'Data Entry',isSelected: false),
-      WorkerDetails( name: 'Rajesh', role: 'Typist',isSelected: false),
-      WorkerDetails( name: 'Abdul', role: 'Team Leader',isSelected: false),
-      WorkerDetails( name: 'Ayesha', role: 'Manager',isSelected: false),
-    ];
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 40,
-        centerTitle: true,
-        title: const Text('Workers Details',
-        style: TextStyle(fontSize:20,
-            fontWeight: FontWeight.w400 )),
-      ),
-      body: ListView.builder(
-          itemCount: 5, itemBuilder: (context, index) => Card(
+//       double width=MediaQuery.of(context).size.width;
+//     List officeDetails = [
+//       WorkerDetails( name: 'Dhina', role: 'Developer',isSelected: false),
+//       WorkerDetails( name: 'Lotus', role: 'Data Entry',isSelected: false),
+//       WorkerDetails( name: 'Rajesh', role: 'Typist',isSelected: false),
+//       WorkerDetails( name: 'Abdul', role: 'Team Leader',isSelected: false),
+//       WorkerDetails( name: 'Ayesha', role: 'Manager',isSelected: false),
+//     ];
+//     return Scaffold(
+//       appBar: AppBar(
+//         toolbarHeight: 40,
+//         centerTitle: true,
+//         title: const Text('Workers Details',
+//         style: TextStyle(fontSize:20,
+//             fontWeight: FontWeight.w400 )),
+//       ),
+//       body: ListView.builder(
+//           itemCount: 5, itemBuilder: (context, index) => Card(
 
-           color: (officeDetails.contains(String))?Colors.green
-            :Colors.red,
-            child: Container(
+//            color: (officeDetails.contains(String))?Colors.green
+//             :Colors.red,
+//             child: Container(
           
           
-              child: ListTile(
+//               child: ListTile(
 
                
-               onTap: (){
+//                onTap: (){
 
-                if(!officeDetails.contains(index)){
+//                 if(!officeDetails.contains(index)){
                 
-                }
-               },
-              leading: CircleAvatar(child: Text(officeDetails[index].name[0]),),
-                title: Text(officeDetails[index].name,
-                 style: TextStyle(fontSize:width*0.07,
-                fontWeight: FontWeight.w400 )),
-                // trailing: Text(officeDetails[index].role,
-                //  style: TextStyle(fontSize:width*0.06,
-                // fontWeight: FontWeight.w400 ))
-//trailing:isSelected==false ?Icon(Icons.abc_sharp):Icon(Icons.alarm,
+//                 }
+//                },
+//               leading: CircleAvatar(child: Text(officeDetails[index].name[0]),),
+//                 title: Text(officeDetails[index].name,
+//                  style: TextStyle(fontSize:width*0.07,
+//                 fontWeight: FontWeight.w400 )),
+//                 // trailing: Text(officeDetails[index].role,
+//                 //  style: TextStyle(fontSize:width*0.06,
+//                 // fontWeight: FontWeight.w400 ))
+// //trailing:isSelected==false ?Icon(Icons.abc_sharp):Icon(Icons.alarm,
 
-              ),
-            ),
-          )),
-    );
-  }
-}
+//               ),
+//             ),
+//           )),
+//     );
+//   }
+// }
+
+
+// import 'package:flutter/material.dart';
+// import 'package:gatello/views/splash_screen4.dart';
+
+// class Dummy extends StatefulWidget {
+//   const Dummy({Key? key}) : super(key: key);
+
+//   @override
+//   State<Dummy> createState() => _DummyState();
+// }
+
+// class _DummyState extends State<Dummy> {
+
+//     final _formkey = GlobalKey<FormState>();
+//   TextEditingController username = TextEditingController();
+//   TextEditingController password = TextEditingController();
+  
+//   bool checkboxvalue = false;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//         appBar: AppBar(),
+//         resizeToAvoidBottomInset: false,
+//         body: Form(
+//           key: _formkey,
+//           child: Center(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//               children: [
+//                 Text(
+//                   "Login Page",
+//                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+//                 ),
+//                 SizedBox(
+//                   width: 100,
+//                 ),
+//                 Container(
+//                   width: 300,
+//                   color: Colors.blue,
+//                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+//                   child: TextFormField(
+//                     controller: username,
+//                     validator: (value) {
+//                       if (value!.isEmpty) {
+//                         return 'Enter your username';
+//                       }
+//                       if (value.length >= 10) {
+//                         return 'Name too long';
+//                       } else if (value.length <= 5) {
+//                         return 'Name too short';
+//                       }
+//                       return null;
+//                     },
+//                     style: TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 15,
+//                         fontWeight: FontWeight.bold),
+//                     decoration: InputDecoration(
+//                       icon: Icon(
+//                         Icons.person_rounded,
+//                         size: 25,
+//                         color: Colors.white,
+//                       ),
+//                       hintText: 'ENTER USERNAME',
+//                       hintStyle: TextStyle(
+//                           fontSize: 12,
+//                           fontWeight: FontWeight.bold,
+//                           color: Colors.white),
+//                       enabledBorder: OutlineInputBorder(
+//                           borderSide: BorderSide(color: Colors.white, width: 2),
+//                           borderRadius: BorderRadius.circular(
+//                             5,
+//                           )),
+//                     ),
+//                   ),
+//                 ),
+//                 Container(
+//                   width: 300,
+//                   color: Colors.blue,
+//                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+//                   child: TextFormField(
+//                     controller: password,
+//                     obscureText: !checkboxvalue,
+//                     validator: (value) {
+//                       if (value!.isEmpty) {
+//                         return 'please enter the password';
+//                       } else if (value.length >= 10) {
+//                         return 'name too long';
+//                       } else if (value.length <= 5) {
+//                         return 'name too short';
+//                       }
+//                       return null;
+//                     },
+//                     style: TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 15,
+//                         fontWeight: FontWeight.bold),
+//                     decoration: InputDecoration(
+//                       icon: Icon(
+//                         Icons.lock,
+//                         size: 25,
+//                         color: Colors.white,
+//                       ),
+//                       hintText: 'ENTER PASSWORD',
+//                       hintStyle: TextStyle(
+//                           fontSize: 12,
+//                           fontWeight: FontWeight.bold,
+//                           color: Colors.white),
+//                       enabledBorder: OutlineInputBorder(
+//                           borderSide: BorderSide(color: Colors.white, width: 2),
+//                           borderRadius: BorderRadius.circular(
+//                             5,
+//                           )),
+//                     ),
+//                   ),
+//                 ),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     SizedBox(
+//                       width: 15,
+//                     ),
+//                     Checkbox(
+//                       value: checkboxvalue,
+//                       focusColor: Colors.pink,
+//                       hoverColor: Colors.pink,
+//                       fillColor: MaterialStateColor.resolveWith(
+//                         (states) {
+//                           if (states.contains(MaterialState.selected)) {
+//                             return Colors
+//                                 .pink; // the color when checkbox is selected;
+//                           }
+//                           return Colors
+//                               .blue; //the color when checkbox is unselected;
+//                         },
+//                       ),
+//                       onChanged: (value) {
+//                         setState(() {
+//                           checkboxvalue = value!;
+//                         });
+//                       },
+//                       checkColor: Colors.blue,
+//                     ),
+//                     Text(
+//                       "Show Password",
+//                       style: TextStyle(
+//                         color: Colors.pink,
+//                         fontWeight: FontWeight.bold,
+//                         fontSize: 13,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//                 OutlinedButton(
+//                     onPressed: () {
+//                       if (_formkey.currentState!.validate()) {
+//                         Navigator.push(
+//                             context,
+//                             MaterialPageRoute(
+//                                 builder: (context) => Splash4())
+//                                 );
+//                       } else {
+//                         showDialog(
+//                             context: context,
+//                             builder: (context) {
+//                               return Dialog(
+//                                 child: Text("Login Failed"),
+//                               );
+//                             });
+//                       }
+//                     },
+//                     child: Text(
+//                       'Login',
+//                       style: TextStyle(color: Colors.blue, fontSize: 20),
+//                     )),
+//               ],
+//             ),
+//           ),
+//         ));
+//   }
+// }
+
+
+
+
+
+// String? defaultValidator({required String? value, required String type, String? message}) {
+//   if (value == null || value.trim() == "" || value.isEmpty || value.length < 1) {
+//     if (message != null) {
+//       return message;
+//     } else {
+//       return '$type should contain atleast 1 characters or above';
+//     }
+//   }
+//   return null;
+// }
+
+// String? usernameValidator(String? value) {
+//   String userPattern = r'(^[a-zA-Z0-9]{4,20}$)';
+//   if (value == null || regex(pattern: userPattern, input: value) == false) {
+//     return 'Username should contain 4 to 20 characters';
+//   }
+//   return null;
+// }
+
+// String? emailValidator(String? value) {
+//   String emailPattern = r"^[a-zA-Z0-9.!#$%&'+=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$";
+//   if (value == null || regex(pattern: emailPattern, input: value) == false) {
+//     return 'Enter the correct email id';
+//   }
+//   return null;
+// }
+
+// String? passwordValidator({required String? value, String? message}) {
+//   String passwordPattern = r'(^(?=.[a-z])(?=.\d)(?=.*[@#%-])[A-Za-z\d@#%-]{6,}$)';
+//   if (value == null || regex(pattern: passwordPattern, input: value) == false) {
+//     if (message != null) {
+//       return message;
+//     } else {
+//       return 'Password should contain 8 and above characters, at least one uppercase letter, one lowercase letter, one number and one symbol';
+//     }
+//   }
+//   return null;
+// }
+
+// String? phoneValidator(String? value) {
+//   String phonePattern = r'(^(\+\d{1,3}[- ]?)?\d{10}$)';
+//   // r'((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))';
+//   if (value == null || regex(pattern: phonePattern, input: value) == false) {
+//     return 'Enter the correct phone number';
+//   }
+//   return null;
+// }
+
+// String? otpValidator(String? value) {
+//   String otpPattern = r'(^[0-9]{6}$)';
+//   if (value == null || regex(pattern: otpPattern, input: value) == false) {
+//     return 'Enter the correct OTP';
+//   }
+//   return null;
+// }
+
+// String? intValidator(String? value, String type) {
+//   if (value == null || (int.tryParse(value) == null && int.tryParse(value).toString().length < 1)) {
+//     return '$type must be numeric(integer) and should contain more than 1 digits!';
+//   }
+//   return null;
+// }
+
+
+// String validateEmail(String value) {
+//     Pattern pattern =
+//         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+//         r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+//         r"{0,253}[a-zA-Z0-9])?)*$";
+//     RegExp regex = new RegExp(pattern);
+//     if (!regex.hasMatch(value) || value == null)
+//       return 'Enter a valid email address';
+//     else
+//       return null;
+//   }
