@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 
+import '../validator/validator.dart';
 import 'login_screen.dart';
 
 class CreateUsername extends StatefulWidget {
@@ -105,6 +106,7 @@ class _CreateUsernameState extends State<CreateUsername> {
                           onPressed: () {},
                         ),
                       ),
+                      validator: (value) => usernameValidator(value),
                     ),
                   ),
                   Image.asset(

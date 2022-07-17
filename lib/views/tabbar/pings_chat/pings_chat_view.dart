@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/core/models/pings_chat_model/pings_chats_list_model.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 class PingsChatView extends StatefulWidget {
   const PingsChatView({Key? key}) : super(key: key);
 
@@ -10,11 +11,9 @@ class PingsChatView extends StatefulWidget {
 }
 
 class _PingsChatViewState extends State<PingsChatView> {
-  
-  
-  List<PingsChatListModel> tileData = [
-
-  ];
+  var isSelected = false;
+  var mycolor = Colors.white;
+  List<PingsChatListModel> tileData = [];
 
   @override
   void initState() {
@@ -51,7 +50,8 @@ class _PingsChatViewState extends State<PingsChatView> {
                   ],
                 ),
               ))
-   : Container(
+          : Container(
+            
               color: Color.fromRGBO(26, 52, 130, 0.06),
               child: ListView.builder(
                 itemCount: tileData.length,
@@ -59,43 +59,43 @@ class _PingsChatViewState extends State<PingsChatView> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 2),
                     child: InkWell(
-                        onTap: (){},
-                        onLongPress: (){
-                        },
-                  child: Container(
-  // color: (tileData.contains(index))
-  //                   ? Colors.blue.withOpacity(0.5)
-  //                   : Colors.transparent,
+                      onTap: () {},
+                      onLongPress: () {},
+                      child: Container(
+                        // color: (tileData.contains(index))
+                        //                   ? Colors.blue.withOpacity(0.5)
+                        //                   : Colors.transparent,
 
-                    child: ListTile(
+                        child: ListTile(
                           onLongPress: () {
-                 
-                  },
-                  onTap: () {
-                    if (tileData.contains(index)) {
-                      setState(() {
-                        tileData.removeWhere((val) => val == index);
-                      });
-                    }
-                  },
-        tileColor: Colors.white,
-                 contentPadding: EdgeInsets.all(10),
-    leading: CircleAvatar(        radius: 25.5.h,
-                            backgroundImage: NetworkImage(
-              tileData[index].dp),
+                            toggleSelection();
+                          },
+                          onTap: () {
+                            if (tileData.contains(index)) {
+                              setState(() {
+                                tileData.removeWhere((val) => val == index);
+                              });
+                            }
+                          },
+                          tileColor: Colors.white,
+                          contentPadding: EdgeInsets.all(10),
+                          leading: CircleAvatar(
+                            radius: 25.5.h,
+                            backgroundImage: NetworkImage(tileData[index].dp),
                           ),
+                          selected: isSelected,
                           title: Text(
                             tileData[index].name,
                             style: GoogleFonts.inter(
                                 textStyle: TextStyle(
-                                  fontSize: 16.sp,
+                                    fontSize: 16.sp,
                                     color: Color.fromRGBO(0, 0, 0, 1),
                                     fontWeight: FontWeight.w700)),
                           ),
                           subtitle: Text(tileData[index].lasttext,
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
-                                    fontSize: 14.sp,
+                                      fontSize: 14.sp,
                                       color: Color.fromRGBO(12, 16, 29, 0.6),
                                       fontWeight: FontWeight.w400))),
                           trailing: Column(
@@ -119,19 +119,19 @@ class _PingsChatViewState extends State<PingsChatView> {
                                   width: 22.w,
                                   height: 22.h,
                                   child: Center(
-                                    child:
-                                        Text(tileData[index].unreadMsg.toString(),
-                                            style: GoogleFonts.inter(
-                                              textStyle: TextStyle(
-                                                  fontSize: 11.sp,
-                                                  color: Color.fromRGBO(0, 0, 0, 1),
-                                                  fontWeight: FontWeight.w400),
-                                            )),
+                                    child: Text(
+                                        tileData[index].unreadMsg.toString(),
+                                        style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                              fontSize: 11.sp,
+                                              color: Color.fromRGBO(0, 0, 0, 1),
+                                              fontWeight: FontWeight.w400),
+                                        )),
                                   )),
                             ],
                           ),
                         ),
-                  ),
+                      ),
                     ),
                   );
                 },
@@ -143,4 +143,16 @@ class _PingsChatViewState extends State<PingsChatView> {
           child: Image.asset("assets/icons_assets/chat_icon_floating.png")),
     );
   }
+   void toggleSelection() {
+    setState(() {
+      if (isSelected) {
+        mycolor=Colors.white;
+        isSelected = false;
+      } else {
+        mycolor=Colors.red;
+        isSelected = true;
+      }
+    });
+  }
 }
+

@@ -4,6 +4,8 @@ import 'package:gatello/views/add_email.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../validator/validator.dart';
+
 class AddMobileNumber extends StatefulWidget {
   const AddMobileNumber({Key? key}) : super(key: key);
 
@@ -12,11 +14,12 @@ class AddMobileNumber extends StatefulWidget {
 }
 
 class _AddMobileNumberState extends State<AddMobileNumber> {
+  String countryCode = '+91';
   @override
   Widget build(BuildContext context) {
-   
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           toolbarHeight: 55.h,
           leading: Center(
@@ -101,8 +104,8 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                                   color: HexColor('#646363'))),
                         ),
                         Container(
-                         // color: Colors.pink.shade100,
-                         height: 43.h,
+                          // color: Colors.pink.shade100,
+                          height: 43.h,
                           child: TextFormField(
                             decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
@@ -145,17 +148,19 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                         Row(
                           children: [
                             Container(
-                              //   color: Colors.blue,
+                                //   color: Colors.blue,
                                 // height: 80,
                                 width: 51.w,
                                 child: TextFormField(
                                   decoration: InputDecoration(
                                       enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: HexColor('#0B0B0B'), width: 1.12.w)),
+                                              color: HexColor('#0B0B0B'),
+                                              width: 1.12.w)),
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: HexColor('#0B0B0B'), width: 1.12.w)),
+                                              color: HexColor('#0B0B0B'),
+                                              width: 1.12.w)),
                                       prefixIcon: Center(
                                           child: Text("+${91}",
                                               style: GoogleFonts.roboto(
@@ -172,20 +177,23 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                               // color: Colors.cyan,
                               width: 265.w,
                               child: TextFormField(
-                                cursorWidth: 2,
-                                cursorColor: HexColor('#0B0B0B'),
-                                decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: HexColor('#0B0B0B'), width: 1.12.w)),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: HexColor('#0B0B0B'), width: 1.12.w)),
-                                  // disabledBorder: UnderlineInputBorder(
-                                  //     borderSide: BorderSide(color:HexColor('#0B0B0B'))
-                                  //   ),
-                                ),
-                              ),
+                                  cursorWidth: 2,
+                                  cursorColor: HexColor('#0B0B0B'),
+                                  decoration: InputDecoration(
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: HexColor('#0B0B0B'),
+                                            width: 1.12.w)),
+                                    focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: HexColor('#0B0B0B'),
+                                            width: 1.12.w)),
+                                    // disabledBorder: UnderlineInputBorder(
+                                    //     borderSide: BorderSide(color:HexColor('#0B0B0B'))
+                                    //   ),
+                                  ),
+                                  validator: (value) => phoneValidator(
+                                      countryCode + " " + value!)),
                             ),
                           ],
                         ),

@@ -14,53 +14,49 @@ class Otp extends StatefulWidget {
 }
 
 class _OtpState extends State<Otp> {
-OtpFieldController _otpController=OtpFieldController();
+  OtpFieldController _otpController = OtpFieldController();
+  String otpText = "";
+  
   @override
   Widget build(BuildContext context) {
-   // double height = MediaQuery.of(context).size.height;
+    // double height = MediaQuery.of(context).size.height;
     double curWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-
-     appBar: AppBar(
-    toolbarHeight:55.h,
- 
-          
-      leading: Center(
-            child: 
-           TextButton(onPressed: (){
+        appBar: AppBar(
+          toolbarHeight: 55.h,
+          leading: Center(
+              child: TextButton(
+            onPressed: () {
               Navigator.pop(context);
-           }, child: Text('Back',
-         
-           style: GoogleFonts.roboto(
-                        textStyle: TextStyle(
-                            fontSize: 13.sp,
-                         fontWeight: FontWeight.w600,
-                            color:Colors.black)),
-              ),
-             )
-          ),
+            },
+            child: Text(
+              'Back',
+              style: GoogleFonts.roboto(
+                  textStyle: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black)),
+            ),
+          )),
         ),
         body: Container(
-          padding: EdgeInsets.only(left: 12.w, 
-          right: 12.w,
-           top: 163.h, bottom: 35.h),
+          padding: EdgeInsets.only(
+              left: 12.w, right: 12.w, top: 163.h, bottom: 35.h),
           child: Center(
-            child:
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center, children: [
-              Text(
-                "Enter confirmation code",
-             
-                     style: GoogleFonts.fredoka(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Enter confirmation code",
+                    style: GoogleFonts.fredoka(
                         textStyle: TextStyle(
                             fontSize: 28.sp,
-                       fontWeight: FontWeight.w500,
-                            color:Colors.black)),
-              ),
-              SizedBox(height: 9.h),
-           
-               Text(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black)),
+                  ),
+                  SizedBox(height: 9.h),
+                  Text(
                     'Enter the code we sent to',
                     style: GoogleFonts.inter(
                         textStyle: TextStyle(
@@ -68,97 +64,86 @@ OtpFieldController _otpController=OtpFieldController();
                             fontWeight: FontWeight.w500,
                             color: HexColor('#646363'))),
                   ),
-                   SizedBox(height: 16.h),
-               Text(
-                '98745 32789',
-             
-                     style: GoogleFonts.roboto(
+                  SizedBox(height: 16.h),
+                  Text(
+                    '98745 32789',
+                    style: GoogleFonts.roboto(
                         textStyle: TextStyle(
                             fontSize: 20.sp,
-                       fontWeight: FontWeight.w700,
-                            color:Colors.black)),
-              ),
-             
-              SizedBox(height:29.h),
-              Container(
-       
-
-      
-      height: 81.h,
-      child: OTPTextField(
-      isDense: true,
-      
-   
-                controller: _otpController,
-              
-           
-                length: 4,
-             
-                fieldStyle: FieldStyle.underline,
-               contentPadding: EdgeInsets.all(17.h),
-          
-           
-             width: curWidth*0.68,
-
-            fieldWidth: 46.w,
-         otpFieldStyle: OtpFieldStyle(
-          
-      backgroundColor : Colors.transparent,
-       borderColor : Colors.pink,
-     focusBorderColor : Colors.black,
-     
-     enabledBorderColor : Colors.black,
-     errorBorderColor : Colors.red,
-         ),
-               // outlineBorderRadius: 5,
-                style:   GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 32.sp,
-                       fontWeight: FontWeight.w600,
-                            color:Colors.black)),
-                onChanged: (pin) {
-                  print("Changed: " + pin);
-                },
-                onCompleted: (pin) {
-                 print("Completed: " + pin);
-                }
-                ),
-      ),
-   Spacer(),
-                    ElevatedButton(
-              onPressed: () {
-                 Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddProfilePic()));
-              },
-              child: Text(
-                'Continue',
-                style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                             color: Colors.black)),
-              ),
-              style: 
-              ElevatedButton.styleFrom(
-                  elevation: 5,
-                  onPrimary: Colors.black,
-               
-                  minimumSize: Size(
-          
-
-              234.w,53.h
                   ),
-                
-                primary: Color.fromRGBO(248, 206, 97, 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(35),
-                  )),
-            ),
-               
-            ]),
+                  SizedBox(height: 29.h),
+                  Container(
+                    height: 81.h,
+                    child: OTPTextField(
+                      isDense: true,
+
+                      controller: _otpController,
+
+                      length: 4,
+
+                      fieldStyle: FieldStyle.underline,
+                      contentPadding: EdgeInsets.all(17.h),
+
+                      width: curWidth * 0.68,
+
+                      fieldWidth: 46.w,
+                      otpFieldStyle: OtpFieldStyle(
+                        backgroundColor: Colors.transparent,
+                        borderColor: Colors.pink,
+                        focusBorderColor: Colors.black,
+                        enabledBorderColor: Colors.black,
+                        errorBorderColor: Colors.red,
+                      ),
+                      // outlineBorderRadius: 5,
+                      style: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                              fontSize: 32.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black)),
+                      onChanged: (pin) {
+                        print("Changed: " + pin);
+                      },
+                      onCompleted: (pin) {
+                        otpText = pin;
+                        //return pressEvent();
+                      },
+                    ),
+                  ),
+                  Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddProfilePic()));
+                    },
+                    child: Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black)),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        elevation: 5,
+                        onPrimary: Colors.black,
+                        minimumSize: Size(234.w, 53.h),
+                        primary: Color.fromRGBO(248, 206, 97, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(35),
+                        )),
+                  ),
+                ]),
           ),
         ),
       ),
     );
+  }
+  
+  Widget pressEvent() {
+    return Container();
   }
 }
