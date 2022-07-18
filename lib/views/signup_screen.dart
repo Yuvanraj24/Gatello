@@ -73,7 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 SizedBox(height: 39.h),
                 Container(
-                  //  color: Colors.blue,
+                 
                   height: 42.h,
                   width: 336.w,
                   child: TextFormField(
