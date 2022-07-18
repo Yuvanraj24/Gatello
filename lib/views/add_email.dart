@@ -16,12 +16,17 @@ class AddEmail extends StatefulWidget {
 }
 
 class _AddEmailState extends State<AddEmail> {
+<<<<<<< HEAD
+  TextEditingController _emailController = TextEditingController();
+=======
     final _formKey = GlobalKey<FormState>();
   TextEditingController _emailController =TextEditingController();
+>>>>>>> 1e73108858ce6d6ec0e8f5dc9729231e22424e7d
   String? _email;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -41,6 +46,81 @@ class _AddEmailState extends State<AddEmail> {
             ),
           )),
         ),
+<<<<<<< HEAD
+        body: Container(
+          padding: EdgeInsets.only(
+              left: 12.w, right: 12.w, top: 163.h, bottom: 35.h),
+          child: Center(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Add your email address",
+                    style: GoogleFonts.fredoka(
+                        textStyle: TextStyle(
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black)),
+                  ),
+                  SizedBox(height: 9.h),
+                  Text(
+                    'This can help recover your account if you',
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 13.h,
+                            fontWeight: FontWeight.w500,
+                            color: HexColor('#646363'))),
+                  ),
+                  SizedBox(width: 14.h),
+                  Text(
+                    'forget your password!',
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 13.h,
+                            fontWeight: FontWeight.w500,
+                            color: HexColor('#646363'))),
+                  ),
+                  SizedBox(
+                    height: 14.h,
+                  ),
+                  Container(
+                    width: 310.w,
+                    child: TextFormField(
+                      cursorColor: HexColor('#0B0B0B'),
+                      decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: HexColor('#0B0B0B'))),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: HexColor('#0B0B0B'))),
+                        labelStyle: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                                fontSize: 12.h,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black)),
+                        labelText: "EMAIL",
+
+                      ),
+                      controller: _emailController,
+                      validator: (value) => emailValidator(value),
+                      onSaved: (val) {
+                       _email = _emailController.text;
+                      },
+                    ),
+                  ),
+                  Spacer(),
+                  Text(_emailController.text,style: TextStyle(
+                    color: Colors.black
+                  )),
+                  ElevatedButton(
+                    onPressed: () {
+                      print("EMAIL : ${_email}");
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) => Otp()));
+                    },
+                    child: Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+=======
         body: Form(
          // autovalidateMode: AutovalidateMode.always,
           key: _formKey,
@@ -54,6 +134,7 @@ class _AddEmailState extends State<AddEmail> {
                     Text(
                       "Add your email address",
                       style: GoogleFonts.fredoka(
+>>>>>>> 1e73108858ce6d6ec0e8f5dc9729231e22424e7d
                           textStyle: TextStyle(
                               fontSize: 28.sp,
                               fontWeight: FontWeight.w500,

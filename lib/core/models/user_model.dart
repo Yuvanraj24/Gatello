@@ -1,17 +1,15 @@
-<<<<<<< HEAD
-class api{
-  
-}
-=======
+// To parse this JSON data, do
+//
+//     final userDetails = userDetailsFromJson(jsonString);
 
 import 'dart:convert';
 
-LoginModel LoginModelFromJson(String str) => LoginModel.fromJson(json.decode(str));
+UserDetails userDetailsFromJson(String str) => UserDetails.fromJson(json.decode(str));
 
-String LoginModelToJson(LoginModel data) => json.encode(data.toJson());
+String userDetailsToJson(UserDetails data) => json.encode(data.toJson());
 
-class LoginModel {
-  LoginModel({
+class UserDetails {
+  UserDetails({
     required this.status,
     required this.message,
     required this.result,
@@ -23,7 +21,7 @@ class LoginModel {
   Result result;
   Error error;
 
-  factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
+  factory UserDetails.fromJson(Map<String, dynamic> json) => UserDetails(
         status: json["status"],
         message: json["message"],
         result: Result.fromJson(json["result"]),
@@ -48,25 +46,28 @@ class Error {
 
 class Result {
   Result({
+    required this.id,
     required this.userId,
-    required this.email,
-    required this.rootFolderId,
+    required this.profileUrl,
+    required this.username,
   });
 
+  String id;
   String userId;
-  String email;
-  String rootFolderId;
+  String? profileUrl;
+  String username;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
+        id: json["_id"],
         userId: json["user_id"],
-        email: json["email"],
-        rootFolderId: json["root_folder_id"],
+        profileUrl: json["profile_url"] == null ? null : json["profile_url"],
+        username: json["username"],
       );
 
   Map<String, dynamic> toJson() => {
+        "_id": id,
         "user_id": userId,
-        "email": email,
-        "root_folder_id": rootFolderId,
+        "profile_url": profileUrl == null ? null : profileUrl,
+        "username": username,
       };
 }
->>>>>>> 1e73108858ce6d6ec0e8f5dc9729231e22424e7d

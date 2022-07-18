@@ -367,14 +367,14 @@ SizedBox(
                                                 color: Color.fromRGBO(
                                                     0, 0, 0, 1)))),
                                     Positioned(
-                                      right:  1,
+                                      right: 1,
                                       bottom: 1,
                                       child: Text("3:30 PM",
                                           style: GoogleFonts.inter(
-                                            fontSize: 10.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: Color.fromRGBO(12, 16, 29, 0.6)
-                                          )),
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: Color.fromRGBO(
+                                                  12, 16, 29, 0.6))),
                                     )
                                   ],
                                 )),
