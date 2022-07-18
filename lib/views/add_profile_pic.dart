@@ -89,10 +89,7 @@ class _AddProfilePicState extends State<AddProfilePic> {
                   ElevatedButton(
                     onPressed: () {
                         pickimage();
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => InviteFriends()));
+                    
                     },
                     child: Text(
                       'Add a photo',
@@ -115,12 +112,23 @@ class _AddProfilePicState extends State<AddProfilePic> {
                   SizedBox(
                     height: 23.h,
                   ),
-                  Text(
-                    'Skip',
-                    style: GoogleFonts.inter(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: HexColor('#646363')),
+                  InkWell(
+                    child: Text(
+                      'Skip',
+                      style: GoogleFonts.inter(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: HexColor('#646363')),
+                        
+                    ),
+                    onTap: (){
+  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => InviteFriends()));
+
+
+                    },
                   )
                 ]),
           ),

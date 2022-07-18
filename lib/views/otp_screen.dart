@@ -74,43 +74,43 @@ class _OtpState extends State<Otp> {
                             color: Colors.black)),
                   ),
                   SizedBox(height: 29.h),
-                  Container(
-                    height: 81.h,
-                    child: OTPTextField(
-                      isDense: true,
+                  // Container(
+                  //   height: 81.h,
+                  //   child: OTPTextField(
+                  //     isDense: true,
 
-                      controller: _otpController,
+                  //     controller: _otpController,
 
-                      length: 4,
+                  //     length: 4,
 
-                      fieldStyle: FieldStyle.underline,
-                      contentPadding: EdgeInsets.all(17.h),
+                  //     fieldStyle: FieldStyle.underline,
+                  //     contentPadding: EdgeInsets.all(17.h),
 
-                      width: curWidth * 0.68,
+                  //     width: curWidth * 0.68,
 
-                      fieldWidth: 46.w,
-                      otpFieldStyle: OtpFieldStyle(
-                        backgroundColor: Colors.transparent,
-                        borderColor: Colors.pink,
-                        focusBorderColor: Colors.black,
-                        enabledBorderColor: Colors.black,
-                        errorBorderColor: Colors.red,
-                      ),
-                      // outlineBorderRadius: 5,
-                      style: GoogleFonts.inter(
-                          textStyle: TextStyle(
-                              fontSize: 32.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black)),
-                      onChanged: (pin) {
-                        print("Changed: " + pin);
-                      },
-                      onCompleted: (pin) {
-                        otpText = pin;
-                        //return pressEvent();
-                      },
-                    ),
-                  ),
+                  //     fieldWidth: 46.w,
+                  //     otpFieldStyle: OtpFieldStyle(
+                  //       backgroundColor: Colors.transparent,
+                  //       borderColor: Colors.pink,
+                  //       focusBorderColor: Colors.black,
+                  //       enabledBorderColor: Colors.black,
+                  //       errorBorderColor: Colors.red,
+                  //     ),
+                  //     // outlineBorderRadius: 5,
+                  //     style: GoogleFonts.inter(
+                  //         textStyle: TextStyle(
+                  //             fontSize: 32.sp,
+                  //             fontWeight: FontWeight.w600,
+                  //             color: Colors.black)),
+                  //     onChanged: (pin) {
+                  //       print("Changed: " + pin);
+                  //     },
+                  //     onCompleted: (pin) {
+                  //       otpText = pin;
+                  //       //return pressEvent();
+                  //     },
+                  //   ),
+                  // ),
                   Spacer(),
                   ElevatedButton(
                     onPressed: () {

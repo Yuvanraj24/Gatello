@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gatello/reset_password.dart';
 import 'package:gatello/views/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+import '../validator/validator.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -12,6 +15,8 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+   final _formkey = GlobalKey<FormState>();
+  TextEditingController _forgotController = TextEditingController();
   @override
   Widget build(BuildContext context) {
 
@@ -81,6 +86,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 height: 41.h,
                 width: 336.w,
                 child: TextFormField(
+  validator: (value) => forgotPasswordValidator(value),
+                  controller: _forgotController,
                   cursorColor: Colors.black,
                   decoration: InputDecoration(
                     contentPadding:
@@ -94,8 +101,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                     hintText: '@email.com',
                     hintStyle:
-                 
-
                         GoogleFonts.roboto(
                             textStyle: TextStyle(
                                 fontSize: 13.sp,
@@ -117,9 +122,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               SizedBox(height: 32.h),
               ElevatedButton(
                 onPressed: () {
-                  // Navigator.push(context,
+                  Navigator.push(context,
 
-                  //     MaterialPageRoute(builder: (context) => LoginScreen()));
+                      MaterialPageRoute(builder: (context) => ResetPassword()));
                 },
                 child: Text(
                   'Send request',

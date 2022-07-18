@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gatello/group_info_screen/group_info.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -68,7 +69,12 @@ class _PersonalChatState extends State<PersonalChat> {
                             ),
                             width: 16.w,
                           ),
-                          onTap: () {},
+                          onTap: () {
+
+
+                              Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Group_Info()));
+                          },
                         ),
                       ],
                     ),
@@ -261,6 +267,41 @@ class _PersonalChatState extends State<PersonalChat> {
             padding: EdgeInsets.only(bottom: 8.h),
             child: Stack(
               children: [
+
+SizedBox(
+  height: 2.h,
+),
+
+                            Row(
+
+                              mainAxisAlignment:MainAxisAlignment.center,
+                              children: [
+                                Container(
+              height: 24.h,
+              width:90.w,
+              decoration: BoxDecoration(
+
+                  //color: Colors.black.withOpacity(0.2)
+                  color: HexColor('#FCFCFC'),
+                  // border: Border.all(color:HexColor('#CACACA'),
+                  // width: 0.2)
+                  borderRadius: BorderRadius.circular(width * 0.01),
+                  boxShadow: [BoxShadow(
+                  color: Color.fromARGB(0, 0, 0, 1))]
+                 ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '20 Dec 2021',
+                    style: TextStyle(
+                        fontSize: width * 0.031, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+                              ],
+                            ),
                 ListView.builder(
                   itemCount: messages.length,
                   shrinkWrap: true,
@@ -284,6 +325,8 @@ class _PersonalChatState extends State<PersonalChat> {
                           });
                         },
                         child: Container(
+
+                           padding:EdgeInsets.only(left: 15.w,right: 15.w),
                           color: mycolor,
                           child: Align(
                             alignment:
@@ -291,6 +334,7 @@ class _PersonalChatState extends State<PersonalChat> {
                                     ? Alignment.topLeft
                                     : Alignment.topRight),
                             child: Container(
+                             
                                 constraints: BoxConstraints(
                                   minWidth: 100.w,
                                   maxWidth: 272.w,

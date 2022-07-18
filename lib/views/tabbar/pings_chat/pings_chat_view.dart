@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/core/models/pings_chat_model/pings_chats_list_model.dart';
+import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PingsChatView extends StatefulWidget {
@@ -11,13 +12,12 @@ class PingsChatView extends StatefulWidget {
 }
 
 class _PingsChatViewState extends State<PingsChatView> {
+  List<PingsChatListModel> tileData = [];
   var isSelected = false;
   var mycolor = Colors.white;
-  List<PingsChatListModel> tileData = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     tileData = pingsChatListData();
   }
@@ -51,7 +51,6 @@ class _PingsChatViewState extends State<PingsChatView> {
                 ),
               ))
           : Container(
-            
               color: Color.fromRGBO(26, 52, 130, 0.06),
               child: ListView.builder(
                 itemCount: tileData.length,
@@ -75,6 +74,9 @@ class _PingsChatViewState extends State<PingsChatView> {
                               setState(() {
                                 tileData.removeWhere((val) => val == index);
                               });
+                            }else{
+                                Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => PersonalChat()));
                             }
                           },
                           tileColor: Colors.white,
@@ -143,16 +145,16 @@ class _PingsChatViewState extends State<PingsChatView> {
           child: Image.asset("assets/icons_assets/chat_icon_floating.png")),
     );
   }
-   void toggleSelection() {
+
+  void toggleSelection() {
     setState(() {
       if (isSelected) {
-        mycolor=Colors.white;
+        mycolor = Colors.white;
         isSelected = false;
       } else {
-        mycolor=Colors.red;
+        mycolor = Colors.red;
         isSelected = true;
       }
     });
   }
 }
-

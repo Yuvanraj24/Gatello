@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/dummy.dart';
-
+import 'package:gatello/group_info_screen/group_info.dart';
+import 'package:gatello/reset_password.dart';
+import 'package:gatello/select_contact.dart';
 import 'package:gatello/views/add_email.dart';
 import 'package:gatello/views/add_mob_no.dart';
 import 'package:gatello/views/add_profile_pic.dart';
@@ -16,22 +18,25 @@ import 'package:gatello/views/set_password.dart';
 import 'package:gatello/views/signup_screen.dart';
 import 'package:gatello/views/splash_screen3.dart';
 import 'package:gatello/views/splash_screen4.dart';
-import 'package:gatello/views/tabbar/chats/selected_contact.dart';
 import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
 import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
+<<<<<<< HEAD
 import 'package:gatello/views/tabbar/test_code/home.dart';
 import 'package:gatello/views/tabbar/test_code/show_bottom_sheet.dart';
 import 'package:gatello/views/tabbar/test_code/sing_in_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+=======
+void main(){
+>>>>>>> 1e73108858ce6d6ec0e8f5dc9729231e22424e7d
 
-void main() {
   runApp(MyApp());
 }
+<<<<<<< HEAD
 
  const String ip = 'http://3.108.219.188:5000';
   const String signUpip = '$ip/signup';
@@ -45,6 +50,9 @@ void main() {
 class MyApp extends StatefulWidget {
   static const IconData phone =
       IconData(0xf4b8, fontFamily: "", fontPackage: "");
+=======
+class MyApp extends StatelessWidget {
+>>>>>>> 1e73108858ce6d6ec0e8f5dc9729231e22424e7d
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -54,6 +62,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return ScreenUtilInit(
       designSize: Size(360, 800),
       minTextAdapt: true,
@@ -95,5 +104,28 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _loginStatus = preferences.getInt("value")!;
     });
+=======
+      return ScreenUtilInit(
+        
+     // designSize:  Size(360, 800),
+    minTextAdapt: true,
+       splitScreenMode: true,
+      builder: (context , child) {
+        return MaterialApp(
+          
+          debugShowCheckedModeBanner: false,
+        
+            theme: ThemeData(
+       
+            appBarTheme: AppBarTheme(
+                shadowColor: Colors.transparent,
+                backgroundColor: Color.fromRGBO(248, 206, 97, 1))
+          ),
+          home: child,
+        );
+      },
+     child: ResetPassword()
+    );
+>>>>>>> 1e73108858ce6d6ec0e8f5dc9729231e22424e7d
   }
 }

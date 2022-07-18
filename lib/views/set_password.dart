@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/add_mob_no.dart';
 
@@ -27,6 +28,7 @@ class  _SetPasswordState extends State<SetPassword> {
     var googleFonts = GoogleFonts;
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
          appBar: AppBar(
     toolbarHeight:55.h,
  
@@ -91,6 +93,7 @@ class  _SetPasswordState extends State<SetPassword> {
                  
                     width:310.w,
                       child: TextFormField(
+                        controller: _setPassword,
                         cursorColor:HexColor('#0B0B0B'),
                         decoration: InputDecoration(
                            enabledBorder: UnderlineInputBorder(
@@ -116,8 +119,9 @@ class  _SetPasswordState extends State<SetPassword> {
                           
                         ),
                         
-                        validator: (value) => passwordValidator(value: value),
+                      validator: (value) => passwordValidator(value: value),
                       ),
+                      
                     ),
                     Image.asset(
                       "assets/icons_assets/green_tick_icon.png",
@@ -126,11 +130,35 @@ class  _SetPasswordState extends State<SetPassword> {
                     ),
                   ],
                 ),
+                // FlutterPwValidator(
+                //     controller: _setPassword,
+                //     minLength: 3,
+                //     uppercaseCharCount: 2,
+                //     numericCharCount: 3,
+                //     specialCharCount: 1,
+                //     normalCharCount: 3,
+                //     width: 400,
+                //     height: 150,
+                //     onSuccess: () {
+                //       print("MATCHED");
+                //       ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+                //           content: new Text("Password is matched")));
+                //     },
+                //     onFail: () {
+                //       print("NOT MATCHED");
+                //     },
+                //   ),
            Spacer(),
                       ElevatedButton(
                 onPressed: () {
-                   Navigator.push(context,
+if (_formKey.currentState!.validate()) {
+    Navigator.push(context,
                         MaterialPageRoute(builder: (context) => AddMobileNumber()));
+} else {
+  return null;
+}
+
+                  
                 },
                 child: Text(
                   'Continue',
