@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hexcolor/hexcolor.dart';
 
+import '../validator/validator.dart';
 import 'forgot_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -31,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
           key: _formkey,
           child: Container(
             padding:
-                EdgeInsets.only(bottom: 220.h, top: 188.h, left: 12.w, right: 12.w),
+                EdgeInsets.only(bottom: 180.h, top: 120.h, left: 12.w, right: 12.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -126,7 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       //     return 'Must be at 8 characters and contain at least one Letter, one number ';
                       //   }
                       // },
-
+   validator: (value) => phoneValidator(value),
+                                        
                       // validator: (value) {
                       //   if
 
@@ -169,16 +171,33 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 42.h,
                   width: 336.w,
                   child: TextFormField(
-            validator: (value) {
-                        if (value!.length >= 8) {
-                          if (RegExp(r'^[0-9]+$').hasMatch(value) &&
-                              RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
-                            return null;
-                          }
-                        } else {
-                          return 'Must be at 8 characters and contain at least one Letter, one number ';
-                        }
-                      },
+
+validator: (value)=> passwordValidator(value: value),
+
+
+
+
+//                   validator: (value){
+// if (value!.isEmpty) {
+//   return 'Please enter your number';
+
+// } else {
+
+//   return null;
+  
+// }
+
+//                   },
+            // validator: (value) {
+            //             if (value!.length >= 8) {
+            //               if (RegExp(r'^[0-9]+$').hasMatch(value) &&
+            //                   RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
+            //                 return null;
+            //               }
+            //             } else {
+            //               return 'Must be at 8 characters and contain at least one Letter, one number ';
+            //             }
+            //           },
                       //      validator: (value) {
                       //   if (_password.text ==
                       //       _mobileNumber.text) {
@@ -242,21 +261,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 
                   onPressed: () {
         
-                       if (_formkey.currentState!.validate()) {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => Splash4())
-                        //         );
-                      } else {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                child: Text("Login Failed"),
-                              );
-                            });
-                      }
+    
+                      //  if (_formkey.currentState!.validate()) {
+                      //   // Navigator.push(
+                      //   //     context,
+                      //   //     MaterialPageRoute(
+                      //   //         builder: (context) => Splash4())
+                      //   //         );
+                      // } else {
+                      //   showDialog(
+                      //       context: context,
+                      //       builder: (context) {
+                      //         return Dialog(
+                      //           child: Text("Login Failed"),
+                      //         );
+                      //       });
+                      // }
+    //  Navigator.push(
+    //                         context,
+    //                         MaterialPageRoute(
+    //                             builder: (context) => SignUpScreen()));
+
                   },
                   child: Text(
                     'Login',

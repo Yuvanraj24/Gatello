@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/group_info_screen/participants.dart';
+import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../select_contact.dart';
 import 'group_info_list_model.dart';
 
 class Group_Info extends StatefulWidget {
@@ -46,7 +48,10 @@ class _Group_InfoState extends State<Group_Info> {
                     ),
                     width: 16.w,
                   ),
-                  onTap: () {},
+                  onTap: () {
+
+                          Navigator.pop(context);
+                  },
                 ),
               ],
             ),
@@ -217,11 +222,19 @@ class _Group_InfoState extends State<Group_Info> {
                         SizedBox(width: 42.w),
                         Column(
                           children: [
-                            Image(
-                              image: AssetImage(
-                                'assets/group_info/add contants.png',
+                            InkWell(
+                              child: Image(
+                                image: AssetImage(
+                                  'assets/group_info/add contants.png',
+                                ),
+                                width: 42.w,
                               ),
-                              width: 42.w,
+
+                              onTap: (){
+
+                                  Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => SelectContact()));
+                              },
                             ),
                             SizedBox(height: 11.h),
                             Text(

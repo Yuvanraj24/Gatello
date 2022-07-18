@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/invite_friends.dart';
 import 'package:gatello/views/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter/services.dart';
+
 
 class AddProfilePic extends StatefulWidget {
   const AddProfilePic({Key? key}) : super(key: key);
@@ -13,6 +18,20 @@ class AddProfilePic extends StatefulWidget {
 }
 
 class _AddProfilePicState extends State<AddProfilePic> {
+  File? image;
+  Future pickimage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (image == null) return;
+      final temporaryImage = File(image.path);
+      setState(() {
+        this.image = temporaryImage;
+      });
+    } on PlatformException catch (e) {
+      print('unable to pick image $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,10 +88,8 @@ class _AddProfilePicState extends State<AddProfilePic> {
                   Spacer(),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => InviteFriends()));
+                        pickimage();
+                    
                     },
                     child: Text(
                       'Add a photo',
@@ -95,12 +112,23 @@ class _AddProfilePicState extends State<AddProfilePic> {
                   SizedBox(
                     height: 23.h,
                   ),
-                  Text(
-                    'Skip',
-                    style: GoogleFonts.inter(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: HexColor('#646363')),
+                  InkWell(
+                    child: Text(
+                      'Skip',
+                      style: GoogleFonts.inter(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: HexColor('#646363')),
+                        
+                    ),
+                    onTap: (){
+  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => InviteFriends()));
+
+
+                    },
                   )
                 ]),
           ),
