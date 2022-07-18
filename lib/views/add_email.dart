@@ -15,11 +15,14 @@ class AddEmail extends StatefulWidget {
 }
 
 class _AddEmailState extends State<AddEmail> {
+  TextEditingController _emailController = TextEditingController();
   String? _email;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           toolbarHeight: 55.h,
           leading: Center(
@@ -90,18 +93,22 @@ class _AddEmailState extends State<AddEmail> {
                         labelText: "EMAIL",
 
                       ),
+                      controller: _emailController,
                       validator: (value) => emailValidator(value),
-                      onChanged: (val) {
-                        _email = val;
+                      onSaved: (val) {
+                       _email = _emailController.text;
                       },
                     ),
                   ),
                   Spacer(),
+                  Text(_emailController.text,style: TextStyle(
+                    color: Colors.black
+                  )),
                   ElevatedButton(
                     onPressed: () {
-                      print("EMAIL : $_email");
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Otp()));
+                      print("EMAIL : ${_email}");
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) => Otp()));
                     },
                     child: Text(
                       'Continue',

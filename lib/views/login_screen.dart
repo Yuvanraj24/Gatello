@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:ui';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +8,9 @@ import 'package:gatello/views/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
 import 'forgot_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,8 +21,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController phonenumber = TextEditingController();
-  TextEditingController password = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  late String phone, password;
+  bool isLoading = false;
+  TextEditingController _phoneNumberController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  late ScaffoldMessengerState scaffoldMessenger;
   @override
   Widget build(BuildContext context) {
     // double height = MediaQuery.of(context).size.height;
@@ -27,8 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          padding:
-              EdgeInsets.only(bottom: 220.h, top: 188.h, left: 12.w, right: 12.w),
+          padding: EdgeInsets.only(
+              bottom: 220.h, top: 188.h, left: 12.w, right: 12.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -113,10 +122,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 42.h,
                 width: 336.w,
                 child: TextFormField(
-                  style: TextStyle(
-                      fontSize:15.sp, fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
                   cursorColor: Colors.black,
-                  controller: phonenumber,
+                  controller: _phoneNumberController,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 10),
                     prefix: Text(
@@ -135,14 +144,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.black)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                       // borderRadius: BorderRadius.circular(5.w)
-                   borderRadius: BorderRadius.circular(6)
-                      ),
+                        // borderRadius: BorderRadius.circular(5.w)
+                        borderRadius: BorderRadius.circular(6)),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                      //  borderRadius: BorderRadius.circular(5.w)
-                      borderRadius: BorderRadius.circular(6)
-                    ),
+                        //  borderRadius: BorderRadius.circular(5.w)
+                        borderRadius: BorderRadius.circular(6)),
                   ),
                 ),
               ),
@@ -151,14 +158,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 42.h,
                 width: 336.w,
                 child: TextFormField(
-                  style: TextStyle(
-                      fontSize:12.sp,
-                       fontWeight: FontWeight.w500),
+                  style:
+                      TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500),
                   cursorColor: Colors.black,
-                  controller: phonenumber,
+                  controller: _passwordController,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 8.h),
-                  
                     suffixIcon: Icon(
                       Icons.visibility,
                       size: 18.sp,
@@ -172,39 +177,48 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.black)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                         borderRadius: BorderRadius.circular(6)
-                        ),
+                        borderRadius: BorderRadius.circular(6)),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        borderRadius: BorderRadius.circular(6)
-                        ),
+                        borderRadius: BorderRadius.circular(6)),
                   ),
                 ),
               ),
               SizedBox(height: 13.h),
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                 InkWell(
-                  child: Text(
-                    'Forgot Password?',
-            
-                    style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w400,
-                            color: HexColor('#00A3FF'))),
-                  ),
-onTap:(){
-
-   Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
-}
-
-                ),
+                    child: Text(
+                      'Forgot Password?',
+                      style: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w400,
+                              color: HexColor('#00A3FF'))),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgotPasswordScreen()));
+                    }),
               ]),
               SizedBox(height: 13.h),
               ElevatedButton(
-              
-                onPressed: () {},
+                onPressed: () {
+                  if (isLoading) {
+                    return;
+                  }
+                  if (_phoneNumberController.text.isEmpty ||
+                      _passwordController.text.isEmpty) {
+                    scaffoldMessenger.showSnackBar(
+                        SnackBar(content: Text("Please Fill all fileds")));
+                    return;
+                  }
+                  login(_phoneNumberController.text, _passwordController.text);
+                  setState(() {
+                    isLoading = true;
+                  });
+                },
                 child: Text(
                   'Login',
                   style: GoogleFonts.inter(
@@ -214,7 +228,7 @@ onTap:(){
                           color: Colors.black)),
                 ),
                 style: ElevatedButton.styleFrom(
-                  elevation: 0,
+                    elevation: 0,
                     // padding: EdgeInsets.all(10),
                     minimumSize: Size(336.w, 43.h),
                     primary: HexColor('#F8CE61'),
@@ -264,5 +278,46 @@ onTap:(){
         ),
       ),
     );
+  }
+
+  login(email, password) async {
+    Map data = {'phone': phone, 'password': password};
+    print(data.toString());
+    final response = await http.post(Uri.parse(loginip),
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: data,
+        encoding: Encoding.getByName("utf-8"));
+    setState(() {
+      isLoading = false;
+    });
+    if (response.statusCode == 200) {
+      Map<String, dynamic> resposne = jsonDecode(response.body);
+      if (!resposne['error']) {
+        Map<String, dynamic> user = resposne['data'];
+        print(" User name ${user['id']}");
+        savePref(1, user['name'], user['email'], user['id']);
+        Navigator.pushReplacementNamed(context, "/home");
+      } else {
+        print(" ${resposne['message']}");
+      }
+      scaffoldMessenger
+          .showSnackBar(SnackBar(content: Text("${resposne['message']}")));
+    } else {
+      scaffoldMessenger
+          .showSnackBar(SnackBar(content: Text("Please try again!")));
+    }
+  }
+
+  savePref(int value, String name, String email, int id) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    preferences.setInt("value", value);
+    preferences.setString("name", name);
+    preferences.setString("email", email);
+    preferences.setString("id", id.toString());
+    preferences.commit();
   }
 }
