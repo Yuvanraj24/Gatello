@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/core/models/pings_chat_model/pings_chats_list_model.dart';
+import 'package:gatello/select_contact.dart';
 import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -80,12 +81,19 @@ class _PingsChatViewState extends State<PingsChatView> {
                             }
                           },
                           tileColor: Colors.white,
-                          contentPadding: EdgeInsets.all(10),
-                          leading: CircleAvatar(
+                          contentPadding: EdgeInsets.only(left: 10,
+                          right: 10,
+                          top: 7,
+                          bottom: 7
+                          ),
+                        //  contentPadding: EdgeInsets.all(10),
+                          leading:
+                           CircleAvatar(
                             radius: 25.5.h,
                             backgroundImage: NetworkImage(tileData[index].dp),
                           ),
                           selected: isSelected,
+                      
                           title: Text(
                             tileData[index].name,
                             style: GoogleFonts.inter(
@@ -140,7 +148,11 @@ class _PingsChatViewState extends State<PingsChatView> {
               ),
             ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+ Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => SelectContact()));
+
+          },
           backgroundColor: Color.fromRGBO(248, 206, 97, 1),
           child: Image.asset("assets/icons_assets/chat_icon_floating.png")),
     );

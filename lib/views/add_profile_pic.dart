@@ -37,7 +37,7 @@ class _AddProfilePicState extends State<AddProfilePic> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 55.h,
+        
           leading: Center(
               child: TextButton(
             onPressed: () {
@@ -55,83 +55,91 @@ class _AddProfilePicState extends State<AddProfilePic> {
         ),
         body: Container(
           padding:
-              EdgeInsets.only(left: 12.w, right: 12.w, top: 85.h, bottom: 51.h),
-          child: Center(
-            child: Column(
-                //  crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Spacer(),
-                  Text(
-                    "Add profile photo",
-                    style: GoogleFonts.fredoka(
-                        textStyle: TextStyle(
-                            fontSize: 28.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    'Add a profile photo so that your friends know its you.',
-                    style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 13.h,
-                            fontWeight: FontWeight.w500,
-                            color: HexColor('#646363'))),
-                  ),
-                  SizedBox(
-                    height: 50.h,
-                  ),
-                  Image.asset(
-                    "assets/profile_page/profile_pic_logo.png",
-                    width: 165.w,
-                  ),
-                  Spacer(),
-                  ElevatedButton(
-                    onPressed: () {
-                        pickimage();
-                    
-                    },
-                    child: Text(
-                      'Add a photo',
+              EdgeInsets.only(left: 12.w, 
+              right: 12.w, 
+              top: 150.h, 
+           bottom: 51.h
+              ),
+          child: Column(
+              //  crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+            
+                Text(
+                  "Add profile photo",
+                  style: GoogleFonts.fredoka(
+                      textStyle: TextStyle(
+                          fontSize: 28.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black)),
+                ),
+                SizedBox(height: 12.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Add a profile photo so that your friends know its you.',
                       style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black)),
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
+                              color: HexColor('#646363'))),
                     ),
-                    style: ElevatedButton.styleFrom(
-                        elevation: 5,
-                        onPrimary: Colors.black,
-                        //  padding: EdgeInsets.all(10),
-                        minimumSize: Size(234.w, 53.h),
-                        primary: Color.fromRGBO(248, 206, 97, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(35),
-                        )),
+                  ],
+                ),
+                SizedBox(
+                  height: 30.h,
+                ),
+                Image.asset(
+                  "assets/profile_page/profile_pic_logo.png",
+                  width: 165.w,
+                ),
+                
+                Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                      pickimage();
+                  
+                  },
+                  child: Text(
+                    'Add a photo',
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black)),
                   ),
-                  SizedBox(
-                    height: 23.h,
+                  style: ElevatedButton.styleFrom(
+                      elevation: 5,
+                      onPrimary: Colors.black,
+                      //  padding: EdgeInsets.all(10),
+                      minimumSize: Size(234.w, 48.h),
+                      primary: Color.fromRGBO(248, 206, 97, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(35),
+                      )),
+                ),
+                SizedBox(
+                  height: 23.h,
+                ),
+                InkWell(
+                  child: Text(
+                    'Skip',
+                    style: GoogleFonts.inter(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: HexColor('#646363')),
+                      
                   ),
-                  InkWell(
-                    child: Text(
-                      'Skip',
-                      style: GoogleFonts.inter(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: HexColor('#646363')),
-                        
-                    ),
-                    onTap: (){
+                  onTap: (){
   Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => InviteFriends()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InviteFriends()));
 
 
-                    },
-                  )
-                ]),
-          ),
+                  },
+                )
+              ]),
         ),
       ),
     );

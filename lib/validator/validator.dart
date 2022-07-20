@@ -21,7 +21,7 @@ String? usernameValidator(String? value) {
   return null;
 }
 String? emailValidator(String? value) {
-  if (value == null || value.isEmpty || !value.contains('@gmail.com')) {
+  if (value == null || value.isEmpty || !value.contains('.com')) {
     return 'Invalid Email';
   }
   return null;

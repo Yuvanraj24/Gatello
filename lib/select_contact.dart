@@ -17,7 +17,6 @@ class _SelectContactState extends State<SelectContact> {
     super.initState();
     tileData = selectInfoListData();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

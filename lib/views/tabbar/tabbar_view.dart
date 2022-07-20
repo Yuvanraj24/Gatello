@@ -16,26 +16,49 @@ class _TabbarState extends State<Tabbar> {
     return SafeArea(
       child: DefaultTabController(
         initialIndex: 1,
-        length:5,
+        length: 5,
         child: SafeArea(
           child: Scaffold(
             appBar: AppBar(
-               toolbarHeight: 79.h,
+       
+              toolbarHeight: 79.h,
               elevation: 20,
               shadowColor: Colors.black,
-              leading: Image(
-                image: AssetImage("assets/Gatello_logo/Gatello_temp_logo.png"),
-                width: 42.w,
-                height: 41.6.h,
+              leading: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Gatello',
+                    style: TextStyle(fontSize: 18.sp, color: Colors.black),
+                  ),
+                ],
               ),
               actionsIconTheme:
                   IconThemeData(color: Color.fromRGBO(0, 0, 0, 1)),
               actions: [
-                CircleAvatar(
-                    radius: 22.h,
-                    backgroundImage: NetworkImage(
-                        "https://c4.wallpaperflare.com/wallpaper/611/838/413/spiderman-hd-4k-superheroes-wallpaper-preview.jpg")),
-                SizedBox(width: 25.w),
+                Row(
+                  children: [
+                    Container(
+                      height: 35.h,
+                      width: 35.w,
+                      decoration: BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image:
+                                  AssetImage('assets/per_chat_icons/dp_image.png'),
+                              fit: BoxFit.fitWidth)),
+                    ),
+
+                    SizedBox(width: 15.w,),
+                     Image.asset('assets/group_info/search.png'),
+                  ],
+                ),
+                // CircleAvatar(
+                //     radius: 22.h,
+                //     backgroundImage: NetworkImage(
+                //         "https://c4.wallpaperflare.com/wallpaper/611/838/413/spiderman-hd-4k-superheroes-wallpaper-preview.jpg")),
+               
                 // GestureDetector(
                 //     onTap: () {},
                 //     child: Image.asset(
@@ -44,98 +67,91 @@ class _TabbarState extends State<Tabbar> {
                 //       height: 13.99.h,
                 //     )),
                 //SizedBox(width: 25.w),
-                PopupMenuButton(
-                    itemBuilder: (BuildContext context) => [
-                          PopupMenuItem(
-                              child: Container(
-                            width: 130.w,
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                    "assets/icons_assets/chat_icon_floating.png"),
-                                SizedBox(
-                                  width: 12.w,
-                                ),
-                                Text(
-                                  "New Group",
-                                  style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Color.fromRGBO(0, 0, 0, 1),
-                                      
-                                    )
-                                  )
-                                  )
-                              ],
-                            ),
-                          )),
-                          PopupMenuItem(child: Container(
-                            width: 130.w,
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                    "assets/icons_assets/chat_icon_floating.png"),
-                                SizedBox(
-                                  width: 12.w,
-                                ),
-                                Text(
-                                  "Linked devices",
-                                  style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Color.fromRGBO(0, 0, 0, 1),
-                                      
-                                    )
-                                  )
-                                  )
-                              ],
-                            ),
-                          )),
-                          PopupMenuItem(child: Container(
-                            width: 130.w,
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                    "assets/icons_assets/chat_icon_floating.png"),
-                                SizedBox(
-                                  width: 12.w,
-                                ),
-                                Text(
-                                  "Invite friends",
-                                  style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Color.fromRGBO(0, 0, 0, 1),
-                                      
-                                    )
-                                  )
-                                  )
-                              ],
-                            ),
-                          )),
-                          PopupMenuItem(child: Container(
-                            width: 130.w,
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                    "assets/icons_assets/chat_icon_floating.png"),
-                                SizedBox(
-                                  width: 12.w,
-                                ),
-                                Text(
-                                  "Settings",
-                                  style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Color.fromRGBO(0, 0, 0, 1),
-                                      
-                                    )
-                                  )
-                                  )
-                              ],
-                            ),
-                          ))
-                        ]),
+                
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: PopupMenuButton(
+                   
+                    iconSize: 25.h,
+                      itemBuilder: (BuildContext context) => [
+                            PopupMenuItem(
+                                child: Container(
+                              width: 130.w,
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                      "assets/icons_assets/chat_icon_floating.png"),
+                                  SizedBox(
+                                    width: 12.w,
+                                  ),
+                                  Text("New Group",
+                                      style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      )))
+                                ],
+                              ),
+                            )),
+                            PopupMenuItem(
+                                child: Container(
+                              width: 130.w,
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                      "assets/icons_assets/chat_icon_floating.png"),
+                                  SizedBox(
+                                    width: 12.w,
+                                  ),
+                                  Text("Linked devices",
+                                      style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      )))
+                                ],
+                              ),
+                            )),
+                            PopupMenuItem(
+                                child: Container(
+                              width: 130.w,
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                      "assets/icons_assets/chat_icon_floating.png"),
+                                  SizedBox(
+                                    width: 12.w,
+                                  ),
+                                  Text("Invite friends",
+                                      style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      )))
+                                ],
+                              ),
+                            )),
+                            PopupMenuItem(
+                                child: Container(
+                              width: 130.w,
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                      "assets/icons_assets/chat_icon_floating.png"),
+                                  SizedBox(
+                                    width: 12.w,
+                                  ),
+                                  Text("Settings",
+                                      style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      )))
+                                ],
+                              ),
+                            ))
+                          ]),
+                ),
               ],
               bottom: TabBar(
                 labelPadding: EdgeInsets.all(0),

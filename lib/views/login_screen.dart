@@ -26,11 +26,12 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _password = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    // double height = MediaQuery.of(context).size.height;
-    // double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Form(
           key: _formkey,
           child: Container(
@@ -69,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       'By continuing, you agree to Gatello\'s',
                       style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                              fontSize: 13.sp,
+                              fontSize: height*0.016,
                               fontWeight: FontWeight.w400,
                               color: HexColor('#646363'))),
                     ),
@@ -80,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         'Terms of service',
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
-                                fontSize: 13.sp,
+                                fontSize: height*0.016,
                                 fontWeight: FontWeight.w400,
                                 color: HexColor('#00A3FF'))),
                       ),
@@ -95,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       'and acknowledge our',
                       style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                              fontSize: 13.sp,
+                            fontSize: height*0.016,
                               fontWeight: FontWeight.w400,
                               color: HexColor('#646363'))),
                     ),
@@ -106,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         'Privacy Policy.',
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(
-                                fontSize: 13.sp,
+                            fontSize: height*0.016,
                                 fontWeight: FontWeight.w400,
                                 color: HexColor('#00A3FF'))),
                       ),
@@ -120,24 +121,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 42.h,
                   width: 336.w,
                   child: TextFormField(
-                      //   validator: (value) {
-                      //   if (value!.length >= 8) {
-                      //     if (RegExp(r'^[0-9]+$').hasMatch(value) &&
-                      //         RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
-                      //       return null;
-                      //     }
-                      //   } else {
-                      //     return 'Must be at 8 characters and contain at least one Letter, one number ';
-                      //   }
-                      // },
+              
    validator: (value) => phoneValidator(value),
                                         
-                      // validator: (value) {
-                      //   if
-
-                      // },
+                   
                     style: TextStyle(
-                        fontSize:15.sp, fontWeight: FontWeight.w500),
+                        fontSize:13.sp, fontWeight: FontWeight.w500),
                     cursorColor: Colors.black,
                     controller: _mobileNumber,
                     decoration: InputDecoration(
@@ -163,19 +152,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black, width: 1.w),
-                        //  borderRadius: BorderRadius.circular(5.w)
+                           //  borderRadius: BorderRadius.circular(5.w)
                         borderRadius: BorderRadius.circular(6)
                       ),
                     ),
                   ),
                 ),
                 SizedBox(height: 28.h),
-                Container(
-                  height: 42.h,
-                  width: 336.w,
-                  child: TextFormField(
-
-validator: (value)=> passwordValidator(value: value),
+             
 
 
 
@@ -209,8 +193,14 @@ validator: (value)=> passwordValidator(value: value),
                       //     return 'Both password must match';
                       //   }
                       // },
+                         Container(
+                  height: 42.h,
+                  width: 336.w,
+                  child: TextFormField(
+
+                 validator: (value)=> passwordValidator(value: value),
                     style: TextStyle(
-                        fontSize:12.sp,
+                        fontSize:13.sp,
                          fontWeight: FontWeight.w500),
                     cursorColor: Colors.black,
                     controller: _password,
@@ -222,10 +212,10 @@ validator: (value)=> passwordValidator(value: value),
                         size: 18.sp,
                         color: Colors.black,
                       ),
-                      labelText: 'Password',
+                      labelText: 'PASSWORD',
                       labelStyle: GoogleFonts.inter(
                           textStyle: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.w400,
                               color: Colors.black)),
                       focusedBorder: OutlineInputBorder(
@@ -290,7 +280,7 @@ validator: (value)=> passwordValidator(value: value),
                     'Login',
                     style: GoogleFonts.inter(
                         textStyle: TextStyle(
-                            fontSize: 17.sp,
+                            fontSize: 15.sp,
                             fontWeight: FontWeight.w600,
                             color: Colors.black)),
                   ),
@@ -348,44 +338,45 @@ validator: (value)=> passwordValidator(value: value),
     );
   }
 
-  login(email, password) async {
-    Map data = {'phone': phone, 'password': password};
-    print(data.toString());
-    final response = await http.post(Uri.parse(loginip),
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: data,
-        encoding: Encoding.getByName("utf-8"));
-    setState(() {
-      isLoading = false;
-    });
-    if (response.statusCode == 200) {
-      Map<String, dynamic> resposne = jsonDecode(response.body);
-      if (!resposne['error']) {
-        Map<String, dynamic> user = resposne['data'];
-        print(" User name ${user['id']}");
-        savePref(1, user['name'], user['email'], user['id']);
-        Navigator.pushReplacementNamed(context, "/home");
-      } else {
-        print(" ${resposne['message']}");
-      }
-      scaffoldMessenger
-          .showSnackBar(SnackBar(content: Text("${resposne['message']}")));
-    } else {
-      scaffoldMessenger
-          .showSnackBar(SnackBar(content: Text("Please try again!")));
-    }
-  }
+  // login(email, password) async {
+  //   Map data = {'phone': phone, 'password': password};
+  //   print(data.toString());
+  //   final response = await http.post(Uri.parse(loginip),
+  //       headers: {
+  //         "Accept": "application/json",
+  //         "Content-Type": "application/x-www-form-urlencoded"
+  //       },
+  //       body: data,
+  //       encoding: Encoding.getByName("utf-8"));
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  //   if (response.statusCode == 200) {
+  //     Map<String, dynamic> resposne = jsonDecode(response.body);
+  //     if (!resposne['error']) {
+  //       Map<String, dynamic> user = resposne['data'];
+  //       print(" User name ${user['id']}");
+  //       savePref(1, user['name'], user['email'], user['id']);
+  //       Navigator.pushReplacementNamed(context, "/home");
+  //     } else {
+  //       print(" ${resposne['message']}");
+  //     }
+  //     scaffoldMessenger
+  //         .showSnackBar(SnackBar(content: Text("${resposne['message']}")));
+  //   } else {
+  //     scaffoldMessenger
+  //         .showSnackBar(SnackBar(content: Text("Please try again!")));
+  //   }
+  // }
 
-  savePref(int value, String name, String email, int id) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+//   savePref(int value, String name, String email, int id) async {
+//     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    preferences.setInt("value", value);
-    preferences.setString("name", name);
-    preferences.setString("email", email);
-    preferences.setString("id", id.toString());
-    preferences.commit();
-  }
+//     preferences.setInt("value", value);
+//     preferences.setString("name", name);
+//     preferences.setString("email", email);
+//     preferences.setString("id", id.toString());
+//     preferences.commit();
+//   }
+// }
 }

@@ -113,6 +113,48 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.2"
+  firebase_auth:
+    dependency: "direct main"
+    description:
+      name: firebase_auth
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.4.2"
+  firebase_auth_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_auth_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.3.2"
+  firebase_auth_web:
+    dependency: transitive
+    description:
+      name: firebase_auth_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0"
+  firebase_core:
+    dependency: "direct main"
+    description:
+      name: firebase_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.19.2"
+  firebase_core_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_core_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.4.3"
+  firebase_core_web:
+    dependency: transitive
+    description:
+      name: firebase_core_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.7.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -167,13 +209,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.5.3+2"
-  flutter_statusbar_manager:
-    dependency: "direct main"
-    description:
-      name: flutter_statusbar_manager
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -394,13 +429,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
-  pin_input_text_field:
-    dependency: transitive
-    description:
-      name: pin_input_text_field
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.2"
   platform:
     dependency: transitive
     description:
@@ -429,7 +457,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.4.0"
-<<<<<<< HEAD
   shared_preferences:
     dependency: "direct main"
     description:
@@ -486,27 +513,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
-  sizer:
-    dependency: "direct main"
-    description:
-      name: sizer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.15"
-=======
->>>>>>> 1e73108858ce6d6ec0e8f5dc9729231e22424e7d
   sky_engine:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.99"
-  sms_autofill:
-    dependency: "direct main"
-    description:
-      name: sms_autofill
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.0"
   source_span:
     dependency: transitive
     description:

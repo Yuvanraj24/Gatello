@@ -269,7 +269,7 @@ class _SignInState extends State<SignIn> {
   login(email, password) async {
     Map data = {'email': email, 'password': password};
     print(data.toString());
-    final response = await http.post(Uri.parse(LOGIN),
+    final response = await http.post(Uri.parse(''),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded"

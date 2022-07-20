@@ -1,7 +1,4 @@
 
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/signup_screen.dart';
@@ -23,8 +20,6 @@ class _Splash4State extends State<Splash4> {
  
   @override
   Widget build(BuildContext context) {
-
-
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -32,28 +27,27 @@ class _Splash4State extends State<Splash4> {
          padding: EdgeInsets.only(
         
 
-      top:340.h,
+      top:275.h,
        bottom:100.h
          ),
         color: HexColor('#F8CE61'),
           child: Column(
           children: [
-           
-            
             Text(
               'Gatello',
              // style: TextStyle(fontSize: 77.7.h),
               style: GoogleFonts.inter(
                         textStyle: TextStyle(
-                         fontSize: 77.7.h,
+                         fontSize: 58.h,
                          fontWeight: FontWeight.w400,
                             color:Colors.black)),
             ),
-            SizedBox(height: 70.7.h),
+            SizedBox(height: 63.h),
             Row(
             mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
+                  
                   onPressed: () {
                      Navigator.push(context,
                       MaterialPageRoute(builder: (context) => LoginScreen()));
@@ -65,17 +59,16 @@ class _Splash4State extends State<Splash4> {
                                 
                                    style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                           fontSize: 17.h,
+                           fontSize: 12.5 .h,
                            fontWeight: FontWeight.w600,
                               color:Colors.black)),
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-     
-                shadowColor:Colors.black ,
+                  style: ElevatedButton.styleFrom( 
+                  elevation: 0,
                       onPrimary: Colors.black,
                       padding: EdgeInsets.all(10),
-                      minimumSize: Size(106.w, 41.h),
+                      minimumSize: Size(106.w, 39.h),
                       primary: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(35),
@@ -93,15 +86,15 @@ class _Splash4State extends State<Splash4> {
                         'Sign Up',
                            style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                           fontSize: 17.h,
+                           fontSize: 12.h,
                            fontWeight: FontWeight.w600,
                               color:HexColor('#FFFFFF'))),
                       ),
                   ),
                   style: ElevatedButton.styleFrom(
-                     // padding: EdgeInsets.only(left: 38.w,right: 38.w,top: 17.h,bottom: 17.h),
-
-                minimumSize: Size(106.w, 41.h),
+                    
+          elevation: 0,  
+                  minimumSize: Size(106.w, 39.h),
                  
                       primary: Colors.black,
                       shape: RoundedRectangleBorder(

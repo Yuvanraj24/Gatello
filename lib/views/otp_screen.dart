@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gatello/views/add_email.dart';
 import 'package:gatello/views/add_profile_pic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -19,12 +20,14 @@ class _OtpState extends State<Otp> {
   
   @override
   Widget build(BuildContext context) {
+
     // double height = MediaQuery.of(context).size.height;
     double curWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          toolbarHeight: 55.h,
+        
           leading: Center(
               child: TextButton(
             onPressed: () {
@@ -42,7 +45,7 @@ class _OtpState extends State<Otp> {
         ),
         body: Container(
           padding: EdgeInsets.only(
-              left: 12.w, right: 12.w, top: 163.h, bottom: 35.h),
+              left: 12.w, right: 12.w, top: 150.h, bottom: 35.h),
           child: Center(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,15 +76,15 @@ class _OtpState extends State<Otp> {
                             fontWeight: FontWeight.w700,
                             color: Colors.black)),
                   ),
-                  SizedBox(height: 29.h),
-                  // Container(
+                //  SizedBox(height: 13.h),
+                  //    Container(
                   //   height: 81.h,
                   //   child: OTPTextField(
                   //     isDense: true,
 
                   //     controller: _otpController,
 
-                  //     length: 4,
+                  //     length: 6,
 
                   //     fieldStyle: FieldStyle.underline,
                   //     contentPadding: EdgeInsets.all(17.h),
@@ -102,22 +105,57 @@ class _OtpState extends State<Otp> {
                   //             fontSize: 32.sp,
                   //             fontWeight: FontWeight.w600,
                   //             color: Colors.black)),
-                  //     onChanged: (pin) {
-                  //       print("Changed: " + pin);
-                  //     },
+                  //     onChanged: (pin) {},
                   //     onCompleted: (pin) {
-                  //       otpText = pin;
+                  //   //    widget.otp = pin;
                   //       //return pressEvent();
                   //     },
                   //   ),
                   // ),
+                  Container(
+                   
+                 //   color: Colors.pink,
+                    height: 81.h,
+                    child: OTPTextField(
+                 
+                   // textFieldAlignment: MainAxisAlignment.spaceBetween,
+                  //    isDense: true,
+
+                      controller: _otpController,
+                      length: 6,
+                      fieldStyle: FieldStyle.underline,
+                     // contentPadding: EdgeInsets.all(17.h),
+                      width: curWidth * 0.88,
+                      fieldWidth: 50.w,
+                      otpFieldStyle: OtpFieldStyle(                       
+                        backgroundColor: Colors.transparent,
+                        borderColor: Colors.pink,
+                        focusBorderColor: Colors.black,
+                        enabledBorderColor: Colors.black,
+                        errorBorderColor: Colors.red,
+                      ),
+                      // outlineBorderRadius: 5,
+                      style: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                              fontSize: 30.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black)),
+                      onChanged: (pin) {
+                        print("Changed: " + pin);
+                      },
+                      onCompleted: (pin) {
+                        otpText = pin;
+                        //return pressEvent();
+                      },
+                    ),
+                  ),
                   Spacer(),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AddProfilePic()));
+                              builder: (context) => AddEmail()));
                     },
                     child: Text(
                       'Continue',
@@ -130,7 +168,7 @@ class _OtpState extends State<Otp> {
                     style: ElevatedButton.styleFrom(
                         elevation: 5,
                         onPrimary: Colors.black,
-                        minimumSize: Size(234.w, 53.h),
+                        minimumSize: Size(234.w, 48.h),
                         primary: Color.fromRGBO(248, 206, 97, 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(35),

@@ -19,11 +19,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController _forgotController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-         toolbarHeight:55.h,
+         toolbarHeight:45.h,
           leading: Center(
               child: TextButton(
             onPressed: () {
@@ -40,16 +39,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           )),
         ),
         body: Container(
-          padding: EdgeInsets.only(top: 95.h, left: 12.w, right: 12.w),
+         padding: EdgeInsets.only(top: 80.h, left: 12.w, right: 12.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image(
-                image: AssetImage('assets/forgot_scren_image/Group 677.png'),
-              
-                width: 92.w,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+             
+                    height:92.h,
+                    width:92.w,
+                    decoration: BoxDecoration(
+                   color: Color.fromRGBO(248, 206, 97, 1),
+                      shape: BoxShape.circle
+                    ),
+                    child: Image(
+                      image: AssetImage('assets/forgot_scren_image/forgot_image.png'),
+                    
+                   height: 150.h,
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 14.h),
+              SizedBox(height: 8.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -61,9 +74,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             fontWeight: FontWeight.w500,
                             color: Colors.black)),
                   ),
-                  SizedBox(height: 9.h),
+                 
                 ],
               ),
+               SizedBox(height: 7.5.h),
               Text(
                 'No Worries! Enter your email and we will send',
                 style: GoogleFonts.inter(
@@ -81,7 +95,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         fontWeight: FontWeight.w400,
                         color: HexColor('#9A9A9A'))),
               ),
-              SizedBox(height: 25.h),
+              SizedBox(height: 23.h),
               Container(
                 height: 41.h,
                 width: 336.w,
@@ -95,7 +109,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     prefixIcon: Container(
                  
                       child: Image(
-                        image: AssetImage('assets/email_image/Group 680.png'),
+                        image: AssetImage('assets/email_image/email_icon.png'),
                         // width: width*0.05,height: height*0.05
                       ),
                     ),
@@ -119,7 +133,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 32.h),
+              SizedBox(height: 24.h),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(context,
@@ -136,7 +150,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.all(10),
-                    minimumSize: Size(336, 43),
+                    minimumSize: Size(336.w, 40.h),
                     primary: HexColor('#F8CE61'),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/add_email.dart';
+import 'package:gatello/views/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -23,7 +24,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          toolbarHeight: 55.h,
+    
           leading: Center(
               child: TextButton(
             onPressed: () {
@@ -43,7 +44,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
           key: _formKey,
           child: Container(
             padding: EdgeInsets.only(
-                left: 12.w, right: 12.w, top: 122.h, bottom: 35.h),
+                left: 12.w, right: 12.w, top: 100.h, bottom: 35.h),
             child: Center(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -65,7 +66,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                               fontWeight: FontWeight.w500,
                               color: Colors.black)),
                     ),
-                    SizedBox(height: 6.h),
+                    SizedBox(height: 3.h),
                     Text(
                       "number?",
                       style: GoogleFonts.fredoka(
@@ -74,12 +75,12 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                               fontWeight: FontWeight.w500,
                               color: Colors.black)),
                     ),
-                    SizedBox(height: 5.h),
+                    SizedBox(height: 6.h),
                     Text(
                       "You will be using this mobile number to login into",
                       style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                              fontSize: 13.h,
+                              fontSize: 13.sp,
                               fontWeight: FontWeight.w500,
                               color: HexColor('#646363'))),
                     ),
@@ -88,7 +89,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                       'your account.',
                       style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                              fontSize: 13.h,
+                              fontSize: 13.sp,
                               fontWeight: FontWeight.w500,
                               color: HexColor('#646363'))),
                     ),
@@ -105,24 +106,27 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                                 textStyle: TextStyle(
                                     fontSize: 12.h,
                                     fontWeight: FontWeight.w400,
-                                    color: HexColor('#646363'))),
+                                    color:Colors.black)),
                           ),
                           Container(
                             // color: Colors.pink.shade100,
                             height: 43.h,
                             child: TextFormField(
-
+enabled: false,
                           
                               decoration: InputDecoration(
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: HexColor('#0B0B0B'))),
+                                        BorderSide(color: HexColor('#0B0B0B'),
+                                      //  width: 3.w
+                                        )),
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: HexColor(
                                           '#0B0B0B',
                                         ),
-                                        width: 1.12.w)),
+                                      //  width: 3.w
+                                        )),
                                 prefixIcon: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -162,11 +166,14 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                                         enabledBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: HexColor('#0B0B0B'),
-                                                width: 1.12.w)),
+                                               width: 1.12.w
+                                                )
+                                                ),
                                         focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: HexColor('#0B0B0B'),
-                                                width: 1.12.w)),
+                                              width: 1.12.w
+                                                )),
                                         prefixIcon: Center(
                                             child: Text("+${91}",
                                                 style: GoogleFonts.roboto(
@@ -213,7 +220,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                       "We'll send you a text verification code.",
                       style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                              fontSize: 13.h,
+                              fontSize: 13.sp,
                               fontWeight: FontWeight.w500,
                               color: HexColor('#646363'))),
                     ),
@@ -223,7 +230,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                        
                   if (_formKey.currentState!.validate()) {
             Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AddEmail()));
+                          MaterialPageRoute(builder: (context) => Otp()));
         } else {
           return null;
         }
@@ -240,7 +247,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                       style: ElevatedButton.styleFrom(
                           elevation: 5,
                           onPrimary: Colors.black,
-                          minimumSize: Size(234.w, 53.h),
+                          minimumSize: Size(234.w, 48.h),
                           primary: Color.fromRGBO(248, 206, 97, 1),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(35),

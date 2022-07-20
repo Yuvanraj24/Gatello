@@ -30,7 +30,7 @@ class  _SetPasswordState extends State<SetPassword> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
          appBar: AppBar(
-    toolbarHeight:55.h,
+   
  
           
       leading: Center(
@@ -52,7 +52,7 @@ class  _SetPasswordState extends State<SetPassword> {
           key: _formKey,
           child: Container(
             padding: EdgeInsets.only(left: 12.w, right: 12.w,
-             top: 163.h, bottom: 35.h),
+             top: 150.h, bottom: 35.h),
             child: Center(
               child:
                   Column(
@@ -72,7 +72,7 @@ class  _SetPasswordState extends State<SetPassword> {
                       "Just make sure it's at least 8 characters",
                       style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                              fontSize: 13.h,
+                              fontSize: 13.sp,
                               fontWeight: FontWeight.w500,
                               color: HexColor('#646363'))),
                     ),
@@ -86,7 +86,7 @@ class  _SetPasswordState extends State<SetPassword> {
                               color: HexColor('#646363'))),
                     ),
                
-                SizedBox(height:51.h),
+               SizedBox(height: 40.h),
                 Row(
                   children: [
                     Container(
@@ -111,8 +111,10 @@ class  _SetPasswordState extends State<SetPassword> {
                           labelText: "PASSWORD",
                           
                           suffixIcon: IconButton(
-                            iconSize:16.w,
-                            icon: Icon(Icons.visibility),
+                            padding: EdgeInsets.only(bottom:2),
+                                alignment: Alignment.bottomCenter,
+                            iconSize:20.w,
+                            icon: Icon(Icons.visibility ,color: Colors.black),
                         
                             onPressed: () {},
                           ),
@@ -123,13 +125,33 @@ class  _SetPasswordState extends State<SetPassword> {
                       ),
                       
                     ),
-                    Image.asset(
-                      "assets/icons_assets/green_tick_icon.png",
-                      width: 16.w,
-                   
+                    Padding(
+                      padding: EdgeInsets.only(
+                      top: 20
+                        ),
+                      child: Image.asset(
+                        "assets/icons_assets/green_tick_icon.png",
+                        width: 16.w,
+                                       
+                      ),
                     ),
                   ],
                 ),
+
+                               SizedBox(height: 6.h),
+                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                             children: [
+                               Text(
+                  'Must be at 8 characters and contain at least\none Letter,none symbol & one number.',
+                  style: GoogleFonts.inter(
+                      textStyle: TextStyle(
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w400,
+                                color: HexColor('#00A3FF'))),
+                ),
+                             ],
+                           ),
                 // FlutterPwValidator(
                 //     controller: _setPassword,
                 //     minLength: 3,
@@ -176,7 +198,7 @@ if (_formKey.currentState!.validate()) {
                     minimumSize: Size(
             
         
-                234.w,53.h
+                234.w,48.h
                     ),
                   
                   primary: Color.fromRGBO(248, 206, 97, 1),
