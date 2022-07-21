@@ -1,18 +1,33 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/add_email.dart';
 import 'package:gatello/views/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart' as http;
 
 import '../validator/validator.dart';
 
 class AddMobileNumber extends StatefulWidget {
+  String birthDay = "";
+  String userName = "";
+  String name = "";
+  String password = "";
+  String? mobileNo;
 
+  AddMobileNumber({
+    required this.name,
+    required this.userName,
+    required this.birthDay,
+    required this.password,
+  });
 
   @override
   State<AddMobileNumber> createState() => _AddMobileNumberState();
 }
+
 
 class _AddMobileNumberState extends State<AddMobileNumber> {
    final _formKey = GlobalKey<FormState>();
@@ -113,7 +128,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                             height: 43.h,
                             child: TextFormField(
 enabled: false,
-                          
+
                               decoration: InputDecoration(
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide:
@@ -193,6 +208,11 @@ enabled: false,
                                 width: 265.w,
                                 child: TextFormField(
                                   keyboardType: TextInputType.number,
+                                    controller: _mobileNumber,
+                                    onChanged: (val) {
+                                      widget.mobileNo =
+                                          _mobileNumber.text.toString();
+                                    },
                                     cursorWidth: 2,
                                     cursorColor: HexColor('#0B0B0B'),
                                     decoration: InputDecoration(
@@ -229,14 +249,26 @@ enabled: false,
                     Spacer(),
                     ElevatedButton(
                       onPressed: () {
-                       
-                  if (_formKey.currentState!.validate()) {
-            Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Otp()));
-        } else {
-          return null;
-        }
-        
+                        sendotp();
+                        if (_formKey.currentState!.validate()) {
+                          print(widget.name);
+                          print(widget.birthDay);
+                          print(widget.userName);
+                          print(widget.password);
+                          print(widget.mobileNo);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Otp(
+                                    name: widget.name,
+                                    birthDay: widget.birthDay,
+                                    userName: widget.userName,
+                                    password: widget.password,
+                                    mobileNo: widget.mobileNo.toString(),
+                                  )));
+                        } else {
+                          return null;
+                        }
                       },
                       child: Text(
                         'Verify mobile number',
@@ -262,4 +294,24 @@ enabled: false,
       ),
     );
   }
+
+   Future<void> sendotp() async {
+     //print(body.toString());
+     var body = jsonEncode(<String, dynamic>{
+       "number": widget.mobileNo,
+     });
+
+     try {
+       var url = Uri.parse("http://3.108.219.188:5000/sendotp");
+       var response = await http.post(url, body: body);
+
+       if (response.statusCode == 200) {
+         print(response.body.toString());
+       } else {
+         print(response.statusCode);
+       }
+     } catch (e) {
+       print(e.toString());
+     }
+   }
 }

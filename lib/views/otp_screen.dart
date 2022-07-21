@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/add_email.dart';
@@ -6,9 +8,23 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:http/http.dart' as http;
 
 class Otp extends StatefulWidget {
-  const Otp({Key? key}) : super(key: key);
+  String birthDay = "";
+  String userName = "";
+  String name = "";
+  String password = "";
+  String mobileNo = "";
+  String? otp;
+
+  Otp({
+    required this.name,
+    required this.userName,
+    required this.birthDay,
+    required this.password,
+    required this.mobileNo,
+  });
 
   @override
   State<Otp> createState() => _OtpState();
@@ -140,11 +156,9 @@ class _OtpState extends State<Otp> {
                               fontSize: 30.sp,
                               fontWeight: FontWeight.w600,
                               color: Colors.black)),
-                      onChanged: (pin) {
-                        print("Changed: " + pin);
-                      },
+                      onChanged: (pin) {},
                       onCompleted: (pin) {
-                        otpText = pin;
+                        widget.otp = pin;
                         //return pressEvent();
                       },
                     ),
@@ -152,10 +166,14 @@ class _OtpState extends State<Otp> {
                   Spacer(),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddEmail()));
+                      print(widget.name);
+                      print(widget.birthDay);
+                      print(widget.userName);
+                      print(widget.password);
+                      print(widget.mobileNo);
+                      print(widget.otp);
+
+                      verifyotp();
                     },
                     child: Text(
                       'Continue',
@@ -183,5 +201,31 @@ class _OtpState extends State<Otp> {
   
   Widget pressEvent() {
     return Container();
+  }
+
+  Future<void> verifyotp() async {
+    //print(body.toString());
+    var body = jsonEncode(<String, dynamic>{
+      "number": widget.mobileNo,
+      "otp":widget.otp
+    });
+
+    try {
+      var url = Uri.parse("http://3.108.219.188:5000/verifyotp");
+      var response = await http.post(url, body: body);
+
+      if (response.statusCode == 200) {
+        print(response.body.toString());
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => AddEmail(
+              name: widget.name,birthDay: widget.birthDay, userName: widget.userName,password: widget.password, mobileNo: widget.mobileNo,otp: widget.otp.toString(),
+
+            )));
+      } else {
+        print(response.statusCode);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

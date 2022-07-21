@@ -10,7 +10,13 @@ import '../validator/validator.dart';
 import 'login_screen.dart';
 
 class CreateUsername extends StatefulWidget {
-  const CreateUsername({Key? key}) : super(key: key);
+  String birthDay = "";
+  String name = "";
+  String? userName;
+  CreateUsername({
+    required this.birthDay,
+    required this.name,
+  });
 
   @override
   State<CreateUsername> createState() => _CreateUsernameState();
@@ -83,8 +89,11 @@ class _CreateUsernameState extends State<CreateUsername> {
                         Container(
                           width: 310.w,
                           child: TextFormField(
-                         
+
                             controller: _userName,
+                            onChanged: (val){
+                              widget.userName = _userName.text.toString();
+                            },
                             cursorColor: HexColor('#0B0B0B'),
                             decoration: InputDecoration(
                               // contentPadding: EdgeInsets.only(bottom: 2),
@@ -121,11 +130,19 @@ class _CreateUsernameState extends State<CreateUsername> {
                     Spacer(),
                     ElevatedButton(
                       onPressed: () {
+                        print(widget.name);
+                        print(widget.birthDay);
+                        print(widget.userName);
+
                         if (_formKey.currentState!.validate()) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SetPassword()));
+                                  builder: (context) => SetPassword(
+                                    name: widget.name,
+                                    birthDay: widget.birthDay,
+                                    userName: widget.userName.toString(),
+                                  )));
                         } else {
                           return null;
                         }

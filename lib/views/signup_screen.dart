@@ -327,21 +327,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/birthday_on_gatello.dart';
 import 'package:gatello/views/create_username.dart';
 import 'package:gatello/views/login_screen.dart';
+import 'package:gatello/views/select_birthday.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 
 import '../validator/validator.dart';
 
-class apiChat {}
+
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  String? first;
+  String? last;
+
+  SignUpScreen({this.first, this.last});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
-
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formkey = GlobalKey<FormState>();
   TextEditingController _firstName = TextEditingController();
@@ -454,7 +457,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: TextFormField(
                     controller: _firstName,
                     onChanged: (val) {
-                      name1 = _firstName.text.toString();
+                      widget.first = _firstName.text.toString();
                     },
 
                     // validator: (value) {
@@ -493,16 +496,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 42.h,
                   width: 336.w,
                   child: TextFormField(
-                    // validator: (value) {
-                    //   if (value!.isNotEmpty && value.length >= 1) {
-                    //     return null;
-                    //   } else {
-                    //     return 'name too short';
-                    //   }
-                    // },
+                    validator: (value) {
+                      if (value!.isNotEmpty && value.length >= 1) {
+                        return null;
+                      } else {
+                        return 'name too short';
+                      }
+                    },
                     controller: _lastName,
                     onChanged: (val) {
-                      name2 = _lastName.text.toString();
+                      widget.last = _lastName.text.toString();
                     },
                     // validator: (value){
                     //   if (value!.isEmpty) {
@@ -592,27 +595,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Spacer(),
                 ElevatedButton(
                   onPressed: () {
-                   // login();
-                    //print("${name1} ${name2}");
-                     Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CreateUsername()));
+                    if (widget.first!.isNotEmpty && widget.last!.isNotEmpty) {
+                      String name = widget.first.toString() +
+                          " " +
+                          widget.last.toString();
 
-                    // if (_formkey.currentState!.validate()) {
-                    //   Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (context) => CreateUsername()));
-                    // } else {
-                    //   showDialog(
-                    //       context: context,
-                    //       builder: (context) {
-                    //         return Dialog(
-                    //           child: Text("Login Failed"),
-                    //         );
-                    //       });
-                    // }
+                      print(widget.first.toString() +
+                          " " +
+                          widget.last.toString());
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SelectBirthday(
+                                name: name,
+                              )));
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              child: Text("Sign-Up Failed"),
+                            );
+                          });
+                    }
                   },
                   child: Text(
                     'Sign Up',

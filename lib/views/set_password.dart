@@ -13,7 +13,15 @@ import '../validator/validator.dart';
 import 'login_screen.dart';
 
 class SetPassword extends StatefulWidget {
-  const SetPassword({Key? key}) : super(key: key);
+  String birthDay = "";
+  String userName = "";
+  String name = "";
+  String? password;
+  SetPassword({
+    required this.name,
+    required this.birthDay,
+    required this.userName,
+  });
 
   @override
   State<SetPassword> createState() => _SetPasswordState();
@@ -94,7 +102,10 @@ class  _SetPasswordState extends State<SetPassword> {
                  
                     width:310.w,
                       child: TextFormField(
-                        controller: _setPassword,
+                          controller: _setPassword,
+                          onChanged: (val) {
+                            widget.password = _setPassword.text.toString();
+                          },
                         cursorColor:HexColor('#0B0B0B'),
                         decoration: InputDecoration(
                            enabledBorder: UnderlineInputBorder(
@@ -178,16 +189,21 @@ child: SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),
                 //   ),
            Spacer(),
                       ElevatedButton(
-                onPressed: () {
-if (_formKey.currentState!.validate()) {
-    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AddMobileNumber()));
-} else {
-  return null;
-}
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            print(widget.name);
+                            print(widget.birthDay);
+                            print(widget.userName);
+                            print(widget.password);
 
-                  
-                },
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddMobileNumber(name: widget.name,birthDay: widget.birthDay, userName: widget.userName,password: widget.password.toString(),)));
+                          } else {
+                            return null;
+                          }
+                        },
                 child: Text(
                   'Continue',
                   style: GoogleFonts.inter(

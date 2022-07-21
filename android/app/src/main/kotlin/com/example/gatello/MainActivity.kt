@@ -1,4 +1,4 @@
-package com.example.gatello
+package com.gatello.user
 
 import io.flutter.embedding.android.FlutterActivity
 

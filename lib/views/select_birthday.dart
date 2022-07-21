@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:gatello/views/create_username.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 
 class SelectBirthday extends StatefulWidget {
-  const SelectBirthday({Key? key}) : super(key: key);
+  String name = "";
+  String? birthday;
+
+  SelectBirthday({
+    required this.name,
+  });
 
   @override
   State<SelectBirthday> createState() => _SelectBirthdayState();
 }
 
 class _SelectBirthdayState extends State<SelectBirthday> {
-  //DateTime _selectedDate = DateTime.now();
-  //DateTime? _selectedDate;
-  DateTime? _dateTime;
+  DateTime? _selectedDate;
 
   @override
   Widget build(BuildContext context) {
@@ -48,53 +52,69 @@ class _SelectBirthdayState extends State<SelectBirthday> {
                 onPressed: () {},
                 style: TextButton.styleFrom(textStyle: TextStyle(fontSize: 12)),
                 child: Text("Why do I need to provide my date of birth?")),
-
             TextFormField(
               onTap: () {},
+              controller: TextEditingController(text: _selectedDate.toString()),
               decoration: InputDecoration(labelText: "Birthday"),
             ),
             SizedBox(height: 30),
+            DatePickerWidget(
+              looping: true, // default is not looping
+              firstDate: DateTime.now(), //DateTime(1960),
+              //  lastDate: DateTime(2002, 1, 1),
+              //initialDate: DateTime.now(),// DateTime(1994),
+              dateFormat:
+              // "MM-dd(E)",
+              "dd/MMMM/yyyy",
+              //     locale: DatePicker.localeFromString('he'),
+              onChange: (DateTime newDate, _) {
+                setState(() {
+                  _selectedDate = newDate;
+                });
+                print(_selectedDate);
+              },
+              pickerTheme: DateTimePickerTheme(
+                itemHeight: 20,
+                itemTextStyle: TextStyle(
+                    color: Color.fromRGBO(248, 206, 97, 1), fontSize: 19),
+                dividerColor: Colors.black,
+              ),
+            ),
+            DatePickerWidget(
+              looping: true, // default is not looping
+              firstDate: DateTime.now(), //DateTime(1960),
+              //  lastDate: DateTime(2002, 1, 1),
+              //initialDate: DateTime.now(),// DateTime(1994),
+              dateFormat:
 
-            ElevatedButton(
-                onPressed: () {
-                  showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1980),
-                          lastDate: DateTime(2022))
-                      .then((date) {
-                    setState(() {
-                      _dateTime = date;
-                    });
-                    print(_dateTime);
-                  });
-                },
-                child: Text("Date Pick")),
-            // DatePickerWidget(
-            //   looping: true, // default is not looping
-            //   firstDate: DateTime.now(), //DateTime(1960),
-            //   //  lastDate: DateTime(2002, 1, 1),
-            //   //initialDate: DateTime.now(),// DateTime(1994),
-            //   dateFormat:
-            //       // "MM-dd(E)",
-            //       "dd/MMMM/yyyy",
-            //   //     locale: DatePicker.localeFromString('he'),
-            //   onChange: (DateTime newDate, _) {
-            //     setState(() {
-            //       _selectedDate = newDate;
-            //     });
-            //     print(_selectedDate);
-            //   },
-            //   pickerTheme: DateTimePickerTheme(
-            //     itemHeight: 20,
-            //     itemTextStyle: TextStyle(
-            //         color: Color.fromRGBO(248, 206, 97, 1), fontSize: 19),
-            //     dividerColor: Colors.black,
-            //   ),
-            // ),
+              "dd/MMMM/yyyy",
+
+              onChange: (DateTime newDate, _) {
+                setState(() {
+                  _selectedDate = newDate;
+                });
+                print(_selectedDate);
+              },
+              pickerTheme: DateTimePickerTheme(
+                itemHeight: 20,
+                itemTextStyle: TextStyle(
+                    color: Color.fromRGBO(248, 206, 97, 1), fontSize: 19),
+                dividerColor: Colors.black,
+              ),
+            ),
             Spacer(),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  widget.birthday = _selectedDate.toString();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateUsername(birthDay: widget.birthday.toString(),name: widget.name,),
+                      ));
+
+                  print(widget.name);
+                  print(widget.birthday);
+                },
                 style: ElevatedButton.styleFrom(
                   side: BorderSide(color: Color.fromRGBO(248, 206, 97, 1)),
                   shape: RoundedRectangleBorder(
@@ -106,13 +126,6 @@ class _SelectBirthdayState extends State<SelectBirthday> {
                   "Continue",
                   style: TextStyle(color: Colors.black),
                 )),
-            Divider(
-              color: Colors.black,
-              height: 35,
-              endIndent: 70,
-              indent: 80,
-              thickness: 3.5,
-            ),
           ],
         ),
       ),
