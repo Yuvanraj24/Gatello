@@ -8,7 +8,7 @@ import 'package:hexcolor/hexcolor.dart';
 import '../validator/validator.dart';
 
 class AddMobileNumber extends StatefulWidget {
-  const AddMobileNumber({Key? key}) : super(key: key);
+
 
   @override
   State<AddMobileNumber> createState() => _AddMobileNumberState();

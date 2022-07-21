@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/add_mob_no.dart';
@@ -7,10 +11,26 @@ import 'package:gatello/views/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../utils/fire_auth.dart';
 import '../validator/validator.dart';
 
 class AddEmail extends StatefulWidget {
-  const AddEmail({Key? key}) : super(key: key);
+  String birthDay = "";
+  String userName = "";
+  String name = "";
+  String password = "";
+  String mobileNo = "";
+  String otp = "";
+  String? email;
+  AddEmail({
+    required this.name,
+    required this.userName,
+    required this.birthDay,
+    required this.password,
+    required this.mobileNo,
+    required this.otp,
+  });
+
 
   @override
   State<AddEmail> createState() => _AddEmailState();
@@ -94,6 +114,10 @@ class _AddEmailState extends State<AddEmail> {
                         keyboardType: TextInputType.emailAddress,
             validator: (value)=>emailValidator(value),
                         controller: _emailController,
+
+                        onChanged: (val) {
+                          widget.email = _emailController.text.toString();
+                        },
                         cursorColor: HexColor('#0B0B0B'),
                         decoration: InputDecoration(
                           enabledBorder: UnderlineInputBorder(
@@ -157,4 +181,48 @@ class _AddEmailState extends State<AddEmail> {
       ),
     );
   }
+    registerFirebase(name, email, password) async {
+      User? user = await FireAuth.registerUsingEmailPassword(
+        name: name,
+        email: email,
+        password: password,
+      );
+      var body = jsonEncode(<String, dynamic>{
+        "user_id": user!.uid,
+        "name": widget.name,
+        "phone": "+91${widget.mobileNo}",
+        "member": "Since ${DateTime.now().year}",
+        "email": widget.email,
+        "username": widget.userName,
+        "password": widget.password,
+      });
+
+      if (user != null) {
+        register(body);
+        print("succeed");
+      }
+      // else if(){
+
+      // }
+      else {
+        print("error in passing mongoDB");
+      }
+    }
+
+    Future<void> register(var body) async {
+      print(body.toString());
+
+      try {
+        var url = Uri.parse("http://3.108.219.188:5000/signup");
+        var response = await http.post(url, body: body);
+
+        if (response.statusCode == 200) {
+          print(response.body.toString());
+        } else {
+          print(response.statusCode);
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    }
 }
