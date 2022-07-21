@@ -54,10 +54,14 @@ dependencies:
   flutter_pw_validator: ^1.4.2
   firebase_auth: ^3.4.2
   firebase_core: ^1.19.2
+  flutter_launcher_icons: ^0.9.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -80,15 +84,14 @@ flutter:
     - assets/appbar_action/Rectangle 7.png
     - assets/profile_page/profile_pic_logo.png
     - assets/invite_friends/invite_friends_logo.png
-    - assets/birthday_image/birthday_logo.png
-    - assets/icons_assets/green_tick_icon.png
+    - assets/birthday_image/birthday_logo.png 
     - assets/splash_1/glogo.png
     - assets/splash2_image/splah2 _image.png
     - assets/splash3_image/splash3_image.png
     - assets/icons_assets/add_friends_button.png
     - assets/Gatello_logo/Gatello_temp_logo.png
     - assets/tabbar_icons/chats_image/chats_empty.png
-    - assets/icons_assets/chat_icon_floating.png
+    - assets/icons_assets/chat_icon_floating.svg
     - assets/tabbar_icons/getit_icon.png
     - assets/tabbar_icons/pings_icon.png
     - assets/tabbar_icons/status_icon.png
@@ -97,7 +100,7 @@ flutter:
     - assets/splash2_image/right_arrow.png
     - assets/splash3_image/left_arrow.png
     - assets/per_chat_icons/chat_background_image.png
-    - assets/per_chat_icons/mic_icon.png
+    - assets/per_chat_icons/mic_icon.svg
     - assets/splash_1/glogo.png
     - assets/per_chat_icons/attach_file_icon.png
     - assets/camera_icon/camera.png
@@ -109,9 +112,10 @@ flutter:
     - assets/per_chat_icons/video.png
     - assets/per_chat_icons/menu_icon.png
     - assets/per_chat_icons/back_icon.png
-    - assets/per_chat_icons/call_icon.png
+    - assets/per_chat_icons/call_icon.svg
+    - assets/per_chat_icons/video icon.svg
     - assets/per_chat_icons/camera.png
-    - assets/per_chat_icons/dp_image.png
+    - assets/per_chat_icons/dp_image.svg
     - assets/linked device image/Gatello_box.png
     - assets/group_info/search.png
     - assets/group_info/add contants.png
@@ -120,9 +124,6 @@ flutter:
     - assets/group_info/video icon.png
     - assets/group_info/add participants.png
     - assets/group_info/invite link.png
-    - assets/select_contact/invite frds.png
-    - assets/select_contact/new contact.png
-    - assets/select_contact/new group.png
     - assets/select_contact/right arrow icon.png
     - assets/icons_assets/visibility_icon.png
     - assets/tabbar_icons/chats_image/attachment_icon_container/document_icon_container.png
@@ -132,7 +133,10 @@ flutter:
     - assets/tabbar_icons/chats_image/attachment_icon_container/location_icon_container.png
     - assets/tabbar_icons/chats_image/attachment_icon_container/contact_icon_container.png
     - assets/tabbar_icons/chats_image/video_call_icon.svg
-    
+    - assets/icons_assets/green_tick.svg
+    - assets/select_contact/invite friends.svg
+    - assets/select_contact/new contact.svg
+    - assets/select_contact/new group.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

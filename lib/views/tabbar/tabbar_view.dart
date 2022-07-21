@@ -23,13 +23,13 @@ class _TabbarState extends State<Tabbar> {
        
               toolbarHeight: 79.h,
               elevation: 20,
-              shadowColor: Colors.black,
+            //  shadowColor: Colors.black,
               leading: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Gatello',
-                    style: TextStyle(fontSize: 18.sp, color: Colors.black),
+                    style: TextStyle(fontSize: 16.sp, color: Colors.black),
                   ),
                 ],
               ),

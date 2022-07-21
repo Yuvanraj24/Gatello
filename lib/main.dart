@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
        
             appBarTheme: AppBarTheme(
-toolbarHeight:  45.h,
+toolbarHeight:  50.h,
 
                 shadowColor: Colors.transparent,
                 backgroundColor: Color.fromRGBO(248, 206, 97, 1))
@@ -57,7 +57,7 @@ toolbarHeight:  45.h,
           home: child,
         );
       },
-     child: Splash4()
+     child: Tabbar()
     );
   }
 }

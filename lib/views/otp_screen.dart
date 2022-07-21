@@ -117,7 +117,7 @@ class _OtpState extends State<Otp> {
                  //   color: Colors.pink,
                     height: 81.h,
                     child: OTPTextField(
-                 
+                 keyboardType: TextInputType.number,
                    // textFieldAlignment: MainAxisAlignment.spaceBetween,
                   //    isDense: true,
 

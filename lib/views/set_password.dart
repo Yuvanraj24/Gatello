@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gatello/views/add_mob_no.dart';
 
 import 'package:gatello/views/set_password.dart';
@@ -111,7 +112,7 @@ class  _SetPasswordState extends State<SetPassword> {
                           labelText: "PASSWORD",
                           
                           suffixIcon: IconButton(
-                            padding: EdgeInsets.only(bottom:2),
+                            padding: EdgeInsets.only(bottom:3,left: 130),
                                 alignment: Alignment.bottomCenter,
                             iconSize:20.w,
                             icon: Icon(Icons.visibility ,color: Colors.black),
@@ -127,14 +128,19 @@ class  _SetPasswordState extends State<SetPassword> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                      top: 20
-                        ),
-                      child: Image.asset(
-                        "assets/icons_assets/green_tick_icon.png",
-                        width: 16.w,
+                      top: 20,left: 10
+                         ),
+                      // child: 
+                      // Image.asset(
+                      //   "assets/icons_assets/green_tick_icon.png",
+                      //   width: 16.w,
                                        
-                      ),
+                      // ),
+child: SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),                    
+                      
                     ),
+
+                
                   ],
                 ),
 

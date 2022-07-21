@@ -160,8 +160,10 @@ enabled: false,
                               Container(
                                   //   color: Colors.blue,
                                   // height: 80,
+                               
                                   width: 51.w,
                                   child: TextFormField(
+                                       enabled:false,
                                     decoration: InputDecoration(
                                         enabledBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
@@ -190,7 +192,7 @@ enabled: false,
                                 // color: Colors.cyan,
                                 width: 265.w,
                                 child: TextFormField(
-                                  
+                                  keyboardType: TextInputType.number,
                                     cursorWidth: 2,
                                     cursorColor: HexColor('#0B0B0B'),
                                     decoration: InputDecoration(

@@ -51,6 +51,37 @@ pingsChatListData() {
       unreadMsg: 15,
       isSelected: false);
   pingsListDetails.add(tileData);
-
+  //5
+  tileData = PingsChatListModel(
+      name: "Aishu",
+      lasttext: "Good Morning",
+      dp: "https://images.pexels.com/photos/733745/pexels-photo-733745.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      unreadMsg: 15,
+      isSelected: false);
+  pingsListDetails.add(tileData);
+  //6
+  tileData = PingsChatListModel(
+      name: "Aishu",
+      lasttext: "Good Morning",
+      dp: "https://images.pexels.com/photos/733745/pexels-photo-733745.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      unreadMsg: 15,
+      isSelected: false);
+  pingsListDetails.add(tileData);
+  //7
+  tileData = PingsChatListModel(
+      name: "Aishu",
+      lasttext: "Good Morning",
+      dp: "https://images.pexels.com/photos/733745/pexels-photo-733745.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      unreadMsg: 15,
+      isSelected: false);
+  pingsListDetails.add(tileData);
+  //8
+tileData = PingsChatListModel(
+      name: "Aishu",
+      lasttext: "Good Morning",
+      dp: "https://images.pexels.com/photos/733745/pexels-photo-733745.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      unreadMsg: 15,
+      isSelected: false);
+  pingsListDetails.add(tileData);
   return pingsListDetails;
 }

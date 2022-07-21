@@ -91,6 +91,7 @@ class _AddEmailState extends State<AddEmail> {
                     Container(
                       width: 310.w,
                       child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
             validator: (value)=>emailValidator(value),
                         controller: _emailController,
                         cursorColor: HexColor('#0B0B0B'),

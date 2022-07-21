@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 42.h,
                   width: 336.w,
                   child: TextFormField(
-              
+              keyboardType:TextInputType.number ,
    validator: (value) => phoneValidator(value),
                                         
                    

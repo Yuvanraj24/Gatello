@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gatello/group_info_screen/group_info.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,6 +18,7 @@ class _SelectContactState extends State<SelectContact> {
     super.initState();
     tileData = selectInfoListData();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,21 +28,20 @@ class _SelectContactState extends State<SelectContact> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              InkWell(
-                child: Image(
-                  image: AssetImage(
-                    'assets/per_chat_icons/back_icon.png',
-                  ),
-                  width: 16.w,
-                ),
-                onTap: () {
-
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Group_Info()));
-                },
-              ),
+                InkWell(
+                          child: Image(
+                            image: AssetImage(
+                              'assets/per_chat_icons/back_icon.png',
+                            ),
+                            width: 20.w,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Group_Info()));
+                          },
+                        ),
             ],
           ),
         ),
@@ -92,16 +93,24 @@ class _SelectContactState extends State<SelectContact> {
           child: ListView.builder(
               itemCount: tileData.length,
               itemBuilder: (context, index) {
-                return ListTile(
+                return 
+
+                 ListTile(
                   leading: Container(
                     height: 44.h,
                     width: 44.w,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image:
-                                AssetImage('assets/dp_image/dp_icon_male.png'),
-                            fit: BoxFit.cover)),
+                    // decoration: BoxDecoration(
+                    //     shape: BoxShape.circle,
+                    //     // image: DecorationImage(
+                    //     //     // image:
+                    //     //     //     AssetImage('assets/dp_image/dp_icon_male.png'),
+                    //     //     image: SvgPicture.asset(),
+                    //     //     fit: BoxFit.cover)
+
+                    //     image: decora
+                    //         ),
+
+                    child: SvgPicture.asset( tileData[index].dp,),
                   ),
                   title: Text(
                     tileData[index].name,
@@ -115,9 +124,9 @@ class _SelectContactState extends State<SelectContact> {
                     tileData[index].account,
                     style: GoogleFonts.inter(
                         textStyle: TextStyle(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color.fromRGBO(0, 0, 0, 5))),
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromRGBO(134, 134, 134, 1))),
                   ),
                 );
               }),
@@ -139,85 +148,86 @@ class SelectInfoListModel {
       required this.account});
 }
 
- selectInfoListData() {
-  List< SelectInfoListModel> selectlistDetails = [];
+selectInfoListData() {
+  List<SelectInfoListModel> selectlistDetails = [];
 
-   SelectInfoListModel tileData =
-       SelectInfoListModel(name: '', account: '', dp: '', isSelected: false);
+  SelectInfoListModel tileData =
+      SelectInfoListModel(name: '', account: '', dp: '', isSelected: false);
 
-  tileData =  SelectInfoListModel(
-      dp: 'assets/group_info/add participants.png',
+  tileData = SelectInfoListModel(
+      dp: 'assets/select_contact/new group.svg',
       isSelected: false,
       name: 'New group',
       account: '');
-   selectlistDetails.add(tileData);
+  selectlistDetails.add(tileData);
 
 //1
-  tileData =  SelectInfoListModel(
-      dp: 'assets/group_info/invite link.png',
+  tileData = SelectInfoListModel(
+      dp: 'assets/select_contact/new contact.svg',
       isSelected: false,
       name: 'New contact',
       account: '');
-   selectlistDetails.add(tileData);
+  selectlistDetails.add(tileData);
 //2
-  tileData =  SelectInfoListModel(
-      dp: 'assets/dp_image/dp_icon_male.png',
+
+  tileData = SelectInfoListModel(
+      dp: 'assets/select_contact/invite friends.svg',
       isSelected: false,
       name: 'Invite friends',
-      account: 'Business account');
-   selectlistDetails.add(tileData);
+      account: '');
+  selectlistDetails.add(tileData);
 //3
-  tileData =  SelectInfoListModel(
-      dp: 'assets/dp_image/dp_icon_male.png',
+  tileData = SelectInfoListModel(
+      dp: 'assets/per_chat_icons/dp_image.svg',
       isSelected: false,
       name: 'Elumalai',
       account: 'Business account');
   selectlistDetails.add(tileData);
 
   //4
-  tileData =  SelectInfoListModel(
-      dp: 'assets/dp_image/dp_icon_male.png',
+  tileData = SelectInfoListModel(
+      dp: 'assets/per_chat_icons/dp_image.svg',
       isSelected: false,
       name: 'Ragu',
       account: 'Business account');
-   selectlistDetails.add(tileData);
+  selectlistDetails.add(tileData);
   //5
-  tileData =  SelectInfoListModel(
-      dp: 'assets/dp_image/dp_icon_male.png',
+  tileData = SelectInfoListModel(
+      dp: 'assets/per_chat_icons/dp_image.svg',
       isSelected: false,
       name: 'Yuvan',
       account: 'Business account');
-   selectlistDetails.add(tileData);
+  selectlistDetails.add(tileData);
   //6
-  tileData =  SelectInfoListModel(
-      dp: 'assets/dp_image/dp_icon_male.png',
+  tileData = SelectInfoListModel(
+      dp: 'assets/per_chat_icons/dp_image.svg',
       isSelected: false,
       name: 'Elumalai',
       account: 'Business account');
   selectlistDetails.add(tileData);
 
   //7
-  tileData =  SelectInfoListModel(
-      dp: 'assets/dp_image/dp_icon_male.png',
+  tileData = SelectInfoListModel(
+      dp: 'assets/per_chat_icons/dp_image.svg',
       isSelected: false,
       name: 'Ragu',
       account: 'Business account');
-   selectlistDetails.add(tileData);
+  selectlistDetails.add(tileData);
   //8
-  tileData =  SelectInfoListModel(
-      dp: 'assets/dp_image/dp_icon_male.png',
+  tileData = SelectInfoListModel(
+      dp: 'assets/per_chat_icons/dp_image.svg',
       isSelected: false,
       name: 'Yuvan',
       account: 'Business account');
   selectlistDetails.add(tileData);
 
   //9
-  tileData =  SelectInfoListModel(
-      dp: 'assets/dp_image/dp_icon_male.png',
+  tileData = SelectInfoListModel(
+      dp: 'assets/per_chat_icons/dp_image.svg',
       isSelected: false,
       name: 'Elumalai',
       account: 'Business account');
- selectlistDetails.add(tileData);
+  selectlistDetails.add(tileData);
   //10
-  return  selectlistDetails;
+  return selectlistDetails;
 }

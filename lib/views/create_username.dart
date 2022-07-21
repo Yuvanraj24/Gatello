@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:gatello/views/set_password.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -82,6 +83,7 @@ class _CreateUsernameState extends State<CreateUsername> {
                         Container(
                           width: 310.w,
                           child: TextFormField(
+                         
                             controller: _userName,
                             cursorColor: HexColor('#0B0B0B'),
                             decoration: InputDecoration(
@@ -100,7 +102,7 @@ class _CreateUsernameState extends State<CreateUsername> {
                                       color: Colors.black)),
                               labelText: "USERNAME",
                               suffixIcon: IconButton(
-                                padding: EdgeInsets.only(bottom: 2),
+                                padding: EdgeInsets.only(bottom: 3,left: 30),
                                 alignment: Alignment.bottomCenter,
                                 iconSize: 20.w,
                                 icon: Icon(Icons.refresh, color: Colors.black),
@@ -111,12 +113,8 @@ class _CreateUsernameState extends State<CreateUsername> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Image.asset(
-                            "assets/icons_assets/green_tick_icon.png",
-                            
-                            width: 16.w,
-                          ),
+                          padding: EdgeInsets.only(top: 20,left: 10),
+                       child: SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,), 
                         ),
                       ],
                     ),
