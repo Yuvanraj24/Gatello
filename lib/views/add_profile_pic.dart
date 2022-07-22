@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -131,7 +132,7 @@ class _AddProfilePicState extends State<AddProfilePic> {
                       
                   ),
                   onTap: (){
-  Navigator.push(
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => InviteFriends()));

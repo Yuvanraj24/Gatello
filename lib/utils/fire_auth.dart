@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FireAuth {
@@ -65,5 +66,12 @@ class FireAuth {
     User? refreshedUser = auth.currentUser;
 
     return refreshedUser;
+  }
+  static Future<User?> deleteUser(User? user) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    await user?.delete();
+
+
   }
 }

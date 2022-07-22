@@ -346,14 +346,14 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 class _SignUpScreenState extends State<SignUpScreen> {
+
   final _formkey = GlobalKey<FormState>();
   TextEditingController _firstName = TextEditingController();
   TextEditingController _lastName = TextEditingController();
   // String? _firstName;
   // String? _lastName;
 
-  String? name1;
-  String? name2;
+
 
   String phone = '9764873648';
   var body = jsonEncode(<String, dynamic>{
@@ -595,6 +595,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Spacer(),
                 ElevatedButton(
                   onPressed: () {
+
                     if (widget.first!.isNotEmpty && widget.last!.isNotEmpty) {
                       String name = widget.first.toString() +
                           " " +
@@ -618,7 +619,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             );
                           });
                     }
-                  },
+
+                   },
                   child: Text(
                     'Sign Up',
                     style: TextStyle(
@@ -643,4 +645,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
+
 }
