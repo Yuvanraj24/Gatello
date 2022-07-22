@@ -32,14 +32,11 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 Future<void> main() async {
-
   runApp(MyApp());
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 }
-
 
 
 const String ip = 'http://3.108.219.188:5000';
@@ -103,6 +100,7 @@ class _MyAppState extends State<MyApp> {
   var _loginStatus = 0;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
+    print(preferences.getInt("value"));
     setState(() {
       _loginStatus = preferences.getInt("value")!;
     });

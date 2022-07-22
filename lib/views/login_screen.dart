@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -14,7 +16,8 @@ import '../validator/validator.dart';
 import 'forgot_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  String? mob;
+  String? pw;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -24,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final _formkey = GlobalKey<FormState>();
   TextEditingController _mobileNumber = TextEditingController();
   TextEditingController _password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -31,7 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return SafeArea(
       child: Scaffold(
+
         resizeToAvoidBottomInset: false,
+
         body: Form(
           key: _formkey,
           child: Container(
@@ -129,6 +135,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize:13.sp, fontWeight: FontWeight.w500),
                     cursorColor: Colors.black,
                     controller: _mobileNumber,
+                    onChanged: (val){
+                        widget.mob = _mobileNumber.text.toString();
+                    },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 10),
                       prefix: Text(
@@ -204,6 +213,9 @@ class _LoginScreenState extends State<LoginScreen> {
                          fontWeight: FontWeight.w500),
                     cursorColor: Colors.black,
                     controller: _password,
+                    onChanged: (val){
+                        widget.pw = _password.text.toString();
+                    },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 8.h),
                     
@@ -251,30 +263,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 ]),
                 SizedBox(height: 13.h),
                 ElevatedButton(
-                
-                  onPressed: () {
-        
-    
-                      //  if (_formkey.currentState!.validate()) {
-                      //   // Navigator.push(
-                      //   //     context,
-                      //   //     MaterialPageRoute(
-                      //   //         builder: (context) => Splash4())
-                      //   //         );
-                      // } else {
-                      //   showDialog(
-                      //       context: context,
-                      //       builder: (context) {
-                      //         return Dialog(
-                      //           child: Text("Login Failed"),
-                      //         );
-                      //       });
-                      // }
-    //  Navigator.push(
-    //                         context,
-    //                         MaterialPageRoute(
-    //                             builder: (context) => SignUpScreen()));
 
+                  onPressed: () {
+                    //loginFirebase(widget.mob, widget.pw);
+
+                    var body = jsonEncode(<String, dynamic>{
+                      "credential_1": "+91${widget.mob}",
+                      "password": widget.pw,
+                    });
+                    signin(body);
                   },
                   child: Text(
                     'Login',
@@ -338,45 +335,50 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // login(email, password) async {
-  //   Map data = {'phone': phone, 'password': password};
-  //   print(data.toString());
-  //   final response = await http.post(Uri.parse(loginip),
-  //       headers: {
-  //         "Accept": "application/json",
-  //         "Content-Type": "application/x-www-form-urlencoded"
-  //       },
-  //       body: data,
-  //       encoding: Encoding.getByName("utf-8"));
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  //   if (response.statusCode == 200) {
-  //     Map<String, dynamic> resposne = jsonDecode(response.body);
-  //     if (!resposne['error']) {
-  //       Map<String, dynamic> user = resposne['data'];
-  //       print(" User name ${user['id']}");
-  //       savePref(1, user['name'], user['email'], user['id']);
-  //       Navigator.pushReplacementNamed(context, "/home");
-  //     } else {
-  //       print(" ${resposne['message']}");
-  //     }
-  //     scaffoldMessenger
-  //         .showSnackBar(SnackBar(content: Text("${resposne['message']}")));
-  //   } else {
-  //     scaffoldMessenger
-  //         .showSnackBar(SnackBar(content: Text("Please try again!")));
-  //   }
-  // }
+    Future<void> signin(var body) async {
+      print(body.toString());
 
-//   savePref(int value, String name, String email, int id) async {
-//     SharedPreferences preferences = await SharedPreferences.getInstance();
+      try {
+        var url = Uri.parse("http://3.108.219.188:5000/login");
+        var response = await http.post(url, body: body);
+        final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+        if (response.statusCode == 200) {
+          print(response.body.toString());
+          Map<String, dynamic> map = jsonDecode(response.body.toString());
+          String status = map['status'];
+          print("STATUS:"+status);
+          if(status=="OK")
+          {
+            Fluttertoast.showToast(
+                msg: "Login Success",
+                toastLength: Toast.LENGTH_SHORT,
+                timeInSecForIosWeb: 1);
+            final SharedPreferences prefs = await _prefs;
+            String resultJson=jsonEncode(map['result']);
+            print(jsonEncode(map['result']));
+            Map<String, dynamic> map1 = jsonDecode(resultJson);
+            print("LOGIN RESPONSE");
+            prefs.setString("userid",  map1['user_id']);
+            prefs.setString("email",  map1['email']);
+            prefs.setString("root_folder_id",  map1['root_folder_id']);
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (BuildContext ctx) => Tabbar()));
 
-//     preferences.setInt("value", value);
-//     preferences.setString("name", name);
-//     preferences.setString("email", email);
-//     preferences.setString("id", id.toString());
-//     preferences.commit();
-//   }
-// }
+
+          }
+
+        } else {
+          print(response.statusCode);
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+    shared()async{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('mobile', 'password');
+      print(prefs.setString('mobile', 'password'));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext ctx) => Tabbar()));
+    }
 }
