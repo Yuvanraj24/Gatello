@@ -448,6 +448,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Tabbar extends StatefulWidget {
   const Tabbar({Key? key}) : super(key: key);
@@ -457,8 +458,14 @@ class Tabbar extends StatefulWidget {
 }
 
 class _TabbarState extends State<Tabbar> {
+
+
   @override
   Widget build(BuildContext context) {
+    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    prefs.setString("email");
+
     return SafeArea(
       child: DefaultTabController(
         initialIndex: 1,
