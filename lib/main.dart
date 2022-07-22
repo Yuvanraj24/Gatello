@@ -31,16 +31,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-Future<void> main() async {
 
+Future<void> main() async {
   runApp(MyApp());
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 }
-
-
 
 const String ip = 'http://3.108.219.188:5000';
 const String signUpip = '$ip/signup';
@@ -52,7 +50,7 @@ const String loginip = '$ip/login';
 
 class MyApp extends StatefulWidget {
   static const IconData phone =
-  IconData(0xf4b8, fontFamily: "", fontPackage: "");
+      IconData(0xf4b8, fontFamily: "", fontPackage: "");
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -62,8 +60,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-
-
     return ScreenUtilInit(
         designSize: Size(360, 800),
         minTextAdapt: true,
@@ -84,21 +80,23 @@ class _MyAppState extends State<MyApp> {
           );
         },
         child: Splash4()
-      // child: Stack(
-      //   children: [
-      //     Container(
-      //       width: double.infinity,
-      //       height: double.infinity,
-      //       child: Image.network(
-      //         "https://c4.wallpaperflare.com/wallpaper/384/818/513/himalayas-mountains-landscape-nature-wallpaper-preview.jpg",
-      //         fit: BoxFit.fill,
-      //       ),
-      //     ),
-      //     (_loginStatus == 1) ? Home() : SignIn()
-      //   ],
-      // ),
-    );
+        // child: Stack(
+        //   children: [
+        //     Container(
+        //       width: double.infinity,
+        //       height: double.infinity,
+        //       child: Image.network(
+        //         "https://c4.wallpaperflare.com/wallpaper/384/818/513/himalayas-mountains-landscape-nature-wallpaper-preview.jpg",
+        //         fit: BoxFit.fill,
+        //       ),
+        //     ),
+        //     (_loginStatus == 1) ? Home() : SignIn()
+        //   ],
+        // ),
+        );
   }
+
+  //Test Comment
 
   var _loginStatus = 0;
   getPref() async {
