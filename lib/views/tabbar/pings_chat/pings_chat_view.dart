@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +7,8 @@ import 'package:gatello/core/models/pings_chat_model/pings_chats_list_model.dart
 import 'package:gatello/select_contact.dart';
 import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../firebase_options.dart';
 
 class PingsChatView extends StatefulWidget {
   const PingsChatView({Key? key}) : super(key: key);
@@ -14,6 +18,7 @@ class PingsChatView extends StatefulWidget {
 }
 
 class _PingsChatViewState extends State<PingsChatView> {
+
   List<PingsChatListModel> tileData = [];
   var isSelected = false;
   var mycolor = Colors.white;
@@ -23,10 +28,14 @@ class _PingsChatViewState extends State<PingsChatView> {
     super.initState();
     tileData = pingsChatListData();
   }
-
+  final db=FirebaseFirestore.instance;
   bool change = false;
   @override
   Widget build(BuildContext context) {
+
+    // readChat();
+    readData();
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(26, 52, 130, 0.06),
       body: change == true
@@ -169,6 +178,26 @@ class _PingsChatViewState extends State<PingsChatView> {
       } else {
         mycolor = Colors.red;
         isSelected = true;
+      }
+    });
+  }
+
+  Future readData()
+  async{
+
+    print("Reading");
+    await db.collection("personal-chat-room-detail").get().then((event) {
+      for (var doc in event.docs) {
+        print("${doc.id} => ${doc.data()}");
+      }
+    });
+  }
+  Future readChat() async{
+    final db=FirebaseFirestore.instance;
+    print("CHAT DATA");
+    await db.collection("personal-chat-room-details").get().then((event) {
+      for (var doc in event.docs) {
+        print("${doc.id} => ${doc.data()}");
       }
     });
   }
