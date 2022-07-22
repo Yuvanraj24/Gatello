@@ -56,7 +56,7 @@ dependencies:
   firebase_core: ^1.19.2
   flutter_launcher_icons: ^0.9.3
   double_back_to_close_app: ^2.1.0
-  cloud_firestore: ^3.4.0
+  # cloud_firestore: ^3.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -139,6 +139,10 @@ flutter:
     - assets/select_contact/invite friends.svg
     - assets/select_contact/new contact.svg
     - assets/select_contact/new group.svg
+    - assets/tabbar_icons/tab_view_main/invite frds tab.svg
+    - assets/tabbar_icons/tab_view_main/linked devices tab.svg
+    - assets/tabbar_icons/tab_view_main/new group tab.svg
+    - assets/tabbar_icons/tab_view_main/settings_icon.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
