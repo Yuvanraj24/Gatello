@@ -1,59 +1,109 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:wp_search_bar/wp_search_bar.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-class Home extends StatefulWidget {
+class Testing extends StatefulWidget {
+  //const Testing({Key? key}) : super(key: key);
+
   @override
-  _HomeState createState() => _HomeState();
+  State<Testing> createState() => _TestingState();
 }
 
-class _HomeState extends State<Home> {
+class _TestingState extends State<Testing> {
+  List<Map<String, String>> data = [
+    {'name': "Mohammad", 'message': "message from mhammad"},
+    {'name': "Kamel", 'message': "message from kamel"},
+    {'name': "Nadine", 'message': "how are you ?"},
+    {'name': "Joseph", 'message': "hello...!"},
+    {'name': "71966691", 'message': "Hi"},
+    {'name': "03405609", 'message': "hiiii...."},
+    {'name': "Mohammad", 'message': "message from mhammad"},
+    {'name': "Kamel", 'message': "message from kamel"},
+    {'name': "Nadine", 'message': "how are you ?"},
+    {'name': "Joseph", 'message': "hello...!"},
+    {'name': "71966691", 'message': "Hi"},
+    {'name': "03405609", 'message': "hiiii...."},
+  ];
+  var buttonFilters = {
+    'name': {
+      'name': 'name',
+      'selected': false,
+      'title': 'Name',
+      'operation': 'CONTAINS',
+      'icon': Icons.photo_size_select_actual_outlined,
 
-bool isLoading=false;
+      'image':'assets/per_chat_icons/dp_image.svg'
+    },
+    'message': {
+      'name': 'message',
+      'selected': false,
+      'title': 'Message',
+      'operation': 'CONTAINS',
+      'icon': Icons.videocam,
+      'image':'assets/per_chat_icons/dp_image.svg'
+    },
+    'date': {
+      'name': 'Date',
+      'selected': false,
+      'title': 'Date',
+      'operation': 'CONTAINS','icon': Icons.link,
+      'image':'assets/per_chat_icons/dp_image.svg'
+    },
+    'other': {
+      'name': 'other',
+      'selected': false,
+      'title': 'Other',
+      'operation': 'CONTAINS',
+      'icon': Icons.gif_outlined,
+      'image':'assets/per_chat_icons/dp_image.svg'
+    },
+    'other': {
+      'name': 'other',
+      'selected': false,
+      'title': 'Other',
+      'operation': 'CONTAINS',
+      'icon': Icons.headphones_outlined,
+      'image':'assets/per_chat_icons/dp_image.svg'
+    },    'other': {
+      'name': 'other',
+      'selected': false,
+      'title': 'Other',
+      'operation': 'CONTAINS',
+      'icon': Icons.file_copy_sharp,
+      'image':'assets/per_chat_icons/dp_image.svg'
+    },
+  };
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black54,
-      appBar: AppBar(
-        leading: InkWell(child: Icon(Icons.compare_arrows),onTap: () async {
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-          preferences.clear();
-          Navigator.pushReplacementNamed(context, "/login");
-        },),
-        title: Text(
-          "Lear With Us",
-          style: GoogleFonts.roboto(
-              textStyle: TextStyle(fontSize: 18, letterSpacing: 1)),
-        ),
-        backgroundColor: Colors.black87,
-        centerTitle: true,
-        actions: <Widget>[
+    return MaterialApp(
+      home: WPSearchBar(
+        listOfFilters: buttonFilters,
+        materialDesign: const {
+          'title': {'text': 'WhatsApp'},
+        },
+        onSearch: (filter, value, operation) {},
 
-        ],
-      ),
-      body: Stack(
-        children: [
-          WebView(
-            javascriptMode: JavascriptMode.unrestricted,
-            initialUrl: 'https://rrtutors.com/language/Flutter',
-            onPageFinished:(value){
-          setState(() {
-            isLoading=true;
-          });
-
-            },
-
-          ),
-          (!isLoading)?Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.green,
-            ),
-          ):Container()
-        ],
-
+        // body: Container(
+        //   decoration: const BoxDecoration(color: Color(0xff121b22)),
+        //   child: ListView.builder(
+        //       itemCount: data.length,
+        //       itemBuilder: (context, index) {
+        //         var item = data[index];
+        //         return ListTile(
+        //           title: Text(
+        //             item['name'].toString(),
+        //             style: const TextStyle(
+        //                 color: Colors.white, fontWeight: FontWeight.bold),
+        //           ),
+        //         );
+        //       }),
+        // ),
       ),
     );
   }
 }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold();
+//   }
+// }

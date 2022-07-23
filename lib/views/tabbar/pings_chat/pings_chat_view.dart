@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gatello/core/models/pings_chat_model/pings_chats_list_model.dart';
-import 'package:gatello/select_contact.dart';
 import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
+import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
+import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PingsChatView extends StatefulWidget {
