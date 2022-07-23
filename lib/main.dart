@@ -26,7 +26,6 @@ import 'package:gatello/views/signup_screen.dart';
 import 'package:gatello/views/splash_screen3.dart';
 import 'package:gatello/views/splash_screen4.dart';
 import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
-import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
 import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
@@ -48,11 +47,7 @@ Future<void> main() async {
   );
 }
 
-<<<<<<< HEAD
-=======
 
-
->>>>>>> bbb46757159787ec2bc3272155e7e3c34769b57f
 const String ip = 'http://3.108.219.188:5000';
 const String signUpip = '$ip/signup';
 const String loginip = '$ip/login';
