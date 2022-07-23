@@ -9,11 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
-
-
 class AddProfilePic extends StatefulWidget {
   const AddProfilePic({Key? key}) : super(key: key);
-
   @override
   State<AddProfilePic> createState() => _AddProfilePicState();
 }
