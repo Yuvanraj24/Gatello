@@ -640,6 +640,7 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -664,6 +665,7 @@ class PersonalChat extends StatefulWidget {
 class _PersonalChatState extends State<PersonalChat> {
   int chg = 0;
   bool isSelected = false;
+  String name="";
   List<int> _selectedItems = [];
   var mycolor = Colors.transparent;
   List<ChatMessage> messages = [
@@ -705,6 +707,9 @@ class _PersonalChatState extends State<PersonalChat> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    getUserDetails(widget.uid);
+
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
@@ -768,7 +773,7 @@ class _PersonalChatState extends State<PersonalChat> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                              'Angelena',
+                              widget.puid,
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
                                       fontSize: 14.sp,
@@ -1274,7 +1279,12 @@ class _PersonalChatState extends State<PersonalChat> {
     );
   }
 }
-
+final db=FirebaseFirestore.instance;
+void getUserDetails(String uid)
+async {
+  DocumentSnapshot<Map<String, dynamic>> userDetailSnapshot = await db.collection("user-detail").doc(uid).get();
+  print("FB NAME+"+userDetailSnapshot.data()!["name"].toString());
+}
 
 
 Widget iconCreation(String iconContainer, String text) {

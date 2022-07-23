@@ -234,90 +234,97 @@ class _PingsChatViewState extends State<PingsChatView> {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 2),
-                  child: Card(
-                    color: mycolor,
-                    child: ListTile(
-                      onLongPress: () {
-                        toggleSelection();
-                      },
-                      onTap: () {
-                        if (tileData.contains(index)) {
-                          setState(() {
-                            tileData.removeWhere((val) => val == index);
-                          });
-                        } else {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
+                  child: InkWell(
+                    onTap: () {},
+                    onLongPress: () {},
+                    child: Container(
+                      // color: (tileData.contains(index))
+                      //                   ? Colors.blue.withOpacity(0.5)
+                      //                   : Colors.transparent,
 
-                                  builder: (context) => PersonalChat(state: 0,
-                                    uid: uid!,
-                                    puid: docs[index].data()["members"]["$uid"]["peeruid"])));
-                        }
-                      },
-                      tileColor: Colors.white,
-                      contentPadding: EdgeInsets.only(
-                          left: 10, right: 10, top: 4, bottom: 4),
-                      //  contentPadding: EdgeInsets.all(10),
-                      leading: CircleAvatar(
-                        radius: 25.5.h,
-                        backgroundImage: NetworkImage(tileData[index].dp),
-                      ),
-                      selected: isSelected,
+                      child: ListTile(
+                        onLongPress: () {
+                          toggleSelection();
+                        },
+                        onTap: () {
+                          if (tileData.contains(index)) {
+                            setState(() {
+                              tileData.removeWhere((val) => val == index);
+                            });
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
 
-                      title: Text(
-                        docs[index].data()["members"]["${docs[index].data()["members"]["$uid"]["peeruid"]}"]["name"],
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 16.sp,
-                                color: Color.fromRGBO(0, 0, 0, 1),
-                                fontWeight: FontWeight.w700)),
-                      ),
-                      subtitle: Text(docs[index].data()["lastMessage"],
+                                    builder: (context) => PersonalChat(state: 0,
+                                      uid: uid!,
+                                      puid: docs[index].data()["members"]["$uid"]["peeruid"])));
+                          }
+                        },
+                        tileColor: Colors.white,
+                        contentPadding: EdgeInsets.only(
+                            left: 10, right: 10, top: 4, bottom: 4),
+                        //  contentPadding: EdgeInsets.all(10),
+                        leading: CircleAvatar(
+                          radius: 25.5.h,
+                          backgroundImage: NetworkImage(tileData[index].dp),
+                        ),
+                        selected: isSelected,
+
+                        title: Text(
+                          docs[index].data()["members"]["${docs[index].data()["members"]["$uid"]["peeruid"]}"]["name"],
                           style: GoogleFonts.inter(
                               textStyle: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Color.fromRGBO(12, 16, 29, 0.6),
-                                  fontWeight: FontWeight.w400))),
-                      trailing: Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: Column(
-                          children: [
-                            Text("${11}:${20} AM",
-                                style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 10.sp,
-                                      color: Color.fromRGBO(0, 0, 0, 1),
-                                      fontWeight: FontWeight.w400),
-                                )),
-                            SizedBox(height: 3.h),
-                           // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
-                           (docs[index].data()["members"]["$uid"]["unreadCount"]==0)?
-                               SizedBox():
-                           Container(
-                               decoration: BoxDecoration(
-                                 //borderRadius: BorderRadius.circular(15),
-                                   border: Border.all(
-                                     color:
-                                     Color.fromRGBO(255, 202, 40, 1),
-                                   ),
-                                   shape: BoxShape.circle,
-                                   color: Color.fromRGBO(255, 202, 40, 1)),
-                               width: 22.w,
-                               height: 22.h,
-                               child: Center(
-                                 child:
-                                 Text(
-                                     docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
-                                     style: GoogleFonts.inter(
-                                       textStyle: TextStyle(
-                                           fontSize: 11.sp,
-                                           color:
-                                           Color.fromRGBO(0, 0, 0, 1),
-                                           fontWeight: FontWeight.w400),
-                                     )),
-                               )),
-                          ],
+                                  fontSize: 16.sp,
+                                  color: Color.fromRGBO(0, 0, 0, 1),
+                                  fontWeight: FontWeight.w700)),
+                        ),
+                        subtitle: Text(docs[index].data()["lastMessage"],
+                            style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Color.fromRGBO(12, 16, 29, 0.6),
+                                    fontWeight: FontWeight.w400))),
+                        trailing: Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: Column(
+                            children: [
+                              Text("${11}:${20} AM",
+                                  style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 10.sp,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                        fontWeight: FontWeight.w400),
+                                  )),
+                              SizedBox(height: 3.h),
+                             // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
+                             (docs[index].data()["members"]["$uid"]["unreadCount"]==0)?
+                                 SizedBox():
+                             Container(
+                                 decoration: BoxDecoration(
+                                   //borderRadius: BorderRadius.circular(15),
+                                     border: Border.all(
+                                       color:
+                                       Color.fromRGBO(255, 202, 40, 1),
+                                     ),
+                                     shape: BoxShape.circle,
+                                     color: Color.fromRGBO(255, 202, 40, 1)),
+                                 width: 22.w,
+                                 height: 22.h,
+                                 child: Center(
+                                   child:
+                                   Text(
+                                       docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
+                                       style: GoogleFonts.inter(
+                                         textStyle: TextStyle(
+                                             fontSize: 11.sp,
+                                             color:
+                                             Color.fromRGBO(0, 0, 0, 1),
+                                             fontWeight: FontWeight.w400),
+                                       )),
+                                 )),
+                            ],
+                          ),
                         ),
                       ),
                     ),
