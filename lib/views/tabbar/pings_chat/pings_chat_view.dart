@@ -255,7 +255,6 @@ class _PingsChatViewState extends State<PingsChatView> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-
                                     builder: (context) => PersonalChat(state: 0,
                                       uid: uid!,
                                       puid: docs[index].data()["members"]["$uid"]["peeruid"])));
@@ -270,7 +269,6 @@ class _PingsChatViewState extends State<PingsChatView> {
                           backgroundImage: NetworkImage(tileData[index].dp),
                         ),
                         selected: isSelected,
-
                         title: Text(
                           docs[index].data()["members"]["${docs[index].data()["members"]["$uid"]["peeruid"]}"]["name"],
                           style: GoogleFonts.inter(
