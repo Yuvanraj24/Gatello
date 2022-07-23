@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -68,8 +69,10 @@ class _AddEmailState extends State<AddEmail> {
           )),
         ),
         body: DoubleBackToCloseApp(
+
           snackBar: SnackBar(
             content: Text("Tap again to close app"),
+
           ),
           child: Form(
            // autovalidateMode: AutovalidateMode.always,
@@ -235,10 +238,16 @@ class _AddEmailState extends State<AddEmail> {
           if(status=="OK")
             {
               print("MONGO SUCCESS");
+              Fluttertoast.showToast(
+                  msg: "Sign-Up Success",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.TOP,
+                  timeInSecForIosWeb: 1);
 
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => AddProfilePic()));
 
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddProfilePic()));
+              // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> AddProfilePic()), (route) => false);
             }
           else
             {
