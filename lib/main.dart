@@ -40,6 +40,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
+
   runApp(MyApp());
 
   await Firebase.initializeApp(
@@ -47,6 +48,11 @@ Future<void> main() async {
   );
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> bbb46757159787ec2bc3272155e7e3c34769b57f
 const String ip = 'http://3.108.219.188:5000';
 const String signUpip = '$ip/signup';
 const String loginip = '$ip/login';

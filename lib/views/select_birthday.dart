@@ -58,28 +58,7 @@ class _SelectBirthdayState extends State<SelectBirthday> {
               decoration: InputDecoration(labelText: "Birthday"),
             ),
             SizedBox(height: 30),
-            DatePickerWidget(
-              looping: true, // default is not looping
-              firstDate: DateTime.now(), //DateTime(1960),
-              //  lastDate: DateTime(2002, 1, 1),
-              //initialDate: DateTime.now(),// DateTime(1994),
-              dateFormat:
-              // "MM-dd(E)",
-              "dd/MMMM/yyyy",
-              //     locale: DatePicker.localeFromString('he'),
-              onChange: (DateTime newDate, _) {
-                setState(() {
-                  _selectedDate = newDate;
-                });
-                print(_selectedDate);
-              },
-              pickerTheme: DateTimePickerTheme(
-                itemHeight: 20,
-                itemTextStyle: TextStyle(
-                    color: Color.fromRGBO(248, 206, 97, 1), fontSize: 19),
-                dividerColor: Colors.black,
-              ),
-            ),
+
             DatePickerWidget(
               looping: true, // default is not looping
               firstDate: DateTime.now(), //DateTime(1960),

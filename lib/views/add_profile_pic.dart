@@ -16,6 +16,7 @@ class AddProfilePic extends StatefulWidget {
 }
 
 class _AddProfilePicState extends State<AddProfilePic> {
+
   File? image;
   Future pickimage() async {
     try {
@@ -53,15 +54,15 @@ class _AddProfilePicState extends State<AddProfilePic> {
         ),
         body: Container(
           padding:
-              EdgeInsets.only(left: 12.w, 
-              right: 12.w, 
-              top: 150.h, 
+              EdgeInsets.only(left: 12.w,
+              right: 12.w,
+              top: 150.h,
            bottom: 51.h
               ),
           child: Column(
               //  crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-            
+
                 Text(
                   "Add profile photo",
                   style: GoogleFonts.fredoka(
@@ -91,12 +92,12 @@ class _AddProfilePicState extends State<AddProfilePic> {
                   "assets/profile_page/profile_pic_logo.png",
                   width: 165.w,
                 ),
-                
+
                 Spacer(),
                 ElevatedButton(
                   onPressed: () {
                       pickimage();
-                  
+
                   },
                   child: Text(
                     'Add a photo',
@@ -126,7 +127,7 @@ class _AddProfilePicState extends State<AddProfilePic> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         color: HexColor('#646363')),
-                      
+
                   ),
                   onTap: (){
                     Navigator.push(
@@ -142,4 +143,6 @@ class _AddProfilePicState extends State<AddProfilePic> {
       ),
     );
   }
+
+
 }

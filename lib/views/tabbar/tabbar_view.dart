@@ -17,6 +17,7 @@ class _TabbarState extends State<Tabbar> {
   bool changed = false;
 
   @override
+  //TestHello
   Widget build(BuildContext context) {
     initSP();
 
@@ -26,6 +27,7 @@ class _TabbarState extends State<Tabbar> {
         length: 5,
         child: SafeArea(
           child: Scaffold(
+<<<<<<< HEAD
               appBar: changed == false
                   ? AppBar(
                       toolbarHeight: 79.h,
@@ -44,13 +46,182 @@ class _TabbarState extends State<Tabbar> {
                       actionsIconTheme:
                           IconThemeData(color: Color.fromRGBO(0, 0, 0, 1)),
                       actions: [
+=======
+            appBar: AppBar(
+
+              toolbarHeight: 79.h,
+              elevation: 20,
+              //  shadowColor: Colors.black,
+              leading: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Gatello',
+                    style: TextStyle(fontSize: 16.sp, color: Colors.black),
+                  ),
+                ],
+              ),
+              actionsIconTheme:
+              IconThemeData(color: Color.fromRGBO(0, 0, 0, 1)),
+              actions: [
+                Row(
+                  children: [
+                    Container(
+                      height: 35.h,
+                      width: 35.w,
+                      decoration: BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image:
+                              AssetImage('assets/per_chat_icons/dp_image.png'),
+                              fit: BoxFit.fitWidth)),
+                    ),
+
+                    SizedBox(width: 15.w,),
+                    Image.asset('assets/group_info/search.png'),
+                  ],
+                ),
+                // CircleAvatar(
+                //     radius: 22.h,
+                //     backgroundImage: NetworkImage(
+                //         "https://c4.wallpaperflare.com/wallpaper/611/838/413/spiderman-hd-4k-superheroes-wallpaper-preview.jpg")),
+
+                // GestureDetector(
+                //     onTap: () {},
+                //     child: Image.asset(
+                //       "assets/icons_assets/search_icon.png",
+                //       width: 14.w,
+                //       height: 13.99.h,
+                //     )),
+                //SizedBox(width: 25.w),
+
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: PopupMenuButton(
+
+                      iconSize: 25.h,
+                      itemBuilder: (BuildContext context) => [
+                        PopupMenuItem(
+                            child: Container(
+                              width: 130.w,
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                      "assets/icons_assets/chat_icon_floating.png"),
+                                  SizedBox(
+                                    width: 12.w,
+                                  ),
+                                  Text("New Group",
+                                      style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                            fontSize: 14.sp,
+                                            color: Color.fromRGBO(0, 0, 0, 1),
+                                          )))
+                                ],
+                              ),
+                            )),
+                        PopupMenuItem(
+                            child: Container(
+                              width: 130.w,
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                      "assets/icons_assets/chat_icon_floating.png"),
+                                  SizedBox(
+                                    width: 12.w,
+                                  ),
+                                  Text("Linked devices",
+                                      style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                            fontSize: 14.sp,
+                                            color: Color.fromRGBO(0, 0, 0, 1),
+                                          )))
+                                ],
+                              ),
+                            )),
+                        PopupMenuItem(
+                            child: Container(
+                              width: 130.w,
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                      "assets/icons_assets/chat_icon_floating.png"),
+                                  SizedBox(
+                                    width: 12.w,
+                                  ),
+                                  Text("Invite friends",
+                                      style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                            fontSize: 14.sp,
+                                            color: Color.fromRGBO(0, 0, 0, 1),
+                                          )))
+                                ],
+                              ),
+                            )),
+                        PopupMenuItem(
+                            child: Container(
+                              width: 130.w,
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                      "assets/icons_assets/chat_icon_floating.png"),
+                                  SizedBox(
+                                    width: 12.w,
+                                  ),
+                                  Text("Settings",
+                                      style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                            fontSize: 14.sp,
+                                            color: Color.fromRGBO(0, 0, 0, 1),
+                                          )))
+                                ],
+                              ),
+                            ))
+                      ]),
+                ),
+              ],
+              bottom: TabBar(
+                labelPadding: EdgeInsets.all(0),
+                indicatorColor: Color.fromRGBO(255, 255, 255, 1),
+                tabs: [
+                  Tab(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image(
+                            image: AssetImage(
+                                "assets/tabbar_icons/getit_icon.png")),
+                        Text(
+                          "Get it",
+                          style: GoogleFonts.fredoka(
+                              textStyle: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Color.fromRGBO(0, 0, 0, 1),
+                                  fontWeight: FontWeight.w400)),
+                        )
+                      ],
+                    ),
+                  ),
+                  Tab(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image(
+                            image: AssetImage(
+                                "assets/tabbar_icons/pings_icon.png")),
+>>>>>>> bbb46757159787ec2bc3272155e7e3c34769b57f
                         Row(
                           children: [
                             Container(
                               height: 35.h,
                               width: 35.w,
                               decoration: BoxDecoration(
+<<<<<<< HEAD
                                   color: Colors.black,
+=======
+                                // borderRadius: BorderRadius.circular(15),
+>>>>>>> bbb46757159787ec2bc3272155e7e3c34769b57f
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
                                       image: AssetImage(
@@ -666,7 +837,12 @@ SvgPicture.asset('assets/tabbar_icons/tab_view_main/chats_image/doc_search.svg',
     );
   }
 
+<<<<<<< HEAD
   void initSP() async {
+=======
+  void initSP()
+  async {
+>>>>>>> bbb46757159787ec2bc3272155e7e3c34769b57f
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
     prefs.getString("email");
