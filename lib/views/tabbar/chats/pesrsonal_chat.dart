@@ -768,7 +768,7 @@ class _PersonalChatState extends State<PersonalChat> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                              'Angelena',
+                              widget.uid,
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
                                       fontSize: 14.sp,
