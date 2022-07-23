@@ -595,6 +595,8 @@ class _PersonalChatState extends State<PersonalChat> {
   }
 }
 
+
+
 Widget iconCreation(String iconContainer, String text) {
   return Column(
     children: [

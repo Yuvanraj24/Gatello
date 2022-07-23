@@ -87,7 +87,7 @@ class _PingsChatViewState extends State<PingsChatView> {
       //                     onLongPress: () {
       //                       toggleSelection();
       //                     },
-      //                     onTap: () {
+      //                     onTap: () {u
       //                       if (tileData.contains(index)) {
       //                         setState(() {
       //                           tileData.removeWhere((val) => val == index);
@@ -210,7 +210,7 @@ class _PingsChatViewState extends State<PingsChatView> {
   Widget getChatList()
   {
 
-    uid="plPttbFnMVPvf741ZQJ9GzkTP6V2";
+    uid="HSS4BBvICHbB5BFQ4zu9OUDgOTn2";
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>
       (
 
@@ -259,7 +259,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                         },
                         tileColor: Colors.white,
                         contentPadding: EdgeInsets.only(
-                            left: 10, right: 10, top: 6, bottom: 6),
+                            left: 10, right: 10, top: 4, bottom: 4),
                         //  contentPadding: EdgeInsets.all(10),
                         leading: CircleAvatar(
                           radius: 25.5.h,
@@ -293,29 +293,32 @@ class _PingsChatViewState extends State<PingsChatView> {
                                         fontWeight: FontWeight.w400),
                                   )),
                               SizedBox(height: 3.h),
-                              Container(
-                                  decoration: BoxDecoration(
-                                    //borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(
-                                        color:
-                                        Color.fromRGBO(255, 202, 40, 1),
-                                      ),
-                                      shape: BoxShape.circle,
-                                      color: Color.fromRGBO(255, 202, 40, 1)),
-                                  width: 22.w,
-                                  height: 22.h,
-                                  child: Center(
-                                    child:
-                                      Text(
-                                        docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
-                                        style: GoogleFonts.inter(
-                                          textStyle: TextStyle(
-                                              fontSize: 11.sp,
-                                              color:
-                                              Color.fromRGBO(0, 0, 0, 1),
-                                              fontWeight: FontWeight.w400),
-                                        )),
-                                  )),
+                             // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
+                             (docs[index].data()["members"]["$uid"]["unreadCount"]==0)?
+                                 SizedBox():
+                             Container(
+                                 decoration: BoxDecoration(
+                                   //borderRadius: BorderRadius.circular(15),
+                                     border: Border.all(
+                                       color:
+                                       Color.fromRGBO(255, 202, 40, 1),
+                                     ),
+                                     shape: BoxShape.circle,
+                                     color: Color.fromRGBO(255, 202, 40, 1)),
+                                 width: 22.w,
+                                 height: 22.h,
+                                 child: Center(
+                                   child:
+                                   Text(
+                                       docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
+                                       style: GoogleFonts.inter(
+                                         textStyle: TextStyle(
+                                             fontSize: 11.sp,
+                                             color:
+                                             Color.fromRGBO(0, 0, 0, 1),
+                                             fontWeight: FontWeight.w400),
+                                       )),
+                                 )),
                             ],
                           ),
                         ),
@@ -339,6 +342,8 @@ class _PingsChatViewState extends State<PingsChatView> {
         }
             );
   }
+
+
 
 
   Future readChat() async{

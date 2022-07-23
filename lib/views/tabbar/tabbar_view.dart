@@ -115,8 +115,7 @@ class _TabbarState extends State<Tabbar> {
                                       style: GoogleFonts.inter(
                                           textStyle: TextStyle(
                                             fontSize: 14.sp,
-                                            color: Color.fromRGBO(0, 0, 0, 1),
-                                          )))
+                                            color: Color.fromRGBO(0, 0, 0, 1),)))
                                 ],
                               ),
                             )),
