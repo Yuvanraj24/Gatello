@@ -651,7 +651,11 @@ import 'package:image_picker/image_picker.dart';
 import '../../../core/models/pings_chat_model/pings_personal_chat_model.dart';
 
 class PersonalChat extends StatefulWidget {
-  const PersonalChat({Key? key}) : super(key: key);
+  final String puid;
+  final int state;
+  final String uid;
+
+  const PersonalChat({Key? key, required this.uid, required this.puid, required this.state}) : super(key: key);
 
   @override
   State<PersonalChat> createState() => _PersonalChatState();
