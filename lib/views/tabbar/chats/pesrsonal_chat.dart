@@ -747,7 +747,7 @@ class _PersonalChatState extends State<PersonalChat> {
                           onTap: () {
                             // Navigator.push(
                             //     context,
-                            //     MaterialPageRoute(
+                            //     MaterialPageRoute(MaterialPageRoute(
                             //         builder: (context) => Group_Info()));
                           },
                         ),
