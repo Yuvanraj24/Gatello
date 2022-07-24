@@ -666,6 +666,7 @@ class _PersonalChatState extends State<PersonalChat> {
   int chg = 0;
   bool isSelected = false;
   String name="";
+  String? lastSeen;
   List<int> _selectedItems = [];
   var mycolor = Colors.transparent;
   List<ChatMessage> messages = [
@@ -704,11 +705,18 @@ class _PersonalChatState extends State<PersonalChat> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getUserDetails(widget.puid);
+  }
+
+  final db=FirebaseFirestore.instance;
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    getUserDetails(widget.uid);
 
     return SafeArea(
       child: Container(
@@ -773,7 +781,7 @@ class _PersonalChatState extends State<PersonalChat> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                              widget.puid,
+                             name,
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
                                       fontSize: 14.sp,
@@ -1278,13 +1286,24 @@ class _PersonalChatState extends State<PersonalChat> {
       ),
     );
   }
+
+  Future<String> getPName()
+  async {
+    DocumentSnapshot<Map<String, dynamic>> userDetailSnapshot = await db.collection("user-detail").doc(widget.puid).get();
+    return userDetailSnapshot.data()!["name"].toString();
+
+  }
+
+  void getUserDetails(String uid)
+  async {
+    DocumentSnapshot<Map<String, dynamic>> userDetailSnapshot = await db.collection("user-detail").doc(uid).get();
+    print("FB NAME+"+userDetailSnapshot.data()!["name"].toString());
+    name=userDetailSnapshot.data()!["name"].toString();
+
+  }
 }
-final db=FirebaseFirestore.instance;
-void getUserDetails(String uid)
-async {
-  DocumentSnapshot<Map<String, dynamic>> userDetailSnapshot = await db.collection("user-detail").doc(uid).get();
-  print("FB NAME+"+userDetailSnapshot.data()!["name"].toString());
-}
+
+
 
 
 Widget iconCreation(String iconContainer, String text) {

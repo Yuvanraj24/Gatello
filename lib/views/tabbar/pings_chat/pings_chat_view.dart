@@ -8,6 +8,7 @@ import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
 
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../firebase_options.dart';
@@ -289,7 +290,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                           padding: EdgeInsets.only(top: 8),
                           child: Column(
                             children: [
-                              Text("${11}:${20} AM",
+                              Text(readTimestamp(int.parse(docs[index].data()["timestamp"])),
                                   style: GoogleFonts.inter(
                                     textStyle: TextStyle(
                                         fontSize: 10.sp,
@@ -364,6 +365,29 @@ class _PingsChatViewState extends State<PingsChatView> {
   }
 
   DateTime getDateTimeSinceEpoch({required String datetime}) {
+    print(DateTime.fromMillisecondsSinceEpoch(int.parse(datetime)));
     return DateTime.fromMillisecondsSinceEpoch(int.parse(datetime));
+  }
+  String readTimestamp(int timestamp) {
+    var now = new DateTime.now();
+    var format = new DateFormat('HH:mm a');
+    var date = new DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
+    var diff = date.difference(now);
+    var time = '';
+
+    if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
+      time = format.format(date);
+    } else {
+      if (diff.inDays == 1) {
+        time = diff.inDays.toString() + 'DAY AGO';
+      } else {
+        time = diff.inDays.toString() + 'DAYS AGO';
+      }
+    }
+
+
+    print("Time:$time");
+
+    return time;
   }
 }
