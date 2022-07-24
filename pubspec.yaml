@@ -134,6 +134,7 @@ flutter:
     - assets/group_info/invite link.png
     - assets/select_contact/right arrow icon.png
     - assets/icons_assets/visibility_icon.png
+    - assets/tabbar_icons/tab_view_main/chats_image/emptyChat.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/document_icon_container.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/gallery_icon_container.png
