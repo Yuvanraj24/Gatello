@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gatello/core/models/pings_chat_model/pings_chats_list_model.dart';
-import 'package:gatello/views/tabbar/chats/pesrsonal_chat.dart';
-import 'package:gatello/views/tabbar/chats/selected_contact.dart';
+import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
+
 
 
 import 'package:google_fonts/google_fonts.dart';
@@ -61,7 +61,7 @@ class _PingsChatViewState extends State<PingsChatView> {
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SelectedContact()));
+                MaterialPageRoute(builder: (context) => SelectContact()));
           },
           backgroundColor: Color.fromRGBO(248, 206, 97, 1),
           child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),

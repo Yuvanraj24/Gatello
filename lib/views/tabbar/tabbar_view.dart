@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,15 +33,7 @@ class _TabbarState extends State<Tabbar> {
               toolbarHeight: 79.h,
               elevation: 20,
               //  shadowColor: Colors.black,
-              leading: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Gatello',
-                    style: TextStyle(fontSize: 16.sp, color: Colors.black),
-                  ),
-                ],
-              ),
+
               actionsIconTheme:
               IconThemeData(color: Color.fromRGBO(0, 0, 0, 1)),
               actions: [
@@ -84,11 +77,10 @@ class _TabbarState extends State<Tabbar> {
                       itemBuilder: (BuildContext context) => [
                         PopupMenuItem(
                             child: Container(
-                              width: 130.w,
+                              width: 150.w,
                               child: Row(
                                 children: [
-                                  Image.asset(
-                                      "assets/icons_assets/chat_icon_floating.png"),
+                                 SvgPicture.asset('assets/tabbar_icons/tab_view_main/new group tab.svg'),
                                   SizedBox(
                                     width: 12.w,
                                   ),
@@ -103,11 +95,11 @@ class _TabbarState extends State<Tabbar> {
                             )),
                         PopupMenuItem(
                             child: Container(
-                              width: 130.w,
+
+                              width: 150.w,
                               child: Row(
                                 children: [
-                                  Image.asset(
-                                      "assets/icons_assets/chat_icon_floating.png"),
+                              SvgPicture.asset('assets/tabbar_icons/tab_view_main/linked devices tab.svg'),
                                   SizedBox(
                                     width: 12.w,
                                   ),
@@ -121,11 +113,10 @@ class _TabbarState extends State<Tabbar> {
                             )),
                         PopupMenuItem(
                             child: Container(
-                              width: 130.w,
+                              width: 150.w,
                               child: Row(
                                 children: [
-                                  Image.asset(
-                                      "assets/icons_assets/chat_icon_floating.png"),
+                                  SvgPicture.asset('assets/tabbar_icons/tab_view_main/invite frds tab.svg'),
                                   SizedBox(
                                     width: 12.w,
                                   ),
@@ -140,11 +131,11 @@ class _TabbarState extends State<Tabbar> {
                             )),
                         PopupMenuItem(
                             child: Container(
-                              width: 130.w,
+
+                              width: 150.w,
                               child: Row(
                                 children: [
-                                  Image.asset(
-                                      "assets/icons_assets/chat_icon_floating.png"),
+                                  SvgPicture.asset('assets/tabbar_icons/tab_view_main/settings_icon.svg'),
                                   SizedBox(
                                     width: 12.w,
                                   ),
