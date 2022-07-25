@@ -247,7 +247,7 @@ class _AddEmailState extends State<AddEmail> {
               // Navigator.push(context,
               //     MaterialPageRoute(builder: (context) => AddProfilePic()));
 
-              // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> AddProfilePic()), (route) => false);
+               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> AddProfilePic()), (route) => false);
             }
           else
             {

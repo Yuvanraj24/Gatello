@@ -640,6 +640,7 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -659,13 +660,29 @@ class PersonalChat extends StatefulWidget {
 
   @override
   State<PersonalChat> createState() => _PersonalChatState();
+
 }
 
 class _PersonalChatState extends State<PersonalChat> {
+  bool chatButtonChange = true;
+  TextEditingController _msg = TextEditingController();
   int chg = 0;
   bool isSelected = false;
+  String name="";
+  String? lastSeen;
   List<int> _selectedItems = [];
   var mycolor = Colors.transparent;
+
+  buttonChange(){
+
+    if(_msg.text.isNotEmpty){
+
+      chatButtonChange = false;
+    }
+
+  }
+
+
   List<ChatMessage> messages = [
     ChatMessage(
         messageContent: "Hello, Yuvan",
@@ -702,9 +719,20 @@ class _PersonalChatState extends State<PersonalChat> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getUserDetails(widget.puid);
+  }
+
+  final db=FirebaseFirestore.instance;
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+
+
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
@@ -734,7 +762,7 @@ class _PersonalChatState extends State<PersonalChat> {
                           onTap: () {
                             // Navigator.push(
                             //     context,
-                            //     MaterialPageRoute(
+                            //     MaterialPageRoute(MaterialPageRoute(
                             //         builder: (context) => Group_Info()));
                           },
                         ),
@@ -768,7 +796,7 @@ class _PersonalChatState extends State<PersonalChat> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                              widget.uid,
+                             name,
                               style: GoogleFonts.inter(
                                   textStyle: TextStyle(
                                       fontSize: 14.sp,
@@ -1140,6 +1168,8 @@ class _PersonalChatState extends State<PersonalChat> {
                                       child: Container(
                                     // color: Colors.lightGreen,
                                     child: TextField(
+                                      controller: _msg,
+
                                       decoration: InputDecoration(
                                         prefixIcon: Icon(
                                           Icons.emoji_emotions_outlined,
@@ -1251,6 +1281,22 @@ class _PersonalChatState extends State<PersonalChat> {
                           SizedBox(
                             width: 6.w,
                           ),
+
+                          chatButtonChange?
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(37.w, 37.h),
+                                  primary: Color.fromRGBO(248, 206, 97, 1),
+                                  shape: CircleBorder()),
+                              onPressed: () {
+                                setState(() {
+                                  chatButtonChange = false;
+                                });
+                              },
+                              child: SvgPicture.asset(
+                                'assets/per_chat_icons/mic_icon.svg',
+                                height: 18.h,
+                              )):
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   minimumSize: Size(37.w, 37.h),
@@ -1258,8 +1304,8 @@ class _PersonalChatState extends State<PersonalChat> {
                                   shape: CircleBorder()),
                               onPressed: () {},
                               child: SvgPicture.asset(
-                                'assets/per_chat_icons/mic_icon.svg',
-                                height: 18.h,
+                                'assets/per_chat_icons/sendIcon.svg',
+                                height: 15.h,
                               ))
                         ],
                       ),
@@ -1273,7 +1319,23 @@ class _PersonalChatState extends State<PersonalChat> {
       ),
     );
   }
+
+  Future<String> getPName()
+  async {
+    DocumentSnapshot<Map<String, dynamic>> userDetailSnapshot = await db.collection("user-detail").doc(widget.puid).get();
+    return userDetailSnapshot.data()!["name"].toString();
+
+  }
+
+  void getUserDetails(String uid)
+  async {
+    DocumentSnapshot<Map<String, dynamic>> userDetailSnapshot = await db.collection("user-detail").doc(uid).get();
+    print("FB NAME+"+userDetailSnapshot.data()!["name"].toString());
+    name=userDetailSnapshot.data()!["name"].toString();
+
+  }
 }
+
 
 
 
