@@ -660,15 +660,29 @@ class PersonalChat extends StatefulWidget {
 
   @override
   State<PersonalChat> createState() => _PersonalChatState();
+
 }
 
 class _PersonalChatState extends State<PersonalChat> {
+  bool chatButtonChange = true;
+  TextEditingController _msg = TextEditingController();
   int chg = 0;
   bool isSelected = false;
   String name="";
   String? lastSeen;
   List<int> _selectedItems = [];
   var mycolor = Colors.transparent;
+
+  buttonChange(){
+
+    if(_msg.text.isNotEmpty){
+
+      chatButtonChange = false;
+    }
+
+  }
+
+
   List<ChatMessage> messages = [
     ChatMessage(
         messageContent: "Hello, Yuvan",
@@ -716,6 +730,7 @@ class _PersonalChatState extends State<PersonalChat> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
 
 
     return SafeArea(
@@ -1153,6 +1168,8 @@ class _PersonalChatState extends State<PersonalChat> {
                                       child: Container(
                                     // color: Colors.lightGreen,
                                     child: TextField(
+                                      controller: _msg,
+
                                       decoration: InputDecoration(
                                         prefixIcon: Icon(
                                           Icons.emoji_emotions_outlined,
@@ -1264,6 +1281,22 @@ class _PersonalChatState extends State<PersonalChat> {
                           SizedBox(
                             width: 6.w,
                           ),
+
+                          chatButtonChange?
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(37.w, 37.h),
+                                  primary: Color.fromRGBO(248, 206, 97, 1),
+                                  shape: CircleBorder()),
+                              onPressed: () {
+                                setState(() {
+                                  chatButtonChange = false;
+                                });
+                              },
+                              child: SvgPicture.asset(
+                                'assets/per_chat_icons/mic_icon.svg',
+                                height: 18.h,
+                              )):
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   minimumSize: Size(37.w, 37.h),
@@ -1271,8 +1304,8 @@ class _PersonalChatState extends State<PersonalChat> {
                                   shape: CircleBorder()),
                               onPressed: () {},
                               child: SvgPicture.asset(
-                                'assets/per_chat_icons/mic_icon.svg',
-                                height: 18.h,
+                                'assets/per_chat_icons/sendIcon.svg',
+                                height: 15.h,
                               ))
                         ],
                       ),

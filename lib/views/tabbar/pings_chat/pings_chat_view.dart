@@ -25,9 +25,12 @@ class _PingsChatViewState extends State<PingsChatView> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   String? uid;
   List<PingsChatListModel> tileData = [];
-  final _isSelected = [];
+  final _isSelected = Map();
   bool selects = false;
   bool change = false;
+
+  bool longPressedFlag=false;
+  late List selectedItems;
 
   @override
   void initState(){
@@ -70,12 +73,12 @@ class _PingsChatViewState extends State<PingsChatView> {
   Future readData()
   async{
     String uid="plPttbFnMVPvf741ZQJ9GzkTP6V2";
-    // print("Reading");
+    print("Reading");
     // await db.collection("personal-chat-room-detail").get().then((event) {
     await db.collection("personal-chat-room-detail").where("members.$uid.isblocked").get().then((event) {
 
       for (var doc in event.docs) {
-        // print("${doc.id} => ${doc.data()}");
+        print("${doc.id} => ${doc.data()}");
       }
 
     });
@@ -108,9 +111,8 @@ class _PingsChatViewState extends State<PingsChatView> {
             return ListView.builder(
               itemCount: docs.length,
               itemBuilder: (context, index) {
-                if(_isSelected[index]==0){
-
-                }
+                if (!_isSelected.containsKey(index)) // important
+                  _isSelected[index] = false;
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 2),
@@ -118,44 +120,62 @@ class _PingsChatViewState extends State<PingsChatView> {
                     selected: _isSelected[index],
                     tileColor: Colors.white,
                     selectedTileColor: Color.fromRGBO(248, 206, 97, 0.31),
-                    onLongPress: () {
-                      setState((){
-                        _isSelected[index] = !_isSelected[index];
-                        print("OP: ${_isSelected[index]}=!${_isSelected[index]} ");
-                        selects = true;
-                        print("Long Press");
-                      });
+                    // onLongPress: () {
+                    //   setState((){
+                    //     _isSelected[index] = !_isSelected[index];
+                    //     print("OP: ${_isSelected[index]}=!${_isSelected} ");
+                    //     selects = true;
+                    //     print("Long Press");
+                    //   });
+                    //
+                    // }
+                      onLongPress: () {
+                        setState((){
+                          _isSelected[index] = !_isSelected[index];
 
-                    },
-                    onTap: () {
-
-                      print("Array LENGTH: ${_isSelected.length}");
-                      if(_isSelected.length==0)
-                        {
-                          selects=false;
-                        }
-                      else {
-                        if (selects == true) {
-                          setState(() {
-                            _isSelected[index] = !_isSelected[index];
-                            print("Tile Selected1");
-
-                            //_isSelected.removeWhere((key, value) => true);
-                          });
-                        }
-                        else {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-
-                                  builder: (context) =>
-                                      PersonalChat(state: 0,
-                                          uid: uid!,
-                                          puid: docs[index]
-                                              .data()["members"]["$uid"]["peeruid"])));
-                        }
+                          selectedItems.add(index);
+                          print("Selected$index");
+                          print("Selected items$selectedItems");
+                          print("Long Press Triggers");
+                          longPressedFlag=true;
+                        });
                       }
-                      },
+                      ,
+
+                    onTap: ()
+                    {
+                      print(longPressedFlag);
+                    },
+
+                    // onTap: () {
+                    //
+                    //   print("Array LENGTH: ${_isSelected.length}");
+                    //   if(_isSelected.length==0)
+                    //     {
+                    //       selects=false;
+                    //     }
+                    //   else {
+                    //     if (selects == true) {
+                    //       setState(() {
+                    //         _isSelected[index] = !_isSelected[index];
+                    //         print("Tile Selected1");
+                    //
+                    //         //_isSelected.removeWhere((key, value) => true);
+                    //       });
+                    //     }
+                    //     else {
+                    //       Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //
+                    //               builder: (context) =>
+                    //                   PersonalChat(state: 0,
+                    //                       uid: uid!,
+                    //                       puid: docs[index]
+                    //                           .data()["members"]["$uid"]["peeruid"])));
+                    //     }
+                    //   }
+                    //   },
 
                     contentPadding: EdgeInsets.only(
                         left: 10, right: 10, top: 4, bottom: 4),
@@ -259,19 +279,19 @@ class _PingsChatViewState extends State<PingsChatView> {
 
   Future readChat() async{
     final db=FirebaseFirestore.instance;
-    // print("CHAT DATA");
+    print("CHAT DATA");
 
 
     await db.collection("personal-chat-room-details").get().then((event) {
     // await db.collection("personal-chat-room-detail").where("members.$uid.isblocked").get().then((event) {
       for (var doc in event.docs) {
-        // print("${doc.id} => ${doc.data()}");
+        print("${doc.id} => ${doc.data()}");
       }
     });
   }
 
   DateTime getDateTimeSinceEpoch({required String datetime}) {
-    // print(DateTime.fromMillisecondsSinceEpoch(int.parse(datetime)));
+    print(DateTime.fromMillisecondsSinceEpoch(int.parse(datetime)));
     return DateTime.fromMillisecondsSinceEpoch(int.parse(datetime));
   }
   String readTimestamp(int timestamp) {
@@ -280,6 +300,7 @@ class _PingsChatViewState extends State<PingsChatView> {
     var date = new DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
     var diff = date.difference(now);
     var time = '';
+
 
     if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
       time = format.format(date);
