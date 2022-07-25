@@ -145,6 +145,15 @@ class _PingsChatViewState extends State<PingsChatView> {
                     onTap: ()
                     {
                       print(longPressedFlag);
+                      Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+
+                                        builder: (context) =>
+                                            PersonalChat(state: 0,
+                                                uid: uid!,
+                                                puid: docs[index]
+                                                    .data()["members"]["$uid"]["peeruid"])));
                     },
 
                     // onTap: () {
