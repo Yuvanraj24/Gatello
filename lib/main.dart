@@ -35,11 +35,13 @@ import 'views/tabbar/pings_chat/select_contact/select_contact.dart';
 
 Future<void> main() async {
 
-  runApp(MyApp());
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  runApp(MyApp());
+
+
 }
 
 

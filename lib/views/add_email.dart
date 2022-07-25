@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gatello/Authentication/Authentication.dart';
 import 'package:http/http.dart' as http;
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -43,8 +45,16 @@ class _AddEmailState extends State<AddEmail> {
     final _formKey = GlobalKey<FormState>();
   TextEditingController _emailController =TextEditingController();
   String? _email;
+  String? token;
+  getFcmToken()
+  async{
+    token= await getFCMToken();
+  }
+    FirebaseFirestore instance = FirebaseFirestore.instance;
+  var url;
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       
       child: Scaffold(
@@ -212,7 +222,31 @@ class _AddEmailState extends State<AddEmail> {
       });
 
       if (user != null) {
+        String uid=user!.uid;
         register(body);
+        String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+
+        await instance.collection("user-detail").doc(uid).set({
+          "uid": uid,
+          "name": name,
+          "email": widget.email,
+          "pic": (url != null) ? url : null,
+          "description": null,
+          "createdAt": timestamp,
+          "updatedAt": null,
+          "phone": widget.mobileNo,
+          "designation": null,
+          "status": null,
+          "chattingWith": null,
+          "callStatus": false,
+          "token": token,
+          "lastseenStatus": true,
+          "onlineStatus": true,
+          "readRecieptStatus": true,
+
+          // "blocked": null,
+          // "userList": null
+        });
         print("succeed");
       }
       // else if(){

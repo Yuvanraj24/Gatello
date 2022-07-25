@@ -20,7 +20,7 @@ import 'mute_notification.dart';
 
 class PersonalChat extends StatefulWidget {
   const PersonalChat(
-      {Key? key})
+      {Key? key, required int state, required String uid, required puid})
       : super(key: key);
 
   @override

@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../firebase_options.dart';
+import '../chats/personal_chat_screen/pesrsonal_chat.dart';
 
 class PingsChatView extends StatefulWidget {
   const PingsChatView({Key? key}) : super(key: key);
@@ -30,7 +31,8 @@ class _PingsChatViewState extends State<PingsChatView> {
   bool change = false;
 
   bool longPressedFlag=false;
-  late List selectedItems;
+  late List? selectedItems=[];
+  bool isFirstTime=true;
 
   @override
   void initState(){
@@ -133,27 +135,102 @@ class _PingsChatViewState extends State<PingsChatView> {
                         setState((){
                           _isSelected[index] = !_isSelected[index];
 
-                          selectedItems.add(index);
-                          print("Selected$index");
-                          print("Selected items$selectedItems");
-                          print("Long Press Triggers");
-                          longPressedFlag=true;
+                          if(isFirstTime) {
+                            if (selectedItems!.isEmpty) {
+                              print("First Time Long Pressing...x");
+                              selectedItems!.add(index);
+                              isFirstTime=false;
+                              longPressedFlag=true;
+                            }
+                          }
+                          else {
+                            if (selectedItems!.contains(index)) {
+                              print("EXISTS So removing...");
+                              selectedItems!.remove(index);
+                              print("Selected$index");
+                              print("Selected items$selectedItems");
+                            }
+                            else{
+                              selectedItems!.add(index);
+                              print("Selected$index");
+                              print("Selected items$selectedItems");
+                              print("Long Press Triggers");
+                              longPressedFlag=true;
+                            }
+
+                            if(selectedItems!.isEmpty && isFirstTime==false)
+                              {
+                                print("Deselect all");
+                                isFirstTime=true;
+                                longPressedFlag=false;
+                              }
+
+                          }
+
                         });
                       }
                       ,
 
                     onTap: ()
                     {
-                      print(longPressedFlag);
-                      Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
+                      print("Long Press Flag:${longPressedFlag}");
+                      if(longPressedFlag)
+                        {
+                        setState(() {
+                          _isSelected[index] = !_isSelected[index];
+                          if(selectedItems!.isEmpty)
+                            {
+                              longPressedFlag=false;
+                            }
+                          else{
+                            print("Tapping...x");
 
-                                        builder: (context) =>
-                                            PersonalChat(state: 0,
-                                                uid: uid!,
-                                                puid: docs[index]
-                                                    .data()["members"]["$uid"]["peeruid"])));
+                            if (selectedItems!.contains(index)) {
+                              print("EXISTS So removing...");
+                              selectedItems!.remove(index);
+                              print("Selected$index");
+                              print("Selected items$selectedItems");
+                            }
+                            else
+                              {
+                                selectedItems!.add(index);
+                                print("Selected$index");
+                                print("Selected items$selectedItems");
+                                print("Tap Triggers");
+                                longPressedFlag=true;
+                              }
+                          }
+                        });
+
+                        if(selectedItems!.isEmpty && isFirstTime==false)
+                        {
+                          print("Deselect all");
+                          isFirstTime=true;
+                          longPressedFlag=false;
+                        }
+                        }
+                      else
+                        {
+                          print("Page Open");
+                          Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+
+                                            builder: (context) =>
+                                                PersonalChat(state: 0,
+                                                    uid: uid!,
+                                                    puid: docs[index]
+                                                        .data()["members"]["$uid"]["peeruid"])));
+                        }
+                      // Navigator.push(
+                      //               context,
+                      //               MaterialPageRoute(
+                      //
+                      //                   builder: (context) =>
+                      //                       PersonalChat(state: 0,
+                      //                           uid: uid!,
+                      //                           puid: docs[index]
+                      //                               .data()["members"]["$uid"]["peeruid"])));
                     },
 
                     // onTap: () {

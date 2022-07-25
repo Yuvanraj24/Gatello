@@ -2,16 +2,15 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 
-import '';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gatello/views/splash_screen4.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 // import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:overlay_support/overlay_support.dart';
-
-import '../main.dart';
 
 String? codeVerificationId;
 int? forceResendToken;
@@ -55,7 +54,7 @@ Future<UserCredential> signInWithEmail({required String email, required String p
 //   );
 //   return await signIn(credential);
 // }
-
+//
 // Future<UserCredential> signInWithFacebook() async {
 //   final LoginResult loginResult = await FacebookAuth.instance.login();
 //   final OAuthCredential credential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
@@ -170,7 +169,8 @@ Future firebaseExceptionHandler(FirebaseAuthException e, {required BuildContext 
       return Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MyApp(
+              builder: (context) => Splash4(
+
               )));
     }
   } else {
