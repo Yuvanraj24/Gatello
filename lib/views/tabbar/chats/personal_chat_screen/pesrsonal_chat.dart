@@ -20,7 +20,7 @@ import 'mute_notification.dart';
 
 class PersonalChat extends StatefulWidget {
   const PersonalChat(
-      {Key? key, required int state, required String uid, required puid})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -263,7 +263,8 @@ class _PersonalChatState extends State<PersonalChat> {
                             ]),
                   ],
                 )
-              : AppBar(
+              :
+          AppBar(
                   leading: Padding(
                     padding: EdgeInsets.only(
                       left: 18.w,
@@ -293,7 +294,9 @@ class _PersonalChatState extends State<PersonalChat> {
                     // Icon(Icons.account_box),
                     InkWell(
                       child: SvgPicture.asset(
-                        'assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/backward.svg',
+                        'assets/tabbar_icons/tab_v'
+                            'iew_main/chats_image/per_chat_o'
+                            'ntap_icons/backward.svg',
                         width: 18.w,
                       ),
                       onTap: () {},
@@ -301,7 +304,8 @@ class _PersonalChatState extends State<PersonalChat> {
                     SizedBox(width: 16),
                     InkWell(
                         child: SvgPicture.asset(
-                          'assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/delete.svg',
+                          'assets/tabbar_icons/tab_view_main/chats_ima'
+                              'ge/per_chat_ontap_icons/delete.svg',
                           color: Colors.black,
                           height: 20.h,
                         ),
@@ -315,7 +319,8 @@ class _PersonalChatState extends State<PersonalChat> {
 
                     SizedBox(width: 16),
                     SvgPicture.asset(
-                      'assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/forward.svg',
+                      'assets/tabbar_icons/tab_view_main/cha'
+                          'ts_image/per_chat_ontap_icons/forward.svg',
                       width: 18.w,
                     ),
                     PopupMenuButton(
