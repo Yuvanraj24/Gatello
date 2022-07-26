@@ -165,6 +165,7 @@ flutter:
     - assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/backward.svg
     - assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/delete.svg
     - assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/forward.svg
+    - assets/tabbar_icons/tab_view_main/archieved_icon.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
