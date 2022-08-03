@@ -16,7 +16,7 @@ import '../../../firebase_options.dart';
 import '../chats/personal_chat_screen/pesrsonal_chat.dart';
 
 class PingsChatView extends StatefulWidget {
-  const PingsChatView({Key? key}) : super(key: key);
+
 
   @override
   State<PingsChatView> createState() => _PingsChatViewState();

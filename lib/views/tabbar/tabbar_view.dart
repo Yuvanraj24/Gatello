@@ -14,7 +14,7 @@ class Tabbar extends StatefulWidget {
 }
 
 class _TabbarState extends State<Tabbar> {
-
+bool isSelected=false;
 
   @override
   //TestHello
@@ -34,9 +34,113 @@ class _TabbarState extends State<Tabbar> {
               elevation: 20,
               //  shadowColor: Colors.black,
 
-              actionsIconTheme:
-              IconThemeData(color: Color.fromRGBO(0, 0, 0, 1)),
-              actions: [
+              // actionsIconTheme:
+              // IconThemeData(color: Color.fromRGBO(0, 0, 0, 1)),
+              // actions: [
+              //   Row(
+              //     children: [
+              //       Container(
+              //         height: 35.h,
+              //         width: 35.w,
+              //         decoration: BoxDecoration(
+              //             color: Colors.black,
+              //             shape: BoxShape.circle,
+              //             image: DecorationImage(
+              //                 image:
+              //                 AssetImage('assets/per_chat_icons/dp_image.png'),
+              //                 fit: BoxFit.fitWidth)),
+              //       ),
+              //
+              //       SizedBox(width: 15.w,),
+              //       Image.asset('assets/group_info/search.png'),
+              //     ],
+              //   ),
+              //
+              //
+              //   Align(
+              //     alignment: Alignment.centerRight,
+              //     child: PopupMenuButton(
+              //
+              //         iconSize: 25.h,
+              //         itemBuilder: (BuildContext context) => [
+              //           PopupMenuItem(
+              //               child: Container(
+              //                 width: 150.w,
+              //                 child: Row(
+              //                   children: [
+              //                    SvgPicture.asset('assets/tabbar_icons/tab_view_main/new group tab.svg'),
+              //                     SizedBox(
+              //                       width: 12.w,
+              //                     ),
+              //                     Text("New Group",
+              //                         style: GoogleFonts.inter(
+              //                             textStyle: TextStyle(
+              //                               fontSize: 14.sp,
+              //                               color: Color.fromRGBO(0, 0, 0, 1),
+              //                             )))
+              //                   ],
+              //                 ),
+              //               )),
+              //           PopupMenuItem(
+              //               child: Container(
+              //
+              //                 width: 150.w,
+              //                 child: Row(
+              //                   children: [
+              //                 SvgPicture.asset('assets/tabbar_icons/tab_view_main/linked devices tab.svg'),
+              //                     SizedBox(
+              //                       width: 12.w,
+              //                     ),
+              //                     Text("Linked devices",
+              //                         style: GoogleFonts.inter(
+              //                             textStyle: TextStyle(
+              //                               fontSize: 14.sp,
+              //                               color: Color.fromRGBO(0, 0, 0, 1),)))
+              //                   ],
+              //                 ),
+              //               )),
+              //           PopupMenuItem(
+              //               child: Container(
+              //                 width: 150.w,
+              //                 child: Row(
+              //                   children: [
+              //                     SvgPicture.asset('assets/tabbar_icons/tab_view_main/invite frds tab.svg'),
+              //                     SizedBox(
+              //                       width: 12.w,
+              //                     ),
+              //                     Text("Invite friends",
+              //                         style: GoogleFonts.inter(
+              //                             textStyle: TextStyle(
+              //                               fontSize: 14.sp,
+              //                               color: Color.fromRGBO(0, 0, 0, 1),
+              //                             )))
+              //                   ],
+              //                 ),
+              //               )),
+              //           PopupMenuItem(
+              //               child: Container(
+              //
+              //                 width: 150.w,
+              //                 child: Row(
+              //                   children: [
+              //                     SvgPicture.asset('assets/tabbar_icons/tab_view_main/settings_icon.svg'),
+              //                     SizedBox(
+              //                       width: 12.w,
+              //                     ),
+              //                     Text("Settings",
+              //                         style: GoogleFonts.inter(
+              //                             textStyle: TextStyle(
+              //                               fontSize: 14.sp,
+              //                               color: Color.fromRGBO(0, 0, 0, 1),
+              //                             )))
+              //                   ],
+              //                 ),
+              //               ))
+              //         ]),
+              //   ),
+              // ],
+
+              actions:isSelected==false  ? [
                 Row(
                   children: [
                     Container(
@@ -55,19 +159,7 @@ class _TabbarState extends State<Tabbar> {
                     Image.asset('assets/group_info/search.png'),
                   ],
                 ),
-                // CircleAvatar(
-                //     radius: 22.h,
-                //     backgroundImage: NetworkImage(
-                //         "https://c4.wallpaperflare.com/wallpaper/611/838/413/spiderman-hd-4k-superheroes-wallpaper-preview.jpg")),
 
-                // GestureDetector(
-                //     onTap: () {},
-                //     child: Image.asset(
-                //       "assets/icons_assets/search_icon.png",
-                //       width: 14.w,
-                //       height: 13.99.h,
-                //     )),
-                //SizedBox(width: 25.w),
 
                 Align(
                   alignment: Alignment.centerRight,
@@ -150,7 +242,7 @@ class _TabbarState extends State<Tabbar> {
                             ))
                       ]),
                 ),
-              ],
+              ] :[],
               bottom: TabBar(
                 labelPadding: EdgeInsets.all(0),
                 indicatorColor: Color.fromRGBO(255, 255, 255, 1),
