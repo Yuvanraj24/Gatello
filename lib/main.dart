@@ -34,7 +34,7 @@ import 'firebase_options.dart';
 import 'views/tabbar/pings_chat/select_contact/select_contact.dart';
 
 Future<void> main() async {
-
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
