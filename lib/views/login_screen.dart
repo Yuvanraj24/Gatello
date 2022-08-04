@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gatello/handler/SharedPrefHandler.dart';
 import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:http/http.dart' as http;
 
@@ -358,9 +359,12 @@ class _LoginScreenState extends State<LoginScreen> {
             print(jsonEncode(map['result']));
             Map<String, dynamic> map1 = jsonDecode(resultJson);
             print("LOGIN RESPONSE");
-            prefs.setString("userid",  map1['user_id']);
-            prefs.setString("email",  map1['email']);
-            prefs.setString("root_folder_id",  map1['root_folder_id']);
+            // prefs.setString("userid",  map1['user_id']);
+            // prefs.setString("email",  map1['email']);
+            // prefs.setString("root_folder_id",  map1['root_folder_id']);
+
+            SharedPrefHandler sharedPrefHandler=new SharedPrefHandler();
+            sharedPrefHandler.writeUserInfo(map1['user_id'], map1['email'], map1['root_folder_id']);
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (BuildContext ctx) => Tabbar()));
 

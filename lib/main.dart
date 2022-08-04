@@ -33,8 +33,11 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'views/tabbar/pings_chat/select_contact/select_contact.dart';
+import 'package:timezone/data/latest.dart' as tz;
+// import 'package:timezone/timezone.dart' as tz;
 
 Future<void> main() async {
+  tz.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -85,7 +88,7 @@ class _MyAppState extends State<MyApp> {
             },
           );
         },
-        child:Tabbar()
+        child:Splash4()
         // child: Stack(
         //   children: [
         //     Container(

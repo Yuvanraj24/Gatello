@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gatello/handler/SharedPrefHandler.dart';
 import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -533,7 +534,8 @@ bool isSelected=false;
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
     prefs.getString("email");
-    Fluttertoast.showToast(msg: prefs.getString("email").toString(), toastLength: Toast.LENGTH_LONG,timeInSecForIosWeb: 1);
+
+    Fluttertoast.showToast(msg: prefs.getString("userid").toString(), toastLength: Toast.LENGTH_LONG,timeInSecForIosWeb: 1);
 
   }
 }

@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gatello/Authentication/Authentication.dart';
 import 'package:gatello/core/models/pings_chat_model/pings_chats_list_model.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
 
@@ -16,7 +18,6 @@ import '../../../firebase_options.dart';
 import '../chats/personal_chat_screen/pesrsonal_chat.dart';
 
 class PingsChatView extends StatefulWidget {
-
 
   @override
   State<PingsChatView> createState() => _PingsChatViewState();
@@ -33,16 +34,25 @@ class _PingsChatViewState extends State<PingsChatView> {
   bool longPressedFlag=false;
   late List? selectedItems=[];
   bool isFirstTime=true;
+  bool isChatListLoaded=false;
 
   @override
   void initState(){
     super.initState();
+    // uid=_getUID() as String?;
+    print("Current UID:${uid}");
     tileData = pingsChatListData();
 
   }
   void initSP()
-  async{
+  async {
+    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    uid=prefs.getString("userid");
 
+    // isChatListLoaded=true;
+
+    Fluttertoast.showToast(msg: prefs.getString("userid").toString(), toastLength: Toast.LENGTH_LONG,timeInSecForIosWeb: 1);
   }
   final db=FirebaseFirestore.instance;
 
@@ -52,29 +62,38 @@ class _PingsChatViewState extends State<PingsChatView> {
     // readChat();
     // readData();
     // getChatList();
-    return Scaffold(
 
-      backgroundColor: Color.fromRGBO(26, 52, 130, 0.06),
+    return FutureBuilder(
+      future: _getUID(),
+        builder: (context, snapshot)
+      {
+        if(snapshot.hasData)
+          {
+          return Scaffold(
+          backgroundColor: Color.fromRGBO(26, 52, 130, 0.06),
+          // body: isChatListLoaded?getChatList():getChatList(),
+          body: getChatList(),
 
-
-      body:
-      getChatList(),
-
-      floatingActionButton: FloatingActionButton(
+          floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SelectContact()));
+          Navigator.push(context,
+          MaterialPageRoute(builder: (context) => SelectContact()));
           },
           backgroundColor: Color.fromRGBO(248, 206, 97, 1),
           child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
-    );
+          );
+          }
+        return getChatList();
+      },);
   }
+
+
 
 
 
   Future readData()
   async{
-    String uid="plPttbFnMVPvf741ZQJ9GzkTP6V2";
+
     print("Reading");
     // await db.collection("personal-chat-room-detail").get().then((event) {
     await db.collection("personal-chat-room-detail").where("members.$uid.isblocked").get().then((event) {
@@ -91,8 +110,6 @@ class _PingsChatViewState extends State<PingsChatView> {
 
   Widget getChatList()
   {
-
-    uid="HSS4BBvICHbB5BFQ4zu9OUDgOTn2";
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>
       (
 
@@ -299,7 +316,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                               )),
                           SizedBox(height: 3.h),
                          // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
-                         (docs[index].data()["members"]["$uid"]["unreadCount"]==0)?
+                         (docs[index].data()["members"]["${docs[index].data()["members"]["$uid"]["peeruid"]}"]["unreadCount"]==0)?
                              SizedBox():
                          Container(
                              decoration: BoxDecoration(
@@ -315,7 +332,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                              child: Center(
                                child:
                                Text(
-                                   docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
+                                   docs[index].data()["members"]["${docs[index].data()["members"]["$uid"]["peeruid"]}"]["unreadCount"].toString(),
                                    style: GoogleFonts.inter(
                                      textStyle: TextStyle(
                                          fontSize: 11.sp,
@@ -402,5 +419,10 @@ class _PingsChatViewState extends State<PingsChatView> {
     // print("Time:$time");
 
     return time;
+  }
+
+  Future<void> _getUID() async{
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    uid=sharedPrefs.getString("userid");
   }
 }

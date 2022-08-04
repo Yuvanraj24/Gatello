@@ -78,8 +78,10 @@ String getDateTimeChat({required DateTime datetime}) {
 // }
 
 String getDateTimeInChat({required DateTime datetime}) {
+  print("getDateTimeInChat ${datetime.toString()}");
   tz.TZDateTime checkedTime = tz.TZDateTime.parse(tz.local, datetime.toString());
   tz.TZDateTime currentTime = tz.TZDateTime.now(tz.local);
+  print("getDateTimeInChat");
 
   if ((currentTime.year == checkedTime.year) && (currentTime.month == checkedTime.month) && (currentTime.day == checkedTime.day)) {
     return "TODAY";
