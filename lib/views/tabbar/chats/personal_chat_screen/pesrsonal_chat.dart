@@ -1,15 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_chat_bubble/bubble_type.dart';
-import 'package:flutter_chat_bubble/chat_bubble.dart';
-import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gatello/views/tabbar/chats/group_personal_screen/group_personal_chat.dart';
@@ -21,7 +16,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../Authentication/Authentication.dart';
 import '../../../../Helpers/DateTimeHelper.dart';
 import '../../../../Others/Structure.dart';
 import '../../../../Others/lottie_strings.dart';
@@ -35,9 +29,9 @@ import 'mute_notification.dart';
 
 class PersonalChat extends StatefulWidget {
 
-  final String? uid;
-  final String? puid;
-  final int? state;
+  String? uid;
+  String? puid;
+  int? state;
   PersonalChat(
       {Key? key, required this.state, required this.uid, required this.puid})
       : super(key: key);
@@ -47,19 +41,11 @@ class PersonalChat extends StatefulWidget {
 }
 
 class _PersonalChatState extends State<PersonalChat> {
-
   int chg = 0;
-  String uid = getUID();
+  String? uid;
   String? puid;
   int? state;
   bool isSelected = false;
-
-  String? replyUserName;
-  Map? replyMessageMap;
-
-  Map inverseDataType = dataTypeMap.inverse;
-
-  final focusNode = FocusNode();
 
   String tempPuid = "";
   Future<DocumentSnapshot<Map<String, dynamic>>>? initUpdateFuture;
@@ -115,7 +101,6 @@ class _PersonalChatState extends State<PersonalChat> {
 
   @override
   Widget build(BuildContext context) {
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -127,807 +112,726 @@ class _PersonalChatState extends State<PersonalChat> {
 
 
     return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-    future: initUpdateFuture!,
-    builder: (context, emptyChatRoomDetails) {
-      if (emptyChatRoomDetails.connectionState == ConnectionState.done) {
-        return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            stream: _chatRoomStreamController.stream,
-            builder: (context, chatRoomSnapshot) {
-              if (chatRoomSnapshot.hasData && chatRoomSnapshot.connectionState == ConnectionState.active) {
-                if (widget.state == 0) {
-                  return StreamBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
-                      stream: _streamController.stream,
-                      builder: (context, snapshot) {
-                      return SafeArea(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                      'assets/per_chat_icons/chat_background_image.png'),
-                                  fit: BoxFit.cover)),
-                          child: Scaffold(
-                            //  resizeToAvoidBottomInset: true,
-                            backgroundColor: Colors.transparent,
-                            appBar: chg == 0
-                                ? AppBar(
-                              leading: Padding(
-                                // padding: EdgeInsets.only(left: 18.w, bottom: 19.h, top: 24.h
-                                //     // right: 18.w
-                                //     ),
-                                padding: EdgeInsets.only(left: 13),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    InkWell(
-                                      child: Image(
+        future: initUpdateFuture!,
+        builder: (context, emptyChatRoomDetails) {
+          if (emptyChatRoomDetails.connectionState == ConnectionState.done) {
+            return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                stream: _chatRoomStreamController.stream,
+                builder: (context, chatRoomSnapshot) {
+                  if (chatRoomSnapshot.hasData && chatRoomSnapshot.connectionState == ConnectionState.active) {
+                    if (widget.state == 0) {
+                      return StreamBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
+                          stream: _streamController.stream,
+                          builder: (context, snapshot) {
+                            return SafeArea(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    image: DecorationImage(
                                         image: AssetImage(
-                                          'assets/per_chat_icons/back_icon.png',
-                                        ),
-                                        width: 16.w,
-                                      ),
-                                      onTap: () {
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) => Group_Info()));
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              centerTitle: false,
-                              titleSpacing: -5.5.w,
-                              title: Padding(
-                                padding: EdgeInsets.only(
-                                  top: 10.h,
-                                  bottom: 7.h,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height: 35.h,
-                                      width: 35.w,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black,
-                                        shape: BoxShape.circle,
-                                        // image: DecorationImage(
-                                        //     image: AssetImage(
-                                        //         'assets/per_chat_icons/dp_image.png'),
-                                        //     fit: BoxFit.cover)
-                                      ),
-                                    ),
-                                    SizedBox(width: 6.w),
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .spaceAround,
+                                            'assets/per_chat_icons/chat_background_image.png'),
+                                        fit: BoxFit.cover)),
+                                child: Scaffold(
+                                  //  resizeToAvoidBottomInset: true,
+                                  backgroundColor: Colors.transparent,
+                                  appBar: chg == 0
+                                      ? AppBar(
+                                    leading: Padding(
+                                      // padding: EdgeInsets.only(left: 18.w, bottom: 19.h, top: 24.h
+                                      //     // right: 18.w
+                                      //     ),
+                                      padding: EdgeInsets.only(left: 13),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            emptyChatRoomDetails.data!
-                                                .data()!["name"],
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 14.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.black)),
+                                          InkWell(
+                                            child: Image(
+                                              image: AssetImage(
+                                                'assets/per_chat_icons/back_icon.png',
+                                              ),
+                                              width: 16.w,
+                                            ),
+                                            onTap: () {
+                                              // Navigator.push(
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //         builder: (context) => Group_Info()));
+                                            },
                                           ),
-                                          SizedBox(height: 3.h),
-
-                                          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                                              stream: instance.collection("user-detail").doc(widget.puid).snapshots(),
-                                              builder: (context, peerSnapshot) {
-                                                return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                                                  stream: instance.collection("user-detail").doc(widget.uid).snapshots(),
-                                                  builder: (context, userSnapshot) {
-                                                    if (userSnapshot.connectionState == ConnectionState.active &&
-                                                        peerSnapshot.connectionState == ConnectionState.active) {
-
-                                                      print("Test Print");
-                                                      if(userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
-                                                        {
-                                                          if(peerSnapshot.data!.data()!["status"] == "online")
-                                                            {
-                                                              print("Online");
-                                                            }
-                                                          else
-                                                            {
-                                                              if((userSnapshot.data!.data()!["lastseenStatus"] == true && peerSnapshot.data!.data()!["lastseenStatus"] == true))
-                                                                {
-                                                                  print("Last seen ${peerSnapshot.data!.data()!["status"]}");
-                                                                  // print("Last seen ${getDateTimeInChat(datetime: 1659561815134)}");
-                                                                  print("Last seen ${getDateTimeSinceEpoch(datetime: "1659561815134")}");
-
-                                                                  print("Last seen ${getDateTimeInChat(datetime: DateTime.now())}");
-
-
-                                                                  print("Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}");
-                                                                  print("Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}");
-                                                                }
-                                                            }
-                                                        }
-
-                                                      return Container(
-                                                        child: Text(
-                                                          (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
-                                                              ? (peerSnapshot.data!.data()!["status"] == "online")
-                                                              ? "Online"
-                                                              : (userSnapshot.data!.data()!["lastseenStatus"] == true &&
-                                                              peerSnapshot.data!.data()!["lastseenStatus"] == true)
-                                                              ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
-                                                              : "Tap here for user info"
-                                                              : "Tap here for user info",
-                                                          style: GoogleFonts.poppins(
-                                                              textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey)),
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      return Container();
-                                                    }
-                                                  },
-                                                );
-                                              })
-
                                         ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              actionsIconTheme: IconThemeData(color: Colors.black),
-                              actions: [
-                                //   Image.asset('assets/per_chat_icons/call_icon.png'),
-                                //   Image.asset("assets/tabbar_icons/chats_image/video_call_icon.svg"),
-                                InkWell(
-                                  child: SvgPicture.asset(
-                                    'assets/per_chat_icons/call_icon.svg',
-                                    height: 18.h,
-                                  ),
-                                  onTap: () {
-                                    showConfirmationDialog(context);
-                                  },
-                                ),
-                                SizedBox(
-                                  width: 18.w,
-                                ),
-                                SvgPicture.asset(
-                                  'assets/per_chat_icons/video icon.svg',
-                                  height: 22.h,
-                                ),
-                                //  SizedBox(width: 16),
-                                //    Icon(Icons.video_call),
-                                //Image.asset('assets/per_chat_icons/video.png'),
-
-                                PopupMenuButton(
-                                    itemBuilder: (context) =>
-                                    [
-                                      PopupMenuItem(
-                                          onTap: () {},
-                                          child: Text(
-                                            "View Profile",
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1))),
-                                          )),
-                                      PopupMenuItem(
-                                          onTap: () {},
-                                          child: Text(
-                                            "Search",
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1))),
-                                          )),
-                                      PopupMenuItem(
-                                          onTap: () {
-                                            Future.delayed(Duration(seconds: 0),
-                                                    () =>
-                                                    showConfirmationDialog(context)
-                                            );
-                                            //
-
-                                          },
-                                          child: Text(
-                                            "Mute Notification",
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1))),
-                                          )),
-                                      PopupMenuItem(
-                                          onTap: () {
-                                            Future.delayed(Duration(seconds: 0),
-                                                    () =>
-                                                    showConfirmationDialog1(context)
-                                            );
-                                          },
-                                          child: Text(
-                                            "Report",
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1))),
-                                          )),
-                                      PopupMenuItem(
-                                          onTap: () {
-                                            Future.delayed(Duration(seconds: 0),
-                                                    () =>
-                                                    showConfirmationDialog2(
-                                                        context));
-                                          },
-                                          child: Text(
-                                            "Clear chats",
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1))),
-                                          )),
-                                      PopupMenuItem(
-                                          onTap: () {
-                                            Future.delayed(Duration(seconds: 0),
-                                                    () =>
-                                                    showConfirmationDialog3(
-                                                        context));
-                                          },
-                                          child: Text(
-                                            "Block",
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color:
-                                                    Color.fromRGBO(255, 0, 0, 1))),
-                                          ))
-                                    ]),
-                              ],
-                            )
-                                :
-                            AppBar(
-                              leading: Padding(
-                                padding: EdgeInsets.only(
-                                  left: 18.w,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    InkWell(
-                                      child: Image(
-                                        image: AssetImage(
-                                          'assets/per_chat_icons/back_icon.png',
-                                        ),
-                                        width: 16.w,
+                                    centerTitle: false,
+                                    titleSpacing: -5.5.w,
+                                    title: Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 10.h,
+                                        bottom: 7.h,
                                       ),
-                                      onTap: () {
-                                        // Navigator.push(
-                                        // context,
-                                        // MaterialPageRoute(
-                                        //     builder: (context) => Group_Info()));
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              actionsIconTheme: IconThemeData(color: Colors.black),
-                              actions: [
-                                // Icon(Icons.account_box),
-                                InkWell(
-                                  child: SvgPicture.asset(
-                                    'assets/tabbar_icons/tab_v'
-                                        'iew_main/chats_image/per_chat_o'
-                                        'ntap_icons/backward.svg',
-                                    width: 18.w,
-                                  ),
-                                  onTap: () {},
-                                ),
-                                SizedBox(width: 16),
-                                InkWell(
-                                    child: SvgPicture.asset(
-                                      'assets/tabbar_icons/tab_view_main/chats_ima'
-                                          'ge/per_chat_ontap_icons/delete.svg',
-                                      color: Colors.black,
-                                      height: 20.h,
-                                    ),
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return DeleteDialog();
-                                          });
-                                    }),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 35.h,
+                                            width: 35.w,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              shape: BoxShape.circle,
+                                              // image: DecorationImage(
+                                              //     image: AssetImage(
+                                              //         'assets/per_chat_icons/dp_image.png'),
+                                              //     fit: BoxFit.cover)
+                                            ),
+                                          ),
+                                          SizedBox(width: 6.w),
+                                          Flexible(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment
+                                                  .spaceAround,
+                                              children: [
+                                                Text(
+                                                  emptyChatRoomDetails.data!
+                                                      .data()!["name"],
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 14.sp,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: Colors.black)),
+                                                ),
+                                                SizedBox(height: 3.h),
 
-                                SizedBox(width: 16),
-                                SvgPicture.asset(
-                                  'assets/tabbar_icons/tab_view_main/cha'
-                                      'ts_image/per_chat_ontap_icons/forward.svg',
-                                  width: 18.w,
-                                ),
-                                PopupMenuButton(
-                                    itemBuilder: (context) =>
-                                    [
-                                      PopupMenuItem(
-                                          child: Text(
-                                            "Info",
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1))),
-                                          )),
-                                      PopupMenuItem(
-                                          child: Text(
-                                            "Share",
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1))),
-                                          )),
-                                      PopupMenuItem(
+                                                StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                                                    stream: instance.collection("user-detail").doc(widget.puid).snapshots(),
+                                                    builder: (context, peerSnapshot) {
+                                                      return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                                                        stream: instance.collection("user-detail").doc(widget.uid).snapshots(),
+                                                        builder: (context, userSnapshot) {
+                                                          if (userSnapshot.connectionState == ConnectionState.active &&
+                                                              peerSnapshot.connectionState == ConnectionState.active) {
+                                                            return Container(
+                                                              child: Text(
+                                                                (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
+                                                                    ? (peerSnapshot.data!.data()!["status"] == "online")
+                                                                    ? "Online"
+                                                                    : (userSnapshot.data!.data()!["lastseenStatus"] == true &&
+                                                                    peerSnapshot.data!.data()!["lastseenStatus"] == true)
+                                                                    ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
+                                                                    : "Tap here for user info"
+                                                                    : "Tap here for user info",
+                                                                style: GoogleFonts.poppins(
+                                                                    textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey)),
+                                                              ),
+                                                            );
+                                                          } else {
+                                                            return Container();
+                                                          }
+                                                        },
+                                                      );
+                                                    })
+
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actionsIconTheme: IconThemeData(color: Colors.black),
+                                    actions: [
+                                      //   Image.asset('assets/per_chat_icons/call_icon.png'),
+                                      //   Image.asset("assets/tabbar_icons/chats_image/video_call_icon.svg"),
+                                      InkWell(
+                                        child: SvgPicture.asset(
+                                          'assets/per_chat_icons/call_icon.svg',
+                                          height: 18.h,
+                                        ),
+                                        onTap: () {
+                                          showConfirmationDialog(context);
+                                        },
+                                      ),
+                                      SizedBox(
+                                        width: 18.w,
+                                      ),
+                                      SvgPicture.asset(
+                                        'assets/per_chat_icons/video icon.svg',
+                                        height: 22.h,
+                                      ),
+                                      //  SizedBox(width: 16),
+                                      //    Icon(Icons.video_call),
+                                      //Image.asset('assets/per_chat_icons/video.png'),
+
+                                      PopupMenuButton(
+                                          itemBuilder: (context) =>
+                                          [
+                                            PopupMenuItem(
+                                                onTap: () {},
+                                                child: Text(
+                                                  "View Profile",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                )),
+                                            PopupMenuItem(
+                                                onTap: () {},
+                                                child: Text(
+                                                  "Search",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                )),
+                                            PopupMenuItem(
+                                                onTap: () {
+                                                  Future.delayed(Duration(seconds: 0),
+                                                          () =>
+                                                          showConfirmationDialog(context)
+                                                  );
+                                                  //
+
+                                                },
+                                                child: Text(
+                                                  "Mute Notification",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                )),
+                                            PopupMenuItem(
+                                                onTap: () {
+                                                  Future.delayed(Duration(seconds: 0),
+                                                          () =>
+                                                          showConfirmationDialog1(context)
+                                                  );
+                                                },
+                                                child: Text(
+                                                  "Report",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                )),
+                                            PopupMenuItem(
+                                                onTap: () {
+                                                  Future.delayed(Duration(seconds: 0),
+                                                          () =>
+                                                          showConfirmationDialog2(
+                                                              context));
+                                                },
+                                                child: Text(
+                                                  "Clear chats",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                )),
+                                            PopupMenuItem(
+                                                onTap: () {
+                                                  Future.delayed(Duration(seconds: 0),
+                                                          () =>
+                                                          showConfirmationDialog3(
+                                                              context));
+                                                },
+                                                child: Text(
+                                                  "Block",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color:
+                                                          Color.fromRGBO(255, 0, 0, 1))),
+                                                ))
+                                          ]),
+                                    ],
+                                  )
+                                      :
+                                  AppBar(
+                                    leading: Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 18.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          InkWell(
+                                            child: Image(
+                                              image: AssetImage(
+                                                'assets/per_chat_icons/back_icon.png',
+                                              ),
+                                              width: 16.w,
+                                            ),
+                                            onTap: () {
+                                              // Navigator.push(
+                                              // context,
+                                              // MaterialPageRoute(
+                                              //     builder: (context) => Group_Info()));
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actionsIconTheme: IconThemeData(color: Colors.black),
+                                    actions: [
+                                      // Icon(Icons.account_box),
+                                      InkWell(
+                                        child: SvgPicture.asset(
+                                          'assets/tabbar_icons/tab_v'
+                                              'iew_main/chats_image/per_chat_o'
+                                              'ntap_icons/backward.svg',
+                                          width: 18.w,
+                                        ),
+                                        onTap: () {},
+                                      ),
+                                      SizedBox(width: 16),
+                                      InkWell(
+                                          child: SvgPicture.asset(
+                                            'assets/tabbar_icons/tab_view_main/chats_ima'
+                                                'ge/per_chat_ontap_icons/delete.svg',
+                                            color: Colors.black,
+                                            height: 20.h,
+                                          ),
                                           onTap: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return DeleteDialog();
+                                                });
+                                          }),
 
-                                          },
-                                          child: Text(
-                                            "Report",
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1))),
-                                          )),
-                                      PopupMenuItem(
-                                          child: Text(
-                                            "Copy",
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1))),
-                                          )),
-                                    ]),
-                              ],
-                            ),
+                                      SizedBox(width: 16),
+                                      SvgPicture.asset(
+                                        'assets/tabbar_icons/tab_view_main/cha'
+                                            'ts_image/per_chat_ontap_icons/forward.svg',
+                                        width: 18.w,
+                                      ),
+                                      PopupMenuButton(
+                                          itemBuilder: (context) =>
+                                          [
+                                            PopupMenuItem(
+                                                child: Text(
+                                                  "Info",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                )),
+                                            PopupMenuItem(
+                                                child: Text(
+                                                  "Share",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                )),
+                                            PopupMenuItem(
+                                                onTap: () {
 
-                            body: Container(
-                              padding: EdgeInsets.only(
-                                  bottom: 4.h, left: 12, right: 12),
-                              child: Stack(
-                                children: [
-                                  SizedBox(
-                                    height: 2.h,
+                                                },
+                                                child: Text(
+                                                  "Report",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                )),
+                                            PopupMenuItem(
+                                                child: Text(
+                                                  "Copy",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                )),
+                                          ]),
+                                    ],
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 24.h,
-                                        width: 90.w,
-                                        decoration: BoxDecoration(
 
-                                          //color: Colors.black.withOpacity(0.2)
-                                            color: HexColor('#FCFCFC'),
-                                            // border: Border.all(color:HexColor('#CACACA'),
-                                            // width: 0.2)
-                                            borderRadius: BorderRadius.circular(
-                                                width * 0.01),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Color.fromARGB(0, 0, 0, 1))
-                                            ]),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .center,
+                                  body: Container(
+                                    padding: EdgeInsets.only(
+                                        bottom: 4.h, left: 12, right: 12),
+                                    child: Stack(
+                                      children: [
+                                        SizedBox(
+                                          height: 2.h,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            Text(
-                                              '20 Dec 2021',
-                                              style: TextStyle(
-                                                  fontSize: width * 0.031,
-                                                  fontWeight: FontWeight.w500),
+                                            Container(
+                                              height: 24.h,
+                                              width: 90.w,
+                                              decoration: BoxDecoration(
+
+                                                //color: Colors.black.withOpacity(0.2)
+                                                  color: HexColor('#FCFCFC'),
+                                                  // border: Border.all(color:HexColor('#CACACA'),
+                                                  // width: 0.2)
+                                                  borderRadius: BorderRadius.circular(
+                                                      width * 0.01),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Color.fromARGB(0, 0, 0, 1))
+                                                  ]),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment
+                                                    .center,
+                                                children: [
+                                                  Text(
+                                                    '20 Dec 2021',
+                                                    style: TextStyle(
+                                                        fontSize: width * 0.031,
+                                                        fontWeight: FontWeight.w500),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  ListView.builder(
-                                    itemCount: messages.length,
-                                    shrinkWrap: true,
-                                    padding: EdgeInsets.only(top: 10, bottom: 10),
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        padding: EdgeInsets.only(
-                                            top: 10, bottom: 10),
-                                        child: GestureDetector(
-                                          onLongPress: () {
-                                            setState(() {
-                                              if (isSelected) {
-                                                mycolor = Color.fromRGBO(
-                                                    248, 206, 97, 0.31);
-                                                isSelected = false;
-                                                chg = 1;
-                                              } else {
-                                                mycolor = Colors.transparent;
-                                                isSelected = true;
-                                                chg = 0;
-                                              }
-                                            });
-                                          },
-                                          child: Container(
-                                            //  padding: EdgeInsets.only(left: 12.w, right: 12.w),
-                                            color: mycolor,
-                                            child: Align(
-                                              alignment:
-                                              (messages[index].messageType ==
-                                                  "receiver"
-                                                  ? Alignment.topLeft
-                                                  : Alignment.topRight),
-                                              child: Container(
-                                                  constraints: BoxConstraints(
-                                                    minWidth: 100.w,
-                                                    maxWidth: 272.w,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                    messages[index].messageType ==
-                                                        "receiver"
-                                                        ? BorderRadius.only(
-                                                        topLeft: Radius.circular(
-                                                            15),
-                                                        topRight: Radius.circular(
-                                                            15),
-                                                        bottomRight: Radius
-                                                            .circular(15))
-                                                        : BorderRadius.only(
-                                                        topLeft: Radius.circular(
-                                                            15),
-                                                        topRight: Radius.circular(
-                                                            15),
-                                                        bottomLeft: Radius.circular(
-                                                            15)),
-                                                    color:
+                                        ListView.builder(
+                                          itemCount: messages.length,
+                                          shrinkWrap: true,
+                                          padding: EdgeInsets.only(top: 10, bottom: 10),
+                                          physics: NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              padding: EdgeInsets.only(
+                                                  top: 10, bottom: 10),
+                                              child: GestureDetector(
+                                                onLongPress: () {
+                                                  setState(() {
+                                                    if (isSelected) {
+                                                      mycolor = Color.fromRGBO(
+                                                          248, 206, 97, 0.31);
+                                                      isSelected = false;
+                                                      chg = 1;
+                                                    } else {
+                                                      mycolor = Colors.transparent;
+                                                      isSelected = true;
+                                                      chg = 0;
+                                                    }
+                                                  });
+                                                },
+                                                child: Container(
+                                                  //  padding: EdgeInsets.only(left: 12.w, right: 12.w),
+                                                  color: mycolor,
+                                                  child: Align(
+                                                    alignment:
                                                     (messages[index].messageType ==
                                                         "receiver"
-                                                        ? Colors.grey.shade200
-                                                        : Color.fromRGBO(
-                                                        248, 206, 97, 1)),
-                                                  ),
-                                                  padding: EdgeInsets.all(16),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      Text(messages[index]
-                                                          .messageContent,
-                                                          style: GoogleFonts.inter(
-                                                              textStyle: TextStyle(
-                                                                  fontSize: 14.sp,
-                                                                  fontWeight: FontWeight
-                                                                      .w400,
-                                                                  color: Color
-                                                                      .fromRGBO(
-                                                                      0, 0, 0,
-                                                                      1)))),
-                                                      Positioned(
-                                                        right: 1,
-                                                        bottom: 1,
-                                                        child: Text("3:30 PM",
-                                                            style: GoogleFonts
-                                                                .inter(
-                                                                fontSize: 10.sp,
-                                                                fontWeight: FontWeight
-                                                                    .w400,
-                                                                color: Color
-                                                                    .fromRGBO(
-                                                                    12, 16, 29,
-                                                                    0.6))),
-                                                      )
-                                                    ],
-                                                  )),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  Column(mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Container(
-                                          //   padding: EdgeInsets.only(top: 570.h),
-                                          //  color: Colors.blue,
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.only(
-                                                      right: 10),
-                                                  height: 36.h,
-                                                  width: 291.w,
-                                                  decoration: BoxDecoration(
-                                                    color: HexColor('#FFFFFF'),
-                                                    borderRadius: BorderRadius
-                                                        .circular(35.0),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          blurRadius: 0.02,
-                                                          color: Colors.grey)
-                                                    ],
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      SizedBox(width: 4.w),
-                                                      Expanded(
-                                                          child: Container(
-                                                            padding: EdgeInsets
-                                                                .only(right: 5),
-                                                            // color: Colors.lightGreen,
-                                                            child: TextField(
-                                                              decoration: InputDecoration(
-                                                                prefixIcon: Icon(
-                                                                  Icons
-                                                                      .emoji_emotions_outlined,
-                                                                  size: 30,
-                                                                  color: Colors
-                                                                      .black38,
-                                                                ),
-
-                                                                // isDense: true,
-                                                                // isCollapsed: true,
-                                                                border: InputBorder
-                                                                    .none,
-                                                                contentPadding: EdgeInsets
-                                                                    .only(
-                                                                    top: 10.h,
-                                                                    bottom: 10.w,
-                                                                    right: 6),
-                                                                hintText: 'Ping here...',
-                                                                hintStyle: GoogleFonts
-                                                                    .inter(
+                                                        ? Alignment.topLeft
+                                                        : Alignment.topRight),
+                                                    child: Container(
+                                                        constraints: BoxConstraints(
+                                                          minWidth: 100.w,
+                                                          maxWidth: 272.w,
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                          messages[index].messageType ==
+                                                              "receiver"
+                                                              ? BorderRadius.only(
+                                                              topLeft: Radius.circular(
+                                                                  15),
+                                                              topRight: Radius.circular(
+                                                                  15),
+                                                              bottomRight: Radius
+                                                                  .circular(15))
+                                                              : BorderRadius.only(
+                                                              topLeft: Radius.circular(
+                                                                  15),
+                                                              topRight: Radius.circular(
+                                                                  15),
+                                                              bottomLeft: Radius.circular(
+                                                                  15)),
+                                                          color:
+                                                          (messages[index].messageType ==
+                                                              "receiver"
+                                                              ? Colors.grey.shade200
+                                                              : Color.fromRGBO(
+                                                              248, 206, 97, 1)),
+                                                        ),
+                                                        padding: EdgeInsets.all(16),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .start,
+                                                          children: [
+                                                            Text(messages[index]
+                                                                .messageContent,
+                                                                style: GoogleFonts.inter(
                                                                     textStyle: TextStyle(
-                                                                        fontSize: 14
-                                                                            .sp,
+                                                                        fontSize: 14.sp,
                                                                         fontWeight: FontWeight
                                                                             .w400,
-                                                                        color: HexColor(
-                                                                            '#9A9A9A'))),
-                                                              ),
-                                                            ),
-                                                          )),
-                                                      InkWell(
-                                                        child: Image(
-                                                          image: AssetImage(
-                                                              'assets/per_chat_icons/attach_file_icon.png'),
-                                                          height: 30.h,
-                                                        ),
-                                                        onTap: () {
-                                                          showModalBottomSheet(
-                                                              backgroundColor: Colors
-                                                                  .transparent,
-                                                              context: context,
-                                                              builder: (
-                                                                  BuildContext context) {
-                                                                return Container(
-                                                                  height: 250,
-                                                                  width: MediaQuery
-                                                                      .of(context)
-                                                                      .size
-                                                                      .width -
-                                                                      20,
-                                                                  child: Card(
-                                                                    shape: RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                            15),
-                                                                        side: BorderSide(
-                                                                            color: Color
-                                                                                .fromRGBO(
-                                                                                246,
-                                                                                207,
-                                                                                70,
-                                                                                1))),
-                                                                    color: Color
-                                                                        .fromRGBO(
-                                                                        255, 255,
-                                                                        255, 1),
-                                                                    margin: EdgeInsets
-                                                                        .all(30),
-                                                                    child: Column(
-                                                                        mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceEvenly,
-                                                                        children: [
-                                                                          Row(
-                                                                            mainAxisAlignment:
-                                                                            MainAxisAlignment
-                                                                                .spaceEvenly,
-                                                                            children: [
-                                                                              iconCreation(
-                                                                                  "assets/tabbar_icons/chats_image/attachment_icon_container/document_icon_container.png",
-                                                                                  "Document"),
-                                                                              iconCreation(
-                                                                                  "assets/tabbar_icons/chats_image/attachment_icon_container/camera_icon_container.png",
-                                                                                  "Camera"),
-                                                                              iconCreation(
-                                                                                  "assets/tabbar_icons/chats_image/attachment_icon_container/gallery_icon_container.png",
-                                                                                  "Gallery")
-                                                                            ],
-                                                                          ),
-                                                                          Row(
-                                                                            mainAxisAlignment:
-                                                                            MainAxisAlignment
-                                                                                .spaceEvenly,
-                                                                            children: [
-                                                                              iconCreation(
-                                                                                  "assets/tabbar_icons/chats_image/attachment_icon_container/audio_icon_container.png",
-                                                                                  "Audio"),
-                                                                              iconCreation(
-                                                                                  "assets/tabbar_icons/chats_image/attachment_icon_container/location_icon_container.png",
-                                                                                  "Location"),
-                                                                              iconCreation(
-                                                                                  "assets/tabbar_icons/chats_image/attachment_icon_container/contact_icon_container.png",
-                                                                                  "Contact")
-                                                                            ],
-                                                                          )
-                                                                        ]),
-                                                                  ),
-                                                                );
-                                                              });
-                                                        },
-                                                      ),
-                                                      SizedBox(width: 7.w),
-                                                      InkWell(
-                                                        child: Image(
-                                                          image: AssetImage(
-                                                              'assets/per_chat_icons/camera.png'),
-                                                          height: 30.h,
-                                                        ),
-                                                        onTap: () {
-                                                          pickimage();
-                                                        },
-                                                      ),
-                                                      //   SizedBox(width: 12.w),
-                                                    ],
+                                                                        color: Color
+                                                                            .fromRGBO(
+                                                                            0, 0, 0,
+                                                                            1)))),
+                                                            Positioned(
+                                                              right: 1,
+                                                              bottom: 1,
+                                                              child: Text("3:30 PM",
+                                                                  style: GoogleFonts
+                                                                      .inter(
+                                                                      fontSize: 10.sp,
+                                                                      fontWeight: FontWeight
+                                                                          .w400,
+                                                                      color: Color
+                                                                          .fromRGBO(
+                                                                          12, 16, 29,
+                                                                          0.6))),
+                                                            )
+                                                          ],
+                                                        )),
                                                   ),
                                                 ),
                                               ),
-                                              SizedBox(
-                                                width: 6.w,
-                                              ),
-                                              // Container(
-                                              //     decoration: BoxDecoration(
-                                              //         color: Color.fromRGBO(248, 206, 97, 1),
-                                              //         shape: BoxShape.circle),
-                                              //     height: 30.h,
-                                              //     width: 30.w,
-                                              //     child: SvgPicture.asset(
-                                              //       'assets/per_chat_icons/mic_icon.svg',
-                                              //       height: 10,
-                                              //       width: 10,
-
-                                              //       ///  fit: BoxFit.cover,
-                                              //       //  ,width: 20.w,
-                                              //     )
-                                              //     // Image(
-                                              //     //   image:
-                                              //     //    SvgPicture.asset(
-                                              //     //     'assets/per_chat_icons/mic_icon.svg',
-                                              //     //   ),
-                                              //     //  width: 40,
-                                              //     //  height: 50,
-                                              //     // ),
-                                              //     ),
-                                              ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                      minimumSize: Size(37.w, 37.h),
-                                                      primary: Color.fromRGBO(
-                                                          248, 206, 97, 1),
-                                                      shape: CircleBorder()),
-                                                  onPressed: () {},
-                                                  child: SvgPicture.asset(
-                                                    'assets/per_chat_icons/mic_icon.svg',
-                                                    height: 18.h,
-                                                  ))
-                                            ],
-                                          ),
+                                            );
+                                          },
                                         ),
-                                      ]),
-                                ],
+                                        Column(mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Container(
+                                                //   padding: EdgeInsets.only(top: 570.h),
+                                                //  color: Colors.blue,
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding: EdgeInsets.only(
+                                                            right: 10),
+                                                        height: 36.h,
+                                                        width: 291.w,
+                                                        decoration: BoxDecoration(
+                                                          color: HexColor('#FFFFFF'),
+                                                          borderRadius: BorderRadius
+                                                              .circular(35.0),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                blurRadius: 0.02,
+                                                                color: Colors.grey)
+                                                          ],
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            SizedBox(width: 4.w),
+                                                            Expanded(
+                                                                child: Container(
+                                                                  padding: EdgeInsets
+                                                                      .only(right: 5),
+                                                                  // color: Colors.lightGreen,
+                                                                  child: TextField(
+                                                                    decoration: InputDecoration(
+                                                                      prefixIcon: Icon(
+                                                                        Icons
+                                                                            .emoji_emotions_outlined,
+                                                                        size: 30,
+                                                                        color: Colors
+                                                                            .black38,
+                                                                      ),
+
+                                                                      // isDense: true,
+                                                                      // isCollapsed: true,
+                                                                      border: InputBorder
+                                                                          .none,
+                                                                      contentPadding: EdgeInsets
+                                                                          .only(
+                                                                          top: 10.h,
+                                                                          bottom: 10.w,
+                                                                          right: 6),
+                                                                      hintText: 'Ping here...',
+                                                                      hintStyle: GoogleFonts
+                                                                          .inter(
+                                                                          textStyle: TextStyle(
+                                                                              fontSize: 14
+                                                                                  .sp,
+                                                                              fontWeight: FontWeight
+                                                                                  .w400,
+                                                                              color: HexColor(
+                                                                                  '#9A9A9A'))),
+                                                                    ),
+                                                                  ),
+                                                                )),
+                                                            InkWell(
+                                                              child: Image(
+                                                                image: AssetImage(
+                                                                    'assets/per_chat_icons/attach_file_icon.png'),
+                                                                height: 30.h,
+                                                              ),
+                                                              onTap: () {
+                                                                showModalBottomSheet(
+                                                                    backgroundColor: Colors
+                                                                        .transparent,
+                                                                    context: context,
+                                                                    builder: (
+                                                                        BuildContext context) {
+                                                                      return Container(
+                                                                        height: 250,
+                                                                        width: MediaQuery
+                                                                            .of(context)
+                                                                            .size
+                                                                            .width -
+                                                                            20,
+                                                                        child: Card(
+                                                                          shape: RoundedRectangleBorder(
+                                                                              borderRadius:
+                                                                              BorderRadius
+                                                                                  .circular(
+                                                                                  15),
+                                                                              side: BorderSide(
+                                                                                  color: Color
+                                                                                      .fromRGBO(
+                                                                                      246,
+                                                                                      207,
+                                                                                      70,
+                                                                                      1))),
+                                                                          color: Color
+                                                                              .fromRGBO(
+                                                                              255, 255,
+                                                                              255, 1),
+                                                                          margin: EdgeInsets
+                                                                              .all(30),
+                                                                          child: Column(
+                                                                              mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .spaceEvenly,
+                                                                              children: [
+                                                                                Row(
+                                                                                  mainAxisAlignment:
+                                                                                  MainAxisAlignment
+                                                                                      .spaceEvenly,
+                                                                                  children: [
+                                                                                    iconCreation(
+                                                                                        "assets/tabbar_icons/chats_image/attachment_icon_container/document_icon_container.png",
+                                                                                        "Document"),
+                                                                                    iconCreation(
+                                                                                        "assets/tabbar_icons/chats_image/attachment_icon_container/camera_icon_container.png",
+                                                                                        "Camera"),
+                                                                                    iconCreation(
+                                                                                        "assets/tabbar_icons/chats_image/attachment_icon_container/gallery_icon_container.png",
+                                                                                        "Gallery")
+                                                                                  ],
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisAlignment:
+                                                                                  MainAxisAlignment
+                                                                                      .spaceEvenly,
+                                                                                  children: [
+                                                                                    iconCreation(
+                                                                                        "assets/tabbar_icons/chats_image/attachment_icon_container/audio_icon_container.png",
+                                                                                        "Audio"),
+                                                                                    iconCreation(
+                                                                                        "assets/tabbar_icons/chats_image/attachment_icon_container/location_icon_container.png",
+                                                                                        "Location"),
+                                                                                    iconCreation(
+                                                                                        "assets/tabbar_icons/chats_image/attachment_icon_container/contact_icon_container.png",
+                                                                                        "Contact")
+                                                                                  ],
+                                                                                )
+                                                                              ]),
+                                                                        ),
+                                                                      );
+                                                                    });
+                                                              },
+                                                            ),
+                                                            SizedBox(width: 7.w),
+                                                            InkWell(
+                                                              child: Image(
+                                                                image: AssetImage(
+                                                                    'assets/per_chat_icons/camera.png'),
+                                                                height: 30.h,
+                                                              ),
+                                                              onTap: () {
+                                                                pickimage();
+                                                              },
+                                                            ),
+                                                            //   SizedBox(width: 12.w),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 6.w,
+                                                    ),
+                                                    // Container(
+                                                    //     decoration: BoxDecoration(
+                                                    //         color: Color.fromRGBO(248, 206, 97, 1),
+                                                    //         shape: BoxShape.circle),
+                                                    //     height: 30.h,
+                                                    //     width: 30.w,
+                                                    //     child: SvgPicture.asset(
+                                                    //       'assets/per_chat_icons/mic_icon.svg',
+                                                    //       height: 10,
+                                                    //       width: 10,
+
+                                                    //       ///  fit: BoxFit.cover,
+                                                    //       //  ,width: 20.w,
+                                                    //     )
+                                                    //     // Image(
+                                                    //     //   image:
+                                                    //     //    SvgPicture.asset(
+                                                    //     //     'assets/per_chat_icons/mic_icon.svg',
+                                                    //     //   ),
+                                                    //     //  width: 40,
+                                                    //     //  height: 50,
+                                                    //     // ),
+                                                    //     ),
+                                                    ElevatedButton(
+                                                        style: ElevatedButton.styleFrom(
+                                                            minimumSize: Size(37.w, 37.h),
+                                                            primary: Color.fromRGBO(
+                                                                248, 206, 97, 1),
+                                                            shape: CircleBorder()),
+                                                        onPressed: () {},
+                                                        child: SvgPicture.asset(
+                                                          'assets/per_chat_icons/mic_icon.svg',
+                                                          height: 18.h,
+                                                        ))
+                                                  ],
+                                                ),
+                                              ),
+                                            ]),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
+                            );
+                          }
                       );
+                    }else{
+                      return Container();
                     }
-                  );
-                }else{
-                  return Container();
+                  }
+                  else {
+                    return Container();
+                  }
                 }
-              }
-              else {
-                return Container();
-              }
+            );
           }
-        );
-      }
-      else {
-        return exceptionScaffold(context: context, lottieString: loadingLottie, subtitle: "Loading Chats");
-      }
-      }
+          else {
+            return exceptionScaffold(context: context, lottieString: loadingLottie, subtitle: "Loading Chats");
+          }
+        }
     );
   }
-
-
-
-
-
-
-  Future<void> onPointerDown({
-    required PointerDownEvent event,
-    required int replyIndex,
-    required DocumentSnapshot<Map<String, dynamic>> document,
-    required DocumentSnapshot<Map<String, dynamic>> chatRoomSnapshot,
-
-    // DocumentSnapshot<Map<String, dynamic>>? userDetailSnapshot,
-    // QuerySnapshot<Map<String, dynamic>>? userDetailsSnapshot,
-  }) async {
-    // Check if right mouse button clicked
-    if (event.kind == PointerDeviceKind.mouse && event.buttons == kSecondaryMouseButton) {
-      final overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
-      final menuItem = await showMenu<int>(
-          context: context,
-          items: [
-            PopupMenuItem(child: Text('Reply'), value: 1),
-          ],
-          position: RelativeRect.fromSize(event.position & Size(48.0, 48.0), overlay.size));
-      // Check if menu item clicked
-      switch (menuItem) {
-        case 1:
-          {
-            if (widget.state == 0) {
-              if (widget.uid == document.data()!["from"]) {
-                replyUserName = chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"];
-              } else {
-                replyUserName = "You";
-              }
-            } else {
-              chatRoomSnapshot.data()!["members"].forEach((k, v) {
-                if (widget.uid == document.data()!["from"]) {
-                  replyUserName = "You";
-                } else if (k == document.data()!["from"]) {
-                  replyUserName = v["name"];
-                }
-              });
-            }
-            if (!mounted) return;
-            setState(() {
-              replyMessageMap =
-                  replyMap(documentId: document.id, documentIndex: replyIndex, fromUid: document.data()!["from"], type: document.data()!["type"], data: document.data()!["data"]);
-            });
-            focusNode.requestFocus();
-          }
-          break;
-        default:
-      }
-    }
-  }
-
   showConfirmationDialog(BuildContext context) {
     showDialog(
       // barrierDismissible: false,
@@ -1131,8 +1035,6 @@ class _PersonalChatState extends State<PersonalChat> {
       }
     });
   }
-
-
   groupDetailDoc() {
     instance.collection("group-detail").doc(widget.puid).snapshots().listen((snapshot) {
       if (snapshot.exists && _chatRoomStreamController.isClosed == false) {
