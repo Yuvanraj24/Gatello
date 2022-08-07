@@ -26,6 +26,7 @@ import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/chats/personal_chat_screen/pesrsonal_chat.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -73,21 +74,23 @@ class _MyAppState extends State<MyApp> {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-                appBarTheme: AppBarTheme(
-                    shadowColor: Colors.transparent,
-                    backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
-            home: child,
-            routes: {
-              // '/signin': (BuildContext context) => SignIn(),
-              // '/signup': (BuildContext context) => SignUp(),
-              // '/home': (BuildContext context) => Home(),
-            },
+          return OverlaySupport.global(
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                  appBarTheme: AppBarTheme(
+                      shadowColor: Colors.transparent,
+                      backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
+              home: child,
+              routes: {
+                // '/signin': (BuildContext context) => SignIn(),
+                // '/signup': (BuildContext context) => SignUp(),
+                // '/home': (BuildContext context) => Home(),
+              },
+            ),
           );
         },
-        child:Tabbar()
+        child:Splash4()
         // child: Stack(
         //   children: [
         //     Container(
