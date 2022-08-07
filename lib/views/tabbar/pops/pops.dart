@@ -330,44 +330,48 @@ Map feedMap=({
                                             print('Double tapped');
                                              // liked_Button();
                                           },
-                                            // child: CarouselSlider.builder(
-                                            //   itemCount: 1,
-                                            //
-                                            //   itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
-                                            //    Container(
-                                            //     height: 259.h,
-                                            //     width: double.infinity,
-                                            //     decoration: BoxDecoration(
-                                            //         image: DecorationImage(
-                                            //             image: NetworkImage(
-                                            //                 feedsValueNotifier.value.item2.result[index].posts[0]),
-                                            //             fit: BoxFit.fill)),
-                                            //   ), options: CarouselOptions(
-                                            //     pauseAutoPlayInFiniteScroll: true
-                                            //
-                                            //   ),
-                                            // ),
-                                            child: CarouselSlider(
-                                              options: CarouselOptions(
 
-                                                enableInfiniteScroll: false,
-                                              ), items: [feedsValueNotifier.value.item2.result[index].posts.length].map((i) {
-                                              return Builder(
-                                                builder: (BuildContext context) {
-                                                  return Container(
-                                                    child: Text("$i"),
-                                                          height: 259.h,
-                                                          width: double.infinity,
-                                                          decoration: BoxDecoration(
-                                                              image: DecorationImage(
-                                                                  image: NetworkImage(
-                                                                      feedsValueNotifier.value.item2.result[index].posts[0]),
-                                                                  fit: BoxFit.fill)),
-                                                        );
-                                                },
-                                              );
-                                            }).toList(),
-                                            ),
+                                    child: CarouselSlider.builder(
+                                      itemCount: feedsValueNotifier.value.item2.result[index].posts.length,
+                                      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+                                          Padding(
+                                            padding: const EdgeInsets.only(),
+                                            child: Container(
+                                                      child: Text("$itemIndex"),
+                                                            height: 259.h,
+                                                            width: double.infinity,
+                                                            decoration: BoxDecoration(
+                                                                image: DecorationImage(
+                                                                    image: NetworkImage(
+                                                                        feedsValueNotifier.value.item2.result[index].posts[itemIndex]),
+                                                                    fit: BoxFit.fill)),
+                                                          ),
+                                          ),
+                                      options: CarouselOptions(
+                                      enableInfiniteScroll: false,
+                                    ),
+                                    )
+                                            // child: CarouselSlider(
+                                            //   options: CarouselOptions(
+                                            //
+                                            //     enableInfiniteScroll: false,
+                                            //   ), items: [feedsValueNotifier.value.item2.result[index].posts.length].map((i) {
+                                            //   return Builder(
+                                            //     builder: (BuildContext context) {
+                                            //       return Container(
+                                            //         child: Text("$i"),
+                                            //               height: 259.h,
+                                            //               width: double.infinity,
+                                            //               decoration: BoxDecoration(
+                                            //                   image: DecorationImage(
+                                            //                       image: NetworkImage(
+                                            //                           feedsValueNotifier.value.item2.result[index].posts[]),
+                                            //                       fit: BoxFit.fill)),
+                                            //             );
+                                            //     },
+                                            //   );
+                                            // }).toList(),
+                                            // ),
                                           ),
                                           Positioned(
                                               top: 61.h,
