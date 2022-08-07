@@ -26,8 +26,7 @@ import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/chats/personal_chat_screen/pesrsonal_chat.dart';
-import 'package:gatello/views/tabbar/test_code/home.dart';
-import 'package:gatello/views/tabbar/test_code/sing_in_test.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
@@ -88,7 +87,7 @@ class _MyAppState extends State<MyApp> {
             },
           );
         },
-        child:Splash4()
+        child:Tabbar()
         // child: Stack(
         //   children: [
         //     Container(
@@ -114,4 +113,6 @@ class _MyAppState extends State<MyApp> {
       _loginStatus = preferences.getInt("value")!;
     });
   }
+
+  //TestCommentByDeena
 }
