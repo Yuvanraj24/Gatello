@@ -123,6 +123,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/dummy.dart';
+import 'package:gatello/views/profile/allpops.dart';
+import 'package:gatello/views/profile/photo_pops.dart';
+import 'package:gatello/views/profile/readmore.dart';
+import 'package:gatello/views/profile/tabbar.dart';
+import 'package:gatello/views/profile/text.dart';
+import 'package:gatello/views/tabbar/calls/call.dart';
+import 'package:gatello/views/tabbar/calls/incomingcall.dart';
+import 'package:gatello/views/tabbar/pops/No%20request.dart';
+import 'package:gatello/views/tabbar/pops/Requests.dart';
+import 'package:gatello/views/tabbar/pops/birthday.dart';
+import 'package:gatello/views/tabbar/pops/comments.dart';
+import 'package:gatello/views/tabbar/pops/doubletap.dart';
+import 'package:gatello/views/tabbar/pops/interactions.dart';
+import 'package:gatello/views/tabbar/pops/newpost.dart';
+import 'package:gatello/views/tabbar/pops/poplikes.dart';
+import 'package:gatello/views/tabbar/pops/readmore.dart';
+import 'package:gatello/views/tabbar/pops/secondreport.dart';
+import 'package:gatello/views/tabbar/pops/share.dart';
+
 // import 'package:gatello/reset_password.dart';
 // import 'package:gatello/select_contact.dart';
 import 'package:gatello/views/add_email.dart';
@@ -148,6 +167,9 @@ import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/chats/personal_chat_screen/personal_chat.dart';
 import 'package:overlay_support/overlay_support.dart';
 
+import 'package:gatello/views/tabbar/chats/personal_chat_screen/pesrsonal_chat.dart';
+import 'package:gatello/views/tabbar/test_code/home.dart';
+import 'package:gatello/views/tabbar/test_code/sing_in_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
@@ -180,6 +202,8 @@ const String loginip = '$ip/login';
 class MyApp extends StatefulWidget {
   static const IconData phone =
   IconData(0xf4b8, fontFamily: "", fontPackage: "");
+      IconData(0xf4b8, fontFamily: "", fontPackage: "");
+
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -194,20 +218,18 @@ class _MyAppState extends State<MyApp> {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return OverlaySupport.global(
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData(
-                  appBarTheme: AppBarTheme(
-                      shadowColor: Colors.transparent,
-                      backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
-              home: child,
-              routes: {
-                // '/signin': (BuildContext context) => SignIn(),
-                // '/signup': (BuildContext context) => SignUp(),
-                // '/home': (BuildContext context) => Home(),
-              },
-            ),
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+                appBarTheme: AppBarTheme(
+                    shadowColor: Colors.transparent,
+                    backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
+            home: child,
+            routes: {
+              // '/signin': (BuildContext context) => SignIn(),
+              // '/signup': (BuildContext context) => SignUp(),
+              // '/home': (BuildContext context) => Home(),
+            },
           );
         },
         child:Splash4()
@@ -226,6 +248,22 @@ class _MyAppState extends State<MyApp> {
       // ),
     );
   }
+        child:Tabbar(),
+        // child: Stack(
+        //   children: [
+        //     Container(
+        //       width: double.infinity,
+        //       height: double.infinity,
+        //       child: Image.network(
+        //         "https://c4.wallpaperflare.com/wallpaper/384/818/513/himalayas-mountains-landscape-nature-wallpaper-preview.jpg",
+        //         fit: BoxFit.fill,
+        //       ),
+        //     ),
+        //     (_loginStatus == 1) ? Home() : SignIn()
+        //   ],
+        // ),
+        );
+  }}
 
   //Test Comment
 
@@ -237,3 +275,14 @@ class _MyAppState extends State<MyApp> {
     });
   }
 }
+//   var _loginStatus = 0;
+//
+//   getPref() async {
+//     SharedPreferences preferences = await SharedPreferences.getInstance();
+//     setState(() {
+//       _loginStatus = preferences.getInt("value")!;
+//     });
+//   }
+// }
+//
+// class Report_PageState {}

@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:flutter/material.dart';
 // import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -86,7 +85,7 @@ class _New_PostState extends State<New_Post> {
                                   style: GoogleFonts.inter(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 13.sp,
+                                          fontSize: 10.sp,
                                           color: Color.fromRGBO(0, 0, 0, 1))),
                                   // overflow: TextOverflow.ellipsis,
                                 ),
@@ -96,16 +95,16 @@ class _New_PostState extends State<New_Post> {
                         ),
                         items: items
                             .map((item) => DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color.fromRGBO(0, 0, 0, 1),
-                                    ),
-                                  ),
-                                ))
+                          value: item,
+                          child: Text(
+                            item,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w400,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                          ),
+                        ))
                             .toList(),
                         value: selectedValue,
                         onChanged: (value) {
@@ -144,39 +143,46 @@ class _New_PostState extends State<New_Post> {
                 SizedBox(
                   height: 13.h,
                 ),
-                TextField(
-                  controller: _descController,
-                  onChanged: (val) {
-                   desc = _descController.text.toString();
-                  },
-                  maxLines: 10,
-
-                  decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1.w,
-                              color: Color.fromRGBO(181, 181, 181, 1)),
-                          borderRadius: BorderRadius.circular(10)),
-                      hintText: 'Type here...',
-                      hintStyle: GoogleFonts.inter(
-                          textStyle: TextStyle(
-                              color: Color.fromRGBO(165, 165, 165, 1),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16.sp)),
-                      prefix: Container(
-                          height: 32.h,
-                          width: 34.w,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(3)),
-                          child: Image.network(
-                            'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg',
-                            fit: BoxFit.fill,
-                          )),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1.w,
-                              color: Color.fromRGBO(181, 181, 181, 1)),
-                          borderRadius: BorderRadius.circular(10))),
+                Stack(
+                    children: [Container(
+                      height:115.h,width:351.w,decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.transparent,border: Border.all(color:
+                    Color.fromRGBO(222, 222, 222, 1),width:1.w),
+                    ),
+                    ),
+                      Positioned(top: 10,left: 9,
+                        child: Container(height:32.h,width: 34.w,decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            image: DecorationImage(image:NetworkImage(
+                                'https://wallpaperaccess.com/full/2213424.jpg'),fit:
+                            BoxFit.fill)
+                        ),),
+                      ),
+                      TextField(
+                        controller: _descController,
+                        onChanged: (val) {
+                          desc = _descController.text.toString();
+                        },
+                        maxLines:3,
+                        decoration: InputDecoration(contentPadding: EdgeInsets.only(
+                            bottom: 15,left: 76
+                        ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1.w,
+                                    color: Colors.transparent),
+                                borderRadius: BorderRadius.circular(10)),
+                            hintText: 'Write a caption...',
+                            hintStyle: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                    color: Color.fromRGBO(165, 165, 165, 1),
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16.sp)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent),
+                                borderRadius: BorderRadius.circular(10))),
+                      )]
                 ),
                 Column(
                   children: [
@@ -184,11 +190,8 @@ class _New_PostState extends State<New_Post> {
                       padding: const EdgeInsets.only(top: 28, left: 18),
                       child: Row(
                         children: [
-
-                           SvgPicture.asset(
-                                'assets/pops_asset/new_post_gallery.svg'),
-
-
+                          SvgPicture.asset(
+                              'assets/pops_asset/new_post_gallery.svg'),
                           SizedBox(
                             width: 18.w,
                           ),
@@ -292,9 +295,7 @@ class _New_PostState extends State<New_Post> {
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16.sp,
                                   color: Color.fromRGBO(0, 0, 0, 1))),
-                          SizedBox(
-                            width: 257.w,
-                          ),
+                          Spacer(),
                           FlutterSwitch(
                             switchBorder: Border.all(
                                 color: Color.fromRGBO(0, 163, 255, 1),
