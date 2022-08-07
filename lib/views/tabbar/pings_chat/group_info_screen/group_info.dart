@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-// import 'package:gatello/group_info_screen/participants.dart';
-import 'package:gatello/views/tabbar/chats/personal_chat_screen/pesrsonal_chat.dart';
+
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-// import '../select_contact/contact_card.dart';
-// import '../select_contact/select_contact.dart';
-// import '../select_contact/contact_card.dart';
+
 
 import 'button_card.dart';
 import 'contact_card.dart';
