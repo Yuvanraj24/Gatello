@@ -164,10 +164,10 @@ import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
-import 'package:gatello/views/tabbar/chats/personal_chat_screen/personal_chat.dart';
+
 import 'package:overlay_support/overlay_support.dart';
 
-import 'package:gatello/views/tabbar/chats/personal_chat_screen/pesrsonal_chat.dart';
+
 import 'package:gatello/views/tabbar/test_code/home.dart';
 import 'package:gatello/views/tabbar/test_code/sing_in_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -200,9 +200,7 @@ const String loginip = '$ip/login';
 // const String LOGIN = "$ROOT/api/login.php";
 
 class MyApp extends StatefulWidget {
-  static const IconData phone =
-  IconData(0xf4b8, fontFamily: "", fontPackage: "");
-      IconData(0xf4b8, fontFamily: "", fontPackage: "");
+
 
   const MyApp({Key? key}) : super(key: key);
 
@@ -248,7 +246,7 @@ class _MyAppState extends State<MyApp> {
       // ),
     );
   }
-        child:Tabbar(),
+
         // child: Stack(
         //   children: [
         //     Container(
@@ -262,8 +260,6 @@ class _MyAppState extends State<MyApp> {
         //     (_loginStatus == 1) ? Home() : SignIn()
         //   ],
         // ),
-        );
-  }}
 
   //Test Comment
 
