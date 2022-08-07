@@ -24,16 +24,7 @@ import 'package:gatello/Models/MyFeeds.dart' as myFeedsModel;
 
 
 import '../../../../Authentication/Authentication.dart';
-import '../../../../components/snackbar.dart';
 
-import '../../../../core/models/exception/pops_exception.dart';
-
-import '../../../../handler/Network.dart';
-
-import '../../../Others/exception_string.dart';
-
-import '../../../Others/route.dart';
-import '../../../core/models/Feeds.dart';
 import 'newpost.dart';
 
 class Pops_Page extends StatefulWidget {
