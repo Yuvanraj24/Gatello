@@ -332,23 +332,28 @@ Map feedMap=({
                                           },
 
                                     child: CarouselSlider.builder(
+
                                       itemCount: feedsValueNotifier.value.item2.result[index].posts.length,
                                       itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
                                           Padding(
-                                            padding: const EdgeInsets.only(),
+                                            padding: const EdgeInsets.only(left: 5,right: 5),
                                             child: Container(
+
                                                       child: Text("$itemIndex"),
                                                             height: 259.h,
-                                                            width: double.infinity,
+                                                            width: MediaQuery.of(context).size.width,
                                                             decoration: BoxDecoration(
+                                                              color: Colors.red,
                                                                 image: DecorationImage(
                                                                     image: NetworkImage(
                                                                         feedsValueNotifier.value.item2.result[index].posts[itemIndex]),
-                                                                    fit: BoxFit.fill)),
+                                                                    fit: BoxFit.cover)),
                                                           ),
                                           ),
                                       options: CarouselOptions(
                                       enableInfiniteScroll: false,
+                                        aspectRatio: 16/9,
+                                        viewportFraction: 1,
                                     ),
                                     )
                                             // child: CarouselSlider(
