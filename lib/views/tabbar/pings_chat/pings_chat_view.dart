@@ -15,7 +15,8 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../firebase_options.dart';
-import '../chats/personal_chat_screen/personal_chat.dart';
+
+import '../chats/personal_chat_screen/pesrsonal_chat.dart';
 
 
 class PingsChatView extends StatefulWidget {

@@ -26,6 +26,7 @@ import '../../../../core/models/exception/pops_exception.dart';
 
 import '../../../../handler/Network.dart';
 
+import '../../../Models/Default.dart';
 import '../../../Others/exception_string.dart';
 
 import '../../../Others/route.dart';
@@ -58,6 +59,7 @@ Map feedMap=({
 
   ValueNotifier<Tuple4> feedsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
   ValueNotifier<Tuple4> userDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
+  ValueNotifier<Tuple4> likeValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
 
   Future feedsApiCall({required String uid}) async {
 
@@ -69,6 +71,16 @@ Map feedMap=({
       url: feedsUrl,
       requestMethod: 1,
       body: {"user_id": uid},
+    );
+  }
+
+  Future likeApiCall({required String uid, required String name, required String? profileUrl, required String postId}) async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: likeValueNotifier,
+      jsonModel: defaultFromJson,
+      url: likeUrl,
+      requestMethod: 1,
+      body: {"user_id": uid, "username": name, "profile_url": profileUrl ?? "", "post_id": postId},
     );
   }
 
@@ -328,6 +340,16 @@ Map feedMap=({
                                         Stack(children: [
                                           GestureDetector(onDoubleTap: (){
                                             print('Double tapped');
+                                            if(feedsValueNotifier.value.item2.result[index].likesStatus) {
+                                              feedsValueNotifier.value.item2
+                                                  .result[index]
+                                                  .likesStatus = false;
+                                            }
+                                            else
+                                              {
+
+                                              }
+                                            likeApiCall(uid: uid!, name: "akashtest", profileUrl: "", postId: feedsValueNotifier.value.item2.result[index].id.oid);
                                              // liked_Button();
                                           },
 
