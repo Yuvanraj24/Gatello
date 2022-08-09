@@ -1,15 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_chat_bubble/bubble_type.dart';
-import 'package:flutter_chat_bubble/chat_bubble.dart';
-import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gatello/views/tabbar/chats/group_personal_screen/group_personal_chat.dart';
@@ -21,11 +16,11 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../Authentication/Authentication.dart';
 import '../../../../Helpers/DateTimeHelper.dart';
 import '../../../../Others/Structure.dart';
 import '../../../../Others/components/ExceptionScaffold.dart';
 import '../../../../Others/lottie_strings.dart';
+
 import '../../../../core/models/pings_chat_model/pings_personal_chat_model.dart';
 import '../../../../handler/LifeCycle.dart';
 import 'block_dialog.dart';
@@ -35,9 +30,9 @@ import 'mute_notification.dart';
 
 class PersonalChat extends StatefulWidget {
 
-  final String? uid;
-  final String? puid;
-  final int? state;
+  String? uid;
+  String? puid;
+  int? state;
   PersonalChat(
       {Key? key, required this.state, required this.uid, required this.puid})
       : super(key: key);
@@ -47,19 +42,11 @@ class PersonalChat extends StatefulWidget {
 }
 
 class _PersonalChatState extends State<PersonalChat> {
-
   int chg = 0;
-  String uid = getUID();
+  String? uid;
   String? puid;
   int? state;
   bool isSelected = false;
-
-  String? replyUserName;
-  Map? replyMessageMap;
-
-  Map inverseDataType = dataTypeMap.inverse;
-
-  final focusNode = FocusNode();
 
   String tempPuid = "";
   Future<DocumentSnapshot<Map<String, dynamic>>>? initUpdateFuture;
@@ -115,7 +102,6 @@ class _PersonalChatState extends State<PersonalChat> {
 
   @override
   Widget build(BuildContext context) {
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -224,31 +210,6 @@ class _PersonalChatState extends State<PersonalChat> {
                                                   builder: (context, userSnapshot) {
                                                     if (userSnapshot.connectionState == ConnectionState.active &&
                                                         peerSnapshot.connectionState == ConnectionState.active) {
-
-                                                      print("Test Print");
-                                                      if(userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
-                                                        {
-                                                          if(peerSnapshot.data!.data()!["status"] == "online")
-                                                            {
-                                                              print("Online");
-                                                            }
-                                                          else
-                                                            {
-                                                              if((userSnapshot.data!.data()!["lastseenStatus"] == true && peerSnapshot.data!.data()!["lastseenStatus"] == true))
-                                                                {
-                                                                  print("Last seen ${peerSnapshot.data!.data()!["status"]}");
-                                                                  // print("Last seen ${getDateTimeInChat(datetime: 1659561815134)}");
-                                                                  print("Last seen ${getDateTimeSinceEpoch(datetime: "1659561815134")}");
-
-                                                                  print("Last seen ${getDateTimeInChat(datetime: DateTime.now())}");
-
-
-                                                                  print("Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}");
-                                                                  print("Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}");
-                                                                }
-                                                            }
-                                                        }
-
                                                       return Container(
                                                         child: Text(
                                                           (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
@@ -872,62 +833,6 @@ class _PersonalChatState extends State<PersonalChat> {
       }
     );
   }
-
-
-
-
-
-
-  Future<void> onPointerDown({
-    required PointerDownEvent event,
-    required int replyIndex,
-    required DocumentSnapshot<Map<String, dynamic>> document,
-    required DocumentSnapshot<Map<String, dynamic>> chatRoomSnapshot,
-
-    // DocumentSnapshot<Map<String, dynamic>>? userDetailSnapshot,
-    // QuerySnapshot<Map<String, dynamic>>? userDetailsSnapshot,
-  }) async {
-    // Check if right mouse button clicked
-    if (event.kind == PointerDeviceKind.mouse && event.buttons == kSecondaryMouseButton) {
-      final overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
-      final menuItem = await showMenu<int>(
-          context: context,
-          items: [
-            PopupMenuItem(child: Text('Reply'), value: 1),
-          ],
-          position: RelativeRect.fromSize(event.position & Size(48.0, 48.0), overlay.size));
-      // Check if menu item clicked
-      switch (menuItem) {
-        case 1:
-          {
-            if (widget.state == 0) {
-              if (widget.uid == document.data()!["from"]) {
-                replyUserName = chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"];
-              } else {
-                replyUserName = "You";
-              }
-            } else {
-              chatRoomSnapshot.data()!["members"].forEach((k, v) {
-                if (widget.uid == document.data()!["from"]) {
-                  replyUserName = "You";
-                } else if (k == document.data()!["from"]) {
-                  replyUserName = v["name"];
-                }
-              });
-            }
-            if (!mounted) return;
-            setState(() {
-              replyMessageMap =
-                  replyMap(documentId: document.id, documentIndex: replyIndex, fromUid: document.data()!["from"], type: document.data()!["type"], data: document.data()!["data"]);
-            });
-            focusNode.requestFocus();
-          }
-          break;
-        default:
-      }
-    }
-  }
-
   showConfirmationDialog(BuildContext context) {
     showDialog(
       // barrierDismissible: false,
@@ -1131,8 +1036,6 @@ class _PersonalChatState extends State<PersonalChat> {
       }
     });
   }
-
-
   groupDetailDoc() {
     instance.collection("group-detail").doc(widget.puid).snapshots().listen((snapshot) {
       if (snapshot.exists && _chatRoomStreamController.isClosed == false) {
