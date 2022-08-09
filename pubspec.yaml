@@ -85,13 +85,16 @@ dependencies:
   flutter_callkit_incoming: ^1.0.2+1
   dropdown_button2: ^1.7.1
   overlay_support: ^2.0.1
+  logger: ^1.1.0
+  carousel_slider: ^4.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: 
+  image_path:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -114,7 +117,7 @@ flutter:
     - assets/appbar_action/Rectangle 7.png
     - assets/profile_page/profile_pic_logo.png
     - assets/invite_friends/invite_friends_logo.png
-    - assets/birthday_image/birthday_logo.png 
+    - assets/birthday_image/birthday_logo.png
     - assets/splash_1/glogo.png
     - assets/splash2_image/splah2 _image.png
     - assets/splash3_image/splash3_image.png
@@ -178,6 +181,35 @@ flutter:
     - assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/delete.svg
     - assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/forward.svg
     - assets/tabbar_icons/tab_view_main/archieved_icon.svg
+    - assets/pops_asset/pops_gallery.svg
+    - assets/pops_asset/pops_likebutton.svg
+    - assets/pops_asset/pops_commentbutton.svg
+    - assets/pops_asset/pops_share.svg
+    - assets/pops_asset/pops_savebutton.svg
+    - assets/pops_asset/pops_sharefinal.svg
+    - assets/pops_asset/search_image.svg
+    - assets/pops_asset/Search-popsfinal.svg
+    - assets/pops_asset/Final_tick.svg
+    - assets/pops_asset/new_post_gallery.svg
+    - assets/pops_asset/Tag_people.svg
+    - assets/pops_asset/Location_image.svg
+    - assets/pops_asset/liked.svg
+    - assets/pops_asset/norequestpops.svg
+    - assets/pops_asset/searchicon.svg
+    - assets/tabbar_icons/tab_view_main/back_icon.svg
+    - assets/pops_asset/floating_comment.svg
+    - assets/pops_asset/interactions.svg
+    - assets/pops_asset/tagpeople.svg
+    - assets/call_assets/noconversation.svg
+    - assets/call_assets/callsymbol.svg
+    - assets/call_assets/calldecline - Copy.svg
+    - assets/call_assets/chat_call.svg
+    - assets/call_assets/arrow_upward.svg
+    - assets/call_assets/arrow2.svg
+    - assets/call_assets/arrow3.svg
+    - assets/profile_assets/back_button.svg
+    - assets/profile_assets/born on.svg
+    - assets/profile_assets/call_outline.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

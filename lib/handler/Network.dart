@@ -13,7 +13,7 @@ import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:http_parser/http_parser.dart';
-// import 'package:logger/logger.dart';
+import 'package:logger/logger.dart';
 import 'package:tuple/tuple.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -23,7 +23,7 @@ import 'package:path_provider/path_provider.dart';
 
 
 import '../Others/exception_string.dart';
-import '../Others/logger.dart';
+// import '../Others/logger.dart';
 import '../core/models/default.dart';
 import '../core/models/exception/pops_exception.dart';
 
@@ -81,9 +81,11 @@ class ApiHandler {
           } else if (formData == null && formBody != null) {
             var request = new http.MultipartRequest("POST", uri);
             request.fields.addAll(formBody);
+            print("Calling API ${uri}");
             return request.send();
           } else {
             if (body != null) {
+              print("Calling API ${uri}");
               return await http.post(uri, headers: _httpHeader(headers: headers, authToken: authToken), body: jsonEncode(body));
             } else {
               return await http.post(uri, headers: _httpHeader(headers: headers, authToken: authToken));
@@ -141,16 +143,20 @@ class ApiHandler {
           );
           var response = await _httpRequest(uri: uri, requestMethod: requestMethod, headers: headers, authToken: authToken, formData: formData, formBody: formBody, body: body);
           if (formData != null || formBody != null) {
+            print("Calling API ${uri}");
             response = await http.Response.fromStream(response);
+
           }
           logger.i(
             "Url\n" + url.toString() + "Response\n" + response.body.toString() + "Status\n" + response.statusCode.toString(),
           );
           if (response.statusCode == 200) {
             var jsonResponse = json.decode(response.body);
+            print("JSON RESP ${jsonResponse}");
             inspect(jsonResponse);
             if (jsonResponse["status"].toString() == "OK") {
               valueNotifier.value = Tuple4(1, jsonModel(utf8.decode(Runes(response.body).string.codeUnits)), jsonResponse["message"].toString(), jsonResponse);
+              print("JSON RESP ${jsonResponse}");
             } else if (jsonResponse["statusCode"] == "200") {
               valueNotifier.value = Tuple4(1, jsonModel(utf8.decode(Runes(response.body).string.codeUnits)), jsonResponse["statusMessage"].toString(), jsonResponse);
             } else {
@@ -160,21 +166,25 @@ class ApiHandler {
             }
           } else {
             switch (response.statusCode) {
+
               case 404:
                 {
                   valueNotifier.value = Tuple4(2, exceptionFromJson(notFound), response.reasonPhrase!, null);
+                  print("API ERROR ${response.statusCode}");
                 }
                 break;
 
               case 500:
                 {
                   valueNotifier.value = Tuple4(2, exceptionFromJson(serverError), response.reasonPhrase!, null);
+                  print("API ERROR ${response.statusCode}");
                 }
                 break;
 
               default:
                 {
                   valueNotifier.value = Tuple4(2, exceptionFromJson(invalid), response.reasonPhrase!, null);
+                  print("API ERROR ${response.statusCode}");
                 }
                 break;
             }
