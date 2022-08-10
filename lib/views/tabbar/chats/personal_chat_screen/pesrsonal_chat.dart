@@ -3825,8 +3825,8 @@ class _PersonalChatState extends State<PersonalChat> with TickerProviderStateMix
         //   });
         // }
         if (snapshot.exists && lastUnreadCount == 0 && lastReadTimestamp == null) {
-          lastUnreadCount = snapshot.data()!["members.${widget.uid}.unreadCount"] ?? 0;
-          lastReadTimestamp = snapshot.data()!["members.${widget.uid}.lastRead"];
+          lastUnreadCount = snapshot.data()!["members.${widget.uid!}.unreadCount"] ?? 0;
+          lastReadTimestamp = snapshot.data()!["members.${widget.uid!}.lastRead"];
         }
       } else {
         lastUnreadCount = 0;

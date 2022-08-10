@@ -22,7 +22,6 @@ import 'package:gatello/views/tabbar/pops/poplikes.dart';
 import 'package:gatello/views/tabbar/pops/readmore.dart';
 import 'package:gatello/views/tabbar/pops/secondreport.dart';
 import 'package:gatello/views/tabbar/pops/share.dart';
-
 // import 'package:gatello/reset_password.dart';
 // import 'package:gatello/select_contact.dart';
 import 'package:gatello/views/add_email.dart';
@@ -132,33 +131,33 @@ class _MyAppState extends State<MyApp> {
         initial: widget.savedThemeMode ?? AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {
           return ScreenUtilInit(
-              designSize: Size(360, 800),
-              minTextAdapt: true,
-              splitScreenMode: true,
-              builder: (context, child) {
-                return MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  theme: ThemeData(
-                      appBarTheme: AppBarTheme(
-                          shadowColor: Colors.transparent,
-                          backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
-                  home: FutureBuilder(
-                      future: getVisitedFlag(),
-                      builder: (context, snapshot) {
-                        themedata = AdaptiveTheme.of(context).modeChangeNotifier;
-                        return ValueListenableBuilder(
-                            valueListenable: themedata,
-                            builder: (context, value, _) {
-                              if (snapshot.connectionState == ConnectionState.done) {
-                                return (snapshot.data == true) ? Tabbar() : LoginScreen();
-                              } else {
-                                return lottieAnimation(loadingLottie);
-                              }
-                            });
-                      }),
+            designSize: Size(360, 800),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                    appBarTheme: AppBarTheme(
+                        shadowColor: Colors.transparent,
+                        backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
+                home: FutureBuilder(
+                    future: getVisitedFlag(),
+                    builder: (context, snapshot) {
+                      themedata = AdaptiveTheme.of(context).modeChangeNotifier;
+                      return ValueListenableBuilder(
+                          valueListenable: themedata,
+                          builder: (context, value, _) {
+                            if (snapshot.connectionState == ConnectionState.done) {
+                              return (snapshot.data == true) ? Tabbar() : LoginScreen();
+                            } else {
+                              return lottieAnimation(loadingLottie);
+                            }
+                          });
+                    }),
 
-                );
-              },
+              );
+            },
 
           );
         },

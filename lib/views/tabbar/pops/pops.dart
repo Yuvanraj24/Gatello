@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gatello/views/tabbar/pops/comments.dart';
 import 'package:gatello/views/tabbar/pops/report.dart';
 import 'package:gatello/views/tabbar/pops/share.dart';
 import 'package:http/http.dart' as http;
@@ -44,18 +46,20 @@ class Pops_Page extends StatefulWidget {
 
 class _Pops_PageState extends State<Pops_Page> {
 
+  bool liked=false;
+  bool showThumbsUp=false;
   String? uid;
 
-  List<Map> feedData=[];
+ // List<Map> feedData=[];
 
-  Map postMap=({});
-Map feedMap=({
-  'id':'123',
-  'uid':'12345',
-  'uname':'akashtest',
-  'prourl':'',
-  'desc':'feeded'
-});
+ // Map postMap=({});
+// Map feedMap=({
+//   'id':'123',
+//   'uid':'12345',
+//   'uname':'akashtest',
+//   'prourl':'',
+//   'desc':'feeded'
+// });
 
   ValueNotifier<Tuple4> feedsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
   ValueNotifier<Tuple4> userDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
@@ -80,7 +84,9 @@ Map feedMap=({
       jsonModel: defaultFromJson,
       url: likeUrl,
       requestMethod: 1,
-      body: {"user_id": uid, "username": name, "profile_url": profileUrl ?? "", "post_id": postId},
+      body: {"user_id": uid, "username": name,
+      "profile_url": profileUrl ?? "",
+      "post_id": postId},
     );
   }
 
@@ -92,6 +98,27 @@ Map feedMap=({
       requestMethod: 1,
       body: {"user_id": uid},
     );
+  }
+
+  _onpressed(){
+    setState((){
+      liked=!liked;
+    });
+  }
+  _ondoubleTap(){
+    setState((){
+      showThumbsUp =true;
+      liked=true;
+      if(showThumbsUp){
+        // showThumbsUp=false;
+        Timer(const Duration(milliseconds: 400),() {
+          setState((){
+            showThumbsUp=false;
+          });
+
+        });
+      }
+    });
   }
 
 
@@ -238,7 +265,8 @@ Map feedMap=({
                                               ),
                                               CircleAvatar(
                                                 backgroundImage: NetworkImage(
-                                                    'https://www.whatsappimages.in/wp-content/uploads/2021/12/Creative-Whatsapp-Dp-Pics-Download.jpg'),
+                                                    'https://www.whatsappimages.in/wp-content/'
+                                                        'uploads/2021/12/Creative-Whatsapp-Dp-Pics-Download.jpg'),
                                                 radius: 20,
                                               ),
                                               Padding(
@@ -337,8 +365,14 @@ Map feedMap=({
                                             ],
                                           ),
                                         ),
-                                        Stack(children: [
-                                          GestureDetector(onDoubleTap: (){
+                                        Stack(
+
+                                            alignment:Alignment.center,children: [
+                                          GestureDetector(
+
+                                              onDoubleTap: (){
+                                                _ondoubleTap();
+
                                             print('Double tapped');
                                             if(feedsValueNotifier.value.item2.result[index].likesStatus) {
                                               feedsValueNotifier.value.item2
@@ -349,8 +383,12 @@ Map feedMap=({
                                               {
 
                                               }
-                                            likeApiCall(uid: uid!, name: "akashtest", profileUrl: "", postId: feedsValueNotifier.value.item2.result[index].id.oid);
-                                             // liked_Button();
+                                            likeApiCall(
+                                                uid: uid!,
+                                                name: "akashtest", profileUrl: "",
+                                                postId: feedsValueNotifier.value.item2.result[index].id.oid
+                                                    );
+
                                           },
 
                                     child: CarouselSlider.builder(
@@ -368,7 +406,8 @@ Map feedMap=({
                                                               color: Colors.red,
                                                                 image: DecorationImage(
                                                                     image: NetworkImage(
-                                                                        feedsValueNotifier.value.item2.result[index].posts[itemIndex]),
+                                                                        feedsValueNotifier.value.item2.result[index].
+                                                                        posts[itemIndex]),
                                                                     fit: BoxFit.cover)),
                                                           ),
                                           ),
@@ -400,11 +439,16 @@ Map feedMap=({
                                             // }).toList(),
                                             // ),
                                           ),
-                                          Positioned(
-                                              top: 61.h,
-                                              left: 139.w,
-                                              right: 139.w,
-                                              child: liked_Button()),
+                                          showThumbsUp? Icon(Icons.thumb_up_sharp,color: Colors.white,
+                                            size: 80,
+
+
+                                          ):Container(),
+                                          // Positioned(
+                                          //     top: 61.h,
+                                          //     left: 139.w,
+                                          //     right: 139.w,
+                                          //     child: liked_Button()),
                                           Positioned(
                                             top: 208.h,
                                             left: 12.w,
@@ -450,9 +494,23 @@ Map feedMap=({
                                                     SizedBox(
                                                       width: 28.w,
                                                     ),
-                                                    SvgPicture.asset(
-                                                      'assets/pops_asset/pops_likebutton.svg',
-                                                    ),
+                                                    IconButton(onPressed: (){
+                                                      _onpressed();
+
+                                                      if(feedsValueNotifier.value.item2.result[index].likesStatus) {
+                                                        feedsValueNotifier.value.item2
+                                                            .result[index]
+                                                            .likesStatus = false;
+                                                      }
+                                                      else
+                                                      {
+
+                                                      }
+                                                      likeApiCall(uid: uid!,
+                                                          name: "akashtest", profileUrl: "",
+                                                          postId: feedsValueNotifier.value.item2.result[index].id.oid);
+                                                    },  icon:Icon( liked ? Icons.thumb_up_sharp :Icons.thumb_up_outlined,
+                                                        color: Colors.black), ),
                                                     SizedBox(
                                                       width: 7.w,
                                                     ),
@@ -470,8 +528,14 @@ Map feedMap=({
                                                     SizedBox(
                                                       width: 13.w,
                                                     ),
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(top: 6),
+                                                    InkWell(
+                                                      onTap:(){
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(builder: (context) =>Command_page()),
+                                                        );
+
+                                                      },
                                                       child: SvgPicture.asset(
                                                           'assets/pops_asset/pops_commentbutton.svg'),
                                                     ),
@@ -609,21 +673,6 @@ Map feedMap=({
       }
     );
   }
-
-  Widget liked_Button(){
-    return Padding(
-      padding: const EdgeInsets.only(top: 18),
-      child: Container(
-          height: 82.h,
-          width: 82.w,
-        child: Icon(Icons.thumb_up_alt,size: 40,),
-        // SvgPicture.asset('assets/pops_asset/liked.svg',height: 20.h,width: 20.w,),
-        decoration:BoxDecoration(shape: BoxShape.circle, color: Color.fromRGBO(255, 255, 255, 1)
-        )
-      ),
-    );
-  }
-
   Widget likedmembers() {
     return Container(
       height: 16.h,

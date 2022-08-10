@@ -6,16 +6,57 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import '/Models/Comments.dart'as commentsModel;
 
+
+
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tuple/tuple.dart';
+import '../../../Models/Default.dart';
+import '../../../Others/exception_string.dart';
+import '../../../Others/route.dart';
+import '../../../core/models/exception/pops_exception.dart';
+import '../../../handler/Network.dart';
 class Command_page extends StatefulWidget {
   const Command_page({Key? key}) : super(key: key);
   @override
   State<Command_page> createState() => _Command_pageState();
 }
 class _Command_pageState extends State<Command_page> {
+
+  TextEditingController commentTextEditingController = TextEditingController();
+  TextEditingController _controller = TextEditingController();
+  ValueNotifier<Tuple4> listCommentsValueNotifier = ValueNotifier<Tuple4>
+    (Tuple4(0, exceptionFromJson(loading), "Loading", null));
+  ValueNotifier<Tuple4> createCommentValueNotifier = ValueNotifier<Tuple4>
+    (Tuple4(-1, exceptionFromJson(alert), "Null", null));
+  Future createCommentApiCall() async {
+    return await ApiHandler().apiHandler(
+        valueNotifier: createCommentValueNotifier,
+        jsonModel: defaultFromJson,
+        url: createCommentUrl,
+        requestMethod: 1,
+        body: {
+          "post_id": "6215ec017abcbe8d47377836",
+          "user_id":"s8b6XInslPffQEgz8sVTINsPhcx2",
+          "profile_pic":"",
+          "username":"akashtest",
+          "content":commentTextEditingController.text,
+          "time_stamp":"234e23432"
+        }
+    );
+  }
+  // Future listCommentsApiCall() async {
+  //   return await ApiHandler().apiHandler(
+  //     valueNotifier: listCommentsValueNotifier,
+  //     jsonModel: commentsModel.commentsFromJson,
+  //     url: commentsListUrl,
+  //     requestMethod: 1,
+  //     body: {"post_id":"6215ec017abcbe8d47377836"},
+  //   );
+  // }
   String? posturl;
-  TextEditingController _controller5 = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +80,12 @@ class _Command_pageState extends State<Command_page> {
           Padding(
             padding: const EdgeInsets.only(top:11,left: 12,right: 12),
             child: TextField(
-              controller: _controller5,
+
+              controller: _controller,
+              onChanged: (value){
+
+                commentTextEditingController=  _controller;
+              },
               decoration: InputDecoration(
                 prefix: Container(
                   height: 54.h,
@@ -60,7 +106,10 @@ class _Command_pageState extends State<Command_page> {
                       primary: Color.fromRGBO(248, 206, 97, 1),
                       fixedSize: Size(80.w,20),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+
+                      createCommentApiCall();
+                    },
                     child: Center(
                       child: Text(
                         'Post',
@@ -86,8 +135,9 @@ class _Command_pageState extends State<Command_page> {
           ),
           Expanded(
             child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
+         // itemCount: listCommentsValueNotifier.value.item2.result.length,
+itemCount: 5,
+                itemBuilder: (context, commentIndex) {
                   return comment_Section();
                 }),
           )
@@ -99,6 +149,9 @@ class _Command_pageState extends State<Command_page> {
 
 }
 Widget comment_Section() {
+  // ValueNotifier<Tuple4> listCommentsValueNotifier = ValueNotifier<Tuple4>
+  //   (Tuple4(0, exceptionFromJson(loading), "Loading", null));
+  //var listCommentsValueNotifier;
   return Padding(
     padding: const EdgeInsets.only(top: 16, left: 2),
     child: Row(
@@ -126,7 +179,9 @@ Widget comment_Section() {
             Padding(
               padding: const EdgeInsets.only(left: 3),
               child: Text(
-                'thewebions',
+                'hh',
+              //  listCommentsValueNotifier.value.item2.result.username,
+
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w700,
@@ -136,7 +191,8 @@ Widget comment_Section() {
             ),
             SizedBox(height: 10.h),
             Text(
-              ' Nice Work🔥🔥🔥',
+              'dvv',
+             // listCommentsValueNotifier.value.item2.result.content,
               style: GoogleFonts.inter(
                   textStyle: TextStyle(
                       fontWeight: FontWeight.w400,
