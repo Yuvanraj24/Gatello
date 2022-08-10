@@ -87,6 +87,16 @@ dependencies:
   overlay_support: ^2.0.1
   logger: ^1.1.0
   carousel_slider: ^4.1.1
+  adaptive_theme: ^2.3.0
+  fluttericon: ^2.0.0
+  substring_highlight: ^1.0.33
+  audioplayers: ^0.20.1
+  url_launcher: ^6.0.17
+  contacts_service: ^0.6.3
+  swipe_to: ^0.1.0-nullsafety.1
+  record: ^3.0.4
+  nanoid: ^1.0.0
+  fast_contacts: ^1.1.1
 
 dev_dependencies:
   flutter_test:
