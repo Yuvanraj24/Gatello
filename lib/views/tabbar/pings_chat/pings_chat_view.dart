@@ -20,6 +20,12 @@ import '../chats/personal_chat_screen/pesrsonal_chat.dart';
 
 
 class PingsChatView extends StatefulWidget {
+  final Map<int, DocumentSnapshot<Map<String, dynamic>>>? messages;
+  final int? state;
+  PingsChatView({
+   this.state,
+   this.messages
+});
 
   @override
   State<PingsChatView> createState() => _PingsChatViewState();
@@ -240,7 +246,8 @@ class _PingsChatViewState extends State<PingsChatView> {
                                                     uid: uid!,
                                                     puid: docs[index]
                                                         .data()["members"]["$uid"]["peeruid"])));
-                        }
+                         }
+
                       // Navigator.push(
                       //               context,
                       //               MaterialPageRoute(

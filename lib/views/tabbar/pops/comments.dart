@@ -33,75 +33,67 @@ class _Command_pageState extends State<Command_page> {
                   color: Color.fromRGBO(12, 16, 29, 1))),
         ),
       ),
-      body:Center(
-        child: ElevatedButton(
-          onPressed: (){
+      body:
+    Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top:11,left: 12,right: 12),
+            child: TextField(
+              controller: _controller5,
+              decoration: InputDecoration(
+                prefix: Container(
+                  height: 54.h,
+                  width: 57.w,
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(5),
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              'https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80'),
+                          fit: BoxFit.fill)),
+                ),
+                suffix:    ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      primary: Color.fromRGBO(248, 206, 97, 1),
+                      fixedSize: Size(80.w,20),
+                    ),
+                    onPressed: () {},
+                    child: Center(
+                      child: Text(
+                        'Post',
+                        style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w700)),
+                      ),
+                    )),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
+                    borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
+                    borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
+                  contentPadding: EdgeInsets.all(17),
+                  hintText: '@ thewebions',
+                  hintStyle: GoogleFonts.inter(
+                      textStyle: TextStyle(
+                          color: Color.fromRGBO(0, 0, 0, 1),
+                          fontWeight: FontWeight.w400)),
+                  ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return comment_Section();
+                }),
+          )
 
-
-          },
-          child: Text('on Click'),
-        ),
-      )
-    //Column(
-      //   children: [
-      //     Padding(
-      //       padding: const EdgeInsets.only(top:11,left: 12,right: 12),
-      //       child: TextFieldR(
-      //         controller: _controller5,
-      //         decoration: InputDecoration(
-      //           prefix: Container(
-      //             height: 54.h,
-      //             width: 57.w,
-      //             decoration: BoxDecoration(
-      //                 color: Colors.black,
-      //                 borderRadius: BorderRadius.circular(5),
-      //                 image: DecorationImage(
-      //                     image: NetworkImage(
-      //                         'https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80'),
-      //                     fit: BoxFit.fill)),
-      //           ),
-      //           suffix:    ElevatedButton(
-      //               style: ElevatedButton.styleFrom(
-      //                 elevation: 0,
-      //                 shape: RoundedRectangleBorder(
-      //                     borderRadius: BorderRadius.circular(5)),
-      //                 primary: Color.fromRGBO(248, 206, 97, 1),
-      //                 fixedSize: Size(80.w,20),
-      //               ),
-      //               onPressed: () {},
-      //               child: Center(
-      //                 child: Text(
-      //                   'Post',
-      //                   style: GoogleFonts.inter(
-      //                       textStyle: TextStyle(
-      //                           color: Color.fromRGBO(0, 0, 0, 1),
-      //                           fontSize: 18.sp,
-      //                           fontWeight: FontWeight.w700)),
-      //                 ),
-      //               )),
-      //           border: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
-      //               borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
-      //           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
-      //               borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
-      //             contentPadding: EdgeInsets.all(17),
-      //             hintText: '@ thewebions',
-      //             hintStyle: GoogleFonts.inter(
-      //                 textStyle: TextStyle(
-      //                     color: Color.fromRGBO(0, 0, 0, 1),
-      //                     fontWeight: FontWeight.w400)),
-      //             ),
-      //       ),
-      //     ),
-      //     Expanded(
-      //       child: ListView.builder(
-      //           itemCount: 10,
-      //           itemBuilder: (context, index) {
-      //             return comment_Section();
-      //           }),
-      //     )
-      //
-      //   ],
-      // ),
+        ],
+      ),
     );
   }
 
