@@ -35,14 +35,6 @@ class _Share_PageState extends State<Share_Page> {
                   ),
                 ),
                 SizedBox(width: 12.w,),
-
-               // Text('Write something here...',style:GoogleFonts.inter(
-               //    textStyle: TextStyle(
-               //      fontSize: 15.sp,
-               //      color: Color.fromRGBO(140, 140, 140, 1)
-               //    )
-               //  ),)
-
               ],
             ),
 
@@ -63,6 +55,8 @@ class _Share_PageState extends State<Share_Page> {
             TextField(
               controller: _controller,
               decoration: InputDecoration(
+                prefixIcon: Icon(Icons.search_rounded,size: 35,color: Colors.black,
+                ),
                  enabledBorder: OutlineInputBorder(
                      borderSide: BorderSide(
                        color:  Colors.transparent,

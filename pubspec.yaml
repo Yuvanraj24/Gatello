@@ -220,6 +220,13 @@ flutter:
     - assets/profile_assets/back_button.svg
     - assets/profile_assets/born on.svg
     - assets/profile_assets/call_outline.svg
+    - assets/pops_asset/LikebuttonGe.svg
+    - assets/pops_asset/commentge.svg
+    - assets/pops_asset/sharegee.svg
+    - assets/pops_asset/galleryge.svg
+    - assets/pops_asset/photosge.svg
+    - assets/pops_asset/tagge.svg
+    - assets/profile_assets/Edit_tool.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

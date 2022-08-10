@@ -76,7 +76,7 @@ class _Report_PageState extends State<Report_Page> {
                         textStyle: TextStyle(
                             decoration: TextDecoration.none,
                             color: Color.fromRGBO(134, 134, 134, 1),
-                            fontSize:16.5.sp,
+                            fontSize:13.sp,
                             fontWeight: FontWeight.w400)),
                   ),
                 ],

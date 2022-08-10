@@ -35,7 +35,7 @@ class _pop_LikesState extends State<pop_Likes> {
                     SizedBox(height: 10.h,),
                     Text('People who likes this pop',style: GoogleFonts.inter(
                         textStyle: TextStyle(
-                            fontWeight: FontWeight.w400,fontSize: 24.sp,color: Color.fromRGBO(0, 0, 0, 1)
+                            fontWeight: FontWeight.w400,fontSize: 20.sp,color: Color.fromRGBO(0, 0, 0, 1)
                         )
                     )),
                      SizedBox(height: 8,),
@@ -52,11 +52,14 @@ class _pop_LikesState extends State<pop_Likes> {
                     )
                   ],
                 ),
-                SizedBox(width: 50.w,),
-                Container(height: 54.h,width: 72.h,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
-                      image:DecorationImage(image: NetworkImage('https://wallpaper-house.com/data/out/8/wallpaper2you_216880.jpg'),
-                      fit: BoxFit.fill) ),
+               Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(right:11),
+                  child: Container(height: 54.h,width: 72.h,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
+                        image:DecorationImage(image: NetworkImage('https://wallpaper-house.com/data/out/8/wallpaper2you_216880.jpg'),
+                        fit: BoxFit.fill) ),
+                  ),
                 )
               ],
             ),
@@ -64,9 +67,16 @@ class _pop_LikesState extends State<pop_Likes> {
             TextField(
               controller: _controller6,
               decoration: InputDecoration(
+                hintText: 'Peter Parker',
+                hintStyle: GoogleFonts.inter(
+                  textStyle: TextStyle(color: Color.fromRGBO(118, 118, 118, 1),
+                  fontWeight: FontWeight.w400,fontSize:14)
+                ),
+                prefixIcon: Icon(Icons.search_rounded,size: 35,color: Colors.black,
+                ),
                 filled: true,
                 fillColor: Color.fromRGBO(217, 217, 217, 1),
-                border: OutlineInputBorder(
+                enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color.fromRGBO(217, 217, 217, 1),width: 1),
                   borderRadius: BorderRadius.circular(4),
                 ),

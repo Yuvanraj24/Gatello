@@ -68,7 +68,7 @@ class _Second_ReportState extends State<Second_Report> {
                 height: 20.h,
               ),
               TextField(
-                maxLines: 10,
+                maxLines: 6,
                 controller: _controller,
                 decoration: InputDecoration(
                   focusedBorder:OutlineInputBorder(
@@ -95,7 +95,7 @@ class _Second_ReportState extends State<Second_Report> {
                 primary: Color.fromRGBO(248, 206, 97, 1),fixedSize: Size(194.w, 43.h),
               ),
                   onPressed: (){
-               // Navigator.push(context, MaterialPageRoute(builder: (context) => Third_Page(),));
+               Navigator.push(context, MaterialPageRoute(builder: (context) =>Third_Page(),));
                   }, child: Text('Send',style: GoogleFonts.inter(
                       textStyle: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 1),fontSize: 16.sp,fontWeight: FontWeight.w700

@@ -128,8 +128,8 @@ class _New_PostState extends State<New_Post> {
                             color: Color.fromRGBO(248, 206, 97, 1)),
                         itemHeight: 40,
                         // itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                        dropdownMaxHeight: 80,
-                        dropdownWidth: 74,
+                        dropdownMaxHeight: 90,
+                        dropdownWidth: 90,
                         buttonElevation: 0,
                         dropdownElevation: 0,
                         dropdownDecoration: BoxDecoration(
@@ -191,7 +191,7 @@ class _New_PostState extends State<New_Post> {
                       child: Row(
                         children: [
                           SvgPicture.asset(
-                              'assets/pops_asset/new_post_gallery.svg'),
+                              'assets/pops_asset/photosge.svg'),
                           SizedBox(
                             width: 18.w,
                           ),
@@ -247,7 +247,7 @@ class _New_PostState extends State<New_Post> {
                       padding: const EdgeInsets.only(top: 30, left: 12),
                       child: Row(
                         children: [
-                          SvgPicture.asset('assets/pops_asset/Tag_people.svg'),
+                          SvgPicture.asset('assets/pops_asset/tagge.svg'),
                           SizedBox(
                             width: 11.w,
                           ),
@@ -265,10 +265,9 @@ class _New_PostState extends State<New_Post> {
                       padding: const EdgeInsets.only(top: 30, left: 18),
                       child: Row(
                         children: [
-                          SvgPicture.asset(
-                              'assets/pops_asset/Location_image.svg'),
+                         Icon(Icons.location_on_rounded,size:30),
                           SizedBox(
-                            width: 18.w,
+                            width: 6.w,
                           ),
                           Text(
                             'Location',
