@@ -23,6 +23,7 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
+
 import 'package:overlay_support/overlay_support.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:substring_highlight/substring_highlight.dart';
@@ -1805,7 +1806,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                   .spaceEvenly,
                                                                               children: [
                                                                                 iconCreation(
-                                                                                    "assets/tabbar_icons/chats_image/attachment_icon_container/audio_icon_container.png",
+                                                                                    "assets/tabbar_icons/chats_image/attachment_icon_container/audio_icon_container.svg",
                                                                                     "Audio"),
                                                                                 iconCreation(
                                                                                     "assets/tabbar_icons/chats_image/attachment_icon_container/location_icon_container.png",

@@ -14,13 +14,21 @@ class Unfollow_page extends StatefulWidget {
 }
 
 class _Unfollow_pageState extends State<Unfollow_page> {
+      int i=0;
   @override
   Widget build(BuildContext context) {
     return  DefaultTabController(length:3,initialIndex:1,
       child: Scaffold(
         appBar: AppBar(
-          leading: SvgPicture.asset('assets/profile_assets/back_button.svg',
-              height: 24.h, width: 24.w),
+          leading: GestureDetector(onTap:(){Navigator.pop(context);},
+            child: Column(mainAxisAlignment:MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset('assets/profile_assets/back_button.svg',
+                    height: 30.h, width:30.w),
+              ],
+            ),
+          ),
           title: Row(
             children: [
               Text(
@@ -31,7 +39,7 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                         fontWeight: FontWeight.w700,
                         color: Color.fromRGBO(0, 0, 0, 1))),
               ),
-              SizedBox(width: 11.w),
+              SizedBox(width: 7.w),
               Container(
                 height: 14.h,
                 width: 14.w,
@@ -41,10 +49,11 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                 child: Icon(Icons.check_rounded,
                     size: 12, color: Color.fromRGBO(255, 255, 255, 1)),
               ),
+              SvgPicture.asset('assets/profile_assets/commentnotifi.svg')
             ],
           ),
           actions: [
-            PopupMenuButton(
+            PopupMenuButton(icon:Icon(Icons.more_vert,color:Colors.black,),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5)),
               itemBuilder: (context) => [
@@ -54,7 +63,7 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                     CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hide',
+                        'Remove follower',
                         style: GoogleFonts.inter(
                             textStyle: TextStyle(fontWeight: FontWeight.w400,
                                 color: Color.fromRGBO(
@@ -69,7 +78,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                     CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Unfollow',
+                        'Share this profile',
+                        style: GoogleFonts.inter(
+                            textStyle: TextStyle(fontWeight: FontWeight.w400,
+                                color: Color.fromRGBO(
+                                    0, 0, 0, 1))),
+                      ),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  child: Column(
+                    crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Report',
                         style: GoogleFonts.inter(fontWeight: FontWeight.w400,
                             textStyle: TextStyle(
                                 color: Color.fromRGBO(
@@ -84,17 +108,18 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                     CrossAxisAlignment.start,
                     children: [
                       Text(
-                          'Report',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(fontWeight: FontWeight.w400,
-                                  color: Color.fromRGBO(
-                                      255, 40, 40, 1))),
-                        ),
+                        'Block',
+                        style: GoogleFonts.inter(
+                            textStyle: TextStyle(fontWeight: FontWeight.w400,
+                                color: Color.fromRGBO(
+                                    255, 40, 40, 1))),
+                      ),
                     ],
                   ),
                 ),
               ],
             )
+
           ],
         ),
         body: SingleChildScrollView(
@@ -112,24 +137,11 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                             fit: BoxFit.fill)),
                   ),
                     Positioned(
-                      right: 12,
-                      top: 85,
-                      child: Container(
-                        height: 23.h,
-                        width: 23.w,
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(248, 206, 97, 1),
-                            border: Border.all(
-                                color: Color.fromRGBO(255, 255, 255, 1), width: 1),
-                            shape: BoxShape.circle),
-                      ),
-                    ),
-                    Positioned(
                       top: 92,
                       left: 21,
                       child: Container(
-                        height: 84.h,
-                        width: 83.w,
+                        height: 94.h,
+                        width: 93.w,
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
@@ -141,26 +153,7 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                       ),
                     ),
                     Positioned(
-                      left: 94,
-                      top: 155,
-                      child: Container(
-                        height: 23.h,
-                        width: 23.w,
-                        child: GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                  Edit_Profile()));
-                            },
-                            child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(248, 206, 97, 1),
-                            border: Border.all(
-                                color: Color.fromRGBO(255, 255, 255, 1), width: 1),
-                            shape: BoxShape.circle),
-                      ),
-                    ),
-                    Positioned(
-                      left: 141,
+                      left: 161,
                       top: 143,
                       child: Row(
                         children: [
@@ -194,7 +187,7 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                       ),
                     ),
                     Positioned(
-                      left: 140,
+                      left: 160,
                       top: 176,
                       child: Row(
                         children: [
@@ -248,7 +241,7 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                           padding: const EdgeInsets.only(right:35),
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(elevation: 0,side: BorderSide(
-                                width:1,color: Color.fromRGBO(0, 163, 255, 1)
+                                  width:1,color: Color.fromRGBO(0, 163, 255, 1)
                               ),
                                 shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                 primary:Colors.white,fixedSize: Size(180.w,29.h),
@@ -259,6 +252,7 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                               )
                           ),)),
                         ),
+
                       ],
                     ),
                     Row(
@@ -290,13 +284,19 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                     Row(
                       children: [
                         Container(
-                          height: 25.h,
-                          width: 25.w,
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(165, 165, 165, 0.9),
-                              shape: BoxShape.circle),
-                          child:
-                          Icon(Icons.add_card, color: Colors.white),
+                            height: 25.h,
+                            width: 25.w,
+                            decoration: BoxDecoration(
+                                color: Color.fromRGBO(165, 165, 165, 0.9),
+                                shape: BoxShape.circle),
+                            child:
+                            Column(crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset('assets/profile_assets/proffesion.svg'
+                                    ,height:12.h,width:12.w),
+                              ],
+                            )
                         ),
                         SizedBox(width: 11.w),
                         Text(
@@ -313,13 +313,19 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                     Row(
                       children: [
                         Container(
-                          height: 25.h,
-                          width: 25.w,
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(165, 165, 165, 0.9),
-                              shape: BoxShape.circle),
-                          child:
-                          Icon(Icons.add_card, color: Colors.white),
+                            height: 25.h,
+                            width: 25.w,
+                            decoration: BoxDecoration(
+                                color: Color.fromRGBO(165, 165, 165, 0.9),
+                                shape: BoxShape.circle),
+                            child:
+                            Column(crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset('assets/profile_assets/proffesion.svg'
+                                    ,height:12.h,width:12.w),
+                              ],
+                            )
                         ),
                         SizedBox(width: 11.w),
                         RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
@@ -336,20 +342,26 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                       ],
                     ),
                     SizedBox(height:14.h),
+                    Row(
+                      children: [
+                        Text(
+                          'Biog',
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                        ),
+                        SizedBox(width:10.w),
+
+                        Container(height:20,width:20,
+                            child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg',
+                                color: i==1?Color.fromRGBO(0, 163, 255, 1):Colors.transparent)),
+                      ],
+                    ),
+                    i==1?Text(''):
                     Column(
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Biog',
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color.fromRGBO(0, 0, 0, 1))),
-                            ), SizedBox(width:10.w)
-                          ],
-                        ),
                         SizedBox(height:7.h),
                         Text('Your professional bio is an important piece of ...',style: GoogleFonts.inter(
                             textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 14.sp,
@@ -360,6 +372,7 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                           padding: const EdgeInsets.only(left:280),
                           child: TextButton( onPressed: () {
                             setState(() {
+                              i=1;
                             });
                           },
                               child: Text('See More...',style:GoogleFonts.inter(
@@ -372,6 +385,11 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                     )
                   ],),
               ),
+              i==1?Texts(onPressed: (){
+                setState(() {
+                  i=0;
+                });
+              },):
               Column(
                 children: [
                   TabBar(
@@ -414,15 +432,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                           fit: BoxFit.fill)),
                                 ),
                                 Positioned(
-                                    left: 25,
-                                    right: 25,
-                                    top: 25,
-                                    bottom: 25,
-                                    child: Icon(
-                                      Icons.motion_photos_paused_rounded,
-                                      size: 50,
-                                      color: Colors.white,
-                                    ))
+                                    left: 35,
+                                    right: 35,
+                                    top: 35,
+                                    bottom: 35,
+                                    child: Container(height:18.h,width:18.w,
+                                      child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                            height:18.h,width:18.w,),
+                                        ],
+                                      ),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color:Color.fromRGBO(255, 255, 255, 1)),)
+                                )
                               ]),
                             ),
                             Positioned(
@@ -491,15 +516,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                           fit: BoxFit.fill)),
                                 ),
                                 Positioned(
-                                    left: 25,
-                                    right: 25,
-                                    top: 25,
-                                    bottom: 25,
-                                    child: Icon(
-                                      Icons.motion_photos_paused_rounded,
-                                      size: 50,
-                                      color: Colors.white,
-                                    ))
+                                    left: 35,
+                                    right: 35,
+                                    top: 35,
+                                    bottom: 35,
+                                    child: Container(height:18.h,width:18.w,
+                                      child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                            height:18.h,width:18.w,),
+                                        ],
+                                      ),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color:Color.fromRGBO(255, 255, 255, 1)),)
+                                )
                               ]),
                             ),
                             Positioned(
@@ -691,15 +723,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 25,
-                                  bottom: 25,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -718,13 +757,20 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                               Positioned(
                                   left: 25,
                                   right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  top: 25,
+                                  bottom: 25,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -741,15 +787,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 25,
-                                  bottom: 25,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -766,15 +819,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -791,15 +851,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 32,
+                                  right: 32,
+                                  top: 32,
+                                  bottom: 32,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -816,15 +883,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -841,15 +915,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -866,15 +947,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 40,
+                                  right: 40,
+                                  top: 40,
+                                  bottom: 40,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -891,15 +979,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                         ]),
@@ -922,3 +1017,11 @@ class _Unfollow_pageState extends State<Unfollow_page> {
     );
   }
 }
+
+
+
+
+
+
+
+

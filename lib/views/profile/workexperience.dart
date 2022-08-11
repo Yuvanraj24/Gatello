@@ -19,8 +19,15 @@ class _Work_ExperienceState extends State<Work_Experience> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: SvgPicture.asset('assets/profile_assets/back_button.svg',
-            height: 24.h, width: 24.w),
+        leading: GestureDetector(onTap:(){Navigator.pop(context);},
+          child: Column(mainAxisAlignment:MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgPicture.asset('assets/profile_assets/back_button.svg',
+                  height: 30.h, width:30.w),
+            ],
+          ),
+        ),
         title: Text(
           'Work Experience',
           style: GoogleFonts.inter(

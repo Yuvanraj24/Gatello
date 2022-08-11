@@ -591,7 +591,7 @@ class _GroupPersonalChatState extends State<GroupPersonalChat> {
                                                           .spaceEvenly,
                                                       children: [
                                                         iconCreation(
-                                                            "assets/tabbar_icons/chats_image/attachment_icon_container/audio_icon_container.png",
+                                                            "assets/tabbar_icons/chats_image/attachment_icon_container/audio_icon_container.svg",
                                                             "Audio"),
                                                         iconCreation(
                                                             "assets/tabbar_icons/chats_image/attachment_icon_container/location_icon_container.png",

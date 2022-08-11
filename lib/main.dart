@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/dummy.dart';
+import 'package:gatello/views/profile/alertdailog.dart';
 import 'package:gatello/views/profile/allpops.dart';
 import 'package:gatello/views/profile/editprofile.dart';
+import 'package:gatello/views/profile/photo_pop.dart';
 import 'package:gatello/views/profile/readmore.dart';
 import 'package:gatello/views/profile/text.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
@@ -150,7 +152,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar() :LoginScreen();
+                              return (snapshot.data == true) ? Tabbar() :Photo_Pop();
                             } else {
                               return lottieAnimation(loadingLottie);
                             }

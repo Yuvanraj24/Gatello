@@ -9,7 +9,8 @@ import 'package:gatello/views/profile/workexperience.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Texts extends StatefulWidget {
-  const Texts({Key? key}) : super(key: key);
+  final VoidCallback? onPressed;
+  const Texts({Key? key,required this.onPressed}) : super(key: key);
 
   @override
   State<Texts> createState() => _TextsState();
@@ -23,21 +24,6 @@ class _TextsState extends State<Texts> {
           padding: EdgeInsets.only(right:30,left: 30),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(
-                'Biog',
-                style: GoogleFonts.inter(
-                    textStyle: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w700,
-                        color: Color.fromRGBO(0, 0, 0, 1))),
-              ), SizedBox(width:10.w),
-              Container(height:20,width:20,
-                  child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),
-            ],
-          ),
-    SizedBox(height:7.h),
     Text('Your professional bio is an important piece of',style: GoogleFonts.inter(
       textStyle: TextStyle(fontSize:13.5.sp,fontWeight: FontWeight.w400,color:
       Color.fromRGBO(0, 0, 0, 0.5))
@@ -119,8 +105,13 @@ class _TextsState extends State<Texts> {
               Container(
                 height: 25.h,
                 width: 25.w,
-                child: Icon(Icons.card_giftcard,color: Colors.white,),
-                // SvgPicture.asset('assets/profile_assets/born on.svg'),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/profile_assets/bornon.svg',height: 15.h,
+                        width:15.w),
+                  ],
+                ),
                 decoration: BoxDecoration(
                     color: Color.fromRGBO(165, 165, 165, 0.9),
                     shape: BoxShape.circle),
@@ -155,33 +146,35 @@ class _TextsState extends State<Texts> {
               Container(
                 height: 25.h,
                 width: 25.w,
-                child: Icon(Icons.language_sharp,color: Colors.white,),
+                child:  Column(crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/profile_assets/profilelanguage.svg',height: 15.h,
+                        width:15.w),
+                  ],
+                ),
                 // SvgPicture.asset('assets/profile_assets/born on.svg'),
                 decoration: BoxDecoration(
                     color: Color.fromRGBO(165, 165, 165, 0.9),
                     shape: BoxShape.circle),
               ),
               SizedBox(width: 11.w),
-              Material(color: Colors.transparent,
-                child: Text(
-                  'I Speak',
-                  style: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Color.fromRGBO(165, 165, 165, 0.9))),
-                ),
+              Text(
+                'I Speak',
+                style: GoogleFonts.inter(
+                    textStyle: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Color.fromRGBO(165, 165, 165, 0.9))),
               ),
               SizedBox(width: 8.w),
-              Material(color: Colors.transparent,
-                child: Text(
-                  'English, Tamil',
-                  style: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color.fromRGBO(0, 0, 0, 1))),
-                ),
+              Text(
+                'English, Tamil',
+                style: GoogleFonts.inter(
+                    textStyle: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromRGBO(0, 0, 0, 1))),
               ),
             ],
           ),
@@ -191,22 +184,25 @@ class _TextsState extends State<Texts> {
               Container(
                 height: 25.h,
                 width: 25.w,
-                child: Icon(Icons.call_outlined,color: Colors.white),
-                // SvgPicture.asset('assets/profile_assets/call_outline.svg'),
+                child: Column(crossAxisAlignment:CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/profile_assets/profilecall.svg',height: 16.h,
+                        width:16.w),
+                  ],
+                ),
                 decoration: BoxDecoration(
                     color: Color.fromRGBO(165, 165, 165, 0.9),
                     shape: BoxShape.circle),
               ),
               SizedBox(width: 11.w),
-              Material(color: Colors.transparent,
-                child: Text(
-                  '+91 9874653631',
-                  style: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color.fromRGBO(0, 0, 0, 1))),
-                ),
+              Text(
+                '+91 9874653631',
+                style: GoogleFonts.inter(
+                    textStyle: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromRGBO(0, 0, 0, 1))),
               ),
             ],
           ),
@@ -253,7 +249,13 @@ class _TextsState extends State<Texts> {
               Container(
                 height: 25.h,
                 width: 25.w,
-                child: Icon(Icons.link,color: Colors.white),
+                child:  Column(crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/profile_assets/profilelink.svg',height: 16.h,
+                        width:16.w),
+                  ],
+                ),
                 decoration: BoxDecoration(
                     color: Color.fromRGBO(165, 165, 165, 0.9),
                     shape: BoxShape.circle),
@@ -413,12 +415,9 @@ class _TextsState extends State<Texts> {
                             fontWeight: FontWeight.w700,
                             color: Color.fromRGBO(0, 0, 0, 1))),
                   ),
-
                   Padding(
-                    padding: const EdgeInsets.only(left:138),
-                    child: TextButton( onPressed: () {
-                    },
-
+                    padding: const EdgeInsets.only(left:150),
+                    child: TextButton( onPressed:widget.onPressed,
                         child: Text('See More...',style:GoogleFonts.inter(
                             textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
                                 color: Color.fromRGBO(0, 163, 255, 1)
@@ -427,7 +426,6 @@ class _TextsState extends State<Texts> {
                   )
                 ],
               ),
-
             ],
           ),
       ],),

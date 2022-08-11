@@ -10,6 +10,10 @@ class Info_Page extends StatefulWidget {
   @override
   State<Info_Page> createState() => _Info_PageState();
 }
+TextEditingController _info1=TextEditingController();
+TextEditingController _info2=TextEditingController();
+TextEditingController _info3=TextEditingController();
+
 
 class _Info_PageState extends State<Info_Page> {
   final List<String> items = ['Public', 'Friends', 'Only me'];
@@ -17,10 +21,17 @@ class _Info_PageState extends State<Info_Page> {
   bool isSwitched = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(resizeToAvoidBottomInset:false,
       appBar: AppBar(
-        leading: SvgPicture.asset('assets/profile_assets/back_button.svg',
-            height: 24.h, width: 24.w),
+        leading: GestureDetector(onTap:(){Navigator.pop(context);},
+          child: Column(mainAxisAlignment:MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgPicture.asset('assets/profile_assets/back_button.svg',
+                  height: 30.h, width:30.w),
+            ],
+          ),
+        ),
         title: Text(
           'info',
           style: GoogleFonts.inter(
@@ -47,8 +58,8 @@ class _Info_PageState extends State<Info_Page> {
                     decoration: BoxDecoration(
                         color: Color.fromRGBO(165, 165, 165, 0.9),
                         shape: BoxShape.circle),
-                    child: Icon(Icons.location_on_sharp,
-                        color: Colors.white, size: 35),
+                    child: Icon(Icons.person,
+                        color: Colors.white),
                   ),
                   SizedBox(width: 11.w),
                   RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
@@ -242,8 +253,13 @@ class _Info_PageState extends State<Info_Page> {
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(165, 165, 165, 0.9),
                           shape: BoxShape.circle),
-                      child: Icon(Icons.location_on_sharp,
-                          color: Colors.white),
+                      child:Column(crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/profile_assets/bornon.svg',height: 15.h,
+                          width:15.w),
+                        ],
+                      )
                     ),
                     SizedBox(width: 11.w),
                     RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
@@ -347,13 +363,25 @@ class _Info_PageState extends State<Info_Page> {
                 Row(
                   children: [
                     Container(
-                      height: 50.h,
-                      width: 50.w,
+                      height: 25.h,
+                      width: 25.w,
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(165, 165, 165, 0.9),
                           shape: BoxShape.circle),
-                      child: Icon(Icons.location_on_sharp,
-                          color: Colors.white, size: 35),
+                      child:  Container(
+                          height: 25.h,
+                          width: 25.w,
+                          decoration: BoxDecoration(
+                              color: Color.fromRGBO(165, 165, 165, 0.9),
+                              shape: BoxShape.circle),
+                          child:Column(crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset('assets/profile_assets/profilelanguage.svg',height: 15.h,
+                                  width:15.w),
+                            ],
+                          )
+                      ),
                     ),
                     SizedBox(width: 11.w),
                     RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
@@ -364,9 +392,26 @@ class _Info_PageState extends State<Info_Page> {
                           ))),
                         ])),
                     Padding(
-                      padding: const EdgeInsets.only(bottom:10,left:6),
-                      child: Container(
-                        height:19.h,width:1.w,color:Colors.black,),
+                      padding: const EdgeInsets.only(bottom:0),
+                      child: Container( height:30.h,width:200.w,color:Colors.transparent,
+                        child:  Padding(
+                          padding: const EdgeInsets.only(top:20),
+                          child: TextField(
+                            cursorColor: Colors.black,cursorHeight:20.h,
+                            controller:_info1,
+                            decoration: InputDecoration(
+                              hintText: '',
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.transparent),
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1.w,
+                                        color: Colors.transparent),
+                                    borderRadius: BorderRadius.circular(10)),
+                            ),),
+                        ),
+                       ),
                     )
                   ],
                 ),
@@ -462,8 +507,13 @@ class _Info_PageState extends State<Info_Page> {
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(165, 165, 165, 0.9),
                           shape: BoxShape.circle),
-                      child: Icon(Icons.location_on_sharp,
-                          color: Colors.white),
+                      child: Column(crossAxisAlignment:CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/profile_assets/profilecall.svg',height: 16.h,
+                              width:16.w),
+                        ],
+                      ),
                     ),
                     SizedBox(width: 11.w),
                     RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
@@ -474,9 +524,26 @@ class _Info_PageState extends State<Info_Page> {
                           ))),
                         ])),
                     Padding(
-                      padding: const EdgeInsets.only(bottom:10,left:6),
-                      child: Container(
-                        height:19.h,width:1.w,color:Colors.black,),
+                      padding: const EdgeInsets.only(bottom:0),
+                      child: Container( height:30.h,width:200.w,color:Colors.transparent,
+                        child:  Padding(
+                          padding: const EdgeInsets.only(top:20),
+                          child: TextField(
+                            cursorColor: Colors.black,cursorHeight:20.h,
+                            controller:_info2,
+                            decoration: InputDecoration(
+                              hintText: '',
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.transparent),
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1.w,
+                                      color: Colors.transparent),
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),),
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -568,19 +635,36 @@ class _Info_PageState extends State<Info_Page> {
                 Row(
                   children: [
                     Container(
-                      height: 50.h,
-                      width: 50.w,
+                      height: 25.h,
+                      width: 25.w,
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(165, 165, 165, 0.9),
                           shape: BoxShape.circle),
-                      child: Icon(Icons.location_on_sharp,
-                          color: Colors.white, size: 35),
+                      child: Icon(Icons.mail_outline,
+                          color: Colors.white),
                     ),
                     SizedBox(width: 11.w),
                     Padding(
-                      padding: const EdgeInsets.only(bottom:10,left:6),
-                      child: Container(
-                        height:19.h,width:1.w,color:Colors.black,),
+                      padding: const EdgeInsets.only(bottom:0),
+                      child: Container( height:30.h,width:200.w,color:Colors.transparent,
+                        child:  Padding(
+                          padding: const EdgeInsets.only(top:20),
+                          child: TextField(
+                            cursorColor: Colors.black,cursorHeight:20.h,
+                            controller:_info3,
+                            decoration: InputDecoration(
+                              hintText: '',
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.transparent),
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1.w,
+                                      color: Colors.transparent),
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),),
+                        ),
+                      ),
                     )
                   ],
                 ),

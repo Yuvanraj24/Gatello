@@ -5,13 +5,14 @@ import 'package:gatello/views/profile/editprofile.dart';
 import 'package:gatello/views/profile/text.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'bio_dialog.dart';
+
 class Photo_Pop extends StatefulWidget {
   const Photo_Pop({Key? key}) : super(key: key);
 
   @override
   State<Photo_Pop> createState() => _Photo_PopState();
 }
-
 class _Photo_PopState extends State<Photo_Pop> {
   int i=0;
   @override
@@ -19,8 +20,15 @@ class _Photo_PopState extends State<Photo_Pop> {
     return DefaultTabController(length:3,initialIndex:1,
       child: Scaffold(
         appBar: AppBar(
-          leading: SvgPicture.asset('assets/profile_assets/back_button.svg',
-              height: 24.h, width: 24.w),
+          leading: GestureDetector(
+            child: Column(mainAxisAlignment:MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset('assets/profile_assets/back_button.svg',
+                    height: 30.h, width:30.w),
+              ],
+            ),
+          ),
           title: Row(
             children: [
               Text(
@@ -31,7 +39,7 @@ class _Photo_PopState extends State<Photo_Pop> {
                         fontWeight: FontWeight.w700,
                         color: Color.fromRGBO(0, 0, 0, 1))),
               ),
-              SizedBox(width: 11.w),
+              SizedBox(width: 7.w),
               Container(
                 height: 14.h,
                 width: 14.w,
@@ -73,7 +81,13 @@ class _Photo_PopState extends State<Photo_Pop> {
                   top: 85,
                   child: Container(
                     height: 23.h,
-                    width: 23.w,
+                    width: 23.w,child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/profile_assets/edittoolblack.svg',
+                          height:15,width:15),
+                      ],
+                    ),
                     decoration: BoxDecoration(
                         color: Color.fromRGBO(248, 206, 97, 1),
                         border: Border.all(
@@ -108,7 +122,14 @@ class _Photo_PopState extends State<Photo_Pop> {
                         Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           Edit_Profile()));
                       },
-                        child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),
+                        child:Column(crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset('assets/profile_assets/edittoolblack.svg',
+                                height:15,width:15),
+                          ],
+                        ),
+                    ),
                     decoration: BoxDecoration(
                         color: Color.fromRGBO(248, 206, 97, 1),
                         border: Border.all(
@@ -201,29 +222,32 @@ class _Photo_PopState extends State<Photo_Pop> {
                               color: Color.fromRGBO(0, 0, 0, 1))),
                     ),
                     Spacer(),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation:1,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18)),
-                          primary: Color.fromRGBO(255, 255, 255, 1),
-                        ),
-                        onPressed: () {
-                         Navigator.push(context, MaterialPageRoute(builder: (context) => Edit_Profile()));
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              'EDIT',
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color.fromRGBO(0, 163, 255, 1))),
-                            ),
-                           SvgPicture.asset('assets/profile_assets/Edit_tool.svg')
-                          ],
-                        ))
+                    Padding(
+                      padding: const EdgeInsets.only(right:12),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation:1,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18)),
+                            primary: Color.fromRGBO(255, 255, 255, 1),
+                          ),
+                          onPressed: () {
+                           Navigator.push(context, MaterialPageRoute(builder: (context) => Edit_Profile()));
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                'EDIT',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 163, 255, 1))),
+                              ),
+                             SvgPicture.asset('assets/profile_assets/Edit_tool.svg')
+                            ],
+                          )),
+                    )
                   ],
                 ),
                 Row(
@@ -261,7 +285,13 @@ class _Photo_PopState extends State<Photo_Pop> {
                           color: Color.fromRGBO(165, 165, 165, 0.9),
                           shape: BoxShape.circle),
                       child:
-                      Icon(Icons.add_card, color: Colors.white),
+                      Column(crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/profile_assets/proffesion.svg'
+                              ,height:12.h,width:12.w),
+                        ],
+                      )
                     ),
                     SizedBox(width: 11.w),
                     Text(
@@ -284,7 +314,13 @@ class _Photo_PopState extends State<Photo_Pop> {
                           color: Color.fromRGBO(165, 165, 165, 0.9),
                           shape: BoxShape.circle),
                       child:
-                      Icon(Icons.add_card, color: Colors.white),
+                      Column(crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/profile_assets/proffesion.svg'
+                              ,height:12.h,width:12.w),
+                        ],
+                      )
                     ),
                     SizedBox(width: 11.w),
                     RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
@@ -301,48 +337,67 @@ class _Photo_PopState extends State<Photo_Pop> {
                   ],
                 ),
                 SizedBox(height:14.h),
+                  Row(
+                    children: [
+                      Text('Biog',style:GoogleFonts.inter(textStyle: TextStyle(fontSize:20.sp,
+                          fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)),)),
+                      SizedBox(width:10.w),
+                      GestureDetector(
+                        onTap: (){
+                          Future.delayed(Duration(seconds: 0),
+                                  () =>
+                                  showConfirmationDialog(context)
+                          );
+                        },
+                        child: Container(height:20,width:20,
+                            child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg',
+                              color: i==1?Color.fromRGBO(0, 163, 255, 1):Colors.transparent)),
+                      ),
+                    ],
+                  ),
                 i==1?Text(''):
                 Column(
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Biog',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color.fromRGBO(0, 0, 0, 1))),
-                        ), SizedBox(width:10.w)
-                      ],
-                    ),
                     SizedBox(height:7.h),
                     Text('Your professional bio is an important piece of ...',style: GoogleFonts.inter(
                         textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 14.sp,
                             color: Color.fromRGBO(0,0,0,0.5)
                         )
                     ),),
-                    Padding(
-                      padding: const EdgeInsets.only(left:280),
-                      child: TextButton( onPressed: () {
+                    Divider(thickness:1.w,color: Color.fromRGBO(228, 228, 228, 1),
+                        indent:22,endIndent:18),
+                    GestureDetector(
+                      onTap: (){
                         setState(() {
                           i=1;
                         });
                       },
-                      child: Text('See More...',style:GoogleFonts.inter(
-                          textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
-                              color: Color.fromRGBO(0, 163, 255, 1)
-                          )
-                      ),)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left:285,bottom:10,top:5),
+                        child: Text('See More...',style:GoogleFonts.inter(
+                            textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
+                                color: Color.fromRGBO(0, 163, 255, 1)
+                            )
+                        ),),
+                      ),
                     ),
                   ],
                 )
               ],),
             ),
-            i==1?Texts():
+            i==1?Texts(onPressed: (){
+              setState(() {
+                i=0;
+              });
+            },):
             Column(
               children: [
                 TabBar(
+                  indicator: BoxDecoration(
+                    color: Colors.transparent,border:Border(bottom:BorderSide(
+                    color: Colors.transparent
+                  ))
+                  ),
                     unselectedLabelStyle: GoogleFonts.inter(
                         textStyle: TextStyle(
                             fontSize: 15.sp,
@@ -382,15 +437,22 @@ class _Photo_PopState extends State<Photo_Pop> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 25,
-                                  bottom: 25,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                  child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                      height:18.h,width:18.w,),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                      color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -459,15 +521,22 @@ class _Photo_PopState extends State<Photo_Pop> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 25,
-                                  bottom: 25,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -659,15 +728,22 @@ class _Photo_PopState extends State<Photo_Pop> {
                                       fit: BoxFit.fill)),
                             ),
                             Positioned(
-                                left: 25,
-                                right: 25,
-                                top: 25,
-                                bottom: 25,
-                                child: Icon(
-                                  Icons.motion_photos_paused_rounded,
-                                  size: 50,
-                                  color: Colors.white,
-                                ))
+                                left: 35,
+                                right: 35,
+                                top: 35,
+                                bottom: 35,
+                                child: Container(height:18.h,width:18.w,
+                                  child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                        height:18.h,width:18.w,),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:Color.fromRGBO(255, 255, 255, 1)),)
+                            )
                           ]),
                         ),
                         Positioned(
@@ -686,13 +762,20 @@ class _Photo_PopState extends State<Photo_Pop> {
                             Positioned(
                                 left: 25,
                                 right: 25,
-                                top: 22,
-                                bottom: 22,
-                                child: Icon(
-                                  Icons.motion_photos_paused_rounded,
-                                  size: 50,
-                                  color: Colors.white,
-                                ))
+                                top: 25,
+                                bottom: 25,
+                                child: Container(height:18.h,width:18.w,
+                                  child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                        height:18.h,width:18.w,),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:Color.fromRGBO(255, 255, 255, 1)),)
+                            )
                           ]),
                         ),
                         Positioned(
@@ -709,15 +792,22 @@ class _Photo_PopState extends State<Photo_Pop> {
                                       fit: BoxFit.fill)),
                             ),
                             Positioned(
-                                left: 25,
-                                right: 25,
-                                top: 25,
-                                bottom: 25,
-                                child: Icon(
-                                  Icons.motion_photos_paused_rounded,
-                                  size: 50,
-                                  color: Colors.white,
-                                ))
+                                left: 35,
+                                right: 35,
+                                top: 35,
+                                bottom: 35,
+                                child: Container(height:18.h,width:18.w,
+                                  child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                        height:18.h,width:18.w,),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:Color.fromRGBO(255, 255, 255, 1)),)
+                            )
                           ]),
                         ),
                         Positioned(
@@ -734,15 +824,22 @@ class _Photo_PopState extends State<Photo_Pop> {
                                       fit: BoxFit.fill)),
                             ),
                             Positioned(
-                                left: 25,
-                                right: 25,
-                                top: 22,
-                                bottom: 22,
-                                child: Icon(
-                                  Icons.motion_photos_paused_rounded,
-                                  size: 50,
-                                  color: Colors.white,
-                                ))
+                                left: 35,
+                                right: 35,
+                                top: 35,
+                                bottom: 35,
+                                child: Container(height:18.h,width:18.w,
+                                  child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                        height:18.h,width:18.w,),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:Color.fromRGBO(255, 255, 255, 1)),)
+                            )
                           ]),
                         ),
                         Positioned(
@@ -759,15 +856,22 @@ class _Photo_PopState extends State<Photo_Pop> {
                                       fit: BoxFit.fill)),
                             ),
                             Positioned(
-                                left: 25,
-                                right: 25,
-                                top: 22,
-                                bottom: 22,
-                                child: Icon(
-                                  Icons.motion_photos_paused_rounded,
-                                  size: 50,
-                                  color: Colors.white,
-                                ))
+                                left: 32,
+                                right: 32,
+                                top: 32,
+                                bottom: 32,
+                                child: Container(height:18.h,width:18.w,
+                                  child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                        height:18.h,width:18.w,),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:Color.fromRGBO(255, 255, 255, 1)),)
+                            )
                           ]),
                         ),
                         Positioned(
@@ -784,15 +888,22 @@ class _Photo_PopState extends State<Photo_Pop> {
                                       fit: BoxFit.fill)),
                             ),
                             Positioned(
-                                left: 25,
-                                right: 25,
-                                top: 22,
-                                bottom: 22,
-                                child: Icon(
-                                  Icons.motion_photos_paused_rounded,
-                                  size: 50,
-                                  color: Colors.white,
-                                ))
+                                left: 35,
+                                right: 35,
+                                top: 35,
+                                bottom: 35,
+                                child: Container(height:18.h,width:18.w,
+                                  child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                        height:18.h,width:18.w,),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:Color.fromRGBO(255, 255, 255, 1)),)
+                            )
                           ]),
                         ),
                         Positioned(
@@ -809,15 +920,22 @@ class _Photo_PopState extends State<Photo_Pop> {
                                       fit: BoxFit.fill)),
                             ),
                             Positioned(
-                                left: 25,
-                                right: 25,
-                                top: 22,
-                                bottom: 22,
-                                child: Icon(
-                                  Icons.motion_photos_paused_rounded,
-                                  size: 50,
-                                  color: Colors.white,
-                                ))
+                                left: 35,
+                                right: 35,
+                                top: 35,
+                                bottom: 35,
+                                child: Container(height:18.h,width:18.w,
+                                  child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                        height:18.h,width:18.w,),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:Color.fromRGBO(255, 255, 255, 1)),)
+                            )
                           ]),
                         ),
                         Positioned(
@@ -834,15 +952,22 @@ class _Photo_PopState extends State<Photo_Pop> {
                                       fit: BoxFit.fill)),
                             ),
                             Positioned(
-                                left: 25,
-                                right: 25,
-                                top: 22,
-                                bottom: 22,
-                                child: Icon(
-                                  Icons.motion_photos_paused_rounded,
-                                  size: 50,
-                                  color: Colors.white,
-                                ))
+                                left: 40,
+                                right: 40,
+                                top: 40,
+                                bottom: 40,
+                                child: Container(height:18.h,width:18.w,
+                                  child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                        height:18.h,width:18.w,),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:Color.fromRGBO(255, 255, 255, 1)),)
+                            )
                           ]),
                         ),
                         Positioned(
@@ -859,15 +984,22 @@ class _Photo_PopState extends State<Photo_Pop> {
                                       fit: BoxFit.fill)),
                             ),
                             Positioned(
-                                left: 25,
-                                right: 25,
-                                top: 22,
-                                bottom: 22,
-                                child: Icon(
-                                  Icons.motion_photos_paused_rounded,
-                                  size: 50,
-                                  color: Colors.white,
-                                ))
+                                left: 35,
+                                right: 35,
+                                top: 35,
+                                bottom: 35,
+                                child: Container(height:18.h,width:18.w,
+                                  child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                        height:18.h,width:18.w,),
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:Color.fromRGBO(255, 255, 255, 1)),)
+                            )
                           ]),
                         ),
                       ]),
@@ -881,12 +1013,19 @@ class _Photo_PopState extends State<Photo_Pop> {
                               color: Colors.grey, width: 0.5))),)
               ],
             )
-
-
           ],
           ),
         ),
       ),
     );
   }
+}
+showConfirmationDialog(BuildContext context) {
+  showDialog(
+    // barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+      return BioDialog();
+    },
+  );
 }

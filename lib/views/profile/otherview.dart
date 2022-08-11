@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gatello/views/profile/text.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'editprofile.dart';
 
 class Other_View extends StatefulWidget {
@@ -17,11 +16,18 @@ class _Other_ViewState extends State<Other_View> {
   @override
   Widget build(BuildContext context) {
     int i=0;
-    return  DefaultTabController(length:3,initialIndex:1,
+    return DefaultTabController(length:3,initialIndex:1,
       child: Scaffold(
         appBar: AppBar(
-          leading: SvgPicture.asset('assets/profile_assets/back_button.svg',
-              height: 24.h, width: 24.w),
+          leading: GestureDetector(onTap:(){Navigator.pop(context);},
+            child: Column(mainAxisAlignment:MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset('assets/profile_assets/back_button.svg',
+                    height: 30.h, width:30.w),
+              ],
+            ),
+          ),
           title: Row(
             children: [
               Text(
@@ -32,7 +38,7 @@ class _Other_ViewState extends State<Other_View> {
                         fontWeight: FontWeight.w700,
                         color: Color.fromRGBO(0, 0, 0, 1))),
               ),
-              SizedBox(width: 11.w),
+              SizedBox(width: 7.w),
               Container(
                 height: 14.h,
                 width: 14.w,
@@ -42,6 +48,9 @@ class _Other_ViewState extends State<Other_View> {
                 child: Icon(Icons.check_rounded,
                     size: 12, color: Color.fromRGBO(255, 255, 255, 1)),
               ),
+              Spacer(),
+              SvgPicture.asset('assets/profile_assets/commentnotifi.svg',height:25.h,
+                  width:25.w)
             ],
           ),
           actions: [
@@ -74,7 +83,13 @@ class _Other_ViewState extends State<Other_View> {
                       top: 85,
                       child: Container(
                         height: 23.h,
-                        width: 23.w,
+                        width: 23.w,child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/profile_assets/edittoolblack.svg',
+                              height:15,width:15),
+                        ],
+                      ),
                         decoration: BoxDecoration(
                             color: Color.fromRGBO(248, 206, 97, 1),
                             border: Border.all(
@@ -86,8 +101,8 @@ class _Other_ViewState extends State<Other_View> {
                       top: 92,
                       left: 21,
                       child: Container(
-                        height: 84.h,
-                        width: 83.w,
+                        height: 94.h,
+                        width: 93.w,
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
@@ -99,26 +114,7 @@ class _Other_ViewState extends State<Other_View> {
                       ),
                     ),
                     Positioned(
-                      left: 94,
-                      top: 155,
-                      child: Container(
-                        height: 23.h,
-                        width: 23.w,
-                        child: GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                  Edit_Profile()));
-                            },
-                            child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(248, 206, 97, 1),
-                            border: Border.all(
-                                color: Color.fromRGBO(255, 255, 255, 1), width: 1),
-                            shape: BoxShape.circle),
-                      ),
-                    ),
-                    Positioned(
-                      left: 141,
+                      left: 161,
                       top: 143,
                       child: Row(
                         children: [
@@ -152,7 +148,7 @@ class _Other_ViewState extends State<Other_View> {
                       ),
                     ),
                     Positioned(
-                      left: 140,
+                      left: 160,
                       top: 176,
                       child: Row(
                         children: [
@@ -215,6 +211,7 @@ class _Other_ViewState extends State<Other_View> {
                               )
                           ),)),
                         ),
+
                       ],
                     ),
                     Row(
@@ -246,13 +243,19 @@ class _Other_ViewState extends State<Other_View> {
                     Row(
                       children: [
                         Container(
-                          height: 25.h,
-                          width: 25.w,
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(165, 165, 165, 0.9),
-                              shape: BoxShape.circle),
-                          child:
-                          Icon(Icons.add_card, color: Colors.white),
+                            height: 25.h,
+                            width: 25.w,
+                            decoration: BoxDecoration(
+                                color: Color.fromRGBO(165, 165, 165, 0.9),
+                                shape: BoxShape.circle),
+                            child:
+                            Column(crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset('assets/profile_assets/proffesion.svg'
+                                    ,height:12.h,width:12.w),
+                              ],
+                            )
                         ),
                         SizedBox(width: 11.w),
                         Text(
@@ -269,13 +272,19 @@ class _Other_ViewState extends State<Other_View> {
                     Row(
                       children: [
                         Container(
-                          height: 25.h,
-                          width: 25.w,
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(165, 165, 165, 0.9),
-                              shape: BoxShape.circle),
-                          child:
-                          Icon(Icons.add_card, color: Colors.white),
+                            height: 25.h,
+                            width: 25.w,
+                            decoration: BoxDecoration(
+                                color: Color.fromRGBO(165, 165, 165, 0.9),
+                                shape: BoxShape.circle),
+                            child:
+                            Column(crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset('assets/profile_assets/proffesion.svg'
+                                    ,height:12.h,width:12.w),
+                              ],
+                            )
                         ),
                         SizedBox(width: 11.w),
                         RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
@@ -292,21 +301,26 @@ class _Other_ViewState extends State<Other_View> {
                       ],
                     ),
                     SizedBox(height:14.h),
+                    Row(
+                      children: [
+                        Text(
+                          'Biog',
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                        ),
+                        SizedBox(width:10.w),
+
+                        Container(height:20,width:20,
+                            child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg',
+                                color: i==1?Color.fromRGBO(0, 163, 255, 1):Colors.transparent)),
+                      ],
+                    ),
                     i==1?Text(''):
                     Column(
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Biog',
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color.fromRGBO(0, 0, 0, 1))),
-                            ), SizedBox(width:10.w)
-                          ],
-                        ),
                         SizedBox(height:7.h),
                         Text('Your professional bio is an important piece of ...',style: GoogleFonts.inter(
                             textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 14.sp,
@@ -330,7 +344,11 @@ class _Other_ViewState extends State<Other_View> {
                     )
                   ],),
               ),
-              i==1?Texts():
+              i==1?Texts(onPressed: (){
+                setState(() {
+                  i=0;
+                });
+              },):
               Column(
                 children: [
                   TabBar(
@@ -373,15 +391,22 @@ class _Other_ViewState extends State<Other_View> {
                                           fit: BoxFit.fill)),
                                 ),
                                 Positioned(
-                                    left: 25,
-                                    right: 25,
-                                    top: 25,
-                                    bottom: 25,
-                                    child: Icon(
-                                      Icons.motion_photos_paused_rounded,
-                                      size: 50,
-                                      color: Colors.white,
-                                    ))
+                                    left: 35,
+                                    right: 35,
+                                    top: 35,
+                                    bottom: 35,
+                                    child: Container(height:18.h,width:18.w,
+                                      child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                            height:18.h,width:18.w,),
+                                        ],
+                                      ),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color:Color.fromRGBO(255, 255, 255, 1)),)
+                                )
                               ]),
                             ),
                             Positioned(
@@ -450,15 +475,22 @@ class _Other_ViewState extends State<Other_View> {
                                           fit: BoxFit.fill)),
                                 ),
                                 Positioned(
-                                    left: 25,
-                                    right: 25,
-                                    top: 25,
-                                    bottom: 25,
-                                    child: Icon(
-                                      Icons.motion_photos_paused_rounded,
-                                      size: 50,
-                                      color: Colors.white,
-                                    ))
+                                    left: 35,
+                                    right: 35,
+                                    top: 35,
+                                    bottom: 35,
+                                    child: Container(height:18.h,width:18.w,
+                                      child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                            height:18.h,width:18.w,),
+                                        ],
+                                      ),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color:Color.fromRGBO(255, 255, 255, 1)),)
+                                )
                               ]),
                             ),
                             Positioned(
@@ -650,15 +682,22 @@ class _Other_ViewState extends State<Other_View> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 25,
-                                  bottom: 25,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -677,13 +716,20 @@ class _Other_ViewState extends State<Other_View> {
                               Positioned(
                                   left: 25,
                                   right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  top: 25,
+                                  bottom: 25,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -700,15 +746,22 @@ class _Other_ViewState extends State<Other_View> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 25,
-                                  bottom: 25,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -725,15 +778,22 @@ class _Other_ViewState extends State<Other_View> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -750,15 +810,22 @@ class _Other_ViewState extends State<Other_View> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 32,
+                                  right: 32,
+                                  top: 32,
+                                  bottom: 32,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -775,15 +842,22 @@ class _Other_ViewState extends State<Other_View> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -800,15 +874,22 @@ class _Other_ViewState extends State<Other_View> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -825,15 +906,22 @@ class _Other_ViewState extends State<Other_View> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 40,
+                                  right: 40,
+                                  top: 40,
+                                  bottom: 40,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                           Positioned(
@@ -850,15 +938,22 @@ class _Other_ViewState extends State<Other_View> {
                                         fit: BoxFit.fill)),
                               ),
                               Positioned(
-                                  left: 25,
-                                  right: 25,
-                                  top: 22,
-                                  bottom: 22,
-                                  child: Icon(
-                                    Icons.motion_photos_paused_rounded,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ))
+                                  left: 35,
+                                  right: 35,
+                                  top: 35,
+                                  bottom: 35,
+                                  child: Container(height:18.h,width:18.w,
+                                    child:Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/profile_assets/videoplay.svg',
+                                          height:18.h,width:18.w,),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:Color.fromRGBO(255, 255, 255, 1)),)
+                              )
                             ]),
                           ),
                         ]),
@@ -881,3 +976,6 @@ class _Other_ViewState extends State<Other_View> {
     );
   }
 }
+
+
+

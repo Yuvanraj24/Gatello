@@ -58,7 +58,6 @@ dependencies:
   flutter_launcher_icons: ^0.9.3
   double_back_to_close_app: ^2.1.0
   cloud_firestore: ^3.4.0
-
   fluttertoast: ^8.0.9
   wp_search_bar: ^0.0.5
   timezone: ^0.8.0
@@ -87,7 +86,6 @@ dependencies:
   overlay_support: ^2.0.1
   logger: ^1.1.0
   carousel_slider: ^4.1.1
-  adaptive_theme: ^2.3.0
   fluttericon: ^2.0.0
   substring_highlight: ^1.0.33
   audioplayers: ^0.20.1
@@ -100,7 +98,7 @@ dependencies:
   mime: ^1.0.1
   giphy_picker: ^2.0.0
   location: ^4.3.0
-
+  adaptive_theme: ^3.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -176,7 +174,7 @@ flutter:
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/document_icon_container.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/gallery_icon_container.png
-    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_icon_container.png
+    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_icon_container.svg
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_icon_container.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_icon_container.png
     - assets/icons_assets/green_tick.svg
@@ -221,7 +219,6 @@ flutter:
     - assets/call_assets/arrow2.svg
     - assets/call_assets/arrow3.svg
     - assets/profile_assets/back_button.svg
-    - assets/profile_assets/born on.svg
     - assets/profile_assets/call_outline.svg
     - assets/pops_asset/LikebuttonGe.svg
     - assets/pops_asset/commentge.svg
@@ -230,6 +227,18 @@ flutter:
     - assets/pops_asset/photosge.svg
     - assets/pops_asset/tagge.svg
     - assets/profile_assets/Edit_tool.svg
+    - assets/profile_assets/edittoolblack.svg
+    - assets/profile_assets/privateaccount.svg
+    - assets/profile_assets/proffesion.svg
+    - assets/profile_assets/videoplay.svg
+    - assets/profile_assets/commentnotifi.svg
+    - assets/profile_assets/bornon.svg
+    - assets/profile_assets/profilecall.svg
+    - assets/profile_assets/profilelink.svg
+    - assets/profile_assets/searchicon.svg
+    - assets/profile_assets/profilelanguage.svg
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
