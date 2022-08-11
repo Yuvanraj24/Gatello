@@ -16,7 +16,7 @@ Widget textField(
       Color borderColor = const Color(accent),
       Color cursorColor = const Color(black),
       double borderWidth = 2.0,
-      double borderRadius = 5.0,
+      double borderRadius = 25,
       Color? fillColor,
       int minLines = 1,
       int maxLines = 1,
@@ -63,7 +63,7 @@ Widget textField(
         errorMaxLines: errorMaxLines,
         alignLabelWithHint: true,
         suffixIcon: suffixIcon,
-        prefix: prefix,
+        prefixIcon: prefix,
         label: (labelText != null && labelStyle != null)
             ? Padding(
           padding: (labelRightPadding != null || labelLeftPadding != null || labelTopPadding != null || labelBottomPadding != null)
@@ -77,7 +77,7 @@ Widget textField(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: (border) ? BorderSide(color: borderColor, width: borderWidth) : BorderSide.none,
         ),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
+       // floatingLabelBehavior: FloatingLabelBehavior.always,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: (border) ? BorderSide(color: borderColor, width: borderWidth) : BorderSide.none,

@@ -97,6 +97,9 @@ dependencies:
   record: ^3.0.4
   nanoid: ^1.0.0
   fast_contacts: ^1.1.1
+  mime: ^1.0.1
+  giphy_picker: ^2.0.0
+  location: ^4.3.0
 
 dev_dependencies:
   flutter_test:

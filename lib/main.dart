@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,17 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/dummy.dart';
 import 'package:gatello/views/profile/allpops.dart';
 import 'package:gatello/views/profile/editprofile.dart';
-import 'package:gatello/views/profile/followers.dart';
-import 'package:gatello/views/profile/info.dart';
-import 'package:gatello/views/profile/link.dart';
-import 'package:gatello/views/profile/othermenu.dart';
-import 'package:gatello/views/profile/otherview.dart';
-import 'package:gatello/views/profile/photo_pop.dart';
 import 'package:gatello/views/profile/readmore.dart';
-import 'package:gatello/views/profile/skill.dart';
-import 'package:gatello/views/profile/tabbarprofile.dart';
 import 'package:gatello/views/profile/text.dart';
-import 'package:gatello/views/profile/workexperience.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
 import 'package:gatello/views/tabbar/calls/incomingcall.dart';
 import 'package:gatello/views/tabbar/pops/No%20request.dart';
@@ -30,7 +22,6 @@ import 'package:gatello/views/tabbar/pops/pops.dart';
 import 'package:gatello/views/tabbar/pops/readmore.dart';
 import 'package:gatello/views/tabbar/pops/secondreport.dart';
 import 'package:gatello/views/tabbar/pops/share.dart';
-
 // import 'package:gatello/reset_password.dart';
 // import 'package:gatello/select_contact.dart';
 import 'package:gatello/views/add_email.dart';
@@ -53,6 +44,7 @@ import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:overlay_support/overlay_support.dart';
 
@@ -62,10 +54,15 @@ import 'package:gatello/views/tabbar/test_code/sing_in_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
+import 'Database/StorageManager.dart';
+import 'Models/Comments.dart';
+import 'Others/components/LottieComposition.dart';
+import 'Others/lottie_strings.dart';
+import 'Style/Colors.dart';
+import 'Style/Text.dart';
 import 'firebase_options.dart';
 import 'views/tabbar/pings_chat/select_contact/select_contact.dart';
 import 'package:timezone/data/latest.dart' as tz;
-// import 'package:timezone/timezone.dart' as tz;
 
 Future<void> main() async {
   tz.initializeTimeZones();
@@ -84,14 +81,14 @@ const String ip = 'http://3.108.219.188:5000';
 const String signUpip = '$ip/signup';
 const String loginip = '$ip/login';
 
-// const String ROOT = "http://tutionteacher.rrtutors.com";
-// const String REGISTRATION = "$ROOT/api/registration.php";
-// const String LOGIN = "$ROOT/api/login.php";
 
+late ValueNotifier<AdaptiveThemeMode> themedata;
 class MyApp extends StatefulWidget {
 
+  final AdaptiveThemeMode? savedThemeMode;
 
-  const MyApp({Key? key}) : super(key: key);
+
+  const MyApp({Key? key, this.savedThemeMode}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -100,57 +97,76 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-        designSize: Size(360, 800),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-                appBarTheme: AppBarTheme(
-                    shadowColor: Colors.transparent,
-                    backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
-            home: child,
-            routes: {
-              // '/signin': (BuildContext context) => SignIn(),
-              // '/signup': (BuildContext context) => SignUp(),
-              // '/home': (BuildContext context) => Home(),
+    return OverlaySupport.global(
+      child: AdaptiveTheme(
+        light: ThemeData(
+            primaryColor: Color(white),
+            brightness: Brightness.light,
+            backgroundColor: const Color(white),
+            canvasColor: Color(white),
+            scaffoldBackgroundColor: Color(white),
+            dividerColor: Color(dividerGrey),
+            primarySwatch: Palette.dark,
+            buttonColor: Color(materialBlack),
+            accentColor: Color(accent),
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(backgroundColor: Color(white)),
+            bottomAppBarColor: Color(white),
+            appBarTheme: AppBarTheme(
+                iconTheme: IconThemeData(color: Color(black)), backgroundColor: Color(white), titleTextStyle: GoogleFonts.poppins(textStyle: textStyle(color: Color(black))))),
+        dark: ThemeData(
+            primaryColor: Color(materialBlack),
+            brightness: Brightness.dark,
+            backgroundColor: const Color(materialBlack),
+            dividerColor: Color(dividerGrey),
+            canvasColor: Color(materialBlack),
+            primarySwatch: Palette.light,
+            accentColor: Color(accent),
+            scaffoldBackgroundColor: Color(materialBlack),
+            buttonColor: Color(white),
+            bottomAppBarColor: Color(materialBlack),
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(backgroundColor: Color(materialBlack)),
+            appBarTheme: AppBarTheme(
+                iconTheme: IconThemeData(color: Color(white)),
+                backgroundColor: Color(materialBlack),
+                titleTextStyle: GoogleFonts.poppins(textStyle: textStyle(color: Color(white))))),
+        initial: widget.savedThemeMode ?? AdaptiveThemeMode.light,
+        builder: (theme, darkTheme) {
+          return ScreenUtilInit(
+            designSize: Size(360, 800),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                    appBarTheme: AppBarTheme(
+                        shadowColor: Colors.transparent,
+                        backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
+                home: FutureBuilder(
+                    future: getVisitedFlag(),
+                    builder: (context, snapshot) {
+                      themedata = AdaptiveTheme.of(context).modeChangeNotifier;
+                      return ValueListenableBuilder(
+                          valueListenable: themedata,
+                          builder: (context, value, _) {
+                            if (snapshot.connectionState == ConnectionState.done) {
+                              return (snapshot.data == true) ? Tabbar() :LoginScreen();
+                            } else {
+                              return lottieAnimation(loadingLottie);
+                            }
+                          });
+                    }),
+
+              );
             },
+
           );
         },
-        child:Unfollow_page()
-      // child: Stack(
-      //   children: [
-      //     Container(
-      //       width: double.infinity,
-      //       height: double.infinity,
-      //       child: Image.network(
-      //         "https://c4.wallpaperflare.com/wallpaper/384/818/513/himalayas-mountains-landscape-nature-wallpaper-preview.jpg",
-      //         fit: BoxFit.fill,
-      //       ),
-      //     ),
-      //     (_loginStatus == 1) ? Home() : SignIn()
-      //   ],
-      // ),
+      ),
     );
   }
 
-        // child: Stack(
-        //   children: [
-        //     Container(
-        //       width: double.infinity,
-        //       height: double.infinity,
-        //       child: Image.network(
-        //         "https://c4.wallpaperflare.com/wallpaper/384/818/513/himalayas-mountains-landscape-nature-wallpaper-preview.jpg",
-        //         fit: BoxFit.fill,
-        //       ),
-        //     ),
-        //     (_loginStatus == 1) ? Home() : SignIn()
-        //   ],
-        // ),
 
-  //Test Comment
 
   var _loginStatus = 0;
   getPref() async {
@@ -160,14 +176,3 @@ class _MyAppState extends State<MyApp> {
     });
   }
 }
-//   var _loginStatus = 0;
-//
-//   getPref() async {
-//     SharedPreferences preferences = await SharedPreferences.getInstance();
-//     setState(() {
-//       _loginStatus = preferences.getInt("value")!;
-//     });
-//   }
-// }
-//
-// class Report_PageState {}

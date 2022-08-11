@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/Authentication/Authentication.dart';
 import 'package:gatello/core/models/pings_chat_model/pings_chats_list_model.dart';
+import 'package:gatello/views/tabbar/chats/personal_chat_screen/ChatPage.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
 
 
@@ -242,7 +243,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                                         MaterialPageRoute(
 
                                             builder: (context) =>
-                                                PersonalChat(state: 0,
+                                                ChatPage(state: 0,
                                                     uid: uid!,
                                                     puid: docs[index]
                                                         .data()["members"]["$uid"]["peeruid"])));
