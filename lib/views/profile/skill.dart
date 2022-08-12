@@ -12,12 +12,12 @@ class Skill_Page extends StatefulWidget {
 }
 
 class _Skill_PageState extends State<Skill_Page> {
+
   final List<String> items = ['Public', 'Friends', 'Only me'];
   String? selectedValue;
   bool isSwitched = false;
   @override
   Widget build(BuildContext context) {
-   // var _skill1.text=" \u25EF ";
     TextEditingController _skill1=TextEditingController();
     return Scaffold(
       appBar: AppBar(
@@ -81,12 +81,18 @@ class _Skill_PageState extends State<Skill_Page> {
                         items: items
                             .map((item) => DropdownMenuItem<String>(
                           value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Color.fromRGBO(0, 0, 0, 1),
+                          child: Container(
+                            child: Center(
+                              child: Text(
+                                  item,
+                                  style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      )
+                                  )
+                              ),
                             ),
                           ),
                         ))
@@ -107,13 +113,13 @@ class _Skill_PageState extends State<Skill_Page> {
                         ),
                         iconSize: 14,
                         buttonHeight: 30,
-                        buttonWidth: 86,
+                        buttonWidth: 90,
                         buttonDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2),
                             color: Color.fromRGBO(248, 206, 97, 1)),
-                        itemHeight: 40,
+                        itemHeight:30,
                         // itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                        dropdownMaxHeight: 90,
+                        dropdownMaxHeight: 130,
                         dropdownWidth: 90,
                         buttonElevation: 0,
                         dropdownElevation: 0,

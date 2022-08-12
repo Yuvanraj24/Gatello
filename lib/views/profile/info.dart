@@ -17,8 +17,12 @@ TextEditingController _info3=TextEditingController();
 
 class _Info_PageState extends State<Info_Page> {
   final List<String> items = ['Public', 'Friends', 'Only me'];
-  String? selectedValue;
-  bool isSwitched = false;
+  String? selectedValue1;
+  String? selectedValue2;
+  String? selectedValue3;
+  String? selectedValue4;
+  String? selectedValue5;
+  bool isSwitched = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(resizeToAvoidBottomInset:false,
@@ -99,22 +103,28 @@ class _Info_PageState extends State<Info_Page> {
                       items: items
                           .map((item) => DropdownMenuItem<String>(
                         value: item,
-                        child: Text(
-                          item,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w400,
-                            color: Color.fromRGBO(0, 0, 0, 1),
+                        child: Container(
+                          child: Center(
+                            child: Text(
+                                item,
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                    )
+                                )
+                            ),
                           ),
                         ),
                       ))
-                            .toList(),
-                    value: selectedValue,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedValue = value as String;
-                      });
-                    },
+                          .toList(),
+                      value: selectedValue1,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue1 = value as String;
+                        });
+                      },
                       icon: Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: Icon(
@@ -125,13 +135,13 @@ class _Info_PageState extends State<Info_Page> {
                       ),
                       iconSize: 14,
                       buttonHeight: 30,
-                      buttonWidth: 86,
+                      buttonWidth: 90,
                       buttonDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(2),
                           color: Color.fromRGBO(248, 206, 97, 1)),
-                      itemHeight: 40,
+                      itemHeight:30,
                       // itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                      dropdownMaxHeight: 90,
+                      dropdownMaxHeight: 130,
                       dropdownWidth: 90,
                       buttonElevation: 0,
                       dropdownElevation: 0,
@@ -200,20 +210,26 @@ class _Info_PageState extends State<Info_Page> {
                         items: items
                             .map((item) => DropdownMenuItem<String>(
                           value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Color.fromRGBO(0, 0, 0, 1),
+                          child: Container(
+                            child: Center(
+                              child: Text(
+                                  item,
+                                  style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      )
+                                  )
+                              ),
                             ),
                           ),
                         ))
                             .toList(),
-                        value: selectedValue,
+                        value: selectedValue2,
                         onChanged: (value) {
                           setState(() {
-                            selectedValue = value as String;
+                            selectedValue2 = value as String;
                           });
                         },
                         icon: Padding(
@@ -226,13 +242,13 @@ class _Info_PageState extends State<Info_Page> {
                         ),
                         iconSize: 14,
                         buttonHeight: 30,
-                        buttonWidth: 86,
+                        buttonWidth: 90,
                         buttonDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2),
                             color: Color.fromRGBO(248, 206, 97, 1)),
-                        itemHeight: 40,
+                        itemHeight:30,
                         // itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                        dropdownMaxHeight: 90,
+                        dropdownMaxHeight: 130,
                         dropdownWidth: 90,
                         buttonElevation: 0,
                         dropdownElevation: 0,
@@ -315,20 +331,26 @@ class _Info_PageState extends State<Info_Page> {
                         items: items
                             .map((item) => DropdownMenuItem<String>(
                           value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Color.fromRGBO(0, 0, 0, 1),
+                          child: Container(
+                            child: Center(
+                              child: Text(
+                                  item,
+                                  style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      )
+                                  )
+                              ),
                             ),
                           ),
                         ))
                             .toList(),
-                        value: selectedValue,
+                        value: selectedValue3,
                         onChanged: (value) {
                           setState(() {
-                            selectedValue = value as String;
+                            selectedValue3 = value as String;
                           });
                         },
                         icon: Padding(
@@ -341,13 +363,13 @@ class _Info_PageState extends State<Info_Page> {
                         ),
                         iconSize: 14,
                         buttonHeight: 30,
-                        buttonWidth: 86,
+                        buttonWidth: 90,
                         buttonDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2),
                             color: Color.fromRGBO(248, 206, 97, 1)),
-                        itemHeight: 40,
+                        itemHeight:30,
                         // itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                        dropdownMaxHeight: 90,
+                        dropdownMaxHeight: 130,
                         dropdownWidth: 90,
                         buttonElevation: 0,
                         dropdownElevation: 0,
@@ -454,20 +476,26 @@ class _Info_PageState extends State<Info_Page> {
                         items: items
                             .map((item) => DropdownMenuItem<String>(
                           value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Color.fromRGBO(0, 0, 0, 1),
+                          child: Container(
+                            child: Center(
+                              child: Text(
+                                  item,
+                                  style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      )
+                                  )
+                              ),
                             ),
                           ),
                         ))
                             .toList(),
-                        value: selectedValue,
+                        value: selectedValue4,
                         onChanged: (value) {
                           setState(() {
-                            selectedValue = value as String;
+                            selectedValue4 = value as String;
                           });
                         },
                         icon: Padding(
@@ -480,13 +508,13 @@ class _Info_PageState extends State<Info_Page> {
                         ),
                         iconSize: 14,
                         buttonHeight: 30,
-                        buttonWidth: 86,
+                        buttonWidth: 90,
                         buttonDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2),
                             color: Color.fromRGBO(248, 206, 97, 1)),
-                        itemHeight: 40,
+                        itemHeight:30,
                         // itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                        dropdownMaxHeight: 90,
+                        dropdownMaxHeight: 130,
                         dropdownWidth: 90,
                         buttonElevation: 0,
                         dropdownElevation: 0,
@@ -587,20 +615,26 @@ class _Info_PageState extends State<Info_Page> {
                         items: items
                             .map((item) => DropdownMenuItem<String>(
                           value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Color.fromRGBO(0, 0, 0, 1),
+                          child: Container(
+                            child: Center(
+                              child: Text(
+                                  item,
+                                  style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      )
+                                  )
+                              ),
                             ),
                           ),
                         ))
                             .toList(),
-                        value: selectedValue,
+                        value: selectedValue5,
                         onChanged: (value) {
                           setState(() {
-                            selectedValue = value as String;
+                            selectedValue5 = value as String;
                           });
                         },
                         icon: Padding(
@@ -613,13 +647,13 @@ class _Info_PageState extends State<Info_Page> {
                         ),
                         iconSize: 14,
                         buttonHeight: 30,
-                        buttonWidth: 86,
+                        buttonWidth: 90,
                         buttonDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2),
                             color: Color.fromRGBO(248, 206, 97, 1)),
-                        itemHeight: 40,
+                        itemHeight:30,
                         // itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                        dropdownMaxHeight: 90,
+                        dropdownMaxHeight: 130,
                         dropdownWidth: 90,
                         buttonElevation: 0,
                         dropdownElevation: 0,

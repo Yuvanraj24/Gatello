@@ -138,7 +138,7 @@ class _Edit_ProfileState extends State<Edit_Profile> {
                    ),))
                  ],
                ),
-               SizedBox(height: 9.h),
+               SizedBox(height: 2.h),
                Row(
                  children: [
                    Container(

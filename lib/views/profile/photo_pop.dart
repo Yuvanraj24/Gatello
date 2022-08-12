@@ -99,8 +99,8 @@ class _Photo_PopState extends State<Photo_Pop> {
                   top: 92,
                   left: 21,
                   child: Container(
-                    height: 84.h,
-                    width: 83.w,
+                    height: 94.h,
+                    width: 93.w,
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image: NetworkImage(
@@ -112,7 +112,7 @@ class _Photo_PopState extends State<Photo_Pop> {
                   ),
                 ),
                 Positioned(
-                  left: 94,
+                  left: 108,
                   top: 155,
                   child: Container(
                     height: 23.h,
@@ -137,74 +137,74 @@ class _Photo_PopState extends State<Photo_Pop> {
                         shape: BoxShape.circle),
                   ),
                 ),
-                Positioned(
-                  left: 141,
-                  top: 143,
-                  child: Row(
+                Positioned(top:146,left:170,
+                  child: Container(child:Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '789',
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w700,
-                                color: Color.fromRGBO(0, 0, 0, 1))),
-                      ),
-                      SizedBox(width: 39.w),
-                      Text(
-                        '789',
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w700,
-                                color: Color.fromRGBO(0, 0, 0, 1))),
-                      ),
-                      SizedBox(width: 39.w),
-                      Text(
-                        '1,028',
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w700,
-                                color: Color.fromRGBO(0, 0, 0, 1))),
-                      )
-                    ],
-                  ),
+                    Row(
+                      children: [
+                        Text(
+                          '789',
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                        ),
+                        SizedBox(width: 39.w),
+                        Text(
+                          '789',
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                        ),
+                        SizedBox(width: 42.w),
+                        Text(
+                          '1,028',
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                        )
+                      ],
+                    ),
+                    SizedBox(height:5.h),
+                    Row(
+                      children: [
+                        Text(
+                          'Pops',
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                        ),
+                        SizedBox(width: 32.w),
+                        Text(
+                          'Following',
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                        ),
+                        SizedBox(width: 25.w),
+                        Text(
+                          'Followers',
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                        )
+                      ],
+                    ),
+                  ],),),
                 ),
-                Positioned(
-                  left: 140,
-                  top: 176,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Pops',
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color.fromRGBO(0, 0, 0, 1))),
-                      ),
-                      SizedBox(width: 32.w),
-                      Text(
-                        'Following',
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color.fromRGBO(0, 0, 0, 1))),
-                      ),
-                      SizedBox(width: 25.w),
-                      Text(
-                        'Followers',
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color.fromRGBO(0, 0, 0, 1))),
-                      )
-                    ],
-                  ),
-                ),],
+                ],
             ),),
 
             Padding(

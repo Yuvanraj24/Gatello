@@ -2,6 +2,8 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gatello/views/profile/photo_pop.dart';
+import 'package:gatello/views/profile/workdetails.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Work_Experience extends StatefulWidget {
@@ -48,7 +50,12 @@ class _Work_ExperienceState extends State<Work_Experience> {
               Text('Website',style: GoogleFonts.inter(
                   fontSize:20.sp,color: Color.fromRGBO(0,0,0,1),fontWeight: FontWeight.w700
               ),),SizedBox(width:118.w),
-              IconButton(onPressed: (){}, icon:Icon(Icons.add,color: Colors.black,),),
+              IconButton(onPressed: (){
+                Future.delayed(Duration(seconds: 0),
+                        () =>
+                        showConfirmationDialog2(context)
+                );
+              }, icon:Icon(Icons.add,color: Colors.black,),),
               Spacer(),
               DropdownButtonHideUnderline(
                 child: DropdownButton2(
@@ -75,12 +82,18 @@ class _Work_ExperienceState extends State<Work_Experience> {
                   items: items
                       .map((item) => DropdownMenuItem<String>(
                     value: item,
-                    child: Text(
-                      item,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400,
-                        color: Color.fromRGBO(0, 0, 0, 1),
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                            item,
+                            style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color.fromRGBO(0, 0, 0, 1),
+                                )
+                            )
+                        ),
                       ),
                     ),
                   ))
@@ -101,13 +114,13 @@ class _Work_ExperienceState extends State<Work_Experience> {
                   ),
                   iconSize: 14,
                   buttonHeight: 30,
-                  buttonWidth: 86,
+                  buttonWidth: 90,
                   buttonDecoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(2),
                       color: Color.fromRGBO(248, 206, 97, 1)),
-                  itemHeight: 40,
+                  itemHeight:30,
                   // itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                  dropdownMaxHeight: 90,
+                  dropdownMaxHeight: 130,
                   dropdownWidth: 90,
                   buttonElevation: 0,
                   dropdownElevation: 0,
@@ -274,4 +287,14 @@ class _Work_ExperienceState extends State<Work_Experience> {
       ),
     );
   }
+}
+
+showConfirmationDialog2(BuildContext context) {
+  showDialog(
+    // barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+      return WorkDetailsDialog();
+    },
+  );
 }

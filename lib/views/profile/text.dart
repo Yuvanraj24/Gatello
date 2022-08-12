@@ -415,15 +415,13 @@ class _TextsState extends State<Texts> {
                             fontWeight: FontWeight.w700,
                             color: Color.fromRGBO(0, 0, 0, 1))),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left:150),
-                    child: TextButton( onPressed:widget.onPressed,
-                        child: Text('See More...',style:GoogleFonts.inter(
-                            textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
-                                color: Color.fromRGBO(0, 163, 255, 1)
-                            )
-                        ),)),
-                  )
+                 SizedBox(width:125.w),
+                  TextButton( onPressed:widget.onPressed,
+                      child: Text('See More...',style:GoogleFonts.inter(
+                          textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
+                              color: Color.fromRGBO(0, 163, 255, 1)
+                          )
+                      ),))
                 ],
               ),
             ],
