@@ -23,7 +23,6 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
-
 import 'package:overlay_support/overlay_support.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:substring_highlight/substring_highlight.dart';
@@ -1428,6 +1427,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                             //   ),
                                             // );
                                             Container(
+
                                               child: GroupedListView(
                                                   sort: false,
                                                   elements: snapshot.data!,
@@ -1534,6 +1534,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                             log(messages.length.toString());
                                                           },
                                                           child: Container(
+
                                                             color: (index <= lastUnreadCount && lastUnreadCount != 0)
                                                                 ? unreadMessageAnimation.value
                                                                 : (messages.values.contains(element))
@@ -1558,6 +1559,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       Container(
+
                                         // height: 66,
                                         color: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
                                         child: Column(
@@ -1567,6 +1569,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                 ? Padding(
                                               padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 8),
                                               child: Container(
+
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
@@ -1575,9 +1578,13 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                     ),
                                                     Expanded(
                                                       child: Container(
+
                                                         padding: EdgeInsets.all(8),
                                                         decoration: BoxDecoration(
-                                                          color: (themedata.value.index == 0) ? Color(dividerGrey).withOpacity(.1) : Color(lightBlack).withOpacity(.1),
+
+                                                          color: (themedata.value.index == 0)
+                                                              ? Color(dividerGrey).withOpacity(.1)
+                                                              : Color(lightBlack).withOpacity(.1),
                                                           borderRadius: BorderRadius.all(
                                                             Radius.circular(12.0),
                                                           ),
@@ -1586,7 +1593,8 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                           child: Row(
                                                             children: [
                                                               Container(
-                                                                color: Color(yellow),
+
+                                                               color: Color(yellow),
                                                                 width: 4,
                                                               ),
                                                               const SizedBox(width: 8),
@@ -1654,61 +1662,654 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                               )
                                                   : Column(
                                                 children: [
-                                                  Container(
-                                                    color:Colors.red,
-                                                    child: Row(
-                                                      children: [
+                                                  Row(
+                                                    children: [
 
-                                                        //textField for personal chat
-                                                        Flexible(
-                                                          child: textField(
+                                                      //textField for personal chat
+                                                      Flexible(
+                                                        child: textField(
 
-                                                            prefix: IconButton(
-                                                            splashColor: Colors.transparent,
-                                                            highlightColor: Colors.transparent,
-                                                            hoverColor: Colors.transparent,
-                                                            onPressed: () async {
-                                                              recentEmojiList = await getRecentEmoji();
-                                                              if (!mounted) return;
-                                                              setState(() {
-                                                                if (attachmentShowing) {
-                                                                  attachmentShowing = false;
-                                                                }
-                                                                emojiShowing = !emojiShowing;
-                                                                if (!emojiShowing) {
-                                                                  focusNode.requestFocus();
-                                                                } else {
-                                                                  focusNode.unfocus();
-                                                                }
-                                                              });
-                                                            },
-                                                                icon: Icon(Icons.emoji_emotions_outlined)),
+                                                           prefix:
+                                                          // IconButton(
+                                                          // splashColor: Colors.transparent,
+                                                          // highlightColor: Colors.transparent,
+                                                          // hoverColor: Colors.transparent,
+                                                          // onPressed: () async {
+                                                          //   recentEmojiList = await getRecentEmoji();
+                                                          //   if (!mounted) return;
+                                                          //   setState(() {
+                                                          //     if (attachmentShowing) {
+                                                          //       attachmentShowing = false;
+                                                          //     }
+                                                          //     emojiShowing = !emojiShowing;
+                                                          //     if (!emojiShowing) {
+                                                          //       focusNode.requestFocus();
+                                                          //     } else {
+                                                          //       focusNode.unfocus();
+                                                          //
+                                                          //     }
+                                                          //   });
+                                                          // },
+                                                          //     icon: Icon(Icons.emoji_emotions_outlined,
+                                                          //     color: Color.fromRGBO(12, 16, 29, 1))),
 
 
-                                                            // IconButton(
-                                                            //     splashColor: Colors.transparent,
-                                                            //     highlightColor: Colors.transparent,
-                                                            //     hoverColor: Colors.transparent,
-                                                            //     onPressed: () {
-                                                            //       if (!mounted) return;
-                                                            //       setState(() {
-                                                            //         if (emojiShowing) {
-                                                            //           emojiShowing = false;
-                                                            //         }
-                                                            //         attachmentShowing = !attachmentShowing;
-                                                            //       });
-                                                            //     },
-                                                            //     icon: Icon(Icons.attach_file)),
-                                                            focusNode: focusNode,
-                                                            textStyle: GoogleFonts.inter(
-                                                                textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white))),
-                                                            textEditingController: textEditingController,
-                                                            hintText: "Ping here...",
-                                                            hintStyle: GoogleFonts.inter(
-                                                                textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey))),
-                                                            border: false,
-                                                            onSubmitted: (canSend)
-                                                                ? (value) async {
+                                                           IconButton(
+                                                               splashColor: Colors.transparent,
+                                                               highlightColor: Colors.transparent,
+                                                               hoverColor: Colors.transparent,
+                                                               onPressed: () {
+                                                                 if (!mounted) return;
+                                                                 setState(() {
+                                                                   if (emojiShowing) {
+                                                                     emojiShowing = false;
+                                                                   }
+                                                                   attachmentShowing = !attachmentShowing;
+                                                                 });
+                                                               },
+                                                               icon: Icon(Icons.attach_file)),
+                                                          focusNode: focusNode,
+                                                          textStyle: GoogleFonts.inter(
+                                                              textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white))),
+                                                          textEditingController: textEditingController,
+                                                          hintText: "Ping here...",
+                                                          hintStyle: GoogleFonts.inter(
+                                                              textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey))),
+                                                          border: false,
+                                                          onSubmitted: (canSend)
+                                                              ? (value) async {
+                                                            if (textEditingController.text.trim() != "") {
+                                                              await writeUserMessage(
+                                                                  type: 0,
+                                                                  peerPic: (chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"] != null)
+                                                                      ? chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"]
+                                                                      : null,
+                                                                  peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
+                                                                  // peerChattingWith: userDetailSnapshot.data!.data()!["chattingWith"],
+                                                                  replyMap: replyMessageMap,
+                                                                  message: textEditingController.text);
+                                                              if (replyMessageMap != null && replyUserName != null) {
+                                                                if (!mounted) return;
+                                                                setState(() {
+                                                                  replyMessageMap = null;
+                                                                  replyUserName = null;
+                                                                });
+                                                              }
+                                                              if (emojiShowing) {
+                                                                if (!mounted) return;
+                                                                setState(() {
+                                                                  emojiShowing = false;
+                                                                });
+                                                              }
+                                                              textEditingController.clear();
+                                                            }
+                                                          }
+                                                              : null,
+                                                          maxLines: 5,
+                                                          fillColor: (themedata.value.index == 0) ? Color(white) : Color(lightBlack),
+                                                          suffixIcon: Container(
+                                                            width: 80,
+
+                                                            child: Row(
+                                                              children: [
+                                                                InkWell(
+                                                                  child: Image(
+                                                                    image: AssetImage(
+                                                                        'assets/per_chat_icons/attach_file_icon.png'
+                                                                    ),
+                                                                    height: 30.h,
+                                                                  ),
+                                                                  onTap: () {
+                                                                    showModalBottomSheet(
+                                                                        backgroundColor: Colors
+                                                                            .transparent,
+                                                                        context: context,
+                                                                        builder: (
+                                                                            BuildContext context) {
+                                                                          return Container(
+                                                                            height: 250,
+                                                                            width: MediaQuery
+                                                                                .of(context)
+                                                                                .size
+                                                                                .width -
+                                                                                20,
+                                                                            child: Card(
+                                                                              shape: RoundedRectangleBorder(
+                                                                                  borderRadius:
+                                                                                  BorderRadius
+                                                                                      .circular(
+                                                                                      15),
+                                                                                  side: BorderSide(
+                                                                                      color: Color
+                                                                                          .fromRGBO(
+                                                                                          246,
+                                                                                          207,
+                                                                                          70,
+                                                                                          1))),
+                                                                              color: Color
+                                                                                  .fromRGBO(
+                                                                                  255, 255,
+                                                                                  255, 1),
+                                                                              margin: EdgeInsets
+                                                                                  .all(30),
+                                                                              child: Column(
+                                                                                  mainAxisAlignment:
+                                                                                  MainAxisAlignment
+                                                                                      .spaceEvenly,
+                                                                                  children: [
+                                                                                    Row(
+                                                                                      mainAxisAlignment:
+                                                                                      MainAxisAlignment
+                                                                                          .spaceEvenly,
+                                                                                      children: [
+
+                                                                                        GestureDetector(
+                                                                                          onTap: () async {
+                                                                                            if (!mounted) return;
+                                                                                            setState(() {
+                                                                                              attachmentShowing = false;
+                                                                                            });
+                                                                                            // Navigator.pop(context);
+                                                                                            return await files().then((value) async {
+                                                                                              if (value!.files.isNotEmpty) {
+                                                                                                for (var file in value.files) {
+                                                                                                  if (file.size < 52428800 && file.bytes != null) {
+                                                                                                    if (widget.state == 0) {
+                                                                                                      await writeUserMessage(
+                                                                                                        type: 4,
+                                                                                                        // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                        peerName:
+                                                                                                        chatRoomSnapshot.data!.data()!["members"]
+                                                                                                        ["${widget.puid}"]["name"],
+                                                                                                        peerPic:
+                                                                                                        chatRoomSnapshot.data!.data()!["members"]
+                                                                                                        ["${widget.puid}"]["pic"],
+                                                                                                        replyMap: replyMessageMap,
+                                                                                                        file: file.bytes,
+                                                                                                        contentType: lookupMimeType(file.path!)!,
+                                                                                                      );
+                                                                                                      if (replyMessageMap != null &&
+                                                                                                          replyUserName != null) {
+                                                                                                        if (!mounted) return;
+                                                                                                        setState(() {
+                                                                                                          replyMessageMap = null;
+                                                                                                          replyUserName = null;
+                                                                                                        });
+                                                                                                      }
+                                                                                                    } else {
+                                                                                                      await writeGroupMessage(
+                                                                                                        type: 4,
+                                                                                                        members:
+                                                                                                        chatRoomSnapshot.data!.data()!["members"],
+                                                                                                        file: file.bytes,
+                                                                                                        contentType: lookupMimeType(file.path!),
+                                                                                                        groupName:
+                                                                                                        chatRoomSnapshot.data!.data()!["title"],
+                                                                                                        groupPic: chatRoomSnapshot.data!.data()!["pic"],
+                                                                                                        replyMap: replyMessageMap,
+                                                                                                      );
+                                                                                                      if (replyMessageMap != null &&
+                                                                                                          replyUserName != null) {
+                                                                                                        if (!mounted) return;
+                                                                                                        setState(() {
+                                                                                                          replyMessageMap = null;
+                                                                                                          replyUserName = null;
+                                                                                                        });
+                                                                                                      }
+                                                                                                    }
+                                                                                                  } else {
+                                                                                                    final snackBar = snackbar(
+                                                                                                        content: "File size is greater than 50MB");
+                                                                                                    ScaffoldMessenger.of(context)
+                                                                                                        .showSnackBar(snackBar);
+                                                                                                  }
+                                                                                                }
+                                                                                              }
+                                                                                            });
+                                                                                          },
+
+                                                                                          child: iconCreation(
+                                                                                              "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/document_icon_container.png",
+                                                                                              "Document"),
+                                                                                        ),
+                                                                                        GestureDetector(
+                                                                                          onTap: () async {
+                                                                                            if (!mounted) return;
+                                                                                            setState(() {
+                                                                                              attachmentShowing = false;
+                                                                                            });
+                                                                                            final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+
+                                                                                            // Navigator.pop(context);
+                                                                                            // return await image().then((value) async {
+                                                                                            if (photo != null) {
+                                                                                              int size = await photo.length();
+                                                                                              Uint8List bytes = await photo.readAsBytes();
+                                                                                              // for (var file in value.files) {
+                                                                                              if (size < 52428800 && bytes != null) {
+                                                                                                if (widget.state == 0) {
+                                                                                                  await writeUserMessage(
+                                                                                                    type: 1,
+                                                                                                    // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                    peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
+                                                                                                    peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
+                                                                                                    replyMap: replyMessageMap,
+                                                                                                    file: bytes,
+                                                                                                    contentType: "image/" + photo.path.split(".").last,
+                                                                                                  );
+                                                                                                  if (replyMessageMap != null && replyUserName != null) {
+                                                                                                    if (!mounted) return;
+                                                                                                    setState(() {
+                                                                                                      replyMessageMap = null;
+                                                                                                      replyUserName = null;
+                                                                                                    });
+                                                                                                  }
+                                                                                                } else {
+                                                                                                  await writeGroupMessage(
+                                                                                                      type: 1,
+                                                                                                      members: chatRoomSnapshot.data!.data()!["members"],
+                                                                                                      file: bytes,
+                                                                                                      replyMap: replyMessageMap,
+                                                                                                      contentType: "image/" + photo.path.split(".").last,
+                                                                                                      groupName: chatRoomSnapshot.data!.data()!["title"],
+                                                                                                      groupPic: chatRoomSnapshot.data!.data()!["pic"]);
+                                                                                                  if (replyMessageMap != null && replyUserName != null) {
+                                                                                                    if (!mounted) return;
+                                                                                                    setState(() {
+                                                                                                      replyMessageMap = null;
+                                                                                                      replyUserName = null;
+                                                                                                    });
+                                                                                                  }
+                                                                                                }
+                                                                                              } else {
+                                                                                                final snackBar = snackbar(content: "File size is greater than 50MB");
+                                                                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                              }
+                                                                                              // }
+                                                                                            }
+                                                                                            // });
+                                                                                          },
+
+                                                                                          child: iconCreation(
+                                                                                              "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png",
+                                                                                              "Camera"
+
+                                                                                          ),
+                                                                                        ),
+                                                                                        GestureDetector(
+                                                                                          onTap: () async {
+                                                                                            Navigator.pop(context);
+                                                                                            if (!mounted) return;
+                                                                                            setState(() {
+                                                                                              attachmentShowing = false;
+                                                                                            });
+                                                                                            // Navigator.pop(context);
+
+                                                                                            return await video().then((value) async {
+                                                                                              if (value!.files.isNotEmpty) {
+                                                                                                Navigator.push(
+                                                                                                    context,
+                                                                                                    MaterialPageRoute(
+                                                                                                        builder: (context) => AssetPageView(
+                                                                                                          fileList: value.files,
+                                                                                                          onPressed: () async {
+                                                                                                            Navigator.pop(context);
+                                                                                                            for (var file in value.files) {
+                                                                                                              if (file.size < 52428800 &&
+                                                                                                                  file.bytes != null) {
+                                                                                                                if (widget.state == 0) {
+                                                                                                                  await writeUserMessage(
+                                                                                                                    type: 2,
+                                                                                                                    // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                                    peerName: chatRoomSnapshot
+                                                                                                                        .data!
+                                                                                                                        .data()![
+                                                                                                                    "members"][
+                                                                                                                    "${widget.puid}"]
+                                                                                                                    ["name"],
+                                                                                                                    peerPic: chatRoomSnapshot
+                                                                                                                        .data!
+                                                                                                                        .data()![
+                                                                                                                    "members"][
+                                                                                                                    "${widget.puid}"]
+                                                                                                                    ["pic"],
+                                                                                                                    replyMap:
+                                                                                                                    replyMessageMap,
+                                                                                                                    file: file.bytes,
+                                                                                                                    contentType: "video/" +
+                                                                                                                        file.extension!,
+                                                                                                                  );
+                                                                                                                  if (replyMessageMap !=
+                                                                                                                      null &&
+                                                                                                                      replyUserName !=
+                                                                                                                          null) {
+                                                                                                                    if (!mounted) return;
+                                                                                                                    setState(() {
+                                                                                                                      replyMessageMap =
+                                                                                                                      null;
+                                                                                                                      replyUserName = null;
+                                                                                                                    });
+                                                                                                                  }
+                                                                                                                } else {
+                                                                                                                  await writeGroupMessage(
+                                                                                                                      type: 2,
+                                                                                                                      members:
+                                                                                                                      chatRoomSnapshot
+                                                                                                                          .data!
+                                                                                                                          .data()![
+                                                                                                                      "members"],
+                                                                                                                      file: file.bytes,
+                                                                                                                      replyMap:
+                                                                                                                      replyMessageMap,
+                                                                                                                      contentType: "video/" +
+                                                                                                                          file.extension!,
+                                                                                                                      groupName:
+                                                                                                                      chatRoomSnapshot
+                                                                                                                          .data!
+                                                                                                                          .data()![
+                                                                                                                      "title"],
+                                                                                                                      groupPic:
+                                                                                                                      chatRoomSnapshot
+                                                                                                                          .data!
+                                                                                                                          .data()![
+                                                                                                                      "pic"]);
+                                                                                                                  if (replyMessageMap !=
+                                                                                                                      null &&
+                                                                                                                      replyUserName !=
+                                                                                                                          null) {
+                                                                                                                    if (!mounted) return;
+                                                                                                                    setState(() {
+                                                                                                                      replyMessageMap =
+                                                                                                                      null;
+                                                                                                                      replyUserName = null;
+                                                                                                                    });
+                                                                                                                  }
+                                                                                                                }
+                                                                                                              } else {
+                                                                                                                final snackBar = snackbar(
+                                                                                                                    content:
+                                                                                                                    "File size is greater than 50MB");
+                                                                                                                ScaffoldMessenger.of(
+                                                                                                                    context)
+                                                                                                                    .showSnackBar(snackBar);
+                                                                                                              }
+                                                                                                            }
+                                                                                                          },
+                                                                                                        )));
+                                                                                              }
+                                                                                            });
+                                                                                          },
+
+                                                                                          child: iconCreation(
+                                                                                              "assets/tabbar_icons/tab_view_m"
+                                                                                                  "ain/chats_image/attachment_icon"
+                                                                                                  "_container/gallery_icon_container.png",
+                                                                                              "Gallery"),
+                                                                                        )
+                                                                                      ],
+                                                                                    ),
+                                                                                    Row(
+                                                                                      mainAxisAlignment:
+                                                                                      MainAxisAlignment
+                                                                                          .spaceEvenly,
+                                                                                      children: [
+                                                                                        GestureDetector(
+                                                                                          onTap: () async {
+                                                                                            if (!mounted) return;
+                                                                                            setState(() {
+                                                                                              attachmentShowing = false;
+                                                                                            });
+                                                                                            // Navigator.pop(context);
+                                                                                            return await audio().then((value) async {
+                                                                                              if (value!.files.isNotEmpty) {
+                                                                                                for (var file in value.files) {
+                                                                                                  if (file.size < 52428800 && file.bytes != null) {
+                                                                                                    if (widget.state == 0) {
+                                                                                                      await writeUserMessage(
+                                                                                                        type: 3,
+                                                                                                        // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                        peerName:
+                                                                                                        chatRoomSnapshot.data!.data()!["members"]
+                                                                                                        ["${widget.puid}"]["name"],
+                                                                                                        peerPic:
+                                                                                                        chatRoomSnapshot.data!.data()!["members"]
+                                                                                                        ["${widget.puid}"]["pic"],
+                                                                                                        replyMap: replyMessageMap,
+                                                                                                        file: file.bytes,
+                                                                                                        contentType: "audio/" + file.extension!,
+                                                                                                      );
+                                                                                                      if (replyMessageMap != null &&
+                                                                                                          replyUserName != null) {
+                                                                                                        if (!mounted) return;
+                                                                                                        setState(() {
+                                                                                                          replyMessageMap = null;
+                                                                                                          replyUserName = null;
+                                                                                                        });
+                                                                                                      }
+                                                                                                    } else {
+                                                                                                      await writeGroupMessage(
+                                                                                                          type: 3,
+                                                                                                          members:
+                                                                                                          chatRoomSnapshot.data!.data()!["members"],
+                                                                                                          file: file.bytes,
+                                                                                                          replyMap: replyMessageMap,
+                                                                                                          contentType: "audio/" + file.extension!,
+                                                                                                          groupName:
+                                                                                                          chatRoomSnapshot.data!.data()!["title"],
+                                                                                                          groupPic:
+                                                                                                          chatRoomSnapshot.data!.data()!["pic"]);
+                                                                                                      if (replyMessageMap != null &&
+                                                                                                          replyUserName != null) {
+                                                                                                        if (!mounted) return;
+                                                                                                        setState(() {
+                                                                                                          replyMessageMap = null;
+                                                                                                          replyUserName = null;
+                                                                                                        });
+                                                                                                      }
+                                                                                                    }
+                                                                                                  } else {
+                                                                                                    final snackBar = snackbar(
+                                                                                                        content: "File size is greater than 50MB");
+                                                                                                    ScaffoldMessenger.of(context)
+                                                                                                        .showSnackBar(snackBar);
+                                                                                                  }
+                                                                                                }
+                                                                                              }
+                                                                                            });
+                                                                                          },
+
+                                                                                          child: iconCreation(
+                                                                                              "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_icon_container.png",
+                                                                                              "Audio"),
+                                                                                        ),
+                                                                                        GestureDetector(
+                                                                                          onTap: () async {
+                                                                                            if (!mounted) return;
+                                                                                            setState(() {
+                                                                                              attachmentShowing = false;
+                                                                                            });
+
+                                                                                            // // Navigator.pop(context);
+                                                                                            return await getUserLocation().then((value) async {
+                                                                                              if (value.item1 != null) {
+                                                                                                return await hereReverseGeocode(value.item1)
+                                                                                                    .then((response) async {
+                                                                                                  Map<String, dynamic> body = jsonDecode(response.body);
+                                                                                                  if (widget.state == 0) {
+                                                                                                    await writeUserMessage(
+                                                                                                      type: 7,
+                                                                                                      // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                      peerName: chatRoomSnapshot.data!
+                                                                                                          .data()!["members"]["${widget.puid}"]["name"],
+                                                                                                      peerPic: chatRoomSnapshot.data!.data()!["members"]
+                                                                                                      ["${widget.puid}"]["pic"],
+                                                                                                      replyMap: replyMessageMap,
+                                                                                                      message:
+                                                                                                      "https://www.google.com/maps/search/?api=1&query=${value.item1.latitude},${value.item1.longitude}" +
+                                                                                                          "\n" +
+                                                                                                          body["Response"]['View'][0]["Result"][0]
+                                                                                                          ['Location']['Address']['Label'],
+                                                                                                    );
+                                                                                                    if (replyMessageMap != null &&
+                                                                                                        replyUserName != null) {
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        replyMessageMap = null;
+                                                                                                        replyUserName = null;
+                                                                                                      });
+                                                                                                    }
+                                                                                                  } else {
+                                                                                                    await writeGroupMessage(
+                                                                                                      type: 7,
+                                                                                                      members:
+                                                                                                      chatRoomSnapshot.data!.data()!["members"],
+                                                                                                      message:
+                                                                                                      "https://www.google.com/maps/search/?api=1&query=${value.item1.latitude},${value.item1.longitude}" +
+                                                                                                          "\n" +
+                                                                                                          body["Response"]['View'][0]["Result"][0]
+                                                                                                          ['Location']['Address']['Label'],
+                                                                                                      groupName:
+                                                                                                      chatRoomSnapshot.data!.data()!["title"],
+                                                                                                      groupPic: chatRoomSnapshot.data!.data()!["pic"],
+                                                                                                      replyMap: replyMessageMap,
+                                                                                                    );
+                                                                                                    if (replyMessageMap != null &&
+                                                                                                        replyUserName != null) {
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        replyMessageMap = null;
+                                                                                                        replyUserName = null;
+                                                                                                      });
+                                                                                                    }
+                                                                                                  }
+                                                                                                });
+                                                                                              } else {
+                                                                                                final snackBar = snackbar(
+                                                                                                    content: "Please enable location services");
+                                                                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                              }
+                                                                                            });
+                                                                                          },
+
+                                                                                          child: iconCreation(
+                                                                                              "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_icon_container.png",
+                                                                                              "Location"),
+                                                                                        ),
+                                                                                        GestureDetector(
+                                                                                          onTap: () async {
+                                                                                            if (!mounted) return;
+                                                                                            setState(() {
+                                                                                              attachmentShowing = false;
+                                                                                            });
+
+                                                                                            // // Navigator.pop(context);
+                                                                                            Navigator.push(
+                                                                                                context,
+                                                                                                MaterialPageRoute(
+                                                                                                    builder: (context) => ContactList(state: 1)))
+                                                                                                .then((value) async {
+                                                                                              if (value != null) {
+                                                                                                for (var i in value) {
+                                                                                                  if (widget.state == 0) {
+                                                                                                    await writeUserMessage(
+                                                                                                      type: 8,
+                                                                                                      // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                      peerName: chatRoomSnapshot.data!
+                                                                                                          .data()!["members"]["${widget.puid}"]["name"],
+                                                                                                      peerPic: chatRoomSnapshot.data!.data()!["members"]
+                                                                                                      ["${widget.puid}"]["pic"],
+                                                                                                      replyMap: replyMessageMap,
+                                                                                                      message: i.displayName + "\n" + i.phones[0],
+                                                                                                    );
+                                                                                                    if (replyMessageMap != null &&
+                                                                                                        replyUserName != null) {
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        replyMessageMap = null;
+                                                                                                        replyUserName = null;
+                                                                                                      });
+                                                                                                    }
+                                                                                                  } else {
+                                                                                                    await writeGroupMessage(
+                                                                                                      type: 8,
+                                                                                                      members:
+                                                                                                      chatRoomSnapshot.data!.data()!["members"],
+                                                                                                      message: i.displayName + "\n" + i.phones[0],
+                                                                                                      groupName:
+                                                                                                      chatRoomSnapshot.data!.data()!["title"],
+                                                                                                      groupPic: chatRoomSnapshot.data!.data()!["pic"],
+                                                                                                      replyMap: replyMessageMap,
+                                                                                                    );
+                                                                                                    if (replyMessageMap != null &&
+                                                                                                        replyUserName != null) {
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        replyMessageMap = null;
+                                                                                                        replyUserName = null;
+                                                                                                      });
+                                                                                                    }
+                                                                                                  }
+                                                                                                }
+                                                                                              }
+                                                                                            });
+                                                                                          },
+
+                                                                                          child: iconCreation(
+                                                                                              "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_icon_container.png",
+                                                                                              "Contact"),
+                                                                                        )
+                                                                                      ],
+                                                                                    )
+                                                                                  ]),
+                                                                            ),
+                                                                          );
+                                                                        });
+                                                                  },
+                                                                ),
+                                                                InkWell(
+                                                                  child: Image(
+                                                                    image: AssetImage(
+
+                                                                            'assets/per_chat_icons/camera.png'
+                                                                    ),
+                                                                    height: 30.h,
+                                                                  ),
+                                                                  onTap: () {
+
+                                                                  },
+                                                                ),
+
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ),
+                                                      ),
+
+
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                                        // padding: EdgeInsets.zero,
+                                                        child: (canSend)
+                                                            ? GestureDetector(
+                                                          // elevation: 0,
+                                                            child: Container(
+                                                              height: 65,
+                                                              width: 65,
+                                                              clipBehavior: Clip.hardEdge,
+                                                              decoration: BoxDecoration(
+                                                                shape: BoxShape.circle,
+                                                                color: Color(accent),
+                                                              ),
+                                                              child: Icon(
+                                                                Icons.send,
+                                                                color: (themedata.value.index == 0) ? Color((canSend) ? white : grey) : Color(grey),
+                                                              ),
+                                                            ),
+                                                            // padding: EdgeInsets.all(20),
+                                                            // shape: CircleBorder(),
+                                                            // color: Color(accent),
+                                                            onTap: canSend
+                                                                ? () async {
                                                               if (textEditingController.text.trim() != "") {
                                                                 await writeUserMessage(
                                                                     type: 0,
@@ -1735,208 +2336,59 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                 textEditingController.clear();
                                                               }
                                                             }
-                                                                : null,
-                                                            maxLines: 5,
-                                                            fillColor: (themedata.value.index == 0) ? Color(white) : Color(lightBlack),
-                                                          ),
-                                                        ),
-                                                        InkWell(
-                                                          child: Image(
-                                                            image: AssetImage(
-                                                                'assets/per_chat_icons/attach_file_icon.png'),
-                                                            height: 30.h,
-                                                          ),
-                                                          onTap: () {
-                                                            showModalBottomSheet(
-                                                                backgroundColor: Colors
-                                                                    .transparent,
-                                                                context: context,
-                                                                builder: (
-                                                                    BuildContext context) {
-                                                                  return Container(
-                                                                    height: 250,
-                                                                    width: MediaQuery
-                                                                        .of(context)
-                                                                        .size
-                                                                        .width -
-                                                                        20,
-                                                                    child: Card(
-                                                                      shape: RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                          BorderRadius
-                                                                              .circular(
-                                                                              15),
-                                                                          side: BorderSide(
-                                                                              color: Color
-                                                                                  .fromRGBO(
-                                                                                  246,
-                                                                                  207,
-                                                                                  70,
-                                                                                  1))),
-                                                                      color: Color
-                                                                          .fromRGBO(
-                                                                          255, 255,
-                                                                          255, 1),
-                                                                      margin: EdgeInsets
-                                                                          .all(30),
-                                                                      child: Column(
-                                                                          mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceEvenly,
-                                                                          children: [
-                                                                            Row(
-                                                                              mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .spaceEvenly,
-                                                                              children: [
-                                                                                iconCreation(
-                                                                                    "assets/tabbar_icons/chats_image/attachment_icon_container/document_icon_container.png",
-                                                                                    "Document"),
-                                                                                iconCreation(
-                                                                                    "assets/tabbar_icons/chats_image/attachment_icon_container/camera_icon_container.png",
-                                                                                    "Camera"),
-                                                                                iconCreation(
-                                                                                    "assets/tabbar_icons/chats_image/attachment_icon_container/gallery_icon_container.png",
-                                                                                    "Gallery")
-                                                                              ],
-                                                                            ),
-                                                                            Row(
-                                                                              mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .spaceEvenly,
-                                                                              children: [
-                                                                                iconCreation(
-                                                                                    "assets/tabbar_icons/chats_image/attachment_icon_container/audio_icon_container.svg",
-                                                                                    "Audio"),
-                                                                                iconCreation(
-                                                                                    "assets/tabbar_icons/chats_image/attachment_icon_container/location_icon_container.png",
-                                                                                    "Location"),
-                                                                                iconCreation(
-                                                                                    "assets/tabbar_icons/chats_image/attachment_icon_container/contact_icon_container.png",
-                                                                                    "Contact")
-                                                                              ],
-                                                                            )
-                                                                          ]),
-                                                                    ),
-                                                                  );
-                                                                });
-                                                          },
-                                                        ),
-                                                        InkWell(
-                                                          child: Image(
-                                                            image: AssetImage(
-                                                                'assets/per_chat_icons/camera.png'),
-                                                            height: 30.h,
-                                                          ),
-                                                          onTap: () {
+                                                                : null)
+                                                            : RecordButton(
+                                                            controller: voiceRecordAnimationController,
+                                                            valueNotifier: recordAudioValueNotifier,
+                                                            function: () async {
+                                                              File file = File(recordAudioValueNotifier.value);
+                                                              if (file.existsSync()) {
+                                                                int length = await file.length();
+                                                                Uint8List bytes = await file.readAsBytes();
 
-                                                          },
-                                                        ),
-
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                                                          // padding: EdgeInsets.zero,
-                                                          child: (canSend)
-                                                              ? GestureDetector(
-                                                            // elevation: 0,
-                                                              child: Container(
-                                                                height: 65,
-                                                                width: 65,
-                                                                clipBehavior: Clip.hardEdge,
-                                                                decoration: BoxDecoration(
-                                                                  shape: BoxShape.circle,
-                                                                  color: Color(accent),
-                                                                ),
-                                                                child: Icon(
-                                                                  DeejosIcon.send_outline,
-                                                                  color: (themedata.value.index == 0) ? Color((canSend) ? white : grey) : Color(grey),
-                                                                ),
-                                                              ),
-                                                              // padding: EdgeInsets.all(20),
-                                                              // shape: CircleBorder(),
-                                                              // color: Color(accent),
-                                                              onTap: canSend
-                                                                  ? () async {
-                                                                if (textEditingController.text.trim() != "") {
-                                                                  await writeUserMessage(
-                                                                      type: 0,
-                                                                      peerPic: (chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"] != null)
-                                                                          ? chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"]
-                                                                          : null,
+                                                                if (length < 52428800) {
+                                                                  if (widget.state == 0) {
+                                                                    await writeUserMessage(
+                                                                      type: 9,
+                                                                      // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
                                                                       peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
-                                                                      // peerChattingWith: userDetailSnapshot.data!.data()!["chattingWith"],
+                                                                      peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
                                                                       replyMap: replyMessageMap,
-                                                                      message: textEditingController.text);
-                                                                  if (replyMessageMap != null && replyUserName != null) {
-                                                                    if (!mounted) return;
-                                                                    setState(() {
-                                                                      replyMessageMap = null;
-                                                                      replyUserName = null;
-                                                                    });
-                                                                  }
-                                                                  if (emojiShowing) {
-                                                                    if (!mounted) return;
-                                                                    setState(() {
-                                                                      emojiShowing = false;
-                                                                    });
-                                                                  }
-                                                                  textEditingController.clear();
-                                                                }
-                                                              }
-                                                                  : null)
-                                                              : RecordButton(
-                                                              controller: voiceRecordAnimationController,
-                                                              valueNotifier: recordAudioValueNotifier,
-                                                              function: () async {
-                                                                File file = File(recordAudioValueNotifier.value);
-                                                                if (file.existsSync()) {
-                                                                  int length = await file.length();
-                                                                  Uint8List bytes = await file.readAsBytes();
-
-                                                                  if (length < 52428800) {
-                                                                    if (widget.state == 0) {
-                                                                      await writeUserMessage(
-                                                                        type: 9,
-                                                                        // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
-                                                                        peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
-                                                                        peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
-                                                                        replyMap: replyMessageMap,
-                                                                        file: bytes,
-                                                                        contentType: "audio/" + file.path.split(".").last,
-                                                                      );
-                                                                      if (replyMessageMap != null && replyUserName != null) {
-                                                                        if (!mounted) return;
-                                                                        setState(() {
-                                                                          replyMessageMap = null;
-                                                                          replyUserName = null;
-                                                                        });
-                                                                      }
-                                                                    } else {
-                                                                      await writeGroupMessage(
-                                                                          type: 9,
-                                                                          members: chatRoomSnapshot.data!.data()!["members"],
-                                                                          file: bytes,
-                                                                          replyMap: replyMessageMap,
-                                                                          contentType: "audio/" + file.path.split(".").last,
-                                                                          groupName: chatRoomSnapshot.data!.data()!["title"],
-                                                                          groupPic: chatRoomSnapshot.data!.data()!["pic"]);
-                                                                      if (replyMessageMap != null && replyUserName != null) {
-                                                                        if (!mounted) return;
-                                                                        setState(() {
-                                                                          replyMessageMap = null;
-                                                                          replyUserName = null;
-                                                                        });
-                                                                      }
+                                                                      file: bytes,
+                                                                      contentType: "audio/" + file.path.split(".").last,
+                                                                    );
+                                                                    if (replyMessageMap != null && replyUserName != null) {
+                                                                      if (!mounted) return;
+                                                                      setState(() {
+                                                                        replyMessageMap = null;
+                                                                        replyUserName = null;
+                                                                      });
                                                                     }
                                                                   } else {
-                                                                    final snackBar = snackbar(content: "File size is greater than 50MB");
-                                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                    await writeGroupMessage(
+                                                                        type: 9,
+                                                                        members: chatRoomSnapshot.data!.data()!["members"],
+                                                                        file: bytes,
+                                                                        replyMap: replyMessageMap,
+                                                                        contentType: "audio/" + file.path.split(".").last,
+                                                                        groupName: chatRoomSnapshot.data!.data()!["title"],
+                                                                        groupPic: chatRoomSnapshot.data!.data()!["pic"]);
+                                                                    if (replyMessageMap != null && replyUserName != null) {
+                                                                      if (!mounted) return;
+                                                                      setState(() {
+                                                                        replyMessageMap = null;
+                                                                        replyUserName = null;
+                                                                      });
+                                                                    }
                                                                   }
+                                                                } else {
+                                                                  final snackBar = snackbar(content: "File size is greater than 50MB");
+                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                                                 }
-                                                              }),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                              }
+                                                            }),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
@@ -2285,8 +2737,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                 {
                                                   //TODOBlock
                                                   if (chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["claim"] == "member") {
-                                                    await instance.collection("group-detail").doc(chatRoomSnapshot.data!.data()!["gid"]).update({
-                                                      "members.$uid.isRemoved": true,
+                                                    await instance.collection("group-detail").doc(chatRoomSnapshot.data!.data()!["gid"]).update({"members.$uid.isRemoved": true,
                                                       "members.$uid.claim": "removed",
                                                       "members.$uid.unreadCount": 0,
                                                       "members.$uid.lastRead": null,
@@ -3647,7 +4098,8 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                 Container(
                                   padding: EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: (themedata.value.index == 0) ? Color(lightBlack).withOpacity(.1) : Color(lightBlack).withOpacity(.1),
+                                    color: (themedata.value.index == 0) ? Color(lightBlack).withOpacity(.1) :
+                                    Color(lightBlack).withOpacity(.1),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(12.0),
                                     ),
@@ -3739,11 +4191,11 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                         : (isRead)
                                         ? Icon(
                                       Icons.done_all,
-                                      color: Color(accent),
+                                      color:  Colors.red,
                                     )
                                         : Icon(
                                       Icons.done_all,
-                                      color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
+                                      color: (themedata.value.index == 0) ? Colors.red: Colors.red,
                                     ),
                                   ],
                                 ),
@@ -4376,143 +4828,143 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
           runAlignment: WrapAlignment.spaceAround,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            // MouseRegion(
-            //   cursor: SystemMouseCursors.click,
-            //   child: GestureDetector(
-            //       onTap: () async {
-            //         if (!mounted) return;
-            //         setState(() {
-            //           attachmentShowing = false;
-            //         });
-            //         final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                  onTap: () async {
+                    if (!mounted) return;
+                    setState(() {
+                      attachmentShowing = false;
+                    });
+                    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
 
-            //         // Navigator.pop(context);
-            //         // return await image().then((value) async {
-            //         if (photo != null) {
-            //           int size = await photo.length();
-            //           Uint8List bytes = await photo.readAsBytes();
-            //           // for (var file in value.files) {
-            //           if (size < 52428800 && bytes != null) {
-            //             if (widget.state == 0) {
-            //               await writeUserMessage(
-            //                 type: 1,
-            //                 // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
-            //                 peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
-            //                 peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
-            //                 replyMap: replyMessageMap,
-            //                 file: bytes,
-            //                 contentType: "image/" + photo.path.split(".").last,
-            //               );
-            //               if (replyMessageMap != null && replyUserName != null) {
-            //                 if (!mounted) return;
-            //                 setState(() {
-            //                   replyMessageMap = null;
-            //                   replyUserName = null;
-            //                 });
-            //               }
-            //             } else {
-            //               await writeGroupMessage(
-            //                   type: 1,
-            //                   members: chatRoomSnapshot.data!.data()!["members"],
-            //                   file: bytes,
-            //                   replyMap: replyMessageMap,
-            //                   contentType: "image/" + photo.path.split(".").last,
-            //                   groupName: chatRoomSnapshot.data!.data()!["title"],
-            //                   groupPic: chatRoomSnapshot.data!.data()!["pic"]);
-            //               if (replyMessageMap != null && replyUserName != null) {
-            //                 if (!mounted) return;
-            //                 setState(() {
-            //                   replyMessageMap = null;
-            //                   replyUserName = null;
-            //                 });
-            //               }
-            //             }
-            //           } else {
-            //             final snackBar = snackbar(content: "File size is greater than 50MB");
-            //             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            //           }
-            //           // }
-            //         }
-            //         // });
-            //       },
-            //       child: Column(
-            //         children: [
-            //           Icon(
-            //             DeejosIcon.camera,
-            //             size: 30,
-            //           ),
-            //           Text("Photo")
-            //         ],
-            //       )),
-            // ),
-            // MouseRegion(
-            //   cursor: SystemMouseCursors.click,
-            //   child: GestureDetector(
-            //       onTap: () async {
-            //         if (!mounted) return;
-            //         setState(() {
-            //           attachmentShowing = false;
-            //         });
-            //         final XFile? video = await _picker.pickVideo(source: ImageSource.camera);
-            //         // Navigator.pop(context);
-            //         // return await image().then((value) async {
-            //         if (video != null) {
-            //           int size = await video.length();
-            //           Uint8List bytes = await video.readAsBytes();
-            //           // for (var file in value.files) {
-            //           if (size < 52428800 && bytes != null) {
-            //             if (widget.state == 0) {
-            //               await writeUserMessage(
-            //                 type: 2,
-            //                 // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
-            //                 peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
-            //                 peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
-            //                 replyMap: replyMessageMap,
-            //                 file: bytes,
-            //                 contentType: "video/" + video.path.split(".").last,
-            //               );
-            //               if (replyMessageMap != null && replyUserName != null) {
-            //                 if (!mounted) return;
-            //                 setState(() {
-            //                   replyMessageMap = null;
-            //                   replyUserName = null;
-            //                 });
-            //               }
-            //             } else {
-            //               await writeGroupMessage(
-            //                   type: 2,
-            //                   members: chatRoomSnapshot.data!.data()!["members"],
-            //                   file: bytes,
-            //                   replyMap: replyMessageMap,
-            //                   contentType: "video/" + video.path.split(".").last,
-            //                   groupName: chatRoomSnapshot.data!.data()!["title"],
-            //                   groupPic: chatRoomSnapshot.data!.data()!["pic"]);
-            //               if (replyMessageMap != null && replyUserName != null) {
-            //                 if (!mounted) return;
-            //                 setState(() {
-            //                   replyMessageMap = null;
-            //                   replyUserName = null;
-            //                 });
-            //               }
-            //             }
-            //           } else {
-            //             final snackBar = snackbar(content: "File size is greater than 50MB");
-            //             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            //           }
-            //           // }
-            //         }
-            //         // });
-            //       },
-            //       child: Column(
-            //         children: [
-            //           Icon(
-            //             DeejosIcon.video_camera,
-            //             size: 30,
-            //           ),
-            //           Text("Video")
-            //         ],
-            //       )),
-            // ),
+                    // Navigator.pop(context);
+                    // return await image().then((value) async {
+                    if (photo != null) {
+                      int size = await photo.length();
+                      Uint8List bytes = await photo.readAsBytes();
+                      // for (var file in value.files) {
+                      if (size < 52428800 && bytes != null) {
+                        if (widget.state == 0) {
+                          await writeUserMessage(
+                            type: 1,
+                            // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                            peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
+                            peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
+                            replyMap: replyMessageMap,
+                            file: bytes,
+                            contentType: "image/" + photo.path.split(".").last,
+                          );
+                          if (replyMessageMap != null && replyUserName != null) {
+                            if (!mounted) return;
+                            setState(() {
+                              replyMessageMap = null;
+                              replyUserName = null;
+                            });
+                          }
+                        } else {
+                          await writeGroupMessage(
+                              type: 1,
+                              members: chatRoomSnapshot.data!.data()!["members"],
+                              file: bytes,
+                              replyMap: replyMessageMap,
+                              contentType: "image/" + photo.path.split(".").last,
+                              groupName: chatRoomSnapshot.data!.data()!["title"],
+                              groupPic: chatRoomSnapshot.data!.data()!["pic"]);
+                          if (replyMessageMap != null && replyUserName != null) {
+                            if (!mounted) return;
+                            setState(() {
+                              replyMessageMap = null;
+                              replyUserName = null;
+                            });
+                          }
+                        }
+                      } else {
+                        final snackBar = snackbar(content: "File size is greater than 50MB");
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                      // }
+                    }
+                    // });
+                  },
+                  child: Column(
+                    children: [
+                      Icon(
+                        DeejosIcon.camera,
+                        size: 30,
+                      ),
+                      Text("Photo")
+                    ],
+                  )),
+            ),
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                  onTap: () async {
+                    if (!mounted) return;
+                    setState(() {
+                      attachmentShowing = false;
+                    });
+                    final XFile? video = await _picker.pickVideo(source: ImageSource.camera);
+                    // Navigator.pop(context);
+                    // return await image().then((value) async {
+                    if (video != null) {
+                      int size = await video.length();
+                      Uint8List bytes = await video.readAsBytes();
+                      // for (var file in value.files) {
+                      if (size < 52428800 && bytes != null) {
+                        if (widget.state == 0) {
+                          await writeUserMessage(
+                            type: 2,
+                            // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                            peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
+                            peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
+                            replyMap: replyMessageMap,
+                            file: bytes,
+                            contentType: "video/" + video.path.split(".").last,
+                          );
+                          if (replyMessageMap != null && replyUserName != null) {
+                            if (!mounted) return;
+                            setState(() {
+                              replyMessageMap = null;
+                              replyUserName = null;
+                            });
+                          }
+                        } else {
+                          await writeGroupMessage(
+                              type: 2,
+                              members: chatRoomSnapshot.data!.data()!["members"],
+                              file: bytes,
+                              replyMap: replyMessageMap,
+                              contentType: "video/" + video.path.split(".").last,
+                              groupName: chatRoomSnapshot.data!.data()!["title"],
+                              groupPic: chatRoomSnapshot.data!.data()!["pic"]);
+                          if (replyMessageMap != null && replyUserName != null) {
+                            if (!mounted) return;
+                            setState(() {
+                              replyMessageMap = null;
+                              replyUserName = null;
+                            });
+                          }
+                        }
+                      } else {
+                        final snackBar = snackbar(content: "File size is greater than 50MB");
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                      // }
+                    }
+                    // });
+                  },
+                  child: Column(
+                    children: [
+                      Icon(
+                        DeejosIcon.video_camera,
+                        size: 30,
+                      ),
+                      Text("Video")
+                    ],
+                  )),
+            ),
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -4578,7 +5030,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                           child: Center(
                             child: Text(
                               "Camera",
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.poppins(
                                   textStyle: textStyle(fontSize: 14, fontWeight: FontWeight.w600, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
                               softWrap: true,
                             ),
@@ -4651,7 +5103,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                           child: Center(
                             child: Text(
                               "Gallery",
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.poppins(
                                   textStyle: textStyle(fontSize: 14, fontWeight: FontWeight.w600, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
                               softWrap: true,
                             ),
@@ -4733,7 +5185,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                           child: Center(
                             child: Text(
                               "Camera",
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.poppins(
                                   textStyle: textStyle(fontSize: 14, fontWeight: FontWeight.w600, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
                               softWrap: true,
                             ),
@@ -4805,7 +5257,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                           child: Center(
                             child: Text(
                               "Gallery",
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.poppins(
                                   textStyle: textStyle(fontSize: 14, fontWeight: FontWeight.w600, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
                               softWrap: true,
                             ),
@@ -4908,7 +5360,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                 peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
                                 replyMap: replyMessageMap,
                                 file: file.bytes,
-                                contentType:  (file.path!)!,
+                                contentType: lookupMimeType(file.path!)!,
                               );
                               if (replyMessageMap != null && replyUserName != null) {
                                 if (!mounted) return;
@@ -5092,7 +5544,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                     });
 
                     // // Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  ContactList(state: 1))).then((value) async {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ContactList(state: 1))).then((value) async {
                       if (value != null) {
                         for (var i in value) {
                           if (widget.state == 0) {
@@ -5147,6 +5599,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       ),
     );
   }
+
 }
 
 Widget iconCreation(String iconContainer, String text) {
@@ -5167,4 +5620,77 @@ Widget iconCreation(String iconContainer, String text) {
                   fontWeight: FontWeight.w400))),
     ],
   );
+  // showModalBottomSheet(
+  //     backgroundColor: Colors
+  //         .transparent,
+  //     context: context,
+  //     builder: (
+  //         BuildContext context) {
+  //       return Container(
+  //         height: 250,
+  //         width: MediaQuery
+  //             .of(context)
+  //             .size
+  //             .width -
+  //             20,
+  //         child: Card(
+  //           shape: RoundedRectangleBorder(
+  //               borderRadius:
+  //               BorderRadius
+  //                   .circular(
+  //                   15),
+  //               side: BorderSide(
+  //                   color: Color
+  //                       .fromRGBO(
+  //                       246,
+  //                       207,
+  //                       70,
+  //                       1))),
+  //           color: Color
+  //               .fromRGBO(
+  //               255, 255,
+  //               255, 1),
+  //           margin: EdgeInsets
+  //               .all(30),
+  //           child: Column(
+  //               mainAxisAlignment:
+  //               MainAxisAlignment
+  //                   .spaceEvenly,
+  //               children: [
+  //                 Row(
+  //                   mainAxisAlignment:
+  //                   MainAxisAlignment
+  //                       .spaceEvenly,
+  //                   children: [
+  //                     iconCreation(
+  //                         "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/document_icon_container.png",
+  //                         "Document"),
+  //                     iconCreation(
+  //                         "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png",
+  //                         "Camera"),
+  //                     iconCreation(
+  //                         "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/gallery_icon_container.png",
+  //                         "Gallery")
+  //                   ],
+  //                 ),
+  //                 Row(
+  //                   mainAxisAlignment:
+  //                   MainAxisAlignment
+  //                       .spaceEvenly,
+  //                   children: [
+  //                     iconCreation(
+  //                         "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_icon_container.png",
+  //                         "Audio"),
+  //                     iconCreation(
+  //                         "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_icon_container.png",
+  //                         "Location"),
+  //                     iconCreation(
+  //                         "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_icon_container.png",
+  //                         "Contact")
+  //                   ],
+  //                 )
+  //               ]),
+  //         ),
+  //       );
+  //     });
 }
