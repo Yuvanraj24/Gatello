@@ -33,7 +33,16 @@ class _Edit_ProfileState extends State<Edit_Profile> {
                   color: Color.fromRGBO(0, 0, 0, 1))),
         ),
         actions: [
-          Icon(Icons.more_vert,color:Color.fromRGBO(0,0,0,1),size:30)
+          PopupMenuButton(shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
+              iconSize:30,icon:Icon(Icons.more_vert,color: Colors.black,),
+              itemBuilder: (context) => [
+                PopupMenuItem(child: Center(
+                  child: Text('Settings',style: GoogleFonts.inter(
+                      textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize:14,
+                          color: Color.fromRGBO(0,0,0,1))
+                  ),),
+                ),)
+              ])
         ],
       ),
       body:Padding(

@@ -43,7 +43,9 @@ class _Private_AccountState extends State<Private_Account> {
                   color: Color.fromRGBO(0, 163, 255, 1)),
               child: Icon(Icons.check_rounded,
                   size: 12, color: Color.fromRGBO(255, 255, 255, 1)),
-            ),
+            ),Spacer(),
+            SvgPicture.asset('assets/profile_assets/commentnotifi.svg',height:25.h,
+                width:25.w)
           ],
         ),
         actions: [
@@ -52,17 +54,14 @@ class _Private_AccountState extends State<Private_Account> {
                 borderRadius: BorderRadius.circular(5)),
             itemBuilder: (context) => [
               PopupMenuItem(
-                child: Container(
-                  height:29.h,width:84,
-                  child: Center(
-                    child: Text(
-                      'Settings',
-                      style: GoogleFonts.inter(
-                          textStyle: TextStyle(fontWeight: FontWeight.w400,
-                              fontSize: 14.sp,
-                              color: Color.fromRGBO(
-                                  0, 0, 0, 1))),
-                    ),
+                child: Center(
+                  child: Text(
+                    'Settings',
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(fontWeight: FontWeight.w400,
+                            fontSize: 14.sp,
+                            color: Color.fromRGBO(
+                                0, 0, 0, 1))),
                   ),
                 ),
               ),

@@ -1,25 +1,25 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
 class WorkDetailsDialog extends StatefulWidget {
+
   @override
   _WorkDetailsDialogState createState() => _WorkDetailsDialogState();
 }
 
 class _WorkDetailsDialogState extends State<WorkDetailsDialog> {
-  var _result;
   bool isSelcted=false;
   final List<String> items = ['Public', 'Friends', 'Only me'];
   String? selectedValue;
   bool isSwitched = false;
-  TextEditingController _Work1=TextEditingController();
-  TextEditingController _Work2=TextEditingController();
-  TextEditingController _Work3=TextEditingController();
-  TextEditingController _Work4=TextEditingController();
-  TextEditingController _Work5=TextEditingController();
+
+  final _from=TextEditingController();
+  final _to=TextEditingController();
+  final _position=TextEditingController();
+  final _company=TextEditingController();
+  final _location=TextEditingController();
 
   List<bool> _isChecked = [false, false, false];
 
@@ -67,10 +67,14 @@ class _WorkDetailsDialogState extends State<WorkDetailsDialog> {
                   Container(height:26.h,width:101.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
                   child: Container(
                     height:25.h,width:100.w,
-                    child: TextField(controller:_Work1,
+                    child: TextField(
+                      autofocus: true,
+                      controller:_from,
+                      onChanged: (val){
+
+                      },
                       cursorColor:Colors.black,
                       decoration: InputDecoration(
-
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.transparent),
                               borderRadius: BorderRadius.circular(10)),
@@ -89,7 +93,9 @@ class _WorkDetailsDialogState extends State<WorkDetailsDialog> {
                   Container(height:26.h,width:101.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
                   child:  Container(
                     height:25.h,width:100.w,
-                    child: TextField(controller:_Work2,
+                    child: TextField(
+                      autofocus: true,
+                      controller:_to,
                       cursorColor:Colors.black,
                       decoration: InputDecoration(
 
@@ -114,7 +120,9 @@ class _WorkDetailsDialogState extends State<WorkDetailsDialog> {
                   Container(height:26.h,width:240.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
                       child: Container(
                         height:25.h,width:100.w,
-                        child: TextField(controller:_Work3,
+                        child: TextField(
+                          autofocus: true,
+                          controller:_position,
                           cursorColor:Colors.black,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
@@ -139,7 +147,9 @@ class _WorkDetailsDialogState extends State<WorkDetailsDialog> {
                   Container(height:45.h,width:228.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
                       child: Container(
                         height:25.h,width:100.w,
-                        child: TextField(controller:_Work4,
+                        child: TextField(
+                          autofocus: true,
+                          controller:_company,
                           cursorColor:Colors.black,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
@@ -164,7 +174,9 @@ class _WorkDetailsDialogState extends State<WorkDetailsDialog> {
                   Container(height:26.h,width:234.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
                       child: Container(
                         height:25.h,width:100.w,
-                        child: TextField(controller:_Work5,
+                        child: TextField(
+                          autofocus: true,
+                          controller:_location,
                           cursorColor:Colors.black,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
@@ -192,7 +204,14 @@ class _WorkDetailsDialogState extends State<WorkDetailsDialog> {
                 primary:Color.fromRGBO(248, 206, 97, 1),fixedSize: Size(302.w,36.h),
               ),
               onPressed: (){
-                Navigator.pop(context);
+              setState(() {
+                print(_from.text);
+                print(_to.text);
+                print(_position.text);
+                print(_company.text);
+                print(_location.text);
+              });
+               Navigator.pop(context);
               }, child: Text('Save',style: GoogleFonts.inter(
               textStyle: TextStyle(
                   color: Color.fromRGBO(0, 0, 0, 1),fontSize:20,fontWeight: FontWeight.w700

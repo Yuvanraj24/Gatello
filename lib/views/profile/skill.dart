@@ -16,10 +16,13 @@ class _Skill_PageState extends State<Skill_Page> {
   final List<String> items = ['Public', 'Friends', 'Only me'];
   String? selectedValue;
   bool isSwitched = false;
+  int _count = 0;
   @override
+  void iniState(){
+    super.initState();
+  }
   Widget build(BuildContext context) {
-    TextEditingController _skill1=TextEditingController();
-    return Scaffold(
+    return Scaffold(resizeToAvoidBottomInset:false,
       appBar: AppBar(
         leading:  GestureDetector(onTap:(){Navigator.pop(context);},
           child: Column(mainAxisAlignment:MainAxisAlignment.center,
@@ -39,22 +42,34 @@ class _Skill_PageState extends State<Skill_Page> {
                   color: Color.fromRGBO(0, 0, 0, 1))),
         ),
         actions: [
-          Icon(Icons.more_vert,color:Color.fromRGBO(0,0,0,1),size:30)
+          PopupMenuButton(shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
+              iconSize:30,icon:Icon(Icons.more_vert,color: Colors.black,),
+              itemBuilder: (context) => [
+                PopupMenuItem(child: Center(
+                  child: Text('Settings',style: GoogleFonts.inter(
+                      textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize:14,
+                          color: Color.fromRGBO(0,0,0,1))
+                  ),),
+                ),)
+              ])
         ],
       ),
-      body: Column(
+      body:Column(
         children: [
-          DottedText("yuvan"),
           Padding(
-            padding: const EdgeInsets.only(left:31,top:21,right:12),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+            padding:  EdgeInsets.only(left:31,top:22,right:12),
+            child: Column(
               children: [
                 Row(
                   children: [
                     Text('Skills',style: GoogleFonts.inter(
                         fontSize:20.sp,color: Color.fromRGBO(0,0,0,1),fontWeight: FontWeight.w700
                     ),),SizedBox(width:118.w),
-                    IconButton(onPressed: (){}, icon:Icon(Icons.add,color: Colors.black,),),
+                    IconButton(onPressed: ()async{
+                      setState(() {
+                        _count++;
+                      });
+                    }, icon:Icon(Icons.add,color: Colors.black,),),
                     Spacer(),
                     DropdownButtonHideUnderline(
                       child: DropdownButton2(
@@ -131,39 +146,15 @@ class _Skill_PageState extends State<Skill_Page> {
                     )
                   ],
                 ),
-                SizedBox(height:31.h),
-
-                Row(children: [
-                  Container(
-                  height: 12.h,
-                  width: 12.w,
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(165, 165, 165, 0.9),
-                      shape: BoxShape.circle),
-                ),SizedBox(width:8.w),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom:0),
-                    child: Container( height:30.h,width:200.w,color:Colors.transparent,
-                      child:  Padding(
-                        padding: const EdgeInsets.only(top:20),
-                        child: TextField(
-                          cursorColor: Colors.black,cursorHeight:20.h,
-                          controller:_skill1,
-                          decoration: InputDecoration(
-                            hintText: '',
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1.w,
-                                    color: Colors.transparent),
-                                borderRadius: BorderRadius.circular(10)),
-                          ),),
-                      ),
-                    ),
-                  )],),
-            ],),
+                SizedBox(height:30.h),
+                ListView.builder(
+                    shrinkWrap:true,
+                    itemCount:_count,
+                    itemBuilder: (context,index){
+                      return _row(index);
+                    }),
+                SizedBox(height:30.h),
+              ],),
           ),
           Spacer(),
           ElevatedButton(
@@ -177,19 +168,36 @@ class _Skill_PageState extends State<Skill_Page> {
               textStyle: TextStyle(
                   color: Color.fromRGBO(0, 0, 0, 1),fontSize:20,fontWeight: FontWeight.w700
               )
-          ),)),
+          ),)),SizedBox(height:8.h),
           Padding(
-            padding: const EdgeInsets.only(bottom:13,top:8),
+            padding: const EdgeInsets.only(bottom:12),
             child: Divider(thickness:2.w,indent:140,endIndent:137,color: Color.fromRGBO(0,0,0,1),),
-          )
+          ),
         ],
       ),
     );
   }
 }
-class DottedText extends Text {
-  const DottedText(String data ) : super(
-    '\u2022 $data',
 
-    );
+
+_row(int index){
+  return Row(
+    children: [
+      Container(
+        height: 12.h,
+        width: 12.w,
+        decoration: BoxDecoration(
+            color: Color.fromRGBO(165, 165, 165, 0.9),
+            shape: BoxShape.circle),
+      ),
+      SizedBox(width:14.w),
+      Expanded(child: TextFormField(autofocus: true,
+        cursorColor:Colors.black,
+        decoration:InputDecoration(
+            focusedBorder:OutlineInputBorder(borderSide:BorderSide(color:Colors.transparent)),
+            enabledBorder:OutlineInputBorder(borderSide:BorderSide(color:Colors.transparent))
+        ),
+      ))
+    ],
+  );
 }

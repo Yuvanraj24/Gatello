@@ -48,12 +48,13 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                     color: Color.fromRGBO(0, 163, 255, 1)),
                 child: Icon(Icons.check_rounded,
                     size: 12, color: Color.fromRGBO(255, 255, 255, 1)),
-              ),
-              SvgPicture.asset('assets/profile_assets/commentnotifi.svg')
+              ),Spacer(),
+              SvgPicture.asset('assets/profile_assets/commentnotifi.svg',height:25.h,
+              width:25.w)
             ],
           ),
           actions: [
-            PopupMenuButton(icon:Icon(Icons.more_vert,color:Colors.black,),
+            PopupMenuButton(icon:Icon(Icons.more_vert,color:Colors.black,),iconSize:30,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5)),
               itemBuilder: (context) => [
@@ -152,74 +153,74 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                             shape: BoxShape.circle),
                       ),
                     ),
-                    Positioned(
-                      left: 161,
-                      top: 143,
-                      child: Row(
+                    Positioned(top:146,left:170,
+                      child: Container(child:Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '789',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
+                          Row(
+                            children: [
+                              Text(
+                                '789',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              ),
+                              SizedBox(width: 39.w),
+                              Text(
+                                '789',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              ),
+                              SizedBox(width: 42.w),
+                              Text(
+                                '1,028',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              )
+                            ],
                           ),
-                          SizedBox(width: 39.w),
-                          Text(
-                            '789',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
+                          SizedBox(height:5.h),
+                          Row(
+                            children: [
+                              Text(
+                                'Pops',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              ),
+                              SizedBox(width: 32.w),
+                              Text(
+                                'Following',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              ),
+                              SizedBox(width: 25.w),
+                              Text(
+                                'Followers',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              )
+                            ],
                           ),
-                          SizedBox(width: 39.w),
-                          Text(
-                            '1,028',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
-                          )
-                        ],
-                      ),
+                        ],),),
                     ),
-                    Positioned(
-                      left: 160,
-                      top: 176,
-                      child: Row(
-                        children: [
-                          Text(
-                            'Pops',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
-                          ),
-                          SizedBox(width: 32.w),
-                          Text(
-                            'Following',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
-                          ),
-                          SizedBox(width: 25.w),
-                          Text(
-                            'Followers',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
-                          )
-                        ],
-                      ),
-                    ),],
+                  ],
                 ),),
 
               Padding(
@@ -238,9 +239,10 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                         ),
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.only(right:35),
+                          padding:EdgeInsets.only(right:35),
                           child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(elevation: 0,side: BorderSide(
+                              style: ElevatedButton.styleFrom(elevation: 0,
+                                side: BorderSide(
                                   width:1,color: Color.fromRGBO(0, 163, 255, 1)
                               ),
                                 shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -353,10 +355,6 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                   color: Color.fromRGBO(0, 0, 0, 1))),
                         ),
                         SizedBox(width:10.w),
-
-                        Container(height:20,width:20,
-                            child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg',
-                                color: i==1?Color.fromRGBO(0, 163, 255, 1):Colors.transparent)),
                       ],
                     ),
                     i==1?Text(''):
@@ -368,18 +366,22 @@ class _Unfollow_pageState extends State<Unfollow_page> {
                                 color: Color.fromRGBO(0,0,0,0.5)
                             )
                         ),),
-                        Padding(
-                          padding: const EdgeInsets.only(left:280),
-                          child: TextButton( onPressed: () {
+                        Divider(thickness:1.w,color: Color.fromRGBO(228, 228, 228, 1),
+                            indent:22,endIndent:18),
+                        GestureDetector(
+                          onTap: (){
                             setState(() {
                               i=1;
                             });
                           },
-                              child: Text('See More...',style:GoogleFonts.inter(
-                                  textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
-                                      color: Color.fromRGBO(0, 163, 255, 1)
-                                  )
-                              ),)),
+                          child: Padding(
+                            padding:EdgeInsets.only(left:285,bottom:10,top:5),
+                            child: Text('See More...',style:GoogleFonts.inter(
+                                textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
+                                    color: Color.fromRGBO(0, 163, 255, 1)
+                                )
+                            ),),
+                          ),
                         ),
                       ],
                     )
@@ -393,6 +395,11 @@ class _Unfollow_pageState extends State<Unfollow_page> {
               Column(
                 children: [
                   TabBar(
+                      indicator: BoxDecoration(
+                          color: Colors.transparent,border:Border(bottom:BorderSide(
+                          color: Colors.transparent
+                      ))
+                      ),
                       unselectedLabelStyle: GoogleFonts.inter(
                           textStyle: TextStyle(
                               fontSize: 15.sp,

@@ -55,10 +55,12 @@ class _Photo_PopState extends State<Photo_Pop> {
             PopupMenuButton(shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
                 iconSize:30,icon:Icon(Icons.more_vert,color: Colors.black,),
                 itemBuilder: (context) => [
-                  PopupMenuItem(child: Text('Settings',style: GoogleFonts.inter(
-                      textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize:14,
-                          color: Color.fromRGBO(0,0,0,1))
-                  ),),)
+                  PopupMenuItem(child: Center(
+                    child: Text('Settings',style: GoogleFonts.inter(
+                        textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize:14,
+                            color: Color.fromRGBO(0,0,0,1))
+                    ),),
+                  ),)
                 ])
           ],
         ),
@@ -79,20 +81,25 @@ class _Photo_PopState extends State<Photo_Pop> {
                 Positioned(
                   right: 12,
                   top: 85,
-                  child: Container(
-                    height: 23.h,
-                    width: 23.w,child: Column(crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset('assets/profile_assets/edittoolblack.svg',
-                          height:15,width:15),
-                      ],
+                  child: GestureDetector(onTap:(){
+                    Navigator.push(context, MaterialPageRoute(builder:(context) =>
+                      Edit_Profile()));
+                  },
+                    child: Container(
+                      height: 23.h,
+                      width: 23.w,child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/profile_assets/edittoolblack.svg',
+                            height:15,width:15),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(248, 206, 97, 1),
+                          border: Border.all(
+                              color: Color.fromRGBO(255, 255, 255, 1), width: 1),
+                          shape: BoxShape.circle),
                     ),
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(248, 206, 97, 1),
-                        border: Border.all(
-                            color: Color.fromRGBO(255, 255, 255, 1), width: 1),
-                        shape: BoxShape.circle),
                   ),
                 ),
                 Positioned(

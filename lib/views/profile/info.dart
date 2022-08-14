@@ -10,9 +10,11 @@ class Info_Page extends StatefulWidget {
   @override
   State<Info_Page> createState() => _Info_PageState();
 }
+TextEditingController _info=TextEditingController();
 TextEditingController _info1=TextEditingController();
 TextEditingController _info2=TextEditingController();
 TextEditingController _info3=TextEditingController();
+TextEditingController _info4=TextEditingController();
 
 
 class _Info_PageState extends State<Info_Page> {
@@ -45,13 +47,22 @@ class _Info_PageState extends State<Info_Page> {
                   color: Color.fromRGBO(0, 0, 0, 1))),
         ),
         actions: [
-          Icon(Icons.more_vert,color:Color.fromRGBO(0,0,0,1),size:30)
+          PopupMenuButton(shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
+              iconSize:30,icon:Icon(Icons.more_vert,color: Colors.black,),
+              itemBuilder: (context) => [
+                PopupMenuItem(child: Center(
+                  child: Text('Settings',style: GoogleFonts.inter(
+                      textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize:14,
+                          color: Color.fromRGBO(0,0,0,1))
+                  ),),
+                ),)
+              ])
         ],
       ),
       body:Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left:29,top:15,right:17),
+            padding:  EdgeInsets.only(left:29,top:15,right:17),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
               Row(
@@ -66,18 +77,27 @@ class _Info_PageState extends State<Info_Page> {
                         color: Colors.white),
                   ),
                   SizedBox(width: 11.w),
-                  RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
-                      children:[
-                        TextSpan(text: 'Gender : ',style: GoogleFonts.inter(textStyle: TextStyle(
-                            fontWeight: FontWeight.w700,fontSize:16.sp,color: Color.fromRGBO(0, 0, 0, 0.5),decoration:
-                        TextDecoration.none
-                        ))),
-                        TextSpan(text:'Male',style: GoogleFonts.inter(textStyle: TextStyle(
-                            fontWeight: FontWeight.w400,fontSize:16.sp,color: Color.fromRGBO(0, 0, 0,1),decoration:
-                        TextDecoration.none
-                        )))
-                      ])),
-                 Spacer(),
+                  Text('Gender : ',style: GoogleFonts.inter(textStyle: TextStyle(
+                      fontWeight: FontWeight.w700,fontSize:14.sp,color: Color.fromRGBO(0, 0, 0, 0.5),decoration:
+                  TextDecoration.none
+                  ))),
+                  Container( height:30.h,width:148.w,color:Colors.transparent,
+                    padding: EdgeInsets.only(top:20),
+                    child:  TextField(autofocus: true,
+                      cursorColor: Colors.black,cursorHeight:20.h,
+                      controller:_info,
+                      decoration: InputDecoration(
+                        hintText: '',
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(10)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1.w,
+                                color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(10)),
+                      ),),
+                  ),
                   DropdownButtonHideUnderline(
                     child: DropdownButton2(
                       isExpanded: true,
@@ -154,7 +174,7 @@ class _Info_PageState extends State<Info_Page> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top:8,left:37),
+                padding:  EdgeInsets.only(top:8,left:37),
                 child: Column(crossAxisAlignment:CrossAxisAlignment.start,
                   children: [
                     Text('Male',style: GoogleFonts.inter(textStyle: TextStyle(
@@ -278,17 +298,27 @@ class _Info_PageState extends State<Info_Page> {
                       )
                     ),
                     SizedBox(width: 11.w),
-                    RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
-                        children:[
-                          TextSpan(text: 'Born on ',style: GoogleFonts.inter(textStyle: TextStyle(
-                              fontWeight: FontWeight.w700,fontSize:14.sp,color: Color.fromRGBO(0, 0, 0, 0.5),decoration:
-                          TextDecoration.none
-                          ))),
-                          TextSpan(text:'December 6th 2000',style: GoogleFonts.inter(textStyle: TextStyle(
-                              fontWeight: FontWeight.w400,fontSize:14.sp,color: Color.fromRGBO(0, 0, 0,1),decoration:
-                          TextDecoration.none
-                          )))
-                        ])),
+                    Text('Born on',style: GoogleFonts.inter(textStyle: TextStyle(
+                        fontWeight: FontWeight.w700,fontSize:14.sp,color: Color.fromRGBO(0, 0, 0, 0.5),decoration:
+                    TextDecoration.none
+                    ))),
+                    Container( height:30.h,width:200.w,color:Colors.transparent,
+                      padding: EdgeInsets.only(top:20),
+                      child:  TextField(autofocus: true,
+                        cursorColor: Colors.black,cursorHeight:20.h,
+                        controller:_info1,
+                        decoration: InputDecoration(
+                          hintText: '',
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1.w,
+                                  color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10)),
+                        ),),
+                    )
                   ],
                 ),
               ],
@@ -406,21 +436,18 @@ class _Info_PageState extends State<Info_Page> {
                       ),
                     ),
                     SizedBox(width: 11.w),
-                    RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
-                        children:[
-                          TextSpan(text: 'I speak ',style: GoogleFonts.inter(textStyle: TextStyle(
-                              fontWeight: FontWeight.w700,fontSize:14.sp,color: Color.fromRGBO(0, 0, 0, 0.5),decoration:
-                          TextDecoration.none
-                          ))),
-                        ])),
+                   Text('I speak ',style: GoogleFonts.inter(textStyle: TextStyle(
+                       fontWeight: FontWeight.w700,fontSize:14.sp,color: Color.fromRGBO(0, 0, 0, 0.5),decoration:
+                   TextDecoration.none
+                   ))),
                     Padding(
                       padding: const EdgeInsets.only(bottom:0),
                       child: Container( height:30.h,width:200.w,color:Colors.transparent,
                         child:  Padding(
-                          padding: const EdgeInsets.only(top:20),
-                          child: TextField(
+                          padding:EdgeInsets.only(top:20),
+                          child: TextField(autofocus: true,
                             cursorColor: Colors.black,cursorHeight:20.h,
-                            controller:_info1,
+                            controller:_info2,
                             decoration: InputDecoration(
                               hintText: '',
                                 enabledBorder: OutlineInputBorder(
@@ -499,7 +526,7 @@ class _Info_PageState extends State<Info_Page> {
                           });
                         },
                         icon: Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.keyboard_arrow_down_rounded,
                             size: 20,
@@ -552,13 +579,13 @@ class _Info_PageState extends State<Info_Page> {
                           ))),
                         ])),
                     Padding(
-                      padding: const EdgeInsets.only(bottom:0),
+                      padding:  EdgeInsets.only(bottom:0),
                       child: Container( height:30.h,width:200.w,color:Colors.transparent,
                         child:  Padding(
-                          padding: const EdgeInsets.only(top:20),
-                          child: TextField(
+                          padding:  EdgeInsets.only(top:20),
+                          child: TextField(autofocus: true,
                             cursorColor: Colors.black,cursorHeight:20.h,
-                            controller:_info2,
+                            controller:_info3,
                             decoration: InputDecoration(
                               hintText: '',
                               enabledBorder: OutlineInputBorder(
@@ -638,7 +665,7 @@ class _Info_PageState extends State<Info_Page> {
                           });
                         },
                         icon: Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.keyboard_arrow_down_rounded,
                             size: 20,
@@ -678,27 +705,23 @@ class _Info_PageState extends State<Info_Page> {
                           color: Colors.white),
                     ),
                     SizedBox(width: 11.w),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom:0),
-                      child: Container( height:30.h,width:200.w,color:Colors.transparent,
-                        child:  Padding(
-                          padding: const EdgeInsets.only(top:20),
-                          child: TextField(
-                            cursorColor: Colors.black,cursorHeight:20.h,
-                            controller:_info3,
-                            decoration: InputDecoration(
-                              hintText: '',
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 1.w,
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),),
-                        ),
-                      ),
+                    Container(
+                      padding: EdgeInsets.only(top:20),
+                      height:30.h,width:200.w,color:Colors.transparent,
+                      child:  TextField(
+                        cursorColor: Colors.black,cursorHeight:20.h,
+                        controller:_info4,
+                        decoration: InputDecoration(
+                          hintText: '',
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1.w,
+                                  color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10)),
+                        ),),
                     )
                   ],
                 ),
@@ -706,24 +729,23 @@ class _Info_PageState extends State<Info_Page> {
             ),
           ),
           Spacer(),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(elevation: 0,
+                shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                primary:Color.fromRGBO(248, 206, 97, 1),fixedSize: Size(336.w,47.h),
+              ),
+              onPressed: (){
+                Navigator.pop(context);
+              }, child: Text('Save',style: GoogleFonts.inter(
+              textStyle: TextStyle(
+                  color: Color.fromRGBO(0, 0, 0, 1),fontSize:20,fontWeight: FontWeight.w700
+              )
+          ),)),
+          SizedBox(height:8.h),
           Padding(
-            padding: const EdgeInsets.only(bottom:14),
-            child: Column(children: [
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(elevation: 0,
-                    shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                    primary:Color.fromRGBO(248, 206, 97, 1),fixedSize: Size(336.w,47.h),
-                  ),
-                  onPressed: (){
-                    Navigator.pop(context);
-                  }, child: Text('Save',style: GoogleFonts.inter(
-                  textStyle: TextStyle(
-                      color: Color.fromRGBO(0, 0, 0, 1),fontSize:20,fontWeight: FontWeight.w700
-                  )
-              ),)),
-              Divider(thickness:2.w,indent:140,endIndent:137,color: Color.fromRGBO(0,0,0,1),)
-            ],),
-          ),
+            padding: EdgeInsets.only(bottom:13),
+            child: Divider(thickness:2.w,indent:140,endIndent:137,color: Color.fromRGBO(0,0,0,1),),
+          )
         ],
       ),
     );

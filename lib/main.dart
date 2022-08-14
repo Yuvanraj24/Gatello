@@ -6,7 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/dummy.dart';
 import 'package:gatello/views/profile/allpops.dart';
 import 'package:gatello/views/profile/editprofile.dart';
+import 'package:gatello/views/profile/followers.dart';
+import 'package:gatello/views/profile/othermenu.dart';
+import 'package:gatello/views/profile/otherview.dart';
 import 'package:gatello/views/profile/photo_pop.dart';
+import 'package:gatello/views/profile/privateaccount.dart';
 import 'package:gatello/views/profile/text.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
 import 'package:gatello/views/tabbar/calls/incomingcall.dart';
@@ -125,7 +129,7 @@ class _MyAppState extends State<MyApp> {
             buttonColor: Color(white),
             bottomAppBarColor: Color(materialBlack),
             bottomNavigationBarTheme: BottomNavigationBarThemeData(backgroundColor: Color(materialBlack)),
-            appBarTheme: AppBarTheme(
+            appBarTheme:AppBarTheme(
                 iconTheme: IconThemeData(color: Color(white)),
                 backgroundColor: Color(materialBlack),
                 titleTextStyle: GoogleFonts.poppins(textStyle: textStyle(color: Color(white))))),
@@ -150,7 +154,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar() :LoginScreen();
+                              return (snapshot.data == true) ? Tabbar() :Photo_Pop();
                             } else {
                               return lottieAnimation(loadingLottie);
                             }

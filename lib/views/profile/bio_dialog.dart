@@ -135,6 +135,7 @@ class _BioDialogState extends State<BioDialog> {
         ),
         SizedBox(height:10.h),
         TextField(controller:_alert1,
+          autofocus: true,
           decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.transparent),

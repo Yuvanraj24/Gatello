@@ -39,7 +39,7 @@ class _Share_PageState extends State<Share_Page> {
             ),
 
             Padding(
-              padding: const EdgeInsets.only(top: 17,left: 12,right: 13),
+              padding: EdgeInsets.only(top: 17,left: 12,right: 13),
               child: Row(
                 children: [
                   Text('Share to...',style: GoogleFonts.inter(
@@ -72,12 +72,6 @@ class _Share_PageState extends State<Share_Page> {
                 disabledBorder: InputBorder.none,
                 filled: true,
                 fillColor: Color.fromRGBO(232, 232, 232, 1),
-                // border: OutlineInputBorder(
-                //     borderSide: BorderSide(
-                //       color:  Colors.red,
-                //     ),
-                //     borderRadius: BorderRadius.circular(20)
-                // ),
                 hintText:'Search...',hintStyle: GoogleFonts.inter(
                   textStyle: TextStyle(
                       fontSize: 14.sp,fontWeight: FontWeight.w400,

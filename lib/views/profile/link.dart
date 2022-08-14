@@ -16,9 +16,16 @@ class _Link_PageState extends State<Link_Page> {
   final List<String> items = ['Public', 'Friends', 'Only me'];
   String? selectedValue;
   bool isSwitched = false;
+
+  int _count = 0;
+
   @override
+  void iniState(){
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(resizeToAvoidBottomInset:false,
       appBar: AppBar(
         leading:  GestureDetector(onTap:(){Navigator.pop(context);},
           child: Column(mainAxisAlignment:MainAxisAlignment.center,
@@ -38,13 +45,22 @@ class _Link_PageState extends State<Link_Page> {
                   color: Color.fromRGBO(0, 0, 0, 1))),
         ),
         actions: [
-          Icon(Icons.more_vert,color:Color.fromRGBO(0,0,0,1),size:30)
+          PopupMenuButton(shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
+              iconSize:30,icon:Icon(Icons.more_vert,color: Colors.black,),
+              itemBuilder: (context) => [
+                PopupMenuItem(child: Center(
+                  child: Text('Settings',style: GoogleFonts.inter(
+                      textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize:14,
+                          color: Color.fromRGBO(0,0,0,1))
+                  ),),
+                ),)
+              ])
         ],
       ),
       body:Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left:31,top:22,right:12),
+            padding:  EdgeInsets.only(left:31,top:22,right:12),
             child: Column(
               children: [
               Row(
@@ -52,8 +68,10 @@ class _Link_PageState extends State<Link_Page> {
                   Text('Website',style: GoogleFonts.inter(
                       fontSize:20.sp,color: Color.fromRGBO(0,0,0,1),fontWeight: FontWeight.w700
                   ),),SizedBox(width:118.w),
-                  IconButton(onPressed: (){
-
+                  IconButton(onPressed: ()async{
+                  setState(() {
+                    _count++;
+                  });
                   }, icon:Icon(Icons.add,color: Colors.black,),),
                   Spacer(),
                   DropdownButtonHideUnderline(
@@ -132,101 +150,13 @@ class _Link_PageState extends State<Link_Page> {
                 ],
               ),
                 SizedBox(height:30.h),
-                Padding(
-                  padding: const EdgeInsets.only(left:10),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            height: 25.h,
-                            width: 25.w,
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(165, 165, 165, 0.9),
-                                shape: BoxShape.circle),
-                            child:Column(crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset('assets/profile_assets/profilelink.svg',height: 16.h,
-                                    width:16.w),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width:14.w),
-                          Text('http://deejos.com/',style: GoogleFonts.inter(
-                              fontSize:16.sp,color: Color.fromRGBO(0,0,0,1),fontWeight: FontWeight.w400
-                          ),)
-                        ],
-                      ),SizedBox(height:30.h),
-                      Row(
-                        children: [
-                          Container(
-                            height: 25.h,
-                            width: 25.w,
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(165, 165, 165, 0.9),
-                                shape: BoxShape.circle),
-                            child:Column(crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset('assets/profile_assets/profilelink.svg',height: 16.h,
-                                    width:16.w),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width:14.w),
-                          Text('http://deejos.com/',style: GoogleFonts.inter(
-                              fontSize:16.sp,color: Color.fromRGBO(0,0,0,1),fontWeight: FontWeight.w400
-                          ),)
-                        ],
-                      ),SizedBox(height:30.h),
-                      Row(
-                        children: [
-                          Container(
-                            height: 25.h,
-                            width: 25.w,
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(165, 165, 165, 0.9),
-                                shape: BoxShape.circle),
-                            child:Column(crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset('assets/profile_assets/profilelink.svg',height: 16.h,
-                                    width:16.w),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width:14.w),
-                          Text('http://deejos.com/',style: GoogleFonts.inter(
-                              fontSize:16.sp,color: Color.fromRGBO(0,0,0,1),fontWeight: FontWeight.w400
-                          ),)
-                        ],
-                      ),SizedBox(height:30.h),
-                      Row(
-                        children: [
-                          Container(
-                            height: 25.h,
-                            width: 25.w,
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(165, 165, 165, 0.9),
-                                shape: BoxShape.circle),
-                            child:Column(crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset('assets/profile_assets/profilelink.svg',height: 16.h,
-                                    width:16.w),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width:14.w),
-                          Text('http://deejos.com/',style: GoogleFonts.inter(
-                              fontSize:16.sp,color: Color.fromRGBO(0,0,0,1),fontWeight: FontWeight.w400
-                          ),)
-                        ],
-                      ),SizedBox(height:30.h),
-                    ],
-                  ),
-                ),
+                ListView.builder(
+                    shrinkWrap:true,
+                    itemCount:_count,
+                    itemBuilder: (context,index){
+                  return _row(index);
+                }),
+               SizedBox(height:30.h),
             ],),
           ),
           Spacer(),
@@ -250,4 +180,34 @@ class _Link_PageState extends State<Link_Page> {
       ),
     );
   }
+}
+
+_row(int index){
+  return Row(
+    children: [
+      Container(
+        height: 25.h,
+        width: 25.w,
+        decoration: BoxDecoration(
+            color: Color.fromRGBO(165, 165, 165, 0.9),
+            shape: BoxShape.circle),
+        child:Column(crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset('assets/profile_assets/profilelink.svg',height: 16.h,
+                width:16.w),
+          ],
+        ),
+      ),
+      SizedBox(width:14.w),
+     Expanded(child: TextFormField(
+       autofocus:true,
+       cursorColor:Colors.black,
+       decoration:InputDecoration(
+           focusedBorder:OutlineInputBorder(borderSide:BorderSide(color:Colors.transparent)),
+           enabledBorder:OutlineInputBorder(borderSide:BorderSide(color:Colors.transparent))
+       ),
+     ))
+    ],
+  );
 }

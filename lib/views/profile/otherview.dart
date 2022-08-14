@@ -11,11 +11,10 @@ class Other_View extends StatefulWidget {
   @override
   State<Other_View> createState() => _Other_ViewState();
 }
-
 class _Other_ViewState extends State<Other_View> {
+  int i=0;
   @override
   Widget build(BuildContext context) {
-    int i=0;
     return DefaultTabController(length:3,initialIndex:1,
       child: Scaffold(
         appBar: AppBar(
@@ -79,25 +78,6 @@ class _Other_ViewState extends State<Other_View> {
                             fit: BoxFit.fill)),
                   ),
                     Positioned(
-                      right: 12,
-                      top: 85,
-                      child: Container(
-                        height: 23.h,
-                        width: 23.w,child: Column(crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset('assets/profile_assets/edittoolblack.svg',
-                              height:15,width:15),
-                        ],
-                      ),
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(248, 206, 97, 1),
-                            border: Border.all(
-                                color: Color.fromRGBO(255, 255, 255, 1), width: 1),
-                            shape: BoxShape.circle),
-                      ),
-                    ),
-                    Positioned(
                       top: 92,
                       left: 21,
                       child: Container(
@@ -113,74 +93,74 @@ class _Other_ViewState extends State<Other_View> {
                             shape: BoxShape.circle),
                       ),
                     ),
-                    Positioned(
-                      left: 161,
-                      top: 143,
-                      child: Row(
+                    Positioned(top:146,left:170,
+                      child: Container(child:Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '789',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
+                          Row(
+                            children: [
+                              Text(
+                                '789',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              ),
+                              SizedBox(width: 39.w),
+                              Text(
+                                '789',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              ),
+                              SizedBox(width: 42.w),
+                              Text(
+                                '1,028',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              )
+                            ],
                           ),
-                          SizedBox(width: 39.w),
-                          Text(
-                            '789',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
+                          SizedBox(height:5.h),
+                          Row(
+                            children: [
+                              Text(
+                                'Pops',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              ),
+                              SizedBox(width: 32.w),
+                              Text(
+                                'Following',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              ),
+                              SizedBox(width: 25.w),
+                              Text(
+                                'Followers',
+                                style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              )
+                            ],
                           ),
-                          SizedBox(width: 39.w),
-                          Text(
-                            '1,028',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
-                          )
-                        ],
-                      ),
+                        ],),),
                     ),
-                    Positioned(
-                      left: 160,
-                      top: 176,
-                      child: Row(
-                        children: [
-                          Text(
-                            'Pops',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
-                          ),
-                          SizedBox(width: 32.w),
-                          Text(
-                            'Following',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
-                          ),
-                          SizedBox(width: 25.w),
-                          Text(
-                            'Followers',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color.fromRGBO(0, 0, 0, 1))),
-                          )
-                        ],
-                      ),
-                    ),],
+                  ],
                 ),),
 
               Padding(
@@ -311,11 +291,6 @@ class _Other_ViewState extends State<Other_View> {
                                   fontWeight: FontWeight.w700,
                                   color: Color.fromRGBO(0, 0, 0, 1))),
                         ),
-                        SizedBox(width:10.w),
-
-                        Container(height:20,width:20,
-                            child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg',
-                                color: i==1?Color.fromRGBO(0, 163, 255, 1):Colors.transparent)),
                       ],
                     ),
                     i==1?Text(''):
@@ -327,18 +302,22 @@ class _Other_ViewState extends State<Other_View> {
                                 color: Color.fromRGBO(0,0,0,0.5)
                             )
                         ),),
-                        Padding(
-                          padding: const EdgeInsets.only(left:280),
-                          child: TextButton( onPressed: () {
+                        Divider(thickness:1.w,color: Color.fromRGBO(228, 228, 228, 1),
+                            indent:22,endIndent:18),
+                        GestureDetector(
+                          onTap: (){
                             setState(() {
                               i=1;
                             });
                           },
-                              child: Text('See More...',style:GoogleFonts.inter(
-                                  textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
-                                      color: Color.fromRGBO(0, 163, 255, 1)
-                                  )
-                              ),)),
+                          child: Padding(
+                            padding:EdgeInsets.only(left:285,bottom:10,top:5),
+                            child: Text('See More...',style:GoogleFonts.inter(
+                                textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
+                                    color: Color.fromRGBO(0, 163, 255, 1)
+                                )
+                            ),),
+                          ),
                         ),
                       ],
                     )
@@ -351,7 +330,11 @@ class _Other_ViewState extends State<Other_View> {
               },):
               Column(
                 children: [
-                  TabBar(
+                  TabBar( indicator: BoxDecoration(
+                      color: Colors.transparent,border:Border(bottom:BorderSide(
+                      color: Colors.transparent
+                  ))
+                  ),
                       unselectedLabelStyle: GoogleFonts.inter(
                           textStyle: TextStyle(
                               fontSize: 15.sp,
