@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gatello/handler/Network.dart';
 import 'package:gatello/views/profile/editprofile.dart';
 import 'package:gatello/views/profile/text.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:tuple/tuple.dart';
 
+import '../../Authentication/Authentication.dart';
+import '../../Others/exception_string.dart';
+import '../../core/models/exception/pops_exception.dart';
 import 'bio_dialog.dart';
 
 class Photo_Pop extends StatefulWidget {
+
   const Photo_Pop({Key? key}) : super(key: key);
 
   @override
@@ -215,7 +222,7 @@ class _Photo_PopState extends State<Photo_Pop> {
             ),),
 
             Padding(
-              padding: const EdgeInsets.only(left:27,top:8),
+              padding:  EdgeInsets.only(left:27,top:8),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                 Row(
@@ -230,7 +237,7 @@ class _Photo_PopState extends State<Photo_Pop> {
                     ),
                     Spacer(),
                     Padding(
-                      padding: const EdgeInsets.only(right:12),
+                      padding:EdgeInsets.only(right:12),
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             elevation:1,
@@ -380,7 +387,7 @@ class _Photo_PopState extends State<Photo_Pop> {
                         });
                       },
                       child: Padding(
-                        padding: const EdgeInsets.only(left:285,bottom:10,top:5),
+                        padding:EdgeInsets.only(left:285,bottom:10,top:5),
                         child: Text('See More...',style:GoogleFonts.inter(
                             textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
                                 color: Color.fromRGBO(0, 163, 255, 1)
@@ -463,7 +470,7 @@ class _Photo_PopState extends State<Photo_Pop> {
                             ]),
                           ),
                           Positioned(
-                            left: 147,
+                            left: 146,
                             top: 15,
                             child: Container(
                               height: 87.h,
@@ -609,7 +616,7 @@ class _Photo_PopState extends State<Photo_Pop> {
                           ),
                         ),
                         Positioned(
-                          left: 147,
+                          left: 146,
                           top: 15,
                           child: Container(
                             height: 87.h,
@@ -754,7 +761,7 @@ class _Photo_PopState extends State<Photo_Pop> {
                           ]),
                         ),
                         Positioned(
-                          left: 147,
+                          left: 146,
                           top: 15,
                           child: Stack(children: [
                             Container(
