@@ -14,6 +14,7 @@ import 'package:gatello/views/profile/privateaccount.dart';
 import 'package:gatello/views/profile/text.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
 import 'package:gatello/views/tabbar/calls/incomingcall.dart';
+import 'package:gatello/views/tabbar/pings_chat/select_contact/contact_card.dart';
 import 'package:gatello/views/tabbar/pops/No%20request.dart';
 import 'package:gatello/views/tabbar/pops/Requests.dart';
 import 'package:gatello/views/tabbar/pops/birthday.dart';
@@ -136,7 +137,7 @@ class _MyAppState extends State<MyApp> {
         initial: widget.savedThemeMode ?? AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {
           return ScreenUtilInit(
-            designSize: Size(360, 800),
+            designSize: Size(360,800),
             minTextAdapt: true,
             splitScreenMode: true,
             builder: (context, child) {
@@ -163,7 +164,6 @@ class _MyAppState extends State<MyApp> {
 
               );
             },
-
           );
         },
       ),

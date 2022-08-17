@@ -393,7 +393,7 @@ class _Other_ViewState extends State<Other_View> {
                               ]),
                             ),
                             Positioned(
-                              left: 147,
+                              left: 146,
                               top: 15,
                               child: Container(
                                 height: 87.h,
@@ -539,7 +539,7 @@ class _Other_ViewState extends State<Other_View> {
                             ),
                           ),
                           Positioned(
-                            left: 147,
+                            left: 146,
                             top: 15,
                             child: Container(
                               height: 87.h,
@@ -684,7 +684,7 @@ class _Other_ViewState extends State<Other_View> {
                             ]),
                           ),
                           Positioned(
-                            left: 147,
+                            left: 146,
                             top: 15,
                             child: Stack(children: [
                               Container(

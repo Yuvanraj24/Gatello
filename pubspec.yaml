@@ -136,10 +136,6 @@ flutter:
     - assets/Gatello_logo/Gatello_temp_logo.png
    # - assets/tabbar_icons/chats_image/chats_empty.png
     - assets/icons_assets/chat_icon_floating.svg
-    - assets/tabbar_icons/getit_icon.png
-    - assets/tabbar_icons/pings_icon.png
-    - assets/tabbar_icons/status_icon.png
-    - assets/tabbar_icons/call_icon.png
     - assets/icons_assets/new_group.png
     - assets/splash2_image/right_arrow.png
     - assets/splash3_image/left_arrow.png
@@ -237,7 +233,10 @@ flutter:
     - assets/profile_assets/profilelink.svg
     - assets/profile_assets/searchicon.svg
     - assets/profile_assets/profilelanguage.svg
-
+    - assets/tabbar_icons/pops_getit.svg
+    - assets/tabbar_icons/pings_icon.svg
+    - assets/tabbar_icons/status_icon.svg
+    - assets/tabbar_icons/pops_call.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
