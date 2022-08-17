@@ -3,7 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gatello/dummy.dart';
+
+
 import 'package:gatello/views/profile/allpops.dart';
 import 'package:gatello/views/profile/editprofile.dart';
 import 'package:gatello/views/profile/followers.dart';
@@ -11,13 +12,15 @@ import 'package:gatello/views/profile/othermenu.dart';
 import 'package:gatello/views/profile/otherview.dart';
 import 'package:gatello/views/profile/photo_pop.dart';
 import 'package:gatello/views/profile/privateaccount.dart';
-import 'package:gatello/views/profile/text.dart';
+import 'package:gatello/views/profile/tabbarprofile.dart';
+
 import 'package:gatello/views/tabbar/calls/call.dart';
 import 'package:gatello/views/tabbar/calls/incomingcall.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/contact_card.dart';
 import 'package:gatello/views/tabbar/pops/No%20request.dart';
 import 'package:gatello/views/tabbar/pops/Requests.dart';
 import 'package:gatello/views/tabbar/pops/birthday.dart';
+import 'package:gatello/views/tabbar/pops/circle_indicator.dart';
 import 'package:gatello/views/tabbar/pops/comments.dart';
 import 'package:gatello/views/tabbar/pops/doubletap.dart';
 import 'package:gatello/views/tabbar/pops/interactions.dart';
@@ -25,6 +28,7 @@ import 'package:gatello/views/tabbar/pops/newpost.dart';
 import 'package:gatello/views/tabbar/pops/poplikes.dart';
 import 'package:gatello/views/tabbar/pops/pops.dart';
 import 'package:gatello/views/tabbar/pops/readmore.dart';
+import 'package:gatello/views/tabbar/pops/report.dart';
 import 'package:gatello/views/tabbar/pops/secondreport.dart';
 import 'package:gatello/views/tabbar/pops/share.dart';
 // import 'package:gatello/reset_password.dart';
@@ -45,6 +49,7 @@ import 'package:gatello/views/splash_screen4.dart';
 import 'package:gatello/views/tabbar/chats/group_personal_screen/group_personal_chat.dart';
 import 'package:gatello/views/tabbar/pings_chat/group_info_screen/group_info.dart';
 import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
+import 'package:gatello/views/tabbar/pops/thirdreport.dart';
 import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
@@ -60,7 +65,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'Database/StorageManager.dart';
-import 'Models/Comments.dart';
+
 import 'Others/components/LottieComposition.dart';
 import 'Others/lottie_strings.dart';
 import 'Style/Colors.dart';
@@ -94,7 +99,6 @@ class MyApp extends StatefulWidget {
 
 
   const MyApp({Key? key, this.savedThemeMode}) : super(key: key);
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -155,13 +159,12 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar() :Photo_Pop();
+                              return (snapshot.data == true) ? Tabbar() :LoginScreen();
                             } else {
                               return lottieAnimation(loadingLottie);
                             }
                           });
                     }),
-
               );
             },
           );
@@ -169,9 +172,6 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
-
-
-
   var _loginStatus = 0;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

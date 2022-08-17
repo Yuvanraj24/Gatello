@@ -5,7 +5,40 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Info_Page extends StatefulWidget {
-  const Info_Page({Key? key}) : super(key: key);
+  final String uid;
+  final String? username;
+  final String? fullname;
+  //final String? phone;
+  final String? dob;
+  final String? email;
+  final String? designation;
+  final String? city;
+  final String? member;
+  final String? company;
+  final String? job;
+  final String? college;
+  final String? highSchool;
+  final String? interest;
+  final String? relationshipStatus;
+  final String? about;
+  final String? userPicture;
+  const Info_Page({Key? key,   this.member,
+   // this.phone,
+    this.dob,
+    this.email,
+    this.about,
+    this.city,
+    this.college,
+    this.company,
+    this.designation,
+    this.fullname,
+    this.highSchool,
+    this.interest,
+    this.job,
+    this.relationshipStatus,
+    this.userPicture,
+    required this.uid,
+    this.username,}) : super(key: key);
 
   @override
   State<Info_Page> createState() => _Info_PageState();
@@ -18,6 +51,7 @@ TextEditingController _info4=TextEditingController();
 
 
 class _Info_PageState extends State<Info_Page> {
+
   final List<String> items = ['Public', 'Friends', 'Only me'];
   String? selectedValue1;
   String? selectedValue2;

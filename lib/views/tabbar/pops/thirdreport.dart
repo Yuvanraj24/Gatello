@@ -6,7 +6,7 @@ import 'package:gatello/views/tabbar/pops/pops.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../dummy.dart';
+
 
 class Third_Page extends StatefulWidget {
   const Third_Page({Key? key}) : super(key: key);

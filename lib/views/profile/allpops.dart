@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tuple/tuple.dart';
 
+import '../../Others/Routers.dart';
+import '../../Others/exception_string.dart';
+import '../../core/models/exception/pops_exception.dart';
+import '../../handler/Network.dart';
+import '/core/models/profile_detail.dart'as profileDetailsModel;
 class All_pops extends StatefulWidget {
   const All_pops({Key? key}) : super(key: key);
 
@@ -9,6 +15,33 @@ class All_pops extends StatefulWidget {
 }
 
 class _All_popsState extends State<All_pops> {
+  ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading),
+
+      "Loading", null));
+  Future profileDetailsApiCall() async {
+    print('worked');
+    return await ApiHandler().apiHandler(
+      valueNotifier: profileDetailsValueNotifier,
+      jsonModel: profileDetailsModel.profileDetailsFromJson,
+      url: profileDetailsUrl,
+      requestMethod: 1,
+   //   body: {"user_id": (widget.userId != null) ? widget.userId : getUID(), "followee_id": ""},
+      body: { "user_id":"s8b6XInslPffQEgz8sVTINsPhcx2","followee_id" : "ftP6vQPaE0eEWrgVzzu48kplEFR2"}
+    );
+  }
+
+  @override
+  void initState() {
+    profileDetailsApiCall();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    profileDetailsValueNotifier.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

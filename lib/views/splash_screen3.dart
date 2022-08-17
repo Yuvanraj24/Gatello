@@ -53,6 +53,7 @@ class _Splash3State extends State<Splash3> {
                 ),
               ],
             ),
+
             Spacer(),
             Row(
               

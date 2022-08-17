@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:io';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -38,7 +37,7 @@ import '../../../../Helpers/DateTimeHelper.dart';
 import '../../../../Others/Structure.dart';
 import '../../../../Others/components/ExceptionScaffold.dart';
 import '../../../../Others/components/LottieComposition.dart';
-import '../../../../Others/components/MarqueeWidget.dart';
+
 import '../../../../Others/lottie_strings.dart';
 import '../../../../Style/Colors.dart';
 import '../../../../Style/Text.dart';
@@ -48,6 +47,7 @@ import '../../../../components/AudioPlayer.dart';
 import '../../../../components/Document.dart';
 import '../../../../components/Emoji.dart';
 import '../../../../components/Gif.dart';
+import '../../../../components/MarqueeWidget.dart';
 import '../../../../components/RecordButton.dart';
 import '../../../../components/ScaffoldDialog.dart';
 import '../../../../components/SimpleDialogBox.dart';

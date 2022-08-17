@@ -62,7 +62,6 @@ class ApiHandler {
     switch (requestMethod) {
       case 0:
         return await http.get(uri, headers: _httpHeader(headers: headers, authToken: authToken));
-
       case 1:
         {
           if (formData != null) {
@@ -86,11 +85,18 @@ class ApiHandler {
           } else {
             if (body != null) {
               print("Calling API ${uri}");
-              return await http.post(uri, headers: _httpHeader(headers: headers, authToken: authToken), body: jsonEncode(body));
+
+              return await http.post(uri, headers: _httpHeader(headers: headers, authToken: authToken),
+
+                  body: jsonEncode(body));
+
             } else {
+
               return await http.post(uri, headers: _httpHeader(headers: headers, authToken: authToken));
             }
+
           }
+
         }
 
       case 2:
@@ -141,30 +147,38 @@ class ApiHandler {
                 "FormBody\n" +
                 formBody.toString(),
           );
-          var response = await _httpRequest(uri: uri, requestMethod: requestMethod, headers: headers, authToken: authToken, formData: formData, formBody: formBody, body: body);
+          var response = await _httpRequest(uri: uri, requestMethod: requestMethod,
+              headers: headers, authToken: authToken, formData: formData, formBody: formBody, body: body);
           if (formData != null || formBody != null) {
             print("Calling API ${uri}");
             response = await http.Response.fromStream(response);
 
           }
           logger.i(
-            "Url\n" + url.toString() + "Response\n" + response.body.toString() + "Status\n" + response.statusCode.toString(),
+
+            "Url\n" + url.toString() + "Response\n" + response.body.toString() +
+                "Status\n" + response.statusCode.toString(),
           );
+
           if (response.statusCode == 200) {
+
             var jsonResponse = json.decode(response.body);
             print("JSON RESP ${jsonResponse}");
             inspect(jsonResponse);
             if (jsonResponse["status"].toString() == "OK") {
-              valueNotifier.value = Tuple4(1, jsonModel(utf8.decode(Runes(response.body).string.codeUnits)), jsonResponse["message"].toString(), jsonResponse);
+              valueNotifier.value = Tuple4(1, jsonModel(utf8.decode(Runes(response.body).string.codeUnits)),
+                  jsonResponse["message"].toString(), jsonResponse);
               print("JSON RESP ${jsonResponse}");
             } else if (jsonResponse["statusCode"] == "200") {
-              valueNotifier.value = Tuple4(1, jsonModel(utf8.decode(Runes(response.body).string.codeUnits)), jsonResponse["statusMessage"].toString(), jsonResponse);
+              valueNotifier.value = Tuple4(1, jsonModel(utf8.decode(Runes(response.body).string.codeUnits)),
+                  jsonResponse["statusMessage"].toString(), jsonResponse);
             } else {
               String? message = jsonResponse["message"] == null ? null : jsonResponse["message"];
               valueNotifier.value =
                   (message != null) ? Tuple4(3, defaultFromJson(response.body), message, jsonResponse) : Tuple4(2, exceptionFromJson(alert), "Something went wrong!", null);
             }
           } else {
+
             switch (response.statusCode) {
 
               case 404:
@@ -190,14 +204,17 @@ class ApiHandler {
             }
           }
         } else {
+
           Future.delayed(const Duration(seconds: 2), () {
             valueNotifier.value = Tuple4(1, jsonModel(testJsonString), "Testing Purposes", json.decode(testJsonString));
           });
         }
       } else {
+
         valueNotifier.value = Tuple4(2, exceptionFromJson(noNetwork), "No Connectivity", null);
       }
     } catch (e) {
+
       valueNotifier.value = Tuple4(2, exceptionFromJson(alert), e.toString(), null);
     }
     logger.i(valueNotifier.value.toString());

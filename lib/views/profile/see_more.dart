@@ -7,17 +7,25 @@ import 'package:gatello/views/profile/photo_pop.dart';
 import 'package:gatello/views/profile/skill.dart';
 import 'package:gatello/views/profile/workexperience.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tuple/tuple.dart';
 
-class Texts extends StatefulWidget {
+import '../../Others/exception_string.dart';
+import '../../core/models/exception/pops_exception.dart';
+
+class SeeMoreText extends StatefulWidget {
   final VoidCallback? onPressed;
-  const Texts({Key? key,required this.onPressed}) : super(key: key);
+  String phone;
+  String email;
+
+   SeeMoreText({Key? key,required this.onPressed,required this.phone,required this.email}) : super(key: key);
 
   @override
-  State<Texts> createState() => _TextsState();
+  State<SeeMoreText> createState() => _TextsuState();
 }
 
-class _TextsState extends State<Texts> {
+class _TextsuState extends State<SeeMoreText> {
   int i=0;
+  ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,10 +65,10 @@ class _TextsState extends State<Texts> {
                 fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)),)  ),
               SizedBox(width:10.w),
               GestureDetector(
-                  onTap:(){
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Info_Page(),));
-                  },
+                  // onTap:(){
+                  //   Navigator.push(context,
+                  //       MaterialPageRoute(builder: (context) => Info_Page(),));
+                  // },
                   child:  Container(height:20,width:20,
                       child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
             ],
@@ -87,15 +95,13 @@ class _TextsState extends State<Texts> {
                         color: Color.fromRGBO(165, 165, 165, 0.9))),
               ),
               SizedBox(width: 8.w),
-              Material(color: Colors.transparent,
-                child: Text(
-                  'Male',
-                  style: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color.fromRGBO(0, 0, 0, 1))),
-                ),
+              Text(
+                'Male',
+                style: GoogleFonts.inter(
+                    textStyle: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromRGBO(0, 0, 0, 1))),
               ),
             ],
           ),
@@ -117,26 +123,22 @@ class _TextsState extends State<Texts> {
                     shape: BoxShape.circle),
               ),
               SizedBox(width: 11.w),
-              Material(color: Colors.transparent,
-                child: Text(
-                  'Born on ',
-                  style: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Color.fromRGBO(165, 165, 165, 0.9))),
-                ),
+              Text(
+                'Born on ',
+                style: GoogleFonts.inter(
+                    textStyle: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Color.fromRGBO(165, 165, 165, 0.9))),
               ),
               SizedBox(width: 8.w),
-              Material(color: Colors.transparent,
-                child: Text(
-                  'December 6th 2000',
-                  style: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color.fromRGBO(0, 0, 0, 1))),
-                ),
+              Text(
+                'December 6th 2000',
+                style: GoogleFonts.inter(
+                    textStyle: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromRGBO(0, 0, 0, 1))),
               ),
             ],
           ),
@@ -170,6 +172,7 @@ class _TextsState extends State<Texts> {
               SizedBox(width: 8.w),
               Text(
                 'English, Tamil',
+
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontSize: 14.sp,
@@ -197,7 +200,11 @@ class _TextsState extends State<Texts> {
               ),
               SizedBox(width: 11.w),
               Text(
-                '+91 9874653631',
+                  widget.phone,
+            // '+91 9874653631',
+                //profileDetailsValueNotifier.value.item2.result.profileDetails.name,
+             //   profileDetailsValueNotifier.value.item4.result.profile_details.phone,
+
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontSize: 14.sp,
@@ -219,7 +226,7 @@ class _TextsState extends State<Texts> {
               ),
               SizedBox(width: 11.w),
               Text(
-                'Deejos123@gmail.com',
+                widget.email,
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontSize: 14.sp,

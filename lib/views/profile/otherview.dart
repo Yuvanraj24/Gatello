@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gatello/views/profile/text.dart';
+import 'package:gatello/views/profile/see_more.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tuple/tuple.dart';
+import '../../Others/exception_string.dart';
+import '../../core/models/exception/pops_exception.dart';
 import 'editprofile.dart';
 
 class Other_View extends StatefulWidget {
@@ -12,6 +15,8 @@ class Other_View extends StatefulWidget {
   State<Other_View> createState() => _Other_ViewState();
 }
 class _Other_ViewState extends State<Other_View> {
+  ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0,
+      exceptionFromJson(loading), "Loading", null));
   int i=0;
   @override
   Widget build(BuildContext context) {
@@ -323,11 +328,13 @@ class _Other_ViewState extends State<Other_View> {
                     )
                   ],),
               ),
-              i==1?Texts(onPressed: (){
+              i==1?SeeMoreText(onPressed: (){
                 setState(() {
                   i=0;
                 });
-              },):
+              },
+                  email: profileDetailsValueNotifier.value.item2.result.profileDetails.email,
+                  phone: profileDetailsValueNotifier.value.item2.result.profileDetails.phone):
               Column(
                 children: [
                   TabBar( indicator: BoxDecoration(

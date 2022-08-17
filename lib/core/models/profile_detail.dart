@@ -4,9 +4,11 @@
 
 import 'dart:convert';
 
-ProfileDetails profileDetailsFromJson(String str) => ProfileDetails.fromJson(json.decode(str));
+ProfileDetails profileDetailsFromJson(String str) =>
+    ProfileDetails.fromJson(json.decode(str));
 
-String profileDetailsToJson(ProfileDetails data) => json.encode(data.toJson());
+String profileDetailsToJson(ProfileDetails data) =>
+    json.encode(data.toJson());
 
 class ProfileDetails {
   ProfileDetails({
@@ -15,13 +17,13 @@ class ProfileDetails {
     required this.result,
     required this.error,
   });
-
   String status;
   String message;
   Result result;
   Error error;
 
-  factory ProfileDetails.fromJson(Map<String, dynamic> json) => ProfileDetails(
+  factory ProfileDetails.fromJson(Map<String,
+      dynamic> json) => ProfileDetails(
     status: json["status"],
     message: json["message"],
     result: Result.fromJson(json["result"]),
@@ -54,7 +56,8 @@ class Result {
   bool isFollowing;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
-    profileDetails: ProfileDetailsClass.fromJson(json["profile_details"]),
+    profileDetails: ProfileDetailsClass.fromJson
+      (json["profile_details"]),
     isFollowing: json["isFollowing"],
   );
 

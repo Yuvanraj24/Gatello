@@ -3,13 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
+import 'package:gatello/views/tabbar/pops/newpost.dart';
 import 'package:gatello/views/tabbar/pops/pops.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../dummy.dart';
 import 'Delete1Dialog.dart';
 
 class Tabbar extends StatefulWidget {
@@ -380,7 +381,14 @@ class _TabState extends State<Tabbar> {
                               child: Text("Get it...!"),
                             ),
                             PingsChatView(),
-                            Pops_Page(),
+
+                            FutureBuilder(
+                              future: Future.delayed(Duration(milliseconds: 1)),
+                              builder: (context,_) {
+                                return Pops_Page();
+                              }
+                            ),
+
                             Center(
                               child: Text("Status...!"),
                             ),

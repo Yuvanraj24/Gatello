@@ -17,9 +17,12 @@ int? forceResendToken;
 
 getUID() {
   try {
+
     return FirebaseAuth.instance.currentUser!.uid;
+
   } catch (e) {
     toast(e.toString());
+
   }
 }
 
