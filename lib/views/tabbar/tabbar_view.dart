@@ -252,14 +252,16 @@ class _TabState extends State<Tabbar> {
                               ),
                               child: TabBar(
                                 labelPadding: EdgeInsets.all(0),
-                                indicatorColor: Color.fromRGBO(255,255,255,1),
+                                indicatorColor: Color.fromRGBO(255, 255, 255, 1),
                                 tabs: [
                                   Tab(
                                     child: Column(
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                     SvgPicture.asset('assets/tabbar_icons/pops_getit.svg'),
+                                        Image(
+                                            image: AssetImage(
+                                                "assets/tabbar_icons/getit_icon.png")),
                                         Text(
                                           "Get it",
                                           style: GoogleFonts.fredoka(
@@ -276,7 +278,9 @@ class _TabState extends State<Tabbar> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                    SvgPicture.asset('assets/tabbar_icons/pings_icon.svg'),
+                                        Image(
+                                            image: AssetImage(
+                                                "assets/tabbar_icons/pings_icon.png")),
                                         Row(
                                           mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -318,7 +322,9 @@ class _TabState extends State<Tabbar> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        SvgPicture.asset(''),
+                                        Image(
+                                            image: AssetImage(
+                                                "assets/tabbar_icons/pings_icon.png")),
                                         Text(
                                           "Pops",
                                           style: GoogleFonts.fredoka(
@@ -335,7 +341,9 @@ class _TabState extends State<Tabbar> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        SvgPicture.asset('assets/tabbar_icons/status_icon.svg'),
+                                        Image(
+                                            image: AssetImage(
+                                                "assets/tabbar_icons/status_icon.png")),
                                         Text(
                                           "Status",
                                           style: GoogleFonts.fredoka(
@@ -352,7 +360,9 @@ class _TabState extends State<Tabbar> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                       SvgPicture.asset('assets/tabbar_icons/pops_call.svg'),
+                                        Image(
+                                            image: AssetImage(
+                                                "assets/tabbar_icons/call_icon.png")),
                                         Text(
                                           "Calls",
                                           style: GoogleFonts.fredoka(
@@ -381,14 +391,7 @@ class _TabState extends State<Tabbar> {
                               child: Text("Get it...!"),
                             ),
                             PingsChatView(),
-
-                            FutureBuilder(
-                              future: Future.delayed(Duration(milliseconds: 1)),
-                              builder: (context,_) {
-                                return Pops_Page();
-                              }
-                            ),
-
+                            Pops_Page(),
                             Center(
                               child: Text("Status...!"),
                             ),
