@@ -79,8 +79,6 @@ Future<void> main() async {
 
 
 }
-
-
 const String ip = 'http://3.108.219.188:5000';
 const String signUpip = '$ip/signup';
 const String loginip = '$ip/login';

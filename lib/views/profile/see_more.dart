@@ -65,10 +65,10 @@ class _TextsuState extends State<SeeMoreText> {
                 fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)),)  ),
               SizedBox(width:10.w),
               GestureDetector(
-                  // onTap:(){
-                  //   Navigator.push(context,
-                  //       MaterialPageRoute(builder: (context) => Info_Page(),));
-                  // },
+                  onTap:(){
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Info_Page(uid: '',),));
+                  },
                   child:  Container(height:20,width:20,
                       child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
             ],

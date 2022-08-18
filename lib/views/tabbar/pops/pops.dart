@@ -282,8 +282,12 @@ class _Pops_PageState extends State<Pops_Page> {
                                                       ),
                                                       CircleAvatar(
                                                         backgroundImage: NetworkImage(
-                                                            'https://www.whatsappimages.in/wp-content/'
-                                                                'uploads/2021/12/Creative-Whatsapp-Dp-Pics-Download.jpg'),
+
+                                                            userDetailsValueNotifier.value.item2.result.profileUrl
+                                                            // 'https://www.whatsappimages.in/wp-content/'
+                                                            //     'uploads/2021/12/Creative-Whatsapp-Dp-Pics-Download.jpg'
+
+                                                        ),
                                                         radius: 20,
                                                       ),
                                                       Padding(
@@ -293,8 +297,8 @@ class _Pops_PageState extends State<Pops_Page> {
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
-                                                              'fgg',
-                                                           //   userDetailsValueNotifier.value.item2.result.username,
+
+                                                              userDetailsValueNotifier.value.item2.result.username,
                                                               style: GoogleFonts.inter(
                                                                   textStyle: TextStyle(
                                                                       color:
@@ -554,7 +558,12 @@ class _Pops_PageState extends State<Pops_Page> {
                                                             Padding(
                                                               padding: const EdgeInsets.only(top: 7),
                                                               child: Text(
-                                                                '3.6k',
+                                                                //'3.6k',
+                                                                (feedsValueNotifier.value.item2.result[index].likesCount >= 2)
+                                                                    ? "${feedsValueNotifier.value.item2.result[index].likesCount}"
+                                                                    : (feedsValueNotifier.value.item2.result[index].likesCount == 1)
+                                                                    ? "${feedsValueNotifier.value.item2.result[index].likesCount}"
+                                                                    : "No Like",
                                                                 style: GoogleFonts.inter(
                                                                     textStyle: TextStyle(fontWeight: FontWeight.w400,
                                                                       color:
@@ -571,7 +580,7 @@ class _Pops_PageState extends State<Pops_Page> {
                                                                   context,
                                                                   MaterialPageRoute(builder: (context) =>Command_page(
                                                                       postId:feedsValueNotifier.value.item2.result[index].id.oid
-                                                          //    postId: postDetailsValueNotifier.value.item2.result.id,
+
                                                                   )
                                                                   ),
                                                                 );
@@ -587,11 +596,15 @@ class _Pops_PageState extends State<Pops_Page> {
                                                               padding: const EdgeInsets.only(top: 7),
                                                               child:InkWell (
                                                                 onTap: (){
-print('dhina:${feedsValueNotifier.value.item2.result[index].id.oid}');
-
+                                                                  print('dhina:${feedsValueNotifier.value.item2.result[index].id.oid}');
                                                                 },
                                                                 child: Text(
-                                                                  '3.6k',
+                                                                  (feedsValueNotifier.value.item2.result[index].commentsCount >= 2)
+                                                                      ? "${feedsValueNotifier.value.item2.result[index].commentsCount}"
+                                                                      : (feedsValueNotifier.value.item2.result[index].commentsCount == 1)
+                                                                      ? "${feedsValueNotifier.value.item2.result[index].commentsCount}"
+                                                                      : "No Comment",
+                                                                //  '3.6k',
                                                                   style: GoogleFonts.inter(
                                                                       textStyle: TextStyle(fontWeight: FontWeight.w400,
                                                                         color:
@@ -659,6 +672,7 @@ print('dhina:${feedsValueNotifier.value.item2.result[index].id.oid}');
                                                               child: Stack(
                                                                 children: [
                                                                   likedmembers(),
+
                                                                   Positioned(
                                                                       left: 10,
                                                                       child: likedmembers()),
@@ -677,12 +691,25 @@ print('dhina:${feedsValueNotifier.value.item2.result[index].id.oid}');
                                                             SizedBox(
                                                               width: 28.w,
                                                             ),
-                                                            Text(
-                                                              'view all comments...',
-                                                              style: GoogleFonts.inter(
-                                                                  textStyle: TextStyle(fontWeight: FontWeight.w400,
-                                                                    color: Color.fromRGBO(98, 98, 98, 1),
-                                                                  )),
+                                                            InkWell(
+                                                              onTap: (){
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(builder: (context) =>Command_page(
+                                                                      postId:feedsValueNotifier.value.item2.result[index].id.oid
+
+                                                                  )
+                                                                  ),
+                                                                );
+
+                                                              },
+                                                              child: Text(
+                                                                'view all comments...',
+                                                                style: GoogleFonts.inter(
+                                                                    textStyle: TextStyle(fontWeight: FontWeight.w400,
+                                                                      color: Color.fromRGBO(98, 98, 98, 1),
+                                                                    )),
+                                                              ),
                                                             )
                                                           ],
                                                         ),

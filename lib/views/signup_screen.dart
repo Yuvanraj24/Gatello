@@ -427,6 +427,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 top: 120.h, bottom: 35.h, left: 12.w, right: 12.w),
             child: Column(
               children: [
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

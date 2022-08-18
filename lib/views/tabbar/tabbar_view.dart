@@ -259,10 +259,14 @@ class _TabState extends State<Tabbar> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        SvgPicture.asset(
-                                          "assets/tabbar_icons/pops_getit.svg",
-
-                                        ),
+                                     ImageIcon(AssetImage('assets/group_info/search.png'),
+                                     size: 10,
+                                     color: Colors.black,
+                                     ),
+                                        // SvgPicture.asset(
+                                        //   "assets/tabbar_icons/pops_getit.svg",
+                                        //
+                                        // ),
                                         Text(
                                           "Get it",
                                           style: GoogleFonts.fredoka(

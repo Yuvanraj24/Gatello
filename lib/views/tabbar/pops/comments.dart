@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import '../../../Authentication/Authentication.dart';
 import '../../../Helpers/DateTimeHelper.dart';
 import '../../../Others/Routers.dart';
-
-
+import '../../../Style/Colors.dart';
+import '../../../Style/Text.dart';
+import '../../../components/SnackBar.dart';
 import '/core/models/default.dart';
 import '/core/models/Comments.dart'as commentsModel;
 import '/core/models/UserDetail.dart'as userDetailsModel;
@@ -22,19 +22,21 @@ import '../../../core/models/exception/pops_exception.dart';
 import '../../../handler/Network.dart';
 class Command_page extends StatefulWidget {
   final String postId;
-
   const Command_page({Key? key,required this.postId}) : super(key: key);
   @override
   State<Command_page> createState() => _Command_pageState();
 }
 class _Command_pageState extends State<Command_page> {
+  String commentText='';
+  String replyText='';
+  bool isReply = false;
+  int commentIndex = 0;
    String? postId;
   String? uid;
   bool postEnable = false;
   FocusNode focusNode = FocusNode();
-  //String? posturl;
   TextEditingController commentTextEditingController = TextEditingController();
-  TextEditingController _controller = TextEditingController();
+ // TextEditingController _controller = TextEditingController();
   ValueNotifier<Tuple4> userDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
   ValueNotifier<Tuple4> listCommentsValueNotifier = ValueNotifier<Tuple4>
     (Tuple4(0, exceptionFromJson(loading), "Loading", null));
@@ -42,20 +44,14 @@ class _Command_pageState extends State<Command_page> {
     (Tuple4(-1, exceptionFromJson(alert), "Null", null));
   ValueNotifier<Tuple4> postDetailsValueNotifier = ValueNotifier<Tuple4>
     (Tuple4(0, exceptionFromJson(loading), "Loading", null));
+   ValueNotifier<Tuple4> replyCommentValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   Future createCommentApiCall() async {
     return await ApiHandler().apiHandler(
         valueNotifier: createCommentValueNotifier,
         jsonModel: defaultFromJson,
         url: createCommentUrl,
         requestMethod: 1,
-        // body: {
-        //   "post_id": "6215ec017abcbe8d47377836",
-        //   "user_id":"s8b6XInslPffQEgz8sVTINsPhcx2",
-        //   "profile_pic":"",
-        //   "username":"akashtest",
-        //   "content":commentTextEditingController.text,
-        //   "time_stamp":"234e23432"
-        // }
+
       body: {
         "post_id": widget.postId,
         "user_id": userDetailsValueNotifier.value.item2.result.userId,
@@ -66,7 +62,6 @@ class _Command_pageState extends State<Command_page> {
       },
     );
   }
-
   Future listCommentsApiCall() async {
     return await ApiHandler().apiHandler(
       valueNotifier: listCommentsValueNotifier,
@@ -74,7 +69,6 @@ class _Command_pageState extends State<Command_page> {
       url: commentsListUrl,
       requestMethod: 1,
       body: {"post_id": widget.postId},
-    //  body: {"post_id":"6215ec017abcbe8d47377836"},
     );
   }
   Future userDetailsApiCall() async {
@@ -86,7 +80,23 @@ class _Command_pageState extends State<Command_page> {
       body: {"user_id": uid},
     );
   }
-  Future<void> _getUID() async{
+   Future replyCommentApiCall({required String commentId}) async {
+     return await ApiHandler().apiHandler(
+       valueNotifier: replyCommentValueNotifier,
+       jsonModel: defaultFromJson,
+       url: replyCommentUrl,
+       requestMethod: 1,
+       body: {
+         "comment_id": commentId,
+         "user_id": userDetailsValueNotifier.value.item2.result.userId,
+         "profile_pic": userDetailsValueNotifier.value.item2.result.profileUrl ?? "",
+         "username": userDetailsValueNotifier.value.item2.result.username,
+         "content": commentTextEditingController.text
+       },
+     );
+   }
+
+   Future<void> _getUID() async{
     SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     uid=sharedPrefs.getString("userid");
     print("ShardPref ${uid}");
@@ -154,13 +164,19 @@ class _Command_pageState extends State<Command_page> {
                                             color: Color.fromRGBO(12, 16, 29, 1),
                                           ),
                                         ),
-                                        title: Text(
-                                          'Comments',
-                                          style: GoogleFonts.inter(
-                                              textStyle: TextStyle(
-                                                  fontSize: 18.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Color.fromRGBO(12, 16, 29, 1))),
+                                        title: InkWell(
+                                          onTap: (){
+
+
+                                          },
+                                          child: Text(
+                                            'Comments',
+                                            style: GoogleFonts.inter(
+                                                textStyle: TextStyle(
+                                                    fontSize: 18.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color.fromRGBO(12, 16, 29, 1))),
+                                          ),
                                         ),
                                       ),
                                       body:
@@ -171,11 +187,12 @@ class _Command_pageState extends State<Command_page> {
                                                     padding: const EdgeInsets.only(top:11,left: 12,right: 12),
                                                     child: TextField(
 
-                                                      controller: _controller,
-                                                      onChanged: (value){
 
-                                                        commentTextEditingController=  _controller;
-                                                      },
+                                                      controller: commentTextEditingController,
+                                                      // onChanged: (value){
+                                                      //
+                                                      //   commentTextEditingController=  _controller;
+                                                      // },
                                                       decoration: InputDecoration(
                                                         prefix: Container(
                                                           height: 54.h,
@@ -188,7 +205,8 @@ class _Command_pageState extends State<Command_page> {
                                                                       'https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80'),
                                                                   fit: BoxFit.fill)),
                                                         ),
-                                                        suffix:    ElevatedButton(
+
+                                                        suffix:         ElevatedButton(
                                                             style: ElevatedButton.styleFrom(
                                                               elevation: 0,
                                                               shape: RoundedRectangleBorder(
@@ -196,12 +214,58 @@ class _Command_pageState extends State<Command_page> {
                                                               primary: Color.fromRGBO(248, 206, 97, 1),
                                                               fixedSize: Size(80.w,20),
                                                             ),
-                                                            onPressed: () {
-                                                              print('dhina:${ listCommentsValueNotifier.value.item2.result}');
-                                                             // createCommentApiCall();
-                                                            //  createCommentApiCall(postId:postDetailsValueNotifier.value.item2.result.id );
-
+                                                            onPressed: (){
+                                                              setState(() {
+                                                                commentText=commentTextEditingController.text.toString();
+                                                              });
                                                             },
+                                                            // onPressed: (
+                                                            //
+                                                            //     postEnable == false ||
+                                                            //     createCommentValueNotifier.value.item1 == 0 ||
+                                                            //     replyCommentValueNotifier.value.item1 == 0)
+                                                            //     ? null
+                                                            //     : (isReply)
+                                                            //     ? () async {
+                                                            //
+                                                            //   return await replyCommentApiCall(
+                                                            //       commentId: listCommentsValueNotifier.
+                                                            //       value.item2.result[commentIndex].
+                                                            //       id.oid)
+                                                            //       .whenComplete(() async {
+                                                            //     if (replyCommentValueNotifier.value.item1 == 1) {
+                                                            //       FocusManager.instance.primaryFocus?.unfocus();
+                                                            //       if (!mounted) return;
+                                                            //       setState(() {
+                                                            //         isReply = false;
+                                                            //         commentTextEditingController.clear();
+                                                            //         valueResetter(replyCommentValueNotifier);
+                                                            //       });
+                                                            //       return await listCommentsApiCall();
+                                                            //     } else if (replyCommentValueNotifier.value.item1 == 2 || replyCommentValueNotifier.value.item1 == 3) {
+                                                            //       final snackBar = snackbar(content: replyCommentValueNotifier.value.item3);
+                                                            //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                            //     }
+                                                            //   });
+                                                            // }
+                                                            //     : () async {
+                                                            //   return await createCommentApiCall().whenComplete(() async {
+                                                            //     isReply = false;
+                                                            //     if (createCommentValueNotifier.value.item1 == 1) {
+                                                            //       FocusManager.instance.primaryFocus?.unfocus();
+                                                            //       if (!mounted) return;
+                                                            //       setState(() {
+                                                            //         commentTextEditingController.clear();
+                                                            //         valueResetter(createCommentValueNotifier);
+                                                            //       });
+                                                            //       return await listCommentsApiCall();
+                                                            //     } else if (createCommentValueNotifier.
+                                                            //     value.item1 == 2 || createCommentValueNotifier.value.item1 == 3) {
+                                                            //       final snackBar = snackbar(content: createCommentValueNotifier.value.item3);
+                                                            //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                            //     }
+                                                            //   });
+                                                            // },
                                                             child: Center(
                                                               child: Text(
                                                                 'Post',
@@ -211,7 +275,9 @@ class _Command_pageState extends State<Command_page> {
                                                                         fontSize: 18.sp,
                                                                         fontWeight: FontWeight.w700)),
                                                               ),
-                                                            )),
+                                                            )
+                                                        ),
+
                                                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
                                                             borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
                                                         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
@@ -274,7 +340,8 @@ class _Command_pageState extends State<Command_page> {
                                                                     ),
                                                                     SizedBox(height: 10.h),
                                                                     Text(
-'jk',
+                                                          commentText,
+                                                                         // commentTextEditingController.text.toString(),
                                                       //    listCommentsValueNotifier.value.item2.result.content,
                                                                       style: GoogleFonts.inter(
                                                                           textStyle: TextStyle(
@@ -292,13 +359,20 @@ class _Command_pageState extends State<Command_page> {
                                                                             color: Color.fromRGBO(112, 112, 112, 1),
                                                                           ),
                                                                           SizedBox(width: 41.w),
-                                                                          Text(
-                                                                            'Reply',
-                                                                            style: GoogleFonts.inter(
-                                                                                textStyle: TextStyle(
-                                                                                    color: Color.fromRGBO(108, 108, 108, 1),
-                                                                                    fontWeight: FontWeight.w700,
-                                                                                    fontSize: 16)),
+                                                                          InkWell(
+                                                                            onTap: (){
+                                                                              setState(() {
+                                                                                replyText=commentTextEditingController.text.toString();
+                                                                              });
+                                                                            },
+                                                                            child: Text(
+                                                          replyText,
+                                                                              style: GoogleFonts.inter(
+                                                                                  textStyle: TextStyle(
+                                                                                      color: Color.fromRGBO(108, 108, 108, 1),
+                                                                                      fontWeight: FontWeight.w700,
+                                                                                      fontSize: 16)),
+                                                                            ),
                                                                           )
                                                                         ],
                                                                       ),
