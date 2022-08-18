@@ -5,10 +5,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/views/tabbar/pops/comments.dart';
+import 'package:gatello/views/tabbar/pops/poplikes.dart';
 import 'package:gatello/views/tabbar/pops/report.dart';
+import 'package:gatello/views/tabbar/pops/secondreport.dart';
 import 'package:gatello/views/tabbar/pops/share.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,6 +20,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 import '../../../Others/Routers.dart';
+import '../../profile/profile_details.dart';
+import '../../profile/user_proflle.dart';
 import '/core/models/My_Feeds.dart' as myFeedsModel;
 
 
@@ -40,18 +43,13 @@ import '/core/models/UserDetail.dart' as userDetailsModel;
 
 class Pops_Page extends StatefulWidget {
   const Pops_Page({Key? key}) : super(key: key);
-
   @override
   State<Pops_Page> createState() => _Pops_PageState();
 }
-
-
 class _Pops_PageState extends State<Pops_Page> {
-
   bool liked=false;
   bool showThumbsUp=false;
   String? uid;
-
   ValueNotifier<Tuple4> postDetailsValueNotifier = ValueNotifier<Tuple4>
     (Tuple4(0, exceptionFromJson(loading), "Loading", null));
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0,
@@ -277,49 +275,64 @@ class _Pops_PageState extends State<Pops_Page> {
                                                       color: Color.fromRGBO(248, 206, 97, 1)),
                                                   child: Row(
                                                     children: [
-                                                      SizedBox(
-                                                        width: 24.9.w,
-                                                      ),
-                                                      CircleAvatar(
-                                                        backgroundImage: NetworkImage(
+                                                      GestureDetector(onTap: (){
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(builder: (context) =>UserProfile(uid: 's8b6XInslPffQEgz8sVTINsPhcx2',
 
-                                                            userDetailsValueNotifier.value.item2.result.profileUrl
-                                                            // 'https://www.whatsappimages.in/wp-content/'
-                                                            //     'uploads/2021/12/Creative-Whatsapp-Dp-Pics-Download.jpg'
+                                                        //  feedsValueNotifier.value.item2.result[index].userId
+                                                          )
+                                                          ),
+                                                        );
 
-                                                        ),
-                                                        radius: 20,
-                                                      ),
-                                                      Padding(
-                                                        padding:  EdgeInsets.only(left: 9.45),
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
+                                                      },
+                                                      child:
+                                                        Row(children: [
+                                                          SizedBox(
+                                                            width: 24.9.w,
+                                                          ),
+                                                          CircleAvatar(
+                                                            backgroundImage: NetworkImage(
 
-                                                              userDetailsValueNotifier.value.item2.result.username,
-                                                              style: GoogleFonts.inter(
-                                                                  textStyle: TextStyle(
-                                                                      color:
-                                                                      Color.fromRGBO(0, 0, 0, 1),
-                                                                      fontSize: 16.sp,
-                                                                      fontWeight: FontWeight.w700)),
+                                                                userDetailsValueNotifier.value.item2.result.profileUrl
+                                                              // 'https://www.whatsappimages.in/wp-content/'
+                                                              //     'uploads/2021/12/Creative-Whatsapp-Dp-Pics-Download.jpg'
+
                                                             ),
-                                                            SizedBox(
-                                                              height: 3.h,
+                                                            radius: 20,
+                                                          ),
+                                                          Padding(
+                                                            padding:  EdgeInsets.only(left: 9.45),
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                Text(
+
+                                                                  userDetailsValueNotifier.value.item2.result.username,
+                                                                  style: GoogleFonts.inter(
+                                                                      textStyle: TextStyle(
+                                                                          color:
+                                                                          Color.fromRGBO(0, 0, 0, 1),
+                                                                          fontSize: 16.sp,
+                                                                          fontWeight: FontWeight.w700)),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 3.h,
+                                                                ),
+                                                                Text(
+                                                                  '23 minutes ago',
+                                                                  style: GoogleFonts.inter(
+                                                                      textStyle: TextStyle(fontWeight: FontWeight.w400,
+                                                                          color: Color.fromRGBO(
+                                                                              78, 78, 78, 1),
+                                                                          fontSize: 10.sp)),
+                                                                )
+                                                              ],
                                                             ),
-                                                            Text(
-                                                              '23 minutes ago',
-                                                              style: GoogleFonts.inter(
-                                                                  textStyle: TextStyle(fontWeight: FontWeight.w400,
-                                                                      color: Color.fromRGBO(
-                                                                          78, 78, 78, 1),
-                                                                      fontSize: 10.sp)),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
+                                                          ),
+                                                        ],),),
+
                                                       Spacer(),
                                                       PopupMenuButton(
                                                         shape: RoundedRectangleBorder(
@@ -644,44 +657,59 @@ class _Pops_PageState extends State<Pops_Page> {
                                                             SizedBox(
                                                               width: 160.w,
                                                             ),
-                                                            SvgPicture.asset(
-                                                                'assets/pops_asset/pops_savebutton.svg')
+                                                            InkWell(
+                                                              onTap: (){
+                                                                print('dhina:${uid}');
+                                                               // print('dhina:${feedsValueNotifier.value.item2.result[index].userId}');
+                                                              },
+                                                              child: SvgPicture.asset(
+                                                                  'assets/pops_asset/pops_savebutton.svg'),
+                                                            )
                                                           ],
                                                         ),
                                                       ),
                                                       Padding(
                                                         padding: const EdgeInsets.only(top: 8),
-                                                        child: Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 28.w,
-                                                            ),
-                                                            Text(
-                                                              'Liked by',
-                                                              style: GoogleFonts.inter(
-                                                                  textStyle: TextStyle(fontWeight: FontWeight.w400,
-                                                                      fontSize: 12.sp,
-                                                                      color: Color.fromRGBO(
-                                                                          0, 0, 0, 1))),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 5.w,
-                                                            ),
-                                                            Container(
-                                                              width: 45.w,
-                                                              child: Stack(
-                                                                children: [
-                                                                  likedmembers(),
-
-                                                                  Positioned(
-                                                                      left: 10,
-                                                                      child: likedmembers()),
-                                                                  Positioned(
-                                                                      left: 20, child: likedmembers())
-                                                                ],
+                                                        child: InkWell(
+                                                          onTap: (){
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(builder: (context) =>pop_Likes(Id:'62f01f551dfcc621553b119f')
                                                               ),
-                                                            )
-                                                          ],
+                                                            );
+                                                          },
+                                                          child: Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 28.w,
+                                                              ),
+                                                              Text(
+                                                                'Liked by',
+                                                                style: GoogleFonts.inter(
+                                                                    textStyle: TextStyle(fontWeight: FontWeight.w400,
+                                                                        fontSize: 12.sp,
+                                                                        color: Color.fromRGBO(
+                                                                            0, 0, 0, 1))),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5.w,
+                                                              ),
+                                                              Container(
+                                                                width: 45.w,
+                                                                child: Stack(
+                                                                  children: [
+                                                                    likedmembers(),
+
+                                                                    Positioned(
+                                                                        left: 10,
+                                                                        child: likedmembers()),
+                                                                    Positioned(
+                                                                        left: 20, child: likedmembers())
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                       Padding(

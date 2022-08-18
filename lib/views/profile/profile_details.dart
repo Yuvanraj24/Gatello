@@ -3,25 +3,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gatello/views/profile/editprofile.dart';
 import 'package:gatello/views/profile/see_more.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tuple/tuple.dart';
-import '../../Authentication/Authentication.dart';
 import '../../Others/Routers.dart';
 import '../../Others/exception_string.dart';
 import '../../core/models/exception/pops_exception.dart';
 import '../../handler/Network.dart';
 import 'bio_dialog.dart';
 import '/core/models/profile_detail.dart'as profileDetailsModel ;
-class Photo_Pop extends StatefulWidget {
+import 'followers.dart';
+class Profile extends StatefulWidget {
   final String? userId;
-  const Photo_Pop({Key? key, this.userId}) : super(key: key);
+  const Profile({Key? key, this.userId}) : super(key: key);
 
   @override
-  State<Photo_Pop> createState() => _Photo_PopState();
+  State<Profile> createState() => _ProfileState();
 }
-class _Photo_PopState extends State<Photo_Pop> {
+class _ProfileState extends State<Profile> {
   String formatDate(DateTime date) => new DateFormat("dd-MM-yyyy").format(date);
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0,
       exceptionFromJson(loading), "Loading", null));
@@ -48,7 +47,6 @@ class _Photo_PopState extends State<Photo_Pop> {
   //   profileDetailsValueNotifier.dispose();
   //   super.dispose();
   // }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -62,15 +60,21 @@ class _Photo_PopState extends State<Photo_Pop> {
                 child: Column(mainAxisAlignment:MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SvgPicture.asset('assets/profile_assets/back_button.svg',
-                        height: 30.h, width:30.w),
+                    InkWell(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: SvgPicture.asset('assets/profile_assets/back_button.svg',
+                          height: 30.h, width:30.w),
+                    ),
                   ],
                 ),
               ),
               title: Row(
                 children: [
                   Text(
-                    'Suresh Offical',
+                    profileDetailsValueNotifier.value.item2.result.profileDetails.username,
+                   // 'Suresh Offical',
 
                     style: GoogleFonts.inter(
                         textStyle: TextStyle(
@@ -197,13 +201,26 @@ class _Photo_PopState extends State<Photo_Pop> {
                           children: [
                             InkWell(
 
-                              child: Text(
-                                '789',
-                                style: GoogleFonts.inter(
-                                    textStyle: TextStyle(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                              child: Column(
+                                children: [
+                                  Text(
+
+                                    profileDetailsValueNotifier.value.item2.result.profileDetails.postsCount.toString(),
+                                    style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color.fromRGBO(0, 0, 0, 1))),
+                                  ),
+                                  Text(
+                                    'Pops',
+                                    style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: Color.fromRGBO(0, 0, 0, 1))),
+                                  ),
+                                ],
                               ),
                               onTap: (){
 
@@ -211,56 +228,66 @@ print('dhina:${profileDetailsValueNotifier.value.item3}');
                               },
                             ),
                             SizedBox(width: 39.w),
-                            Text(
-                              '789',
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color.fromRGBO(0, 0, 0, 1))),
-                            ),
-                            SizedBox(width: 42.w),
-                            Text(
-                              '1,028',
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color.fromRGBO(0, 0, 0, 1))),
-                            )
-                          ],
-                        ),
-                        SizedBox(height:5.h),
-                        Row(
-                          children: [
-                            Text(
-                              'Pops',
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color.fromRGBO(0, 0, 0, 1))),
-                            ),
-                            SizedBox(width: 32.w),
-                            Text(
-                              'Following',
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color.fromRGBO(0, 0, 0, 1))),
+                            InkWell(
+                              onTap:(){
+
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+
+                                    profileDetailsValueNotifier.value.item2.result.profileDetails.followingCount.toString(),
+                                    style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color.fromRGBO(0, 0, 0, 1))),
+                                  ),
+                                  Text(
+                                    'Following',
+                                    style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: Color.fromRGBO(0, 0, 0, 1))),
+                                  ),
+                                ],
+                              ),
                             ),
                             SizedBox(width: 25.w),
-                            Text(
-                              'Followers',
-                              style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color.fromRGBO(0, 0, 0, 1))),
+                            GestureDetector(
+                              onTap:(){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) =>Followers_Page(id: 's8b6XInslPffQEgz8sVTINsPhcx2')),
+                                );
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+
+                                    profileDetailsValueNotifier.value.item2.result.profileDetails.followersCount.toString(),
+                                    style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color.fromRGBO(0, 0, 0, 1))),
+                                  ),
+                                  Text(
+                                    'Followers',
+                                    style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: Color.fromRGBO(0, 0, 0, 1))),
+                                  )
+                                ],
+                              ),
                             )
                           ],
                         ),
+
+
                       ],),),
                     ),
                     ],

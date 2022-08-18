@@ -152,254 +152,266 @@ class _Command_pageState extends State<Command_page> {
                                 return FutureBuilder(
                                   future:listCommentsApiCall() ,
                                   builder: (context,_) {
-                                    return Scaffold(
-                                      appBar: AppBar(
-                                        leading:
-                                        IconButton(
-                                          onPressed: (){
-                                            Navigator.pop(context);
-                                          },
-                                          icon: Icon(
-                                            Icons.arrow_back,
-                                            color: Color.fromRGBO(12, 16, 29, 1),
+                                    return FutureBuilder(
+                                      future: replyCommentApiCall(commentId: listCommentsValueNotifier.
+                                      value.item2.result[commentIndex].
+                                      id.oid),
+                                      builder: (context,_) {
+                                        return Scaffold(
+                                          appBar: AppBar(
+                                            leading:
+                                            IconButton(
+                                              onPressed: (){
+                                                Navigator.pop(context);
+                                              },
+                                              icon: Icon(
+                                                Icons.arrow_back,
+                                                color: Color.fromRGBO(12, 16, 29, 1),
+                                              ),
+                                            ),
+                                            title: InkWell(
+                                              onTap: (){
+                                                print('dhinaa${commentTextEditingController}');
+
+                                              },
+                                              child: Text(
+                                                'Comments',
+                                                style: GoogleFonts.inter(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 18.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Color.fromRGBO(12, 16, 29, 1))),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        title: InkWell(
-                                          onTap: (){
+                                          body:
+
+                                                   Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(top:11,left: 12,right: 12),
+                                                        child: TextField(
 
 
-                                          },
-                                          child: Text(
-                                            'Comments',
-                                            style: GoogleFonts.inter(
-                                                textStyle: TextStyle(
-                                                    fontSize: 18.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(12, 16, 29, 1))),
-                                          ),
-                                        ),
-                                      ),
-                                      body:
-
-                                               Column(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(top:11,left: 12,right: 12),
-                                                    child: TextField(
-
-
-                                                      controller: commentTextEditingController,
-                                                      // onChanged: (value){
-                                                      //
-                                                      //   commentTextEditingController=  _controller;
-                                                      // },
-                                                      decoration: InputDecoration(
-                                                        prefix: Container(
-                                                          height: 54.h,
-                                                          width: 57.w,
-                                                          decoration: BoxDecoration(
-                                                              color: Colors.black,
-                                                              borderRadius: BorderRadius.circular(5),
-                                                              image: DecorationImage(
-                                                                  image: NetworkImage(
-                                                                      'https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80'),
-                                                                  fit: BoxFit.fill)),
-                                                        ),
-
-                                                        suffix:         ElevatedButton(
-                                                            style: ElevatedButton.styleFrom(
-                                                              elevation: 0,
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius: BorderRadius.circular(5)),
-                                                              primary: Color.fromRGBO(248, 206, 97, 1),
-                                                              fixedSize: Size(80.w,20),
+                                                          controller: commentTextEditingController,
+                                                          // onChanged: (value){
+                                                          //
+                                                          //   commentTextEditingController=  _controller;
+                                                          // },
+                                                          decoration: InputDecoration(
+                                                            prefix: Container(
+                                                              height: 54.h,
+                                                              width: 57.w,
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors.black,
+                                                                  borderRadius: BorderRadius.circular(5),
+                                                                  image: DecorationImage(
+                                                                      image: NetworkImage(
+                                                                          'https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80'),
+                                                                      fit: BoxFit.fill)),
                                                             ),
-                                                            onPressed: (){
-                                                              setState(() {
-                                                                commentText=commentTextEditingController.text.toString();
-                                                              });
-                                                            },
-                                                            // onPressed: (
-                                                            //
-                                                            //     postEnable == false ||
-                                                            //     createCommentValueNotifier.value.item1 == 0 ||
-                                                            //     replyCommentValueNotifier.value.item1 == 0)
-                                                            //     ? null
-                                                            //     : (isReply)
-                                                            //     ? () async {
-                                                            //
-                                                            //   return await replyCommentApiCall(
-                                                            //       commentId: listCommentsValueNotifier.
-                                                            //       value.item2.result[commentIndex].
-                                                            //       id.oid)
-                                                            //       .whenComplete(() async {
-                                                            //     if (replyCommentValueNotifier.value.item1 == 1) {
-                                                            //       FocusManager.instance.primaryFocus?.unfocus();
-                                                            //       if (!mounted) return;
-                                                            //       setState(() {
-                                                            //         isReply = false;
-                                                            //         commentTextEditingController.clear();
-                                                            //         valueResetter(replyCommentValueNotifier);
-                                                            //       });
-                                                            //       return await listCommentsApiCall();
-                                                            //     } else if (replyCommentValueNotifier.value.item1 == 2 || replyCommentValueNotifier.value.item1 == 3) {
-                                                            //       final snackBar = snackbar(content: replyCommentValueNotifier.value.item3);
-                                                            //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                            //     }
-                                                            //   });
-                                                            // }
-                                                            //     : () async {
-                                                            //   return await createCommentApiCall().whenComplete(() async {
-                                                            //     isReply = false;
-                                                            //     if (createCommentValueNotifier.value.item1 == 1) {
-                                                            //       FocusManager.instance.primaryFocus?.unfocus();
-                                                            //       if (!mounted) return;
-                                                            //       setState(() {
-                                                            //         commentTextEditingController.clear();
-                                                            //         valueResetter(createCommentValueNotifier);
-                                                            //       });
-                                                            //       return await listCommentsApiCall();
-                                                            //     } else if (createCommentValueNotifier.
-                                                            //     value.item1 == 2 || createCommentValueNotifier.value.item1 == 3) {
-                                                            //       final snackBar = snackbar(content: createCommentValueNotifier.value.item3);
-                                                            //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                            //     }
-                                                            //   });
-                                                            // },
-                                                            child: Center(
-                                                              child: Text(
-                                                                'Post',
-                                                                style: GoogleFonts.inter(
-                                                                    textStyle: TextStyle(
-                                                                        color: Color.fromRGBO(0, 0, 0, 1),
-                                                                        fontSize: 18.sp,
-                                                                        fontWeight: FontWeight.w700)),
-                                                              ),
-                                                            )
-                                                        ),
 
-                                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
-                                                            borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
-                                                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
-                                                            borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
-                                                        contentPadding: EdgeInsets.all(17),
-                                                        hintText: '@ thewebions',
-                                                        hintStyle: GoogleFonts.inter(
-                                                            textStyle: TextStyle(
-                                                                color: Color.fromRGBO(0, 0, 0, 1),
-                                                                fontWeight: FontWeight.w400)),
+                                                            suffix:         ElevatedButton(
+                                                                style: ElevatedButton.styleFrom(
+                                                                  elevation: 0,
+                                                                  shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(5)),
+                                                                  primary: Color.fromRGBO(248, 206, 97, 1),
+                                                                  fixedSize: Size(80.w,20),
+                                                                ),
+
+                                                                // onPressed: (){
+                                                                //
+                                                                //   setState(() {
+                                                                //     commentText=commentTextEditingController.text.toString();
+                                                                //   });
+                                                                // },
+                                                                onPressed: (
+                                                                    postEnable == false ||
+                                                                    createCommentValueNotifier.value.item1 == 0 ||
+                                                                    replyCommentValueNotifier.value.item1 == 0)
+                                                                    ? null
+                                                                    : (isReply)
+                                                                    ? () async {
+
+                                                                  return await replyCommentApiCall(
+                                                                      commentId: listCommentsValueNotifier.
+                                                                      value.item2.result[commentIndex].
+                                                                      id.oid)
+                                                                      .whenComplete(() async {
+                                                                        print('1111');
+                                                                    if (replyCommentValueNotifier.value.item1 == 1) {
+                                                                      FocusManager.instance.primaryFocus?.unfocus();
+                                                                      if (!mounted) return;
+                                                                      setState(() {
+                                                                        isReply = false;
+                                                                        commentTextEditingController.clear();
+                                                                        valueResetter(replyCommentValueNotifier);
+                                                                      });
+                                                                      return await listCommentsApiCall();
+                                                                    } else if (replyCommentValueNotifier.value.item1 == 2 ||
+                                                                        replyCommentValueNotifier.value.item1 == 3) {
+                                                                      final snackBar = snackbar(content: replyCommentValueNotifier.value.item3);
+                                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                    }
+                                                                  });
+                                                                }
+                                                                    : () async {
+                                                                  print('2222');
+                                                                  return await createCommentApiCall().whenComplete(() async {
+                                                                    isReply = false;
+                                                                    if (createCommentValueNotifier.value.item1 == 1) {
+                                                                      FocusManager.instance.primaryFocus?.unfocus();
+                                                                      if (!mounted) return;
+                                                                      setState(() {
+                                                                        commentTextEditingController.clear();
+                                                                        valueResetter(createCommentValueNotifier);
+                                                                      });
+                                                                      return await listCommentsApiCall();
+                                                                    } else if (createCommentValueNotifier.
+                                                                    value.item1 == 2 || createCommentValueNotifier.value.item1 == 3) {
+                                                                      final snackBar = snackbar(content: createCommentValueNotifier.value.item3);
+                                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                    }
+                                                                  });
+                                                                },
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    'Post',
+                                                                    style: GoogleFonts.inter(
+                                                                        textStyle: TextStyle(
+                                                                            color: Color.fromRGBO(0, 0, 0, 1),
+                                                                            fontSize: 18.sp,
+                                                                            fontWeight: FontWeight.w700)),
+                                                                  ),
+                                                                )
+                                                            ),
+
+                                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
+                                                                borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
+                                                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
+                                                                borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
+                                                            contentPadding: EdgeInsets.all(17),
+                                                            hintText: '@ thewebions',
+                                                            hintStyle: GoogleFonts.inter(
+                                                                textStyle: TextStyle(
+                                                                    color: Color.fromRGBO(0, 0, 0, 1),
+                                                                    fontWeight: FontWeight.w400)),
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: ListView.builder(
-                                                       itemCount: listCommentsValueNotifier.value.item2.result.length,
-                                                      //  itemCount: 5,
-                                                        itemBuilder: (context, commentIndex) {
-                                                          return Padding(
-                                                            padding: const EdgeInsets.only(top: 16, left: 2),
-                                                            child: Row(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                SizedBox(
-                                                                  width: 22.w,
-                                                                ),
-                                                                Container(
-                                                                  height: 32.h,
-                                                                  width: 32.w,
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors.yellow,
-                                                                      shape: BoxShape.circle,
-                                                                      image: DecorationImage(
-                                                                          image: NetworkImage(
-                                                                              // 'http://www.goodmorningimagesdownload.com/wp-content/u'
-                                                                              //     'ploads/2021/07/1080p-New-Cool-Whatsapp-Dp-Profile-Ima'
-                                                                              //     'ges-pictures-hd-1-300x300.jpg'
-                                                                              listCommentsValueNotifier.value.item2.result[commentIndex].postedBy.profilePic
-                                                                          ))),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 10.w,
-                                                                ),
-                                                                Column(
+                                                      Expanded(
+                                                        child: ListView.builder(
+                                                           itemCount: listCommentsValueNotifier.value.item2.result.length,
+                                                          //  itemCount: 5,
+                                                            itemBuilder: (context, commentIndex) {
+                                                              return Padding(
+                                                                padding: const EdgeInsets.only(top: 16, left: 2),
+                                                                child: Row(
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.only(left: 3),
-                                                                      child: Text(
-
-                                                                         listCommentsValueNotifier.value.item2.result[commentIndex].postedBy.username,
-
-
-                                                                        style: GoogleFonts.inter(
-                                                                            textStyle: TextStyle(
-                                                                                fontWeight: FontWeight.w700,
-                                                                                fontSize: 14.sp,
-                                                                                color: Color.fromRGBO(0, 0, 0, 1))),
-                                                                      ),
+                                                                    SizedBox(
+                                                                      width: 22.w,
                                                                     ),
-                                                                    SizedBox(height: 10.h),
+                                                                    Container(
+                                                                      height: 32.h,
+                                                                      width: 32.w,
+                                                                      decoration: BoxDecoration(
+                                                                          color: Colors.yellow,
+                                                                          shape: BoxShape.circle,
+                                                                          image: DecorationImage(
+                                                                              image: NetworkImage(
+                                                                                  // 'http://www.goodmorningimagesdownload.com/wp-content/u'
+                                                                                  //     'ploads/2021/07/1080p-New-Cool-Whatsapp-Dp-Profile-Ima'
+                                                                                  //     'ges-pictures-hd-1-300x300.jpg'
+                                                                                  listCommentsValueNotifier.value.item2.result[commentIndex].postedBy.profilePic
+                                                                              ))),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 10.w,
+                                                                    ),
+                                                                    Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets.only(left: 3),
+                                                                          child: Text(
+
+                                                                             listCommentsValueNotifier.value.item2.result[commentIndex].postedBy.username,
+
+
+                                                                            style: GoogleFonts.inter(
+                                                                                textStyle: TextStyle(
+                                                                                    fontWeight: FontWeight.w700,
+                                                                                    fontSize: 14.sp,
+                                                                                    color: Color.fromRGBO(0, 0, 0, 1))),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(height: 10.h),
+                                                                        Text(
+                                                              commentTextEditingController.text.toString(),
+                                                            //  commentText,
+                                                                             // commentTextEditingController.text.toString(),
+                                                          //    listCommentsValueNotifier.value.item2.result.content,
+                                                                          style: GoogleFonts.inter(
+                                                                              textStyle: TextStyle(
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                  fontSize: 14.sp,
+                                                                                  color: Color.fromRGBO(45, 45, 45, 1))),
+                                                                        ),
+                                                                        SizedBox(height: 10.h),
+                                                                        Padding(
+                                                                          padding: const EdgeInsets.only(left: 4),
+                                                                          child: Row(
+                                                                            children: [
+                                                                              SvgPicture.asset(
+                                                                                'assets/pops_asset/pops_likebutton.svg',
+                                                                                color: Color.fromRGBO(112, 112, 112, 1),
+                                                                              ),
+                                                                              SizedBox(width: 41.w),
+                                                                              InkWell(
+                                                                                onTap: (){
+                                                                                  setState(() {
+                                                                                    replyText=commentTextEditingController.text.toString();
+                                                                                  });
+                                                                                },
+                                                                                child: Text(
+                                                              replyText,
+                                                                                  style: GoogleFonts.inter(
+                                                                                      textStyle: TextStyle(
+                                                                                          color: Color.fromRGBO(108, 108, 108, 1),
+                                                                                          fontWeight: FontWeight.w700,
+                                                                                          fontSize: 16)),
+                                                                                ),
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 120.w,
+                                                                    ),
                                                                     Text(
-                                                          commentText,
-                                                                         // commentTextEditingController.text.toString(),
-                                                      //    listCommentsValueNotifier.value.item2.result.content,
+                                                                      getDateTime(datetime: listCommentsValueNotifier.value.item2.result[commentIndex].timeStamp),
+                                                                    //  'Just now',
                                                                       style: GoogleFonts.inter(
                                                                           textStyle: TextStyle(
                                                                               fontWeight: FontWeight.w400,
-                                                                              fontSize: 14.sp,
-                                                                              color: Color.fromRGBO(45, 45, 45, 1))),
-                                                                    ),
-                                                                    SizedBox(height: 10.h),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.only(left: 4),
-                                                                      child: Row(
-                                                                        children: [
-                                                                          SvgPicture.asset(
-                                                                            'assets/pops_asset/pops_likebutton.svg',
-                                                                            color: Color.fromRGBO(112, 112, 112, 1),
-                                                                          ),
-                                                                          SizedBox(width: 41.w),
-                                                                          InkWell(
-                                                                            onTap: (){
-                                                                              setState(() {
-                                                                                replyText=commentTextEditingController.text.toString();
-                                                                              });
-                                                                            },
-                                                                            child: Text(
-                                                          replyText,
-                                                                              style: GoogleFonts.inter(
-                                                                                  textStyle: TextStyle(
-                                                                                      color: Color.fromRGBO(108, 108, 108, 1),
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 16)),
-                                                                            ),
-                                                                          )
-                                                                        ],
-                                                                      ),
-                                                                    ),
+                                                                              fontSize: 15.sp,
+                                                                              color: Color.fromRGBO(161, 161, 161, 1))),
+                                                                    )
                                                                   ],
                                                                 ),
-                                                                SizedBox(
-                                                                  width: 120.w,
-                                                                ),
-                                                                Text(
-                                                                  getDateTime(datetime: listCommentsValueNotifier.value.item2.result[commentIndex].timeStamp),
-                                                                //  'Just now',
-                                                                  style: GoogleFonts.inter(
-                                                                      textStyle: TextStyle(
-                                                                          fontWeight: FontWeight.w400,
-                                                                          fontSize: 15.sp,
-                                                                          color: Color.fromRGBO(161, 161, 161, 1))),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          );;
-                                                        }),
+                                                              );;
+                                                            }),
+                                                      )
+
+                                                    ],
                                                   )
 
-                                                ],
-                                              )
-
+                                        );
+                                      }
                                     );
                                   }
                                 );

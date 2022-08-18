@@ -2,7 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gatello/views/profile/photo_pop.dart';
+import 'package:gatello/views/profile/profile_details.dart';
 import 'package:gatello/views/profile/workdetails.dart';
 import 'package:google_fonts/google_fonts.dart';
 

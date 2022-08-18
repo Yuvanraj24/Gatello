@@ -2,18 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-
+import 'package:tuple/tuple.dart';
+import '/core/models/Follow_List.dart' as followListModel;
+import '../../Others/Routers.dart';
+import '../../Others/exception_string.dart';
+import '../../core/models/exception/pops_exception.dart';
+import '../../handler/Network.dart';
 class Followers_Page extends StatefulWidget {
-  const Followers_Page({Key? key}) : super(key: key);
-  
+  final String id;
+  const Followers_Page({Key? key,required this.id}) : super(key: key);
+
   @override
   State<Followers_Page> createState() => _Followers_PageState();
 }
-
 class _Followers_PageState extends State<Followers_Page> {
+  ValueNotifier<Tuple4> followListValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
+  Future followerListApiCall() async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: followListValueNotifier,
+      jsonModel: followListModel.followListFromJson,
+      url: followerListUrl,
+      requestMethod: 1,
+      body: {"user_id": widget.id},
+    );
+  }
+
   bool follow=false;
-  ScrollController _Scrolling=ScrollController();
+
   TextEditingController _followercontroller=TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -167,9 +182,9 @@ class _Followers_PageState extends State<Followers_Page> {
                            ),
                          ),
                          ListView.builder(
-                             controller: _Scrolling,
+
                              shrinkWrap: true,
-                             itemCount:10,
+                             itemCount: followListValueNotifier.value.item2.result.length,
                              itemBuilder: (context, index) {
                                return Padding(
                                  padding: const EdgeInsets.only(top:22),
@@ -183,7 +198,7 @@ class _Followers_PageState extends State<Followers_Page> {
                                          height: 57.h,width: 57.w,
                                          decoration: BoxDecoration(
                                              borderRadius: BorderRadius.circular(7),
-                                             image: DecorationImage(image: NetworkImage('https://loveshayariimages.in/wp-content/uploads/2021/10/DP-for-Whatsapp-Profile-Pics-HD.jpg'),
+                                             image: DecorationImage(image: NetworkImage(''),
                                                  fit: BoxFit.fill)
                                          ),
                                        ),
@@ -276,7 +291,7 @@ class _Followers_PageState extends State<Followers_Page> {
                            ),
                          ),
                          ListView.builder(
-                             controller: _Scrolling,
+
                              shrinkWrap: true,
                              itemCount:10,
                              itemBuilder: (context, index) {

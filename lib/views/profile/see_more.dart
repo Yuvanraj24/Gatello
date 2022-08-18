@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gatello/views/profile/info.dart';
 import 'package:gatello/views/profile/link.dart';
-import 'package:gatello/views/profile/photo_pop.dart';
+import 'package:gatello/views/profile/profile_details.dart';
 import 'package:gatello/views/profile/skill.dart';
 import 'package:gatello/views/profile/workexperience.dart';
 import 'package:google_fonts/google_fonts.dart';
