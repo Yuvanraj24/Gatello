@@ -99,6 +99,8 @@ dependencies:
   giphy_picker: ^2.0.0
   location: ^4.3.0
   adaptive_theme: ^3.1.1
+  firebase_dynamic_links: ^4.0.3
+  share_plus: ^4.0.10+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -134,7 +136,6 @@ flutter:
     - assets/splash3_image/splash3_image.png
     - assets/icons_assets/add_friends_button.png
     - assets/Gatello_logo/Gatello_temp_logo.png
-   # - assets/tabbar_icons/chats_image/chats_empty.png
     - assets/icons_assets/chat_icon_floating.svg
     - assets/icons_assets/new_group.png
     - assets/splash2_image/right_arrow.png
@@ -170,7 +171,6 @@ flutter:
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/document_icon_container.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/gallery_icon_container.png
-    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_icon_container.svg
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_icon_container.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_icon_container.png
     - assets/icons_assets/green_tick.svg
@@ -234,10 +234,6 @@ flutter:
     - assets/profile_assets/searchicon.svg
     - assets/profile_assets/profilelanguage.svg
     - assets/tabbar_icons/pops_getit.svg
-    - assets/tabbar_icons/pings_icon.svg
-    - assets/tabbar_icons/status_icon.svg
-    - assets/tabbar_icons/pops_call.svg
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

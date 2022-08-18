@@ -10,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
@@ -33,6 +34,7 @@ import '../../../../Assets/GatelloIcon.dart';
 import '../../../../Database/StorageManager.dart';
 import '../../../../Firebase.dart';
 import '../../../../Firebase/FirebaseNotifications.dart';
+import '../../../../Firebase/Writes.dart';
 import '../../../../Helpers/DateTimeHelper.dart';
 import '../../../../Others/Structure.dart';
 import '../../../../Others/components/ExceptionScaffold.dart';
@@ -60,6 +62,7 @@ import '../../../../handler/LifeCycle.dart';
 import '../../../../handler/Location.dart';
 import '../../../../main.dart';
 
+import '../../../../utils/DynamicLinkParser.dart';
 import '../../../ContactList.dart';
 import 'ChatDetails.dart';
 
@@ -837,6 +840,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                               // }
                               return Scaffold(
 
+
                                 // this appbar is for personal
 
                                 appBar: AppBar(
@@ -1344,7 +1348,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              new Text((widget.state == 0) ? emptyChatRoomDetails.data!.data()!["name"] : emptyChatRoomDetails.data!.data()!["title"],
+                                              Text((widget.state == 0) ? emptyChatRoomDetails.data!.data()!["name"] : emptyChatRoomDetails.data!.data()!["title"],
                                                   style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16,color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.w500))),
                                               StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                                                   stream: instance.collection("user-detail").doc(widget.puid).snapshots(),
@@ -1354,20 +1358,17 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                       builder: (context, userSnapshot) {
                                                         if (userSnapshot.connectionState == ConnectionState.active &&
                                                             peerSnapshot.connectionState == ConnectionState.active) {
-                                                          return MarqueeWidget(
-                                                            direction: Axis.horizontal,
-                                                            child: Text(
-                                                              (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
-                                                                  ? (peerSnapshot.data!.data()!["status"] == "online")
-                                                                  ? "Online"
-                                                                  : (userSnapshot.data!.data()!["lastseenStatus"] == true &&
-                                                                  peerSnapshot.data!.data()!["lastseenStatus"] == true)
-                                                                  ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
-                                                                  : "Tap here for user info"
-                                                                  : "Tap here for user info",
-                                                              style: GoogleFonts.inter(
-                                                                  textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color.fromRGBO(0, 0, 0, 1))),
-                                                            ),
+                                                          return Text(
+                                                            (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
+                                                                ? (peerSnapshot.data!.data()!["status"] == "online")
+                                                                ? "Online"
+                                                                : (userSnapshot.data!.data()!["lastseenStatus"] == true &&
+                                                                peerSnapshot.data!.data()!["lastseenStatus"] == true)
+                                                                ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
+                                                                : "Tap here for user info"
+                                                                : "Tap here for user info",
+                                                            style: GoogleFonts.inter(
+                                                                textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color.fromRGBO(0, 0, 0, 1))),
                                                           );
                                                         } else {
                                                           return Container();
@@ -2293,8 +2294,8 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                             ? GestureDetector(
                                                           // elevation: 0,
                                                             child: Container(
-                                                              height: 65,
-                                                              width: 65,
+                                                              height: 45,
+                                                              width: 45,
                                                               clipBehavior: Clip.hardEdge,
                                                               decoration: BoxDecoration(
                                                                 shape: BoxShape.circle,
@@ -3489,7 +3490,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                       // if (sizingInformation.screenSize == DeviceScreenType.desktop) {
                       //   Navigator.maybePop(context);
                       // }
-                      return Scaffold(
+                      return Scaffold (
                         appBar: AppBar(
                           centerTitle: false,
                           automaticallyImplyLeading: false,
@@ -4022,7 +4023,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 //!! should replace it with read..(also bad which reads the array again if someone changes thier profile) or something effiecient
     // DocumentSnapshot<Map<String, dynamic>>? replyDocumentSnapshot;
     // DocumentSnapshot<Map<String, dynamic>>? DocumentSnapshot;
-    String userName = "";
+    //String userName = "";
     String replyUserName = "";
     bool isRead = false;
     if (widget.state == 1) {
@@ -4031,9 +4032,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       }
       chatRoomSnapshot.data()!["members"].forEach((k, v) {
         if (k == document.data()!["from"]) {
-          userName = v["name"];
+          //userName = v["name"];
         } else if (document.data()!["reply"] != null && (k == document.data()!["reply"]["from"])) {
-          replyUserName = v["name"];
+          //replyUserName = v["name"];
         }
       });
     }
@@ -4065,6 +4066,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                         );
                       },
                       child: ChatBubble(
+
                         alignment: Alignment.centerRight,
                         clipper: ChatBubbleClipper5(type: BubbleType.sendBubble),
                         backGroundColor: Color(accent),
@@ -4178,15 +4180,15 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                         0)
                                         ? Icon(
                                       Icons.done_all,
-                                      color: Color(accent),
+                                      color: Color.fromRGBO(0, 0, 0, 1),
                                     )
                                         : Icon(
                                       Icons.done_all,
-                                      color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
+                                      color: (themedata.value.index == 0) ? Colors.white : Colors.red,
                                     )
                                         : Icon(
                                       Icons.done_all,
-                                      color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
+                                      color: (themedata.value.index == 0) ? Colors.brown : Colors.pink,
                                     )
                                         : (isRead)
                                         ? Icon(
@@ -4275,13 +4277,16 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                   children: [
                     Listener(
                       onPointerDown: (event) async {
-                        return await onPointerDown(event: event, replyIndex: replyIndex, document: document, chatRoomSnapshot: chatRoomSnapshot);
+                        return await onPointerDown(event: event,
+                            replyIndex: replyIndex,
+                            document: document,
+                            chatRoomSnapshot: chatRoomSnapshot);
                       },
                       child: ChatBubble(
                         alignment: Alignment.centerLeft,
                         elevation: 0,
                         clipper: ChatBubbleClipper5(type: BubbleType.receiverBubble),
-                        backGroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(lightBlack),
+                        backGroundColor: (themedata.value.index == 0) ? Color.fromRGBO(252, 252, 252, 1) : Colors.green,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -4311,13 +4316,13 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  (widget.state == 0) ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"]) : userName,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, color: Color(accent))),
-                                ),
+                                // Text(
+                                //   (widget.state == 0) ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"]) : userName,
+                                //   overflow: TextOverflow.ellipsis,
+                                //   maxLines: 1,
+                                //   softWrap: true,
+                                //   style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, color: Color(accent))),
+                                // ),
                                 Container(
                                   padding: EdgeInsets.all(8),
                                   decoration: BoxDecoration(
@@ -4369,22 +4374,25 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                     ),
                                   ),
                                 ),
-                                Padding(padding: const EdgeInsets.only(top: 8), child: messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot))
+                                Padding(padding: const EdgeInsets.only(top: 8),
+                                    child: messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot))
                               ],
                             )
                                 : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  (widget.state == 0) ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"]) : userName,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, color: Color(accent))),
-                                ),
-                                Padding(padding: const EdgeInsets.only(top: 8), child: messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot)),
+                                // Text(
+                                //   (widget.state == 0) ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"]) : userName,
+                                //   overflow: TextOverflow.ellipsis,
+                                //   maxLines: 1,
+                                //   softWrap: true,
+                                //   style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, color: Color(accent))),
+                                // ),
+                                Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot)),
                                 Align(
-                                  alignment: Alignment.centerLeft,
+                                  alignment: Alignment.centerRight,
                                   child: Text(
                                     formatTime(getDateTimeSinceEpoch(datetime: document["timestamp"])),
                                     style: GoogleFonts.inter(
@@ -4413,7 +4421,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         ));
   }
 
-  Widget messageBuilder({required DocumentSnapshot<Map<String, dynamic>> document, required DocumentSnapshot<Map<String, dynamic>> chatRoomSnapshot}) {
+  Widget  messageBuilder({required DocumentSnapshot<Map<String, dynamic>> document, required DocumentSnapshot<Map<String, dynamic>> chatRoomSnapshot}) {
     switch (inverseDataType[document.data()!["type"]]) {
       case 0:
         return (document.data()!["delete"]["everyone"] == true)
@@ -4516,7 +4524,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       case 4:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
-            : DocumentDownloader(url: document.data()!["data"]["document"]);
+            : DocumentDownloader(url: document.data()!["data"]["document"],);
       case 5:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
@@ -4570,38 +4578,39 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                       )),
                 ),
               )
-                  : Container(),
-              // GestureDetector(
-              //   onTap: () async {
-              //     DocumentSnapshot<Map<String, dynamic>> userDoc = await instance.collection("user-detail").doc(document.data()!["from"]).get();
-              //     await DynamicLinkHandler().shareLink(
-              //         userDoc.data()!["name"],
-              //         document.data()!["data"]["text"],
-              //         Uri.decodeFull(document.data()!["data"]["story"]).toString().split("&link=").last,
-              //         (document.data()!["data"]["image"] != null)
-              //             ? document.data()!["data"]["image"]
-              //             : ((document.data()!["data"]["video"] != null))
-              //                 ? document.data()!["data"]["video"]
-              //                 : "");
-              //   },
-              //   onLongPress: () {
-              //     Clipboard.setData(ClipboardData(text: Uri.decodeFull(document.data()!["data"]["story"]).toString()));
-              //     final snackBar = snackbar(content: "Copied to clipboard");
-              //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              //   },
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(8.0),
-              //     child: Text(
-              //       Uri.decodeFull(document.data()!["data"]["story"]).toString(),
-              //       softWrap: true,
-              //       style: GoogleFonts.inter(
-              //           fontSize: 14,
-              //           textStyle: textStyle(
-              //             color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white),
-              //           )),
-              //     ),
-              //   ),
-              // ),
+                  :
+              //Container(),
+              GestureDetector(
+                onTap: () async {
+                  DocumentSnapshot<Map<String, dynamic>> userDoc = await instance.collection("user-detail").doc(document.data()!["from"]).get();
+                  await DynamicLinkHandler().shareLink(
+                      userDoc.data()!["name"],
+                      document.data()!["data"]["text"],
+                      Uri.decodeFull(document.data()!["data"]["story"]).toString().split("&link=").last,
+                      (document.data()!["data"]["image"] != null)
+                          ? document.data()!["data"]["image"]
+                          : ((document.data()!["data"]["video"] != null))
+                              ? document.data()!["data"]["video"]
+                              : "");
+                },
+                onLongPress: () {
+                  Clipboard.setData(ClipboardData(text: Uri.decodeFull(document.data()!["data"]["story"]).toString()));
+                  final snackBar = snackbar(content: "Copied to clipboard");
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    Uri.decodeFull(document.data()!["data"]["story"]).toString(),
+                    softWrap: true,
+                    style: GoogleFonts.inter(
+                        fontSize: 14,
+                        textStyle: textStyle(
+                          color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white),
+                        )),
+                  ),
+                ),
+              ),
             ],
           ),
         );
@@ -4708,13 +4717,17 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       child: Material(
         child: DefaultTabController(
           length: emojiArray.length + 1,
+
           child: Column(
             children: [
               TabBar(
+                indicatorColor: Color.fromRGBO(248, 206, 97, 1),
                 // isScrollable: true,
                   tabs: List.generate(
+
                     emojiArray.length + 1,
                         (tabindex) => Tab(text: (tabindex == 0 ? "🕐" : emojiArray[tabindex - 1][0])),
+
                   )),
               Flexible(
                 child: TabBarView(
