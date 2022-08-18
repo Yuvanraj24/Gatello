@@ -3,8 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-
 import 'package:gatello/views/profile/allpops.dart';
 import 'package:gatello/views/profile/editprofile.dart';
 import 'package:gatello/views/profile/followers.dart';
@@ -13,7 +11,6 @@ import 'package:gatello/views/profile/otherview.dart';
 import 'package:gatello/views/profile/photo_pop.dart';
 import 'package:gatello/views/profile/privateaccount.dart';
 import 'package:gatello/views/profile/tabbarprofile.dart';
-
 import 'package:gatello/views/tabbar/calls/call.dart';
 import 'package:gatello/views/tabbar/calls/incomingcall.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/contact_card.dart';
@@ -55,10 +52,7 @@ import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:overlay_support/overlay_support.dart';
-
-
 import 'package:gatello/views/tabbar/test_code/home.dart';
 import 'package:gatello/views/tabbar/test_code/sing_in_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -159,7 +153,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar() :LoginScreen();
+                              return (snapshot.data == true) ? Tabbar() :Tabbar();
                             } else {
                               return lottieAnimation(loadingLottie);
                             }

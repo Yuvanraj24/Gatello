@@ -59,7 +59,8 @@ class _Pops_PageState extends State<Pops_Page> {
   ValueNotifier<Tuple4> feedsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
   ValueNotifier<Tuple4> userDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
   ValueNotifier<Tuple4> likeValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
-
+  ValueNotifier<Tuple4> listCommentsValueNotifier = ValueNotifier<Tuple4>
+    (Tuple4(0, exceptionFromJson(loading), "Loading", null));
   Future feedsApiCall({required String uid}) async {
 
     print("Getting posts for ${uid} from ${feedsUrl} ");
@@ -292,7 +293,8 @@ class _Pops_PageState extends State<Pops_Page> {
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Text(
-                                                              userDetailsValueNotifier.value.item2.result.username,
+                                                              'fgg',
+                                                           //   userDetailsValueNotifier.value.item2.result.username,
                                                               style: GoogleFonts.inter(
                                                                   textStyle: TextStyle(
                                                                       color:
@@ -568,8 +570,8 @@ class _Pops_PageState extends State<Pops_Page> {
                                                                 Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(builder: (context) =>Command_page(
-
-                                                                // postDetailsValueNotifier.value.item2.result.id
+                                                                      postId:feedsValueNotifier.value.item2.result[index].id.oid
+                                                          //    postId: postDetailsValueNotifier.value.item2.result.id,
                                                                   )
                                                                   ),
                                                                 );
@@ -585,8 +587,8 @@ class _Pops_PageState extends State<Pops_Page> {
                                                               padding: const EdgeInsets.only(top: 7),
                                                               child:InkWell (
                                                                 onTap: (){
+print('dhina:${feedsValueNotifier.value.item2.result[index].id.oid}');
 
-                                                                  print('hhhh:${profileDetailsValueNotifier.value.item2}');
                                                                 },
                                                                 child: Text(
                                                                   '3.6k',

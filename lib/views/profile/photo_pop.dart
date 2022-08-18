@@ -5,6 +5,7 @@ import 'package:gatello/views/profile/editprofile.dart';
 import 'package:gatello/views/profile/see_more.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:tuple/tuple.dart';
 import '../../Authentication/Authentication.dart';
 import '../../Others/Routers.dart';
@@ -21,6 +22,7 @@ class Photo_Pop extends StatefulWidget {
   State<Photo_Pop> createState() => _Photo_PopState();
 }
 class _Photo_PopState extends State<Photo_Pop> {
+  String formatDate(DateTime date) => new DateFormat("dd-MM-yyyy").format(date);
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0,
       exceptionFromJson(loading), "Loading", null));
   int i=0;
@@ -33,7 +35,6 @@ class _Photo_PopState extends State<Photo_Pop> {
       requestMethod: 1,
       body: {"user_id": (widget.userId != null) ? widget.userId : 's8b6XInslPffQEgz8sVTINsPhcx2', "followee_id": ""},
     );
-
   }
   // @override
   // void initState() {
@@ -206,9 +207,7 @@ class _Photo_PopState extends State<Photo_Pop> {
                               ),
                               onTap: (){
 
-print('dhina:${profileDetailsValueNotifier.value.item2.result.profileDetails.name}');
-
-
+print('dhina:${profileDetailsValueNotifier.value.item3}');
                               },
                             ),
                             SizedBox(width: 39.w),

@@ -1,6 +1,5 @@
 name: gatello
 description: A new Flutter project.
-
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -99,8 +98,7 @@ dependencies:
   giphy_picker: ^2.0.0
   location: ^4.3.0
   adaptive_theme: ^3.1.1
-  firebase_dynamic_links: ^4.0.3
-  share_plus: ^4.0.10+1
+  firebase_dynamic_links: ^4.3.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -136,6 +134,7 @@ flutter:
     - assets/splash3_image/splash3_image.png
     - assets/icons_assets/add_friends_button.png
     - assets/Gatello_logo/Gatello_temp_logo.png
+    # - assets/tabbar_icons/chats_image/chats_empty.png
     - assets/icons_assets/chat_icon_floating.svg
     - assets/icons_assets/new_group.png
     - assets/splash2_image/right_arrow.png
@@ -234,6 +233,10 @@ flutter:
     - assets/profile_assets/searchicon.svg
     - assets/profile_assets/profilelanguage.svg
     - assets/tabbar_icons/pops_getit.svg
+    - assets/tabbar_icons/pings_icon.svg
+    - assets/tabbar_icons/status_icon.svg
+    - assets/tabbar_icons/pops_call.svg
+    - assets/pops_asset/gatello_loading.gif
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

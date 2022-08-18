@@ -259,9 +259,10 @@ class _TabState extends State<Tabbar> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Image(
-                                            image: AssetImage(
-                                                "assets/tabbar_icons/getit_icon.png")),
+                                        SvgPicture.asset(
+                                          "assets/tabbar_icons/pops_getit.svg",
+
+                                        ),
                                         Text(
                                           "Get it",
                                           style: GoogleFonts.fredoka(
@@ -278,9 +279,10 @@ class _TabState extends State<Tabbar> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Image(
-                                            image: AssetImage(
-                                                "assets/tabbar_icons/pings_icon.png")),
+                                        SvgPicture.asset(
+                                          "assets/tabbar_icons/pings_icon.svg",
+
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -322,9 +324,10 @@ class _TabState extends State<Tabbar> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Image(
-                                            image: AssetImage(
-                                                "assets/tabbar_icons/pings_icon.png")),
+                                        SvgPicture.asset(
+                                          "assets/tabbar_icons/pops_getit.svg",
+
+                                        ),
                                         Text(
                                           "Pops",
                                           style: GoogleFonts.fredoka(
@@ -341,9 +344,10 @@ class _TabState extends State<Tabbar> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Image(
-                                            image: AssetImage(
-                                                "assets/tabbar_icons/status_icon.png")),
+                                        SvgPicture.asset(
+                                          "assets/tabbar_icons/status_icon.svg",
+
+                                        ),
                                         Text(
                                           "Status",
                                           style: GoogleFonts.fredoka(
@@ -360,9 +364,10 @@ class _TabState extends State<Tabbar> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Image(
-                                            image: AssetImage(
-                                                "assets/tabbar_icons/call_icon.png")),
+                                        SvgPicture.asset(
+                                          "assets/tabbar_icons/pops_call.svg",
+
+                                        ),
                                         Text(
                                           "Calls",
                                           style: GoogleFonts.fredoka(
