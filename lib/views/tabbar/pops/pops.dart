@@ -71,7 +71,6 @@ class _Pops_PageState extends State<Pops_Page> {
       body: {"user_id": uid},
     );
   }
-
   Future likeApiCall({required String uid, required String name, required String? profileUrl, required String postId}) async {
     print('3333');
     return await ApiHandler().apiHandler(
@@ -127,8 +126,6 @@ class _Pops_PageState extends State<Pops_Page> {
 
 
   }
-
-
 
   @override
   Widget build(BuildContext context) {

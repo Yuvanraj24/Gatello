@@ -230,7 +230,7 @@ print('dhina:${profileDetailsValueNotifier.value.item3}');
                             SizedBox(width: 39.w),
                             InkWell(
                               onTap:(){
-
+print('dhina:${profileDetailsValueNotifier.value.item2.result.profileDetails.userId}');
                               },
                               child: Column(
                                 children: [
@@ -259,7 +259,7 @@ print('dhina:${profileDetailsValueNotifier.value.item3}');
                               onTap:(){
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) =>Followers_Page(id: 's8b6XInslPffQEgz8sVTINsPhcx2')),
+                                  MaterialPageRoute(builder: (context) =>Followers_Page(id:profileDetailsValueNotifier.value.item2.result.profileDetails.userId )),
                                 );
                               },
                               child: Column(
