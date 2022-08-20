@@ -105,7 +105,8 @@ class _Third_PageState extends State<Third_Page> {
                     fixedSize: Size(194.w, 43.h),
                   ),
                   onPressed: () {
-                     Navigator.pop(context,MaterialPageRoute(builder: (context) => Pops_Page()));
+                     Navigator.pop(context,MaterialPageRoute(builder: (context) =>
+                         Pops_Page()));
                   },
                   child: Text(
                     'OK',

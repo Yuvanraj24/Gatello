@@ -139,7 +139,7 @@ class _Info_PageState extends State<Info_Page> {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(
+                              padding:  EdgeInsets.only(
                                   top: 7, left: 9, bottom: 6),
                               child: Text(
                                 'Public',
@@ -180,7 +180,7 @@ class _Info_PageState extends State<Info_Page> {
                         });
                       },
                       icon: Padding(
-                        padding: const EdgeInsets.only(right: 10),
+                        padding:  EdgeInsets.only(right: 10),
                         child: Icon(
                           Icons.keyboard_arrow_down_rounded,
                           size: 20,
@@ -194,7 +194,6 @@ class _Info_PageState extends State<Info_Page> {
                           borderRadius: BorderRadius.circular(2),
                           color: Color.fromRGBO(248, 206, 97, 1)),
                       itemHeight:30,
-                      // itemPadding: const EdgeInsets.only(left: 14, right: 14),
                       dropdownMaxHeight: 130,
                       dropdownWidth: 90,
                       buttonElevation: 0,
@@ -230,7 +229,7 @@ class _Info_PageState extends State<Info_Page> {
           ),
           Divider(thickness:1,indent:12,endIndent:12,color: Color.fromRGBO(235, 235, 235, 1),),
           Padding(
-            padding: const EdgeInsets.only(left:29,right:17,top:8),
+            padding:  EdgeInsets.only(left:29,right:17,top:8),
             child: Column(
               children: [
                 Row(
@@ -246,7 +245,7 @@ class _Info_PageState extends State<Info_Page> {
                           children: [
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(
+                                padding: EdgeInsets.only(
                                     top: 7, left: 9, bottom: 6),
                                 child: Text(
                                   'Public',
@@ -287,7 +286,7 @@ class _Info_PageState extends State<Info_Page> {
                           });
                         },
                         icon: Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.keyboard_arrow_down_rounded,
                             size: 20,
@@ -301,7 +300,7 @@ class _Info_PageState extends State<Info_Page> {
                             borderRadius: BorderRadius.circular(2),
                             color: Color.fromRGBO(248, 206, 97, 1)),
                         itemHeight:30,
-                        // itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                        // itemPadding: EdgeInsets.only(left: 14, right: 14),
                         dropdownMaxHeight: 130,
                         dropdownWidth: 90,
                         buttonElevation: 0,
@@ -361,7 +360,7 @@ class _Info_PageState extends State<Info_Page> {
           SizedBox(height:10.h),
           Divider(thickness:1,indent:12,endIndent:12,color: Color.fromRGBO(235, 235, 235, 1),),
           Padding(
-            padding: const EdgeInsets.only(left:29,right:17,top:8),
+            padding: EdgeInsets.only(left:29,right:17,top:8),
             child: Column(
               children: [
                 Row(
@@ -377,7 +376,7 @@ class _Info_PageState extends State<Info_Page> {
                           children: [
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(
+                                padding: EdgeInsets.only(
                                     top: 7, left: 9, bottom: 6),
                                 child: Text(
                                   'Public',
@@ -418,7 +417,7 @@ class _Info_PageState extends State<Info_Page> {
                           });
                         },
                         icon: Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.keyboard_arrow_down_rounded,
                             size: 20,
@@ -432,7 +431,7 @@ class _Info_PageState extends State<Info_Page> {
                             borderRadius: BorderRadius.circular(2),
                             color: Color.fromRGBO(248, 206, 97, 1)),
                         itemHeight:30,
-                        // itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                        // itemPadding: EdgeInsets.only(left: 14, right: 14),
                         dropdownMaxHeight: 130,
                         dropdownWidth: 90,
                         buttonElevation: 0,
@@ -475,7 +474,7 @@ class _Info_PageState extends State<Info_Page> {
                    TextDecoration.none
                    ))),
                     Padding(
-                      padding: const EdgeInsets.only(bottom:0),
+                      padding: EdgeInsets.only(bottom:0),
                       child: Container( height:30.h,width:200.w,color:Colors.transparent,
                         child:  Padding(
                           padding:EdgeInsets.only(top:20),
@@ -503,7 +502,7 @@ class _Info_PageState extends State<Info_Page> {
           ), SizedBox(height:10.h),
           Divider(thickness:1,indent:12,endIndent:12,color: Color.fromRGBO(235, 235, 235, 1),),
           Padding(
-            padding: const EdgeInsets.only(left:29,right:17,top:8),
+            padding: EdgeInsets.only(left:29,right:17,top:8),
             child: Column(
               children: [
                 Row(
@@ -519,7 +518,7 @@ class _Info_PageState extends State<Info_Page> {
                           children: [
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(
+                                padding: EdgeInsets.only(
                                     top: 7, left: 9, bottom: 6),
                                 child: Text(
                                   'Public',
@@ -574,7 +573,7 @@ class _Info_PageState extends State<Info_Page> {
                             borderRadius: BorderRadius.circular(2),
                             color: Color.fromRGBO(248, 206, 97, 1)),
                         itemHeight:30,
-                        // itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                        // itemPadding: EdgeInsets.only(left: 14, right: 14),
                         dropdownMaxHeight: 130,
                         dropdownWidth: 90,
                         buttonElevation: 0,
@@ -642,7 +641,7 @@ class _Info_PageState extends State<Info_Page> {
           SizedBox(height:10.h),
           Divider(thickness:1,indent:12,endIndent:12,color: Color.fromRGBO(235, 235, 235, 1),),
           Padding(
-            padding: const EdgeInsets.only(left:29,right:17,top:8),
+            padding: EdgeInsets.only(left:29,right:17,top:8),
             child: Column(
               children: [
                 Row(
@@ -658,7 +657,7 @@ class _Info_PageState extends State<Info_Page> {
                           children: [
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(
+                                padding: EdgeInsets.only(
                                     top: 7, left: 9, bottom: 6),
                                 child: Text(
                                   'Public',
@@ -713,7 +712,7 @@ class _Info_PageState extends State<Info_Page> {
                             borderRadius: BorderRadius.circular(2),
                             color: Color.fromRGBO(248, 206, 97, 1)),
                         itemHeight:30,
-                        // itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                        // itemPadding: EdgeInsets.only(left: 14, right: 14),
                         dropdownMaxHeight: 130,
                         dropdownWidth: 90,
                         buttonElevation: 0,

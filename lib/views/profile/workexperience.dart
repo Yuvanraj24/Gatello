@@ -9,8 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 class Work_Experience extends StatefulWidget {
    Work_Experience({Key? key}) : super(key: key);
 
-
-
   @override
   State<Work_Experience> createState() => _Work_ExperienceState();
 }
@@ -20,6 +18,7 @@ class _Work_ExperienceState extends State<Work_Experience> {
   final List<String> items = ['Public', 'Friends', 'Only me'];
   String? selectedValue;
   bool isSwitched = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +76,7 @@ class _Work_ExperienceState extends State<Work_Experience> {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(
+                              padding: EdgeInsets.only(
                                   top: 7, left: 9, bottom: 6),
                               child: Text(
                                 'Public',
@@ -118,7 +117,7 @@ class _Work_ExperienceState extends State<Work_Experience> {
                         });
                       },
                       icon: Padding(
-                        padding: const EdgeInsets.only(right: 10),
+                        padding: EdgeInsets.only(right: 10),
                         child: Icon(
                           Icons.keyboard_arrow_down_rounded,
                           size: 20,
@@ -132,7 +131,7 @@ class _Work_ExperienceState extends State<Work_Experience> {
                           borderRadius: BorderRadius.circular(2),
                           color: Color.fromRGBO(248, 206, 97, 1)),
                       itemHeight:30,
-                      // itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                      // itemPadding: EdgeInsets.only(left: 14, right: 14),
                       dropdownMaxHeight: 130,
                       dropdownWidth: 90,
                       buttonElevation: 0,

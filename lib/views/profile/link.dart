@@ -81,7 +81,7 @@ class _Link_PageState extends State<Link_Page> {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(
+                              padding: EdgeInsets.only(
                                   top: 7, left: 9, bottom: 6),
                               child: Text(
                                 'Public',
@@ -122,7 +122,7 @@ class _Link_PageState extends State<Link_Page> {
                         });
                       },
                       icon: Padding(
-                        padding: const EdgeInsets.only(right: 10),
+                        padding: EdgeInsets.only(right: 10),
                         child: Icon(
                           Icons.keyboard_arrow_down_rounded,
                           size: 20,
@@ -136,7 +136,7 @@ class _Link_PageState extends State<Link_Page> {
                           borderRadius: BorderRadius.circular(2),
                           color: Color.fromRGBO(248, 206, 97, 1)),
                       itemHeight:30,
-                      // itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                      // itemPadding: EdgeInsets.only(left: 14, right: 14),
                       dropdownMaxHeight: 130,
                       dropdownWidth: 90,
                       buttonElevation: 0,
@@ -173,7 +173,7 @@ class _Link_PageState extends State<Link_Page> {
               )
           ),)),SizedBox(height:8.h),
           Padding(
-            padding: const EdgeInsets.only(bottom:12),
+            padding: EdgeInsets.only(bottom:12),
             child: Divider(thickness:2.w,indent:140,endIndent:137,color: Color.fromRGBO(0,0,0,1),),
           ),
         ],

@@ -169,7 +169,7 @@ class _Private_AccountState extends State<Private_Account> {
           ),),
 
         Padding(
-          padding: const EdgeInsets.only(left:27,top:8),
+          padding: EdgeInsets.only(left:27,top:8),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -184,7 +184,7 @@ class _Private_AccountState extends State<Private_Account> {
                   ),
                   Spacer(),
                   Padding(
-                    padding: const EdgeInsets.only(right:35),
+                    padding: EdgeInsets.only(right:35),
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(elevation: 0,
                           shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -202,14 +202,14 @@ class _Private_AccountState extends State<Private_Account> {
         ),
         Divider(indent:12,endIndent:12,thickness:1,color:Color.fromRGBO(231, 231, 231, 1)),
         Padding(
-          padding: const EdgeInsets.only(left:16),
+          padding:  EdgeInsets.only(left:16),
           child: Row(mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(height:50.h,width:50.w,
                 child:Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top:12),
+                      padding: EdgeInsets.only(top:12),
                       child: Container(
                         child: SvgPicture.asset('assets/profile_assets/privateaccount.svg',height:30,
                         width:30),

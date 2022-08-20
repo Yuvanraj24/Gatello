@@ -23,7 +23,7 @@ class _Incoming_CallState extends State<Incoming_Call> {
                 fit: BoxFit.fill),
           ),
             Padding(
-              padding: const EdgeInsets.only(left:12,top:450),
+              padding: EdgeInsets.only(left:12,top:450),
               child: Column(mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -36,7 +36,7 @@ class _Incoming_CallState extends State<Incoming_Call> {
                       fontSize:14.sp,fontWeight: FontWeight.w400
                   ),),
                   Padding(
-                    padding: const EdgeInsets.only(left:189),
+                    padding:  EdgeInsets.only(left:189),
                     child: Column(
                       children: [
                       SvgPicture.asset('assets/call_assets/arrow_upward.svg'),
@@ -59,19 +59,10 @@ class _Incoming_CallState extends State<Incoming_Call> {
         ]),
         floatingActionButton:
         Padding(
-          padding: const EdgeInsets.only(left: 31,bottom:44),
+          padding: EdgeInsets.only(left: 31,bottom:44),
           child: Row(mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(width: 62.w,height: 62.h,
-              //   decoration: BoxDecoration(
-              //     shape:BoxShape.circle,
-              //       boxShadow: [
-              //   BoxShadow(
-              //   color: Colors.black.withOpacity(0.5),
-              // spreadRadius:200,
-              // blurRadius:600,
-              // offset: Offset(20,20))]
-              //   ),
                 child: FloatingActionButton(onPressed: (){},
                   child: SvgPicture.asset('assets/call_assets/chat_call.svg'),
                   backgroundColor: Color.fromRGBO(248, 206, 97, 1),elevation: 10,

@@ -46,7 +46,7 @@ class _Edit_ProfileState extends State<Edit_Profile> {
         ],
       ),
       body:Padding(
-        padding: const EdgeInsets.only(right:12,left:12,top:15),
+        padding:  EdgeInsets.only(right:12,left:12,top:15),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
           Text('Cover photo',style: GoogleFonts.inter(
@@ -114,7 +114,7 @@ class _Edit_ProfileState extends State<Edit_Profile> {
                   ))),
             ),
            Padding(
-             padding: const EdgeInsets.only(left:27,top:8),
+             padding: EdgeInsets.only(left:27,top:8),
              child: Column(children: [
                Row(
                  children: [
@@ -224,7 +224,7 @@ class _Edit_ProfileState extends State<Edit_Profile> {
                 )
             ),)),
             Padding(
-              padding: const EdgeInsets.only(top:10,bottom:12),
+              padding: EdgeInsets.only(top:10,bottom:12),
               child: Divider(thickness:2.w,indent:140,endIndent:137,color: Color.fromRGBO(0,0,0,1),),
             )
         ],

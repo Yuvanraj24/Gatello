@@ -31,7 +31,6 @@ class _New_PostState extends State<New_Post> {
 
   String profile_url = "";
 
-
   TextEditingController _descController = TextEditingController();
   List<PlatformFile> fileList = [];
   Future<FilePickerResult?> files() async => await FilePicker.platform.pickFiles(

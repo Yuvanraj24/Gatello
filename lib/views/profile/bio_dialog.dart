@@ -41,7 +41,7 @@ class _BioDialogState extends State<BioDialog> {
           borderRadius: BorderRadius.circular(8)
       ),child: Column(children: [
         Padding(
-          padding: const EdgeInsets.only(left:16,top:17,right:17),
+          padding:  EdgeInsets.only(left:16,top:17,right:17),
           child: Row(children: [
             Text(
               'Biog',
@@ -58,7 +58,7 @@ class _BioDialogState extends State<BioDialog> {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(
+                        padding: EdgeInsets.only(
                             top: 7, left: 9, bottom: 6),
                         child: Text(
                           'Public',
@@ -99,7 +99,7 @@ class _BioDialogState extends State<BioDialog> {
                   });
                 },
                 icon: Padding(
-                  padding: const EdgeInsets.only(right: 10),
+                  padding:  EdgeInsets.only(right: 10),
                   child: Icon(
                     Icons.keyboard_arrow_down_rounded,
                     size: 20,
@@ -113,7 +113,6 @@ class _BioDialogState extends State<BioDialog> {
                     borderRadius: BorderRadius.circular(2),
                     color: Color.fromRGBO(248, 206, 97, 1)),
                 itemHeight:30,
-                // itemPadding: const EdgeInsets.only(left: 14, right: 14),
                 dropdownMaxHeight: 130,
                 dropdownWidth: 90,
                 buttonElevation: 0,
@@ -152,7 +151,7 @@ class _BioDialogState extends State<BioDialog> {
           ),),
         Spacer(),
         Padding(
-          padding: const EdgeInsets.only(bottom:17),
+          padding: EdgeInsets.only(bottom:17),
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(elevation: 0,
                 shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),

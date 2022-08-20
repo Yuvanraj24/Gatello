@@ -44,7 +44,7 @@ class _WorkDetailsDialogState extends State<WorkDetailsDialog> {
           borderRadius: BorderRadius.circular(8)
       ),child: Column(children: [
         Padding(
-          padding: const EdgeInsets.only(left:16,top:17,right:17),
+          padding: EdgeInsets.only(left:16,top:17,right:17),
           child: Row(children: [
             Spacer(),
             GestureDetector(onTap: (){
@@ -197,7 +197,7 @@ class _WorkDetailsDialogState extends State<WorkDetailsDialog> {
         ),
         Spacer(),
         Padding(
-          padding: const EdgeInsets.only(bottom:17),
+          padding: EdgeInsets.only(bottom:17),
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(elevation: 0,
                 shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),

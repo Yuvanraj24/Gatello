@@ -133,7 +133,7 @@ class _Followers_PageState extends State<Followers_Page> {
                      child: Column(
                        children: [
                          Container(child:Padding(
-                           padding: const EdgeInsets.only(left:9,right:16),
+                           padding: EdgeInsets.only(left:9,right:16),
                            child: Row(children: [
                              Container(
                                height: 57.h,width: 57.w,
@@ -187,12 +187,12 @@ class _Followers_PageState extends State<Followers_Page> {
                              itemCount: followListValueNotifier.value.item2.result.length,
                              itemBuilder: (context, index) {
                                return Padding(
-                                 padding: const EdgeInsets.only(top:22),
+                                 padding:  EdgeInsets.only(top:22),
                                  child: Container(height:75.h,width:double.infinity,decoration: BoxDecoration(
                                      color:Color.fromRGBO(248, 206, 97, 0.28),borderRadius:BorderRadius.circular(7)
                                  ),
                                    child:Padding(
-                                     padding: const EdgeInsets.only(left:9,right:16),
+                                     padding:  EdgeInsets.only(left:9,right:16),
                                      child: Row(children: [
                                        Container(
                                          height: 57.h,width: 57.w,
@@ -242,7 +242,7 @@ class _Followers_PageState extends State<Followers_Page> {
                      child: Column(
                        children: [
                          Container(child:Padding(
-                           padding: const EdgeInsets.only(left:9,right:16),
+                           padding:  EdgeInsets.only(left:9,right:16),
                            child: Row(children: [
                              Container(
                                height: 57.h,width: 57.w,
@@ -296,12 +296,12 @@ class _Followers_PageState extends State<Followers_Page> {
                              itemCount:10,
                              itemBuilder: (context, index) {
                                return Padding(
-                                 padding: const EdgeInsets.only(top:22),
+                                 padding:  EdgeInsets.only(top:22),
                                  child: Container(height:75.h,width:double.infinity,decoration: BoxDecoration(
                                      color:Color.fromRGBO(248, 206, 97, 0.28),borderRadius:BorderRadius.circular(7)
                                  ),
                                    child:Padding(
-                                     padding: const EdgeInsets.only(left:9,right:16),
+                                     padding:  EdgeInsets.only(left:9,right:16),
                                      child: Row(children: [
                                        Container(
                                          height: 57.h,width: 57.w,
