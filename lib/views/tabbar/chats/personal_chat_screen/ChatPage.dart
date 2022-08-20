@@ -421,46 +421,46 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                   "lastRead": null,
                   "unreadCount": 0,
                 },
-              }
-              // "${widget.uid}-peeruid": "${widget.puid}",
-              // "${widget.uid}-peername": peerName,
-              // "${widget.uid}-name": value.data()!["name"],
-              // "${widget.uid}-pic": (value.data()!["pic"] != null) ? value.data()!["pic"].last : null,
-              // "${widget.uid}-lastRead": null,
-              // "${widget.uid}-blocked": false,
-              // "${widget.uid}-unreadCount": 0,
-              // "${widget.puid}-peeruid": "${widget.uid}",
-              // "${widget.puid}-peername": value.data()!["name"],
-              // "${widget.puid}-name": peerName,
-              // "${widget.puid}-pic": peerPic,
-              // "${widget.puid}-lastRead": null,
-              // "${widget.puid}-blocked": false,
-              // "${widget.puid}-unreadCount": 1
+              },
+              "${widget.uid}-peeruid": "${widget.puid}",
+              "${widget.uid}-peername": peerName,
+              "${widget.uid}-name": value.data()!["name"],
+              "${widget.uid}-pic": (value.data()!["pic"] != null) ? value.data()!["pic"].last : null,
+              "${widget.uid}-lastRead": null,
+              "${widget.uid}-blocked": false,
+              "${widget.uid}-unreadCount": 0,
+              "${widget.puid}-peeruid": "${widget.uid}",
+              "${widget.puid}-peername": value.data()!["name"],
+              "${widget.puid}-name": peerName,
+              "${widget.puid}-pic": peerPic,
+              "${widget.puid}-lastRead": null,
+              "${widget.puid}-blocked": false,
+              "${widget.puid}-unreadCount": 1
             });
-            // writeBatch.set(
-            //     instance.collection("user-detail").doc(widget.uid),
-            //     {
-            //       "userList": FieldValue.arrayUnion([widget.puid])
-            //     },
-            //     SetOptions(merge: true));
-            // writeBatch.set(
-            //     instance.collection("user-detail").doc(widget.puid),
-            //     {
-            //       "userList": FieldValue.arrayUnion([widget.uid])
-            //     },
-            //     SetOptions(merge: true));
-            // writeBatch.set(
-            //     instance.collection("personal-user-list").doc(widget.uid),
-            //     {
-            //       "userList": FieldValue.arrayUnion([widget.puid])
-            //     },
-            //     SetOptions(merge: true));
-            // writeBatch.set(
-            //     instance.collection("personal-user-list").doc(widget.puid),
-            //     {
-            //       "userList": FieldValue.arrayUnion([widget.uid])
-            //     },
-            //     SetOptions(merge: true));
+            writeBatch.set(
+                instance.collection("user-detail").doc(widget.uid),
+                {
+                  "userList": FieldValue.arrayUnion([widget.puid])
+                },
+                SetOptions(merge: true));
+            writeBatch.set(
+                instance.collection("user-detail").doc(widget.puid),
+                {
+                  "userList": FieldValue.arrayUnion([widget.uid])
+                },
+                SetOptions(merge: true));
+            writeBatch.set(
+                instance.collection("personal-user-list").doc(widget.uid),
+                {
+                  "userList": FieldValue.arrayUnion([widget.puid])
+                },
+                SetOptions(merge: true));
+            writeBatch.set(
+                instance.collection("personal-user-list").doc(widget.puid),
+                {
+                  "userList": FieldValue.arrayUnion([widget.uid])
+                },
+                SetOptions(merge: true));
             writeBatch.set(instance.collection("personal-chat").doc(roomid).collection("messages").doc(timestamp.toString()), {
               "from": widget.uid,
               "to": widget.puid,
@@ -2845,10 +2845,10 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                     .collection("messages")
                                                                     .doc(value.data()!["timestamp"])
                                                                     .get();
-                                                                // DocumentSnapshot<Map<String, dynamic>> message =
-                                                                //     chatList[chatList.indexWhere((element) => element.id == value.id)];
-                                                                // chatList[chatList.indexWhere((element) => element.id == value.id)] =
-                                                                //     message.data()!["delete"].update("everyone", (value) => true);
+                                                                DocumentSnapshot<Map<String, dynamic>> message =
+                                                                    chatList[chatList.indexWhere((element) => element.id == value.id)];
+                                                                chatList[chatList.indexWhere((element) => element.id == value.id)] =
+                                                                    message.data()!["delete"].update("everyone", (value) => true);
                                                                 chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
                                                                 _streamController.add(chatList);
                                                               });

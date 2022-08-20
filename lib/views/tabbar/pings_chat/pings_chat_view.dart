@@ -8,15 +8,10 @@ import 'package:gatello/Authentication/Authentication.dart';
 import 'package:gatello/core/models/pings_chat_model/pings_chats_list_model.dart';
 import 'package:gatello/views/tabbar/chats/personal_chat_screen/ChatPage.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
-
-
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../firebase_options.dart';
-
 import '../chats/personal_chat_screen/pesrsonal_chat.dart';
 
 
@@ -325,6 +320,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                                     fontWeight: FontWeight.w400),
                               )),
                           SizedBox(height: 3.h),
+
                          // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
                          (docs[index].data()["members"]["${docs[index].data()["members"]["$uid"]["peeruid"]}"]["unreadCount"]==0)?
                              SizedBox():
