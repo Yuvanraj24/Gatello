@@ -51,19 +51,30 @@ class _New_PostState extends State<New_Post> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text(
-            'New post',
-            style: GoogleFonts.inter(
-                textStyle: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Color.fromRGBO(12, 16, 29, 1))),
+          appBar: AppBar(
+            title: Text(
+              'New post',
+              style: GoogleFonts.inter(
+                  textStyle: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color.fromRGBO(12, 16, 29, 1))),
+            ),
+            leading:GestureDetector(
+                onTap:(){
+                  Navigator.pop(context);
+                },
+                child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment:CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/pops_asset/back_icon.svg',height:35.h,
+                      width:35.w,),
+                  ],
+                )),
+            //SvgPicture.asset('assets/tabbar_icons/tab_view_main/back_icon.svg')
           ),
-          leading: Icon(Icons.arrow_back, color: Color.fromRGBO(12, 16, 29, 1)),
-        ),
         body: Padding(
-          padding: const EdgeInsets.only(right: 12, left: 12, top: 13),
+          padding: EdgeInsets.only(right: 12, left: 12, top: 13),
           child: Container(
             child: Column(
               children: [
@@ -77,7 +88,7 @@ class _New_PostState extends State<New_Post> {
                           children: [
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(
+                                padding: EdgeInsets.only(
                                     top: 7, left: 9, bottom: 6),
                                 child: Text(
                                   'Public',
@@ -95,12 +106,18 @@ class _New_PostState extends State<New_Post> {
                         items: items
                             .map((item) => DropdownMenuItem<String>(
                           value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Color.fromRGBO(0, 0, 0, 1),
+                          child: Container(
+                            child: Center(
+                              child: Text(
+                                  item,
+                                  style: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      )
+                                  )
+                              ),
                             ),
                           ),
                         ))
@@ -112,7 +129,7 @@ class _New_PostState extends State<New_Post> {
                           });
                         },
                         icon: Padding(
-                          padding: const EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.keyboard_arrow_down_rounded,
                             size: 20,
@@ -121,13 +138,13 @@ class _New_PostState extends State<New_Post> {
                         ),
                         iconSize: 14,
                         buttonHeight: 30,
-                        buttonWidth: 86,
+                        buttonWidth: 90,
                         buttonDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2),
                             color: Color.fromRGBO(248, 206, 97, 1)),
-                        itemHeight: 40,
-                        // itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                        dropdownMaxHeight: 90,
+                        itemHeight:30,
+                        // itemPadding: EdgeInsets.only(left: 14, right: 14),
+                        dropdownMaxHeight: 130,
                         dropdownWidth: 90,
                         buttonElevation: 0,
                         dropdownElevation: 0,
@@ -136,7 +153,7 @@ class _New_PostState extends State<New_Post> {
                         ),
                         scrollbarAlwaysShow: false,
                       ),
-                    ),
+                    )
                   ],
                 ),
                 SizedBox(
@@ -186,7 +203,7 @@ class _New_PostState extends State<New_Post> {
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 28, left: 18),
+                      padding:EdgeInsets.only(top: 28, left: 18),
                       child: Row(
                         children: [
                           SvgPicture.asset(
@@ -194,7 +211,7 @@ class _New_PostState extends State<New_Post> {
                           SizedBox(
                             width: 18.w,
                           ),
-                          InkWell(
+                          GestureDetector(
                             onTap: ()async{
                               Fluttertoast.showToast(
                                   msg: "${desc}",
@@ -243,7 +260,7 @@ class _New_PostState extends State<New_Post> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 12),
+                      padding: EdgeInsets.fromLTRB(10.w, 30.h, 0.w, 0.h),
                       child: Row(
                         children: [
                           SvgPicture.asset('assets/pops_asset/tagge.svg'),
@@ -261,12 +278,12 @@ class _New_PostState extends State<New_Post> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 18),
+                      padding: EdgeInsets.fromLTRB(12.w, 27.h, 0.w, 0.h),
                       child: Row(
                         children: [
                          Icon(Icons.location_on_rounded,size:30),
                           SizedBox(
-                            width: 6.w,
+                            width: 11.w,
                           ),
                           Text(
                             'Location',
@@ -285,7 +302,7 @@ class _New_PostState extends State<New_Post> {
                       thickness: 1,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 6, top: 6),
+                      padding: EdgeInsets.fromLTRB(6.w, 6.h, 0.w, 0.h),
                       child: Row(
                         children: [
                           Text('Status',
@@ -317,34 +334,34 @@ class _New_PostState extends State<New_Post> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 77.h,
-                    ),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
-                          primary: Color.fromRGBO(248, 206, 97, 1),
-                          fixedSize: Size(194.w, 43.h),
-                        ),
-                        onPressed: () {
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0.w, 77.h, 0.w,0.h),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                            primary: Color.fromRGBO(248, 206, 97, 1),
+                            fixedSize: Size(171.w, 42.h),
+                          ),
+                          onPressed: () {
 
-                          params =
-                          "?user_id=${uid}&username=${username}&profile_url=${profile_url}&description=${desc}";
-                          print(params);
-                          print("Description : $desc");
-                          var body = jsonEncode(<String, dynamic>{});
-                          createPost(body);
-                        },
-                        child: Text(
-                          'Post',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  color: Color.fromRGBO(0, 0, 0, 1),
-                                  fontSize: 24.sp,
-                                  fontWeight: FontWeight.w700)),
-                        )),
+                            params =
+                            "?user_id=${uid}&username=${username}&profile_url=${profile_url}&description=${desc}";
+                            print(params);
+                            print("Description : $desc");
+                            var body = jsonEncode(<String, dynamic>{});
+                            createPost(body);
+                          },
+                          child: Text(
+                            'Post',
+                            style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                    color: Color.fromRGBO(0, 0, 0, 1),
+                                    fontSize: 24.sp,
+                                    fontWeight: FontWeight.w700)),
+                          )),
+                    ),
                   ],
                 )
               ],

@@ -92,30 +92,28 @@ class _Third_PageState extends State<Third_Page> {
                         color: Color.fromRGBO(124, 124, 124, 1),
                         fontWeight: FontWeight.w400)),
               ),
-
-              SizedBox(
-                height: 171.h,
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0.w, 0.h, 0.w, 285.h),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      primary: Color.fromRGBO(248, 206, 97, 1),
+                      fixedSize: Size(194.w, 43.h),
+                    ),
+                    onPressed: () {Navigator.push(context, MaterialPageRoute(builder:(context) =>Pops_Page()));
+                    },
+                    child: Text(
+                      'OK',
+                      style: GoogleFonts.inter(
+                          textStyle: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w700)),
+                    )),
               ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    primary: Color.fromRGBO(248, 206, 97, 1),
-                    fixedSize: Size(194.w, 43.h),
-                  ),
-                  onPressed: () {
-                     Navigator.pop(context,MaterialPageRoute(builder: (context) =>
-                         Pops_Page()));
-                  },
-                  child: Text(
-                    'OK',
-                    style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            color: Color.fromRGBO(0, 0, 0, 1),
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w700)),
-                  )),
             ],
           ),
         ),

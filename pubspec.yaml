@@ -66,6 +66,7 @@ dependencies:
   flutter_downloader: ^1.8.1
   tuple: ^2.0.0
   permission_handler: ^10.0.0
+  flutter_contacts: ^1.1.5
   device_info_plus: ^4.0.1
   path_provider: ^2.0.11
   lottie: ^1.4.1
@@ -94,6 +95,7 @@ dependencies:
   record: ^3.0.4
   nanoid: ^1.0.0
   fast_contacts: ^1.1.1
+  flutter_speed_dial: ^6.0.0
   mime: ^1.0.1
   giphy_picker: ^2.0.0
   location: ^4.3.0
@@ -127,7 +129,6 @@ flutter:
   assets:
     - assets/appbar_action/Rectangle 7.png
     - assets/profile_page/profile_pic_logo.png
-    - assets/invite_friends/invite_friends_logo.png
     - assets/birthday_image/birthday_logo.png
     - assets/splash_1/glogo.png
     - assets/splash2_image/splah2 _image.png
@@ -237,6 +238,13 @@ flutter:
     - assets/tabbar_icons/status_icon.svg
     - assets/tabbar_icons/pops_call.svg
     - assets/pops_asset/gatello_loading.gif
+    - assets/invite_friends/invitefriends.svg
+    - assets/invite_friends/add_icon.svg
+    - assets/invite_friends/profilepicture.svg
+    - assets/pops_asset/pings_icon.svg
+    - assets/pops_asset/interaction_icon.svg
+    - assets/pops_asset/request_icon.svg
+    - assets/pops_asset/back_icon.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

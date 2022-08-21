@@ -13,6 +13,7 @@ import '../../Others/Routers.dart';
 import '../../Others/exception_string.dart';
 import '../../core/models/exception/pops_exception.dart';
 import '../../handler/Network.dart';
+import '../invite_friends.dart';
 import '../profile/profile_details.dart';
 import 'Delete1Dialog.dart';
 import '/core/models/profile_detail.dart'as profileDetailsModel ;
@@ -90,10 +91,10 @@ class _TabState extends State<Tabbar> {
 
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) =>Profile(
+                                              MaterialPageRoute(builder: (context) =>Profile()
 
                                                 //  feedsValueNotifier.value.item2.result[index].userId
-                                              )
+
                                               ),
                                             );
                                           } ,
@@ -167,23 +168,26 @@ class _TabState extends State<Tabbar> {
                                                       ),
                                                     )),
                                                 PopupMenuItem(
-                                                    child: Container(
-                                                      width: 150.w,
-                                                      child: Row(
-                                                        children: [
-                                                          SvgPicture.asset(
-                                                              'assets/tabbar_icons/tab_view_main/invite frds tab.svg'),
-                                                          SizedBox(
-                                                            width: 12.w,
-                                                          ),
-                                                          Text("Invite friends",
-                                                              style: GoogleFonts.inter(
-                                                                  textStyle: TextStyle(
-                                                                    fontSize: 14.sp,
-                                                                    color: Color.fromRGBO(
-                                                                        0, 0, 0, 1),
-                                                                  )))
-                                                        ],
+                                                    child: GestureDetector(onTap:(){Navigator.push(context, MaterialPageRoute(
+                                                        builder:(context) =>InviteFriends() ));},
+                                                      child: Container(
+                                                        width: 150.w,
+                                                        child: Row(
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                                'assets/tabbar_icons/tab_view_main/invite frds tab.svg'),
+                                                            SizedBox(
+                                                              width: 12.w,
+                                                            ),
+                                                            Text("Invite friends",
+                                                                style: GoogleFonts.inter(
+                                                                    textStyle: TextStyle(
+                                                                      fontSize: 14.sp,
+                                                                      color: Color.fromRGBO(
+                                                                          0, 0, 0, 1),
+                                                                    )))
+                                                          ],
+                                                        ),
                                                       ),
                                                     )),
                                                 PopupMenuItem(

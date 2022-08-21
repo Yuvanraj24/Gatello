@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gatello/views/tabbar/pops/Requests.dart';
 import 'package:gatello/views/tabbar/pops/comments.dart';
+import 'package:gatello/views/tabbar/pops/interactions.dart';
 import 'package:gatello/views/tabbar/pops/poplikes.dart';
 import 'package:gatello/views/tabbar/pops/report.dart';
 import 'package:gatello/views/tabbar/pops/secondreport.dart';
@@ -20,6 +24,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 import '../../../Others/Routers.dart';
+import '../../../components/PreloadPageViewer.dart';
+import '../../../components/SnackBar.dart';
 import '../../profile/profile_details.dart';
 import '../../profile/user_proflle.dart';
 import '/core/models/My_Feeds.dart' as myFeedsModel;
@@ -47,6 +53,7 @@ class Pops_Page extends StatefulWidget {
   State<Pops_Page> createState() => _Pops_PageState();
 }
 class _Pops_PageState extends State<Pops_Page> {
+  TextEditingController _controllerpop =TextEditingController();
   bool liked=false;
   bool showThumbsUp=false;
   String? uid;
@@ -158,28 +165,24 @@ class _Pops_PageState extends State<Pops_Page> {
                               child: Column(
                                 children: [
                                   Container(
+
                                     height: 77.h,
                                     width: double.infinity,
+                                    padding: EdgeInsets.symmetric(horizontal: 12.w),
                                     child: Row(
                                       children: [
-                                        SizedBox(
-                                          width: 12.w,
-                                        ),
                                         Container(
                                           height: 52.h,
                                           width: 51.w,
                                           decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(5),
-                                              color: Colors.yellow,
                                               image: DecorationImage(
                                                   image: NetworkImage(
                                                       'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmVzc2lvbmFsfGVufDB8fDB8fA%3D%3D&w=1000&q=80'),
                                                   fit: BoxFit.fill)),
                                         ),
-                                        SizedBox(
-                                          width: 7.w,
-                                        ),
-                                        Container(
+                                        SizedBox(width: 7.w),
+                                        Container(padding:EdgeInsets.fromLTRB(0.w,8.h, 0.w, 0.h),
                                           height: 52.h,
                                           width: 227.w,
                                           decoration: BoxDecoration(
@@ -187,72 +190,39 @@ class _Pops_PageState extends State<Pops_Page> {
                                             border:
                                             Border.all(color: Color.fromRGBO(217, 217, 217, 1)),
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 13),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  height: 8.h,
-                                                ),
-                                                Text(
-                                                  'Pop your photos,videos &',
-                                                  style: GoogleFonts.inter(
-                                                      textStyle: TextStyle(
-                                                          fontWeight: FontWeight.w400,
-                                                          color: Color.fromRGBO(152, 152, 152, 1),
-                                                          fontSize: 14.sp)),
-                                                ),
-                                                SizedBox(
-                                                  height: 4.h,
-                                                ),
-                                                Text('messages here...',
-                                                    style: GoogleFonts.inter(
-                                                        textStyle: TextStyle(fontWeight: FontWeight.w400,
-                                                            color: Color.fromRGBO(152, 152, 152, 1),
-                                                            fontSize: 14.sp))),
-                                              ],
+                                          child: TextField(
+                                            cursorColor:Colors.black,
+                                            controller: _controllerpop,
+                                            decoration: InputDecoration(
+                                              hintMaxLines: 2,
+                                              hintText: 'Pop your photos, videos &\nmessages here...',hintStyle: TextStyle(
+                                                fontSize: 18,fontWeight: FontWeight.w400),
+                                              enabledBorder:OutlineInputBorder(borderSide: BorderSide(color:Colors.transparent,width: 1),),
+                                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color:  Colors.transparent,width: 1),),
                                             ),
                                           ),
                                         ),
                                         SizedBox(
                                           width: 14.w,
                                         ),
-                                        IconButton(onPressed: ()
-                                        {
+                                          Padding(
+                                            padding:  EdgeInsets.only(bottom: 13.h),
+                                            child: GestureDetector(
+                                              onTap:(){
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) =>New_Post()),
+                                                  );
 
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) =>New_Post()),
-                                          );
-
-
-
-                                        },
-                                            icon: Icon(Icons.add)),
-                                        // Padding(
-                                        //   padding:  EdgeInsets.only(bottom: 15),
-                                        //   child: SvgPicture.asset(
-                                        //     'assets/pops_asset/pops_gallery.svg',
-                                        //     width: 38.w,
-                                        //     height: 40.h,
-                                        //   ),
-                                        // ),
-                                        //
-                                        Padding(
-                                          padding:  EdgeInsets.only(bottom: 15),
-                                          child: InkWell(
-                                            onTap:(){
-
-
-                                            },
-                                            child: SvgPicture.asset(
-                                              'assets/pops_asset/pops_gallery.svg',
-                                              width: 38.w,
-                                              height: 40.h,
+                                              },
+                                              child: SvgPicture.asset(
+                                                'assets/pops_asset/pops_gallery.svg',
+                                                width: 38.w,
+                                                height: 40.h,
+                                              ),
                                             ),
                                           ),
-                                        ),
+
                                       ],
                                     ),
                                   ),
@@ -276,8 +246,6 @@ class _Pops_PageState extends State<Pops_Page> {
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(builder: (context) =>UserProfile(uid: 's8b6XInslPffQEgz8sVTINsPhcx2',
-
-                                                        //  feedsValueNotifier.value.item2.result[index].userId
                                                           )
                                                           ),
                                                         );
@@ -288,15 +256,26 @@ class _Pops_PageState extends State<Pops_Page> {
                                                           SizedBox(
                                                             width: 24.9.w,
                                                           ),
-                                                          CircleAvatar(
-                                                            backgroundImage: NetworkImage(
-
-                                                                userDetailsValueNotifier.value.item2.result.profileUrl
-                                                              // 'https://www.whatsappimages.in/wp-content/'
-                                                              //     'uploads/2021/12/Creative-Whatsapp-Dp-Pics-Download.jpg'
+                                                          Container(
+                                                            height: 35.h,
+                                                            width: 35.w,
+                                                            child: ClipOval(
+                                                                child: CachedNetworkImage(
+                                                                  fit: BoxFit.cover,
+                                                                  fadeInDuration: const Duration(milliseconds: 400),
+                                                                  progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                                                    child: Container(
+                                                                      width: 20.w,
+                                                                      height: 20.h,
+                                                                      child: CircularProgressIndicator(value:
+                                                                      downloadProgress.progress),
+                                                                    ),
+                                                                  ),
+                                                                  imageUrl:  userDetailsValueNotifier.value.item2.result.profileUrl,
+                                                                  errorWidget: (context, url, error) => Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
+                                                                )
 
                                                             ),
-                                                            radius: 20,
                                                           ),
                                                           Padding(
                                                             padding:  EdgeInsets.only(left: 9.45),
@@ -304,9 +283,7 @@ class _Pops_PageState extends State<Pops_Page> {
                                                               mainAxisAlignment: MainAxisAlignment.center,
                                                               crossAxisAlignment: CrossAxisAlignment.start,
                                                               children: [
-                                                                Text(
-
-                                                                  userDetailsValueNotifier.value.item2.result.username,
+                                                                Text(userDetailsValueNotifier.value.item2.result.username,
                                                                   style: GoogleFonts.inter(
                                                                       textStyle: TextStyle(
                                                                           color:
@@ -397,6 +374,53 @@ class _Pops_PageState extends State<Pops_Page> {
                                                     ],
                                                   ),
                                                 ),
+                                            // GestureDetector(
+                                            //   behavior: HitTestBehavior.opaque,
+                                            //   onDoubleTap: (likeValueNotifier.value.item1 == 0)
+                                            //       ? null
+                                            //       : (feedsValueNotifier.value.item2.result[index].likesStatus == true)
+                                            //       ? () async {
+                                            //     return await unlikeApiCall(
+                                            //         uid: userDetailsValueNotifier.value.item2.result.userId,
+                                            //         postId: feedsValueNotifier.value.item2.result[index].id.oid)
+                                            //         .whenComplete(() async {
+                                            //       if (likeValueNotifier.value.item1 == 1) {
+                                            //         if (!mounted) return;
+                                            //         setState(() {
+                                            //           feedsValueNotifier.value.item2.result[index].likesStatus = false;
+                                            //           feedsValueNotifier.value.item2.result[index].likesCount -= 1;
+                                            //         });
+                                            //       } else if (likeValueNotifier.value.item1 == 2 || likeValueNotifier.value.item1 == 3) {
+                                            //         final snackBar = snackbar(content: likeValueNotifier.value.item3.toString());
+                                            //         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                            //       }
+                                            //     });
+                                            //   }
+                                            //       : () async {
+                                            //     return await likeApiCall(
+                                            //         uid: userDetailsValueNotifier.value.item2.result.userId,
+                                            //         name: userDetailsValueNotifier.value.item2.result.username,
+                                            //         profileUrl: userDetailsValueNotifier.value.item2.result.profileUrl,
+                                            //         postId: feedsValueNotifier.value.item2.result[index].id.oid)
+                                            //         .whenComplete(() async {
+                                            //       if (likeValueNotifier.value.item1 == 1) {
+                                            //         if (!mounted) return;
+                                            //         setState(() {
+                                            //           feedsValueNotifier.value.item2.result[index].likesStatus = true;
+                                            //           feedsValueNotifier.value.item2.result[index].likesCount += 1;
+                                            //         });
+                                            //       } else if (likeValueNotifier.value.item1 == 2 || likeValueNotifier.value.item1 == 3) {
+                                            //         final snackBar = snackbar(content: likeValueNotifier.value.item3.toString());
+                                            //         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                            //       }
+                                            //     });
+                                            //   },
+                                            //   child: PreloadPageViewWidget(
+                                            //     valueNotifier: feedsValueNotifier,
+                                            //     index: index,
+                                            //
+                                            //   ),
+                                            // ),
                                                 Stack(
 
                                                     alignment:Alignment.center,children: [
@@ -521,153 +545,136 @@ class _Pops_PageState extends State<Pops_Page> {
                                                   )
                                                 ]),
                                                 Container(
-                                                  height: 108.h,
+                                                  padding: EdgeInsets.fromLTRB(28, 7, 24, 0),
+                                                  height: 120.h,
                                                   width: double.infinity,
                                                   child: Column(
                                                     children: [
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(top: 8),
-                                                        child: Row(
+                                                        Row(
                                                           crossAxisAlignment:
                                                           CrossAxisAlignment.start,
                                                           children: [
-                                                            SizedBox(
-                                                              width: 28.w,
-                                                            ),
-                                                            IconButton(onPressed: (){
+                                                            GestureDetector(onTap: (){
                                                               _onpressed();
-
-                                                              // if(feedsValueNotifier.value.item2.result[index].likesStatus) {
-                                                              //   feedsValueNotifier.value.item2
-                                                              //       .result[index]
-                                                              //       .likesStatus = false;
-                                                              // }
-                                                              // else
-                                                              // {
-                                                              //
-                                                              // }
-                                                              // likeApiCall(uid: uid!,
-                                                              //     name: "akashtest", profileUrl: "",
-                                                              //     postId: feedsValueNotifier.value.item2.result[index].id.oid);
                                                               if(liked==true){
                                                                 likeApiCall(uid: uid!,
                                                                     name:  userDetailsValueNotifier.value.item2.result.username, profileUrl: "",
-                                                                    postId: feedsValueNotifier.value.item2.result[index].id.oid);
-
-                                                              }
+                                                                    postId: feedsValueNotifier.value.item2.result[index].id.oid);}
                                                               else{
                                                                 unlikeApiCall(uid: uid!,
                                                                     postId: feedsValueNotifier.value.item2.result[index].id.oid);
 
                                                               }
-                                                            },  icon:Icon( liked ? Icons.thumb_up_sharp :Icons.thumb_up_outlined,
+                                                            },  child:Icon( liked ? Icons.thumb_up_sharp :Icons.thumb_up_outlined,
                                                                 color: Colors.black), ),
                                                             SizedBox(
                                                               width: 7.w,
                                                             ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.only(top: 7),
-                                                              child: Text(
-                                                                //'3.6k',
-                                                                (feedsValueNotifier.value.item2.result[index].likesCount >= 2)
-                                                                    ? "${feedsValueNotifier.value.item2.result[index].likesCount}"
-                                                                    : (feedsValueNotifier.value.item2.result[index].likesCount == 1)
-                                                                    ? "${feedsValueNotifier.value.item2.result[index].likesCount}"
-                                                                    : "No Like",
-                                                                style: GoogleFonts.inter(
-                                                                    textStyle: TextStyle(fontWeight: FontWeight.w400,
-                                                                      color:
-                                                                      Color.fromRGBO(51, 51, 51, 1),
-                                                                    )),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 13.w,
-                                                            ),
-                                                            InkWell(
-                                                              onTap:(){
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(builder: (context) =>Command_page(
-                                                                      postId:feedsValueNotifier.value.item2.result[index].id.oid
 
-                                                                  )
-                                                                  ),
-                                                                );
-
-                                                              },
-                                                              child: SvgPicture.asset(
-                                                                  'assets/pops_asset/pops_commentbutton.svg'),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 4.w,
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.only(top: 7),
-                                                              child:InkWell (
-                                                                onTap: (){
-                                                                  print('dhina:${feedsValueNotifier.value.item2.result[index].id.oid}');
-                                                                },
-                                                                child: Text(
-                                                                  (feedsValueNotifier.value.item2.result[index].commentsCount >= 2)
-                                                                      ? "${feedsValueNotifier.value.item2.result[index].commentsCount}"
-                                                                      : (feedsValueNotifier.value.item2.result[index].commentsCount == 1)
-                                                                      ? "${feedsValueNotifier.value.item2.result[index].commentsCount}"
-                                                                      : "No Comment",
-                                                                //  '3.6k',
+                                                               Padding(
+                                                                 padding:  EdgeInsets.fromLTRB(0, 5.h, 0, 0),
+                                                                 child: Text(
+                                                                  (feedsValueNotifier.value.item2.result[index].likesCount >= 2)
+                                                                      ? "${feedsValueNotifier.value.item2.result[index].likesCount}"
+                                                                      : (feedsValueNotifier.value.item2.result[index].likesCount == 1)
+                                                                      ? "${feedsValueNotifier.value.item2.result[index].likesCount}"
+                                                                      : "No Like",
                                                                   style: GoogleFonts.inter(
                                                                       textStyle: TextStyle(fontWeight: FontWeight.w400,
                                                                         color:
                                                                         Color.fromRGBO(51, 51, 51, 1),
                                                                       )),
-                                                                ),
+                                                              ),
+                                                               ),
+
+                                                            SizedBox(
+                                                              width: 13.w,
+                                                            ),
+                                                            Padding(
+                                                              padding:  EdgeInsets.fromLTRB(0, 5.h, 0, 0),
+                                                              child: GestureDetector(
+                                                                onTap:(){
+                                                                  Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(builder: (context) =>Command_page(
+                                                                        postId:feedsValueNotifier.value.item2.result[index].id.oid
+                                                                    )
+                                                                    ),
+                                                                  );
+                                                                },
+                                                                child: SvgPicture.asset(
+                                                                    'assets/pops_asset/pops_commentbutton.svg'),
                                                               ),
                                                             ),
+                                                            SizedBox(
+                                                              width: 4.w,
+                                                            ),
+                                                              Padding(
+                                                                padding:  EdgeInsets.fromLTRB(0, 5.h, 0, 0),
+                                                                child: GestureDetector (
+                                                                  onTap: (){
+                                                                    print('dhina:${feedsValueNotifier.value.item2.result[index].id.oid}');
+                                                                  },
+                                                                  child: Text(
+                                                                    (feedsValueNotifier.value.item2.result[index].commentsCount >= 2)
+                                                                        ? "${feedsValueNotifier.value.item2.result[index].commentsCount}"
+                                                                        : (feedsValueNotifier.value.item2.result[index].commentsCount == 1)
+                                                                        ? "${feedsValueNotifier.value.item2.result[index].commentsCount}"
+                                                                        : "No Comment",
+                                                                  //  '3.6k',
+                                                                    style: GoogleFonts.inter(
+                                                                        textStyle: TextStyle(fontWeight: FontWeight.w400,
+                                                                          color:
+                                                                          Color.fromRGBO(51, 51, 51, 1),
+                                                                        )),
+                                                                  ),
+                                                                ),
+                                                              ),
+
                                                             SizedBox(
                                                               width: 10.w,
                                                             ),
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                showModalBottomSheet(
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.only(
-                                                                          topLeft:
-                                                                          Radius.circular(20),
-                                                                          topRight:
-                                                                          Radius.circular(20))),
-                                                                  context: context,
-                                                                  builder: (context) {
-                                                                    return Container(child: Share_Page());
-                                                                  },
-                                                                );
-                                                              },
-                                                              child: Padding(
-                                                                padding:
-                                                                const EdgeInsets.only(top: 4),
-                                                                child: SvgPicture.asset(
-                                                                  'assets/pops_asset/pops_sharefinal.svg',
-                                                                  height: 15.h,
-                                                                  width: 15.w,
-                                                                ),
+                                                            Padding(
+                                                              padding:  EdgeInsets.fromLTRB(0, 5.h, 0, 0),
+                                                              child: GestureDetector(
+                                                                onTap: () {
+                                                                  showModalBottomSheet(
+                                                                    isScrollControlled: true,
+                                                                    shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.only(
+                                                                            topLeft:
+                                                                            Radius.circular(20),
+                                                                            topRight:
+                                                                            Radius.circular(20))),
+                                                                    context: context,
+                                                                    builder: (context) {
+                                                                      return Container(child: Share_Page());
+                                                                    },
+                                                                  );
+                                                                },
+                                                                  child: SvgPicture.asset(
+                                                                    'assets/pops_asset/pops_sharefinal.svg',
+                                                                    height: 15.h,
+                                                                    width: 15.w,
+                                                                  ),
+
                                                               ),
                                                             ),
-                                                            SizedBox(
-                                                              width: 160.w,
-                                                            ),
+                                                           Spacer(),
                                                             InkWell(
                                                               onTap: (){
-                                                                print('dhina:${uid}');
-                                                               // print('dhina:${feedsValueNotifier.value.item2.result[index].userId}');
+
                                                               },
                                                               child: SvgPicture.asset(
                                                                   'assets/pops_asset/pops_savebutton.svg'),
                                                             )
                                                           ],
                                                         ),
+
+                                                      SizedBox(
+                                                       height: 7.h,
                                                       ),
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(top: 8),
-                                                        child: InkWell(
+                                                       GestureDetector(
                                                           onTap: (){
                                                             Navigator.push(
                                                               context,
@@ -677,9 +684,6 @@ class _Pops_PageState extends State<Pops_Page> {
                                                           },
                                                           child: Row(
                                                             children: [
-                                                              SizedBox(
-                                                                width: 28.w,
-                                                              ),
                                                               Text(
                                                                 'Liked by',
                                                                 style: GoogleFonts.inter(
@@ -689,14 +693,13 @@ class _Pops_PageState extends State<Pops_Page> {
                                                                             0, 0, 0, 1))),
                                                               ),
                                                               SizedBox(
-                                                                width: 5.w,
+                                                                width: 6.w,
                                                               ),
                                                               Container(
                                                                 width: 45.w,
                                                                 child: Stack(
                                                                   children: [
                                                                     likedmembers(),
-
                                                                     Positioned(
                                                                         left: 10,
                                                                         child: likedmembers()),
@@ -708,25 +711,18 @@ class _Pops_PageState extends State<Pops_Page> {
                                                             ],
                                                           ),
                                                         ),
-                                                      ),
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(top: 8),
-                                                        child: Row(
+                                                      SizedBox(height: 3.h),
+                                                         Row(
                                                           children: [
-                                                            SizedBox(
-                                                              width: 28.w,
-                                                            ),
-                                                            InkWell(
+                                                            GestureDetector(
                                                               onTap: (){
                                                                 Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(builder: (context) =>Command_page(
                                                                       postId:feedsValueNotifier.value.item2.result[index].id.oid
-
                                                                   )
                                                                   ),
                                                                 );
-
                                                               },
                                                               child: Text(
                                                                 'view all comments...',
@@ -737,13 +733,13 @@ class _Pops_PageState extends State<Pops_Page> {
                                                               ),
                                                             )
                                                           ],
-                                                        ),
-                                                      ),
+                                                        ), Spacer(),
                                                       Divider(
                                                         thickness: 1,
-                                                        indent: 25,
-                                                        endIndent: 25,
+                                                        indent: 12,
+                                                        endIndent: 12,
                                                       ),
+
                                                     ],
                                                   ),
                                                 ),
@@ -752,19 +748,39 @@ class _Pops_PageState extends State<Pops_Page> {
                                           );
                                         }),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 300,bottom: 20),
-                                    child: FloatingActionButton(
-                                        backgroundColor: Color.fromRGBO(248, 206, 97, 1),
-                                        focusColor: Color.fromRGBO(248, 206, 97, 1),focusElevation: 10,elevation: 10,
-                                        child: Icon(Icons.keyboard_arrow_up,color: Color.fromRGBO(12, 16, 29, 1),size: 40,),
-                                        onPressed: (){}),
-                                  )
                                 ],
                               ),
                             ),
+                              floatingActionButton:SpeedDial(
+                                overlayOpacity:0,
+                                spacing:17,
+                                spaceBetweenChildren: 17,
+                                activeIcon:Icons.keyboard_arrow_up_rounded,
+                                icon: Icons.keyboard_arrow_down_rounded,
+                                backgroundColor:Color.fromRGBO(248, 206, 97, 1),
+                                foregroundColor:Colors.black,
+                                children: [
+                                  SpeedDialChild( backgroundColor:Color.fromRGBO(248, 206, 97, 1),
+                                      child:SvgPicture.asset('assets/pops_asset/pings_icon.svg')
+                                  ),
+                                  SpeedDialChild(
+                                      onTap:() => Navigator.push(context, MaterialPageRoute(builder:
+                                          (context) =>Inter_Actions())),
+                                      backgroundColor:Color.fromRGBO(248, 206, 97, 1),
+                                      child:SvgPicture.asset('assets/pops_asset/interaction_icon.svg')
+                                  ),
+                                  SpeedDialChild( backgroundColor:Color.fromRGBO(248, 206, 97, 1),
+                                      onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) =>
+                                          Requests_Page())),
+                                      child: SvgPicture.asset('assets/pops_asset/pop_request.svg',height:18.h,
+                                        width:18.w,)
+                                  )
+
+                                ],
+                              )
                           ),
-                        );
+                          );
+
 
                       }
                     }

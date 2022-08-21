@@ -160,153 +160,260 @@ class _Command_pageState extends State<Command_page> {
                                         return Scaffold(
                                           appBar: AppBar(
                                             leading:
-                                            IconButton(
-                                              onPressed: (){
-                                                Navigator.pop(context);
-                                              },
-                                              icon: Icon(
-                                                Icons.arrow_back,
-                                                color: Color.fromRGBO(12, 16, 29, 1),
-                                              ),
-                                            ),
-                                            title: InkWell(
-                                              onTap: (){
-                                                print('dhinaa${commentTextEditingController}');
-
-                                              },
-                                              child: Text(
-                                                'Comments',
-                                                style: GoogleFonts.inter(
-                                                    textStyle: TextStyle(
-                                                        fontSize: 18.sp,
-                                                        fontWeight: FontWeight.w400,
-                                                        color: Color.fromRGBO(12, 16, 29, 1))),
-                                              ),
+                                            GestureDetector(
+                                                onTap:(){
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment:CrossAxisAlignment.center,
+                                                  children: [
+                                                    SvgPicture.asset('assets/pops_asset/back_icon.svg',height:35.h,
+                                                      width:35.w,),
+                                                  ],
+                                                )),
+                                            title: Text(
+                                              'Comments',
+                                              style: GoogleFonts.inter(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 18.sp,
+                                                      fontWeight: FontWeight.w400,
+                                                      color: Color.fromRGBO(12, 16, 29, 1))),
                                             ),
                                           ),
-                                          body:
-
-                                                   Column(
-                                                    children: [
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(top:11,left: 12,right: 12),
-                                                        child: TextField(
-
-
-                                                          controller: commentTextEditingController,
-                                                          // onChanged: (value){
-                                                          //
-                                                          //   commentTextEditingController=  _controller;
-                                                          // },
-                                                          decoration: InputDecoration(
-                                                            prefix: Container(
-                                                              height: 54.h,
-                                                              width: 57.w,
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors.black,
-                                                                  borderRadius: BorderRadius.circular(5),
-                                                                  image: DecorationImage(
-                                                                      image: NetworkImage(
-                                                                          'https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80'),
-                                                                      fit: BoxFit.fill)),
-                                                            ),
-
-                                                            suffix:         ElevatedButton(
-                                                                style: ElevatedButton.styleFrom(
-                                                                  elevation: 0,
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(5)),
-                                                                  primary: Color.fromRGBO(248, 206, 97, 1),
-                                                                  fixedSize: Size(80.w,20),
+                                           body:
+                                                    Column(
+                                                     children: [
+                                                       SizedBox(height:11.h),
+                                                      Container(
+                                                        height: 80.h,
+                                                        width: 330.w,
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(color: Color.fromRGBO(214, 214, 214, 1)),
+                                                            borderRadius: BorderRadius.circular(5)),
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(left:13,right:8),
+                                                          child: Row(
+                                                            children: [
+                                                              Container(
+                                                                height: 54.h,
+                                                                width: 57.w,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(5),
+                                                                    image: DecorationImage(
+                                                                        image: NetworkImage(
+                                                                            'https://www.setaswall.com/wp-content/uploads/2021/01/Captain-America-Wallpaper-1080x1920-002.jpg'),
+                                                                        fit: BoxFit.fill)),
+                                                              ),
+                                                              Container(height: 50.h,width: 150.w,
+                                                                child: TextField(
+                                                                  controller: commentTextEditingController,
+                                                                  decoration: InputDecoration(
+                                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)
+                                                                    ),
+                                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)
+                                                                    ),
+                                                                    hintText: '@ thewebions',
+                                                                    hintStyle: GoogleFonts.inter(
+                                                                        textStyle: TextStyle(
+                                                                            fontSize: 12.sp,
+                                                                            fontWeight: FontWeight.w400,
+                                                                            color: Color.fromRGBO(0, 0, 0, 1))),
+                                                                  ),
                                                                 ),
+                                                              ),
+                                                              Spacer(),
+                                                              ElevatedButton(
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    elevation: 0,
+                                                                    shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(5)),
+                                                                    primary: Color.fromRGBO(248, 206, 97, 1),
+                                                                    fixedSize: Size(58.w, 22.h),
+                                                                  ),
+                                                                  onPressed: () {
+                                                                    onPressed: (
+                                                                        postEnable == false ||
+                                                                            createCommentValueNotifier.value.item1 == 0 ||
+                                                                            replyCommentValueNotifier.value.item1 == 0)
+                                                                        ? null
+                                                                        : (isReply)
+                                                                        ? () async {
 
-                                                                // onPressed: (){
-                                                                //
-                                                                //   setState(() {
-                                                                //     commentText=commentTextEditingController.text.toString();
-                                                                //   });
-                                                                // },
-                                                                onPressed: (
-                                                                    postEnable == false ||
-                                                                    createCommentValueNotifier.value.item1 == 0 ||
-                                                                    replyCommentValueNotifier.value.item1 == 0)
-                                                                    ? null
-                                                                    : (isReply)
-                                                                    ? () async {
-
-                                                                  return await replyCommentApiCall(
-                                                                      commentId: listCommentsValueNotifier.
-                                                                      value.item2.result[commentIndex].
-                                                                      id.oid)
-                                                                      .whenComplete(() async {
+                                                                      return await replyCommentApiCall(
+                                                                          commentId: listCommentsValueNotifier.
+                                                                          value.item2.result[commentIndex].
+                                                                          id.oid)
+                                                                          .whenComplete(() async {
                                                                         print('1111');
-                                                                    if (replyCommentValueNotifier.value.item1 == 1) {
-                                                                      FocusManager.instance.primaryFocus?.unfocus();
-                                                                      if (!mounted) return;
-                                                                      setState(() {
+                                                                        if (replyCommentValueNotifier.value.item1 == 1) {
+                                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                                          if (!mounted) return;
+                                                                          setState(() {
+                                                                            isReply = false;
+                                                                            commentTextEditingController.clear();
+                                                                            valueResetter(replyCommentValueNotifier);
+                                                                          });
+                                                                          return await listCommentsApiCall();
+                                                                        } else if (replyCommentValueNotifier.value.item1 == 2 ||
+                                                                            replyCommentValueNotifier.value.item1 == 3) {
+                                                                          final snackBar = snackbar(content: replyCommentValueNotifier.value.item3);
+                                                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                        }
+                                                                      });
+                                                                    }
+                                                                        : () async {
+                                                                      print('2222');
+                                                                      return await createCommentApiCall().whenComplete(() async {
                                                                         isReply = false;
-                                                                        commentTextEditingController.clear();
-                                                                        valueResetter(replyCommentValueNotifier);
+                                                                        if (createCommentValueNotifier.value.item1 == 1) {
+                                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                                          if (!mounted) return;
+                                                                          setState(() {
+                                                                            commentTextEditingController.clear();
+                                                                            valueResetter(createCommentValueNotifier);
+                                                                          });
+                                                                          return await listCommentsApiCall();
+                                                                        } else if (createCommentValueNotifier.
+                                                                        value.item1 == 2 || createCommentValueNotifier.value.item1 == 3) {
+                                                                          final snackBar = snackbar(content: createCommentValueNotifier.value.item3);
+                                                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                        }
                                                                       });
-                                                                      return await listCommentsApiCall();
-                                                                    } else if (replyCommentValueNotifier.value.item1 == 2 ||
-                                                                        replyCommentValueNotifier.value.item1 == 3) {
-                                                                      final snackBar = snackbar(content: replyCommentValueNotifier.value.item3);
-                                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                    }
-                                                                  });
-                                                                }
-                                                                    : () async {
-                                                                  print('2222');
-                                                                  return await createCommentApiCall().whenComplete(() async {
-                                                                    isReply = false;
-                                                                    if (createCommentValueNotifier.value.item1 == 1) {
-                                                                      FocusManager.instance.primaryFocus?.unfocus();
-                                                                      if (!mounted) return;
-                                                                      setState(() {
-                                                                        commentTextEditingController.clear();
-                                                                        valueResetter(createCommentValueNotifier);
-                                                                      });
-                                                                      return await listCommentsApiCall();
-                                                                    } else if (createCommentValueNotifier.
-                                                                    value.item1 == 2 || createCommentValueNotifier.value.item1 == 3) {
-                                                                      final snackBar = snackbar(content: createCommentValueNotifier.value.item3);
-                                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                    }
-                                                                  });
-                                                                },
-                                                                child: Center(
+                                                                    };
+                                                                  },
                                                                   child: Text(
                                                                     'Post',
                                                                     style: GoogleFonts.inter(
                                                                         textStyle: TextStyle(
                                                                             color: Color.fromRGBO(0, 0, 0, 1),
-                                                                            fontSize: 18.sp,
+                                                                            fontSize: 14.sp,
                                                                             fontWeight: FontWeight.w700)),
-                                                                  ),
-                                                                )
-                                                            ),
-
-                                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
-                                                                borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
-                                                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
-                                                                borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
-                                                            contentPadding: EdgeInsets.all(17),
-                                                            hintText: '@ thewebions',
-                                                            hintStyle: GoogleFonts.inter(
-                                                                textStyle: TextStyle(
-                                                                    color: Color.fromRGBO(0, 0, 0, 1),
-                                                                    fontWeight: FontWeight.w400)),
+                                                                  )),
+                                                            ],
                                                           ),
                                                         ),
                                                       ),
+
+
+
+                                                      // Padding(
+                                                      //   padding:  EdgeInsets.only(top:11,left: 12,right: 12),
+                                                      //   child: TextField(
+                                                      //     controller: commentTextEditingController,
+                                                      //     decoration: InputDecoration(
+                                                      //       prefix: Container(
+                                                      //         height: 54.h,
+                                                      //         width: 57.w,
+                                                      //         decoration: BoxDecoration(
+                                                      //             color: Colors.black,
+                                                      //             borderRadius: BorderRadius.circular(5),
+                                                      //             image: DecorationImage(
+                                                      //                 image: NetworkImage(
+                                                      //                     'https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80'),
+                                                      //                 fit: BoxFit.fill)),
+                                                      //       ),
+                                                      //
+                                                      //       suffix:         ElevatedButton(
+                                                      //           style: ElevatedButton.styleFrom(
+                                                      //             elevation: 0,
+                                                      //             shape: RoundedRectangleBorder(
+                                                      //                 borderRadius: BorderRadius.circular(5)),
+                                                      //             primary: Color.fromRGBO(248, 206, 97, 1),
+                                                      //             fixedSize: Size(80.w,20),
+                                                      //           ),
+                                                      //
+                                                      //           // onPressed: (){
+                                                      //           //
+                                                      //           //   setState(() {
+                                                      //           //     commentText=commentTextEditingController.text.toString();
+                                                      //           //   });
+                                                      //           // },
+                                                      //           onPressed: (
+                                                      //               postEnable == false ||
+                                                      //               createCommentValueNotifier.value.item1 == 0 ||
+                                                      //               replyCommentValueNotifier.value.item1 == 0)
+                                                      //               ? null
+                                                      //               : (isReply)
+                                                      //               ? () async {
+                                                      //
+                                                      //             return await replyCommentApiCall(
+                                                      //                 commentId: listCommentsValueNotifier.
+                                                      //                 value.item2.result[commentIndex].
+                                                      //                 id.oid)
+                                                      //                 .whenComplete(() async {
+                                                      //                   print('1111');
+                                                      //               if (replyCommentValueNotifier.value.item1 == 1) {
+                                                      //                 FocusManager.instance.primaryFocus?.unfocus();
+                                                      //                 if (!mounted) return;
+                                                      //                 setState(() {
+                                                      //                   isReply = false;
+                                                      //                   commentTextEditingController.clear();
+                                                      //                   valueResetter(replyCommentValueNotifier);
+                                                      //                 });
+                                                      //                 return await listCommentsApiCall();
+                                                      //               } else if (replyCommentValueNotifier.value.item1 == 2 ||
+                                                      //                   replyCommentValueNotifier.value.item1 == 3) {
+                                                      //                 final snackBar = snackbar(content: replyCommentValueNotifier.value.item3);
+                                                      //                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                      //               }
+                                                      //             });
+                                                      //           }
+                                                      //               : () async {
+                                                      //             print('2222');
+                                                      //             return await createCommentApiCall().whenComplete(() async {
+                                                      //               isReply = false;
+                                                      //               if (createCommentValueNotifier.value.item1 == 1) {
+                                                      //                 FocusManager.instance.primaryFocus?.unfocus();
+                                                      //                 if (!mounted) return;
+                                                      //                 setState(() {
+                                                      //                   commentTextEditingController.clear();
+                                                      //                   valueResetter(createCommentValueNotifier);
+                                                      //                 });
+                                                      //                 return await listCommentsApiCall();
+                                                      //               } else if (createCommentValueNotifier.
+                                                      //               value.item1 == 2 || createCommentValueNotifier.value.item1 == 3) {
+                                                      //                 final snackBar = snackbar(content: createCommentValueNotifier.value.item3);
+                                                      //                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                      //               }
+                                                      //             });
+                                                      //           },
+                                                      //           child: Center(
+                                                      //             child: Text(
+                                                      //               'Post',
+                                                      //               style: GoogleFonts.inter(
+                                                      //                   textStyle: TextStyle(
+                                                      //                       color: Color.fromRGBO(0, 0, 0, 1),
+                                                      //                       fontSize: 18.sp,
+                                                      //                       fontWeight: FontWeight.w700)),
+                                                      //             ),
+                                                      //           )
+                                                      //       ),
+                                                      //
+                                                      //       border: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
+                                                      //           borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
+                                                      //       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5),
+                                                      //           borderSide: BorderSide(width: 1.w,color: Color.fromRGBO(214, 214, 214, 1))),
+                                                      //       contentPadding: EdgeInsets.all(17),
+                                                      //       hintText: '@ thewebions',
+                                                      //       hintStyle: GoogleFonts.inter(
+                                                      //           textStyle: TextStyle(
+                                                      //               color: Color.fromRGBO(0, 0, 0, 1),
+                                                      //               fontWeight: FontWeight.w400)),
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
+
+
+
+
+
                                                       Expanded(
                                                         child: ListView.builder(
                                                            itemCount: listCommentsValueNotifier.value.item2.result.length,
                                                           //  itemCount: 5,
                                                             itemBuilder: (context, commentIndex) {
                                                               return Padding(
-                                                                padding: const EdgeInsets.only(top: 16, left: 2),
+                                                                padding:  EdgeInsets.only(top: 16, left: 2),
                                                                 child: Row(
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
@@ -317,13 +424,9 @@ class _Command_pageState extends State<Command_page> {
                                                                       height: 32.h,
                                                                       width: 32.w,
                                                                       decoration: BoxDecoration(
-                                                                          color: Colors.yellow,
                                                                           shape: BoxShape.circle,
-                                                                          image: DecorationImage(
+                                                                          image: DecorationImage(fit:BoxFit.fill,
                                                                               image: NetworkImage(
-                                                                                  // 'http://www.goodmorningimagesdownload.com/wp-content/u'
-                                                                                  //     'ploads/2021/07/1080p-New-Cool-Whatsapp-Dp-Profile-Ima'
-                                                                                  //     'ges-pictures-hd-1-300x300.jpg'
                                                                                   listCommentsValueNotifier.value.item2.result[commentIndex].postedBy.profilePic
                                                                               ))),
                                                                     ),
@@ -334,16 +437,10 @@ class _Command_pageState extends State<Command_page> {
                                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                                       children: [
                                                                         Padding(
-                                                                          padding: const EdgeInsets.only(left: 3),
-                                                                          child: Text(
-
-                                                                             listCommentsValueNotifier.value.item2.result[commentIndex].postedBy.username,
-
-
+                                                                          padding: EdgeInsets.only(left: 3),
+                                                                          child: Text(listCommentsValueNotifier.value.item2.result[commentIndex].postedBy.username,
                                                                             style: GoogleFonts.inter(
-                                                                                textStyle: TextStyle(
-                                                                                    fontWeight: FontWeight.w700,
-                                                                                    fontSize: 14.sp,
+                                                                                textStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.sp,
                                                                                     color: Color.fromRGBO(0, 0, 0, 1))),
                                                                           ),
                                                                         ),
@@ -361,7 +458,7 @@ class _Command_pageState extends State<Command_page> {
                                                                         ),
                                                                         SizedBox(height: 10.h),
                                                                         Padding(
-                                                                          padding: const EdgeInsets.only(left: 4),
+                                                                          padding: EdgeInsets.only(left: 4),
                                                                           child: Row(
                                                                             children: [
                                                                               SvgPicture.asset(
@@ -403,7 +500,7 @@ class _Command_pageState extends State<Command_page> {
                                                                     )
                                                                   ],
                                                                 ),
-                                                              );;
+                                                              );
                                                             }),
                                                       )
 
