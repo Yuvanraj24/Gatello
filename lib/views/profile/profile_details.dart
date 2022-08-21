@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gatello/views/profile/editprofile.dart';
 import 'package:gatello/views/profile/see_more.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../Style/Colors.dart';
 import '/core/models/My_Feeds.dart' as myFeedsModel;
 import 'package:intl/intl.dart';
 import 'package:tuple/tuple.dart';
@@ -23,6 +25,7 @@ class Profile extends StatefulWidget {
 }
 class _ProfileState extends State<Profile> {
   String formatDate(DateTime date) => new DateFormat("dd-MM-yyyy").format(date);
+  ValueNotifier<Tuple4> myFeedsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0,
       exceptionFromJson(loading), "Loading", null));
 
@@ -51,13 +54,22 @@ class _ProfileState extends State<Profile> {
   //   profileDetailsValueNotifier.dispose();
   //   super.dispose();
   // }
-  Future feedsApiCall() async {
+  // Future feedsApiCall() async {
+  //   return await ApiHandler().apiHandler(
+  //     valueNotifier: feedsValueNotifier,
+  //     jsonModel: myFeedsModel.myFeedsFromJson,
+  //     url: myFeedsUrl,
+  //     requestMethod: 1,
+  //     body: {"user_id":  's8b6XInslPffQEgz8sVTINsPhcx2'},
+  //   );
+  // }
+  Future myFeedsApiCall() async {
     return await ApiHandler().apiHandler(
-      valueNotifier: feedsValueNotifier,
+      valueNotifier: myFeedsValueNotifier,
       jsonModel: myFeedsModel.myFeedsFromJson,
       url: myFeedsUrl,
       requestMethod: 1,
-      body: {"user_id":  's8b6XInslPffQEgz8sVTINsPhcx2'},
+      body: {"user_id":'s8b6XInslPffQEgz8sVTINsPhcx2'},
     );
   }
   @override
@@ -67,7 +79,7 @@ class _ProfileState extends State<Profile> {
       builder: (context,_) {
 
         return FutureBuilder(
-          future:feedsApiCall(),
+          future:myFeedsApiCall(),
           builder: (context,_) {
             return DefaultTabController(length:3,initialIndex:1,
               child: Scaffold(
@@ -173,8 +185,7 @@ class _ProfileState extends State<Profile> {
                                 image: DecorationImage(
                                     image: NetworkImage(
                                         profileDetailsValueNotifier.value.item2.result.profileDetails.profileUrl,
-                                        // 'https://ukcompaniesco.com/wp-content/uploads/2020/05/company-formation-in-t'
-                                        //     'he-united-kingdom.jpg'
+
                                     ),
                                     fit: BoxFit.fill),
 
@@ -275,7 +286,7 @@ class _ProfileState extends State<Profile> {
                                   onTap:(){
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) =>Followers_Page(id:profileDetailsValueNotifier.value.item2.result.profileDetails.userId )),
+                                      MaterialPageRoute(builder: (context) =>Followers_Page(Id:profileDetailsValueNotifier.value.item2.result.profileDetails.userId )),
                                     );
                                   },
                                   child: Column(
@@ -526,29 +537,135 @@ class _ProfileState extends State<Profile> {
                               Text('Video Pops'),
                             ]),
                         Container(padding:EdgeInsets.only(top:10),child:  TabBarView(children: <Widget>[
-                          GridView.builder(
-                              itemCount:
-                              feedsValueNotifier.value.item2.result.length,
-                              shrinkWrap:true,
-                              itemBuilder: ( context,index){
-
-                                return InkWell(
-                                  onTap: (){
-                                    print('dhina:${ feedsValueNotifier.value.item2}');
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: GridView.builder(
+                              itemCount: myFeedsValueNotifier.value.item2.result.length,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, crossAxisSpacing: 5),
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, gridIndex) {
+                                return GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>Profile() ));
                                   },
-                                  child: Image.network(
-                                      'https://wallpaperaccess.com/full/33115.jpg '  ,
-                                     // 'https://z.com/full/33115.jpg',
-                                      fit:BoxFit.fill),
-                                );},
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
-                                  crossAxisSpacing:3,mainAxisSpacing:3)),
-                          GridView.builder(itemCount:feedsValueNotifier.value.item2.result.length,shrinkWrap:true,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    fit: StackFit.expand,
+                                    children: [
+                                      (myFeedsValueNotifier.value.item2.result[gridIndex].posts[0].toString().contains("mp4") ||
+                                          myFeedsValueNotifier.value.item2.result[gridIndex].posts[0].toString().contains("mpeg4"))
+                                          ? Stack(
+                                        children: [
+                                          Container(
+                                            color: Color(materialBlack),
+                                          ),
+                                          Center(
+                                              child: Container(
+                                                height: 60.h,
+                                                width: 60.w,
+                                                child: Icon(
+                                                  Icons.play_arrow_rounded,
+                                                  size: 45,
+                                                  color: Color.fromRGBO(248, 206, 97, 1),
+
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Color.fromRGBO(255, 255, 255, 1)
+
+                                                ),
+                                              ))
+                                        ],
+                                      )
+                                          : CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        fadeInDuration: const Duration(milliseconds: 400),
+                                        progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                          child: Container(
+                                            width: 20.0,
+                                            height: 20.0,
+                                            child: CircularProgressIndicator(value: downloadProgress.progress),
+                                          ),
+                                        ),
+                                        imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
+                                        errorWidget: (context, url, error) => Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
+                                      ),
+                                      // : CachedNetworkImage(
+                                      //     fadeInDuration: const Duration(milliseconds: 400),
+                                      //     progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                      //       child: Container(
+                                      //         width: 20.0,
+                                      //         height: 20.0,
+                                      //         child: CircularProgressIndicator(value: downloadProgress.progress),
+                                      //       ),
+                                      //     ),
+                                      //     imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
+                                      //     fit: BoxFit.cover,
+                                      //     errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
+                                      //   ),
+                                      (myFeedsValueNotifier.value.item2.result[gridIndex].posts.length > 1)
+                                          ? Positioned(
+                                          top: 5,
+                                          right: 5,
+                                          child: Icon(
+                                            Icons.collections_rounded,
+                                            color: Color(white),
+                                            size: 15,
+                                          ))
+                                          : Container()
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          // GridView.builder(
+                          //     itemCount:5,
+                          //   //  feedsValueNotifier.value.item2.result.length,
+                          //     shrinkWrap:true,
+                          //     itemBuilder: ( context,index){
+                          //
+                          //       return InkWell(
+                          //         onTap: (){
+                          //           print('dhina:${ feedsValueNotifier.value.item2.result[index].posts[index]}');
+                          //         },
+                          //         child: Image.network(
+                          //            // feedsValueNotifier.value.item2.result[index].posts[index],
+                          //             'https://wallpaperaccess.com/full/33115.jpg',
+                          //            // 'https://z.com/full/33115.jpg',
+                          //             fit:BoxFit.fill),
+                          //       );},
+                          //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
+                          //         crossAxisSpacing:3,mainAxisSpacing:3)),
+
+// GridView.builder(gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, crossAxisSpacing: 5),
+//     itemCount: myFeedsValueNotifier.value.item2.result.length,
+//     itemBuilder: (context, gridIndex){
+// return CachedNetworkImage(
+//   fit: BoxFit.cover,
+//   fadeInDuration: const Duration(milliseconds: 400),
+//   progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+//     child: Container(
+//       width: 20.0,
+//       height: 20.0,
+//       child: CircularProgressIndicator(value: downloadProgress.progress),
+//     ),
+//   ),
+//   imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
+//   errorWidget: (context, url, error) => Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
+// );
+//
+//     }),
+                          GridView.builder(itemCount:5,shrinkWrap:true,
                               itemBuilder: (BuildContext context, int index) {
                                 return Image.network('https://wallpaperaccess.com/full/33115.jpg',fit:BoxFit.fill);},
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
                                   crossAxisSpacing:3,mainAxisSpacing:3)),
-                          GridView.builder(itemCount:feedsValueNotifier.value.item2.result.length,shrinkWrap:true,
+
+
+                          GridView.builder(itemCount:5,shrinkWrap:true,
                               itemBuilder: (BuildContext context, int index) {
                                 return Image.network('https://wallpaperaccess.com/full/33115.jpg',fit:BoxFit.fill);},
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,

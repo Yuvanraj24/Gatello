@@ -90,10 +90,10 @@ class _TabState extends State<Tabbar> {
 
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(builder: (context) =>Profile(
+                                              MaterialPageRoute(builder: (context) =>Profile()
 
                                                 //  feedsValueNotifier.value.item2.result[index].userId
-                                              )
+
                                               ),
                                             );
                                           } ,
