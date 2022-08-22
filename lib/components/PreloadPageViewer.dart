@@ -27,7 +27,8 @@ class _PreloadPageViewWidgetState extends State<PreloadPageViewWidget> {
   late PreloadPageController preloadPageController;
   @override
   void initState() {
-    preloadPageController = PreloadPageController(initialPage: widget.valueNotifier.value.item2.result[widget.index].currentPage);
+    preloadPageController = PreloadPageController(initialPage: widget.valueNotifier.value.item2.result[widget.index].
+    currentPage);
     super.initState();
   }
 
@@ -134,7 +135,8 @@ child: CarouselSlider.builder(itemCount:  widget.valueNotifier.value.item2.resul
             child: Chip(
               backgroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
               label: Text(
-                "${widget.valueNotifier.value.item2.result[widget.index].currentPage + 1}" + "/" + "${widget.valueNotifier.value.item2.result[widget.index].posts.length}",
+                "${widget.valueNotifier.value.item2.result[widget.index].currentPage + 1}" +
+                    "/" + "${widget.valueNotifier.value.item2.result[widget.index].posts.length}",
                 style: GoogleFonts.poppins(
                     textStyle: textStyle(
                       fontSize: 10,

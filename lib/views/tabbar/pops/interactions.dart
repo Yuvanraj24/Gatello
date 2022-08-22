@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/models/interactions_model.dart';
-
-
-
 class Inter_Actions extends StatefulWidget {
   const Inter_Actions({Key? key}) : super(key: key);
 
@@ -18,34 +14,25 @@ class _Inter_ActionsState extends State<Inter_Actions> {
   String? imageurl;
   String? name;
   String? notifications;
-  String? timing;
+  String?  timing;
 
-  List<InteractionsModel> dataModel = [];
-
+  List<InteractionsModel> dataModel=[];
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
-    dataModel = interactiondata();
-  }
 
+    super.initState();
+    dataModel=interactiondata();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          leading: GestureDetector(
-              onTap:(){
-                Navigator.pop(context);
-              },
-              child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment:CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset('assets/pops_asset/back_icon.svg',height:35.h,
-                    width:35.w,),
-                ],
-              )),
+          leading: Icon(
+            Icons.arrow_back,
+            color: Color.fromRGBO(12, 16, 29, 1),
+          ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,32 +56,27 @@ class _Inter_ActionsState extends State<Inter_Actions> {
           ),
         ),
         body: Container(
-          padding:EdgeInsets.only(right:12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding:EdgeInsets.only(top:7,left:15),
-                child: Text('Today', style: GoogleFonts.inter(
-                    textStyle: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12.sp,
-                        color: Color.fromRGBO(0, 0, 0, 1))),
+                padding: const EdgeInsets.only(top: 7, left: 15),
+                child: Text(
+                  'Today',
+                  style: GoogleFonts.inter(
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12.sp,
+                          color: Color.fromRGBO(0, 0, 0, 1))),
                 ),
               ),
-              SizedBox(
-                height: 14.h,
-              ),
+              SizedBox(height: 14.h,),
               Expanded(
                 child: ListView.builder(
-                  itemCount: 2,
+                  itemCount:2,
                   itemBuilder: (context, index) {
-                    return inter_Actions(
-                        dataModel[index].imageurl,
-                        dataModel[index].name,
-                        dataModel[index].notification,
-                        dataModel[index].timing);
-                  },
+                  return inter_Actions(dataModel[index].imageurl,dataModel[index].name,dataModel[index].notification,dataModel[index].timing);
+                },
                 ),
               ),
             ],
@@ -104,8 +86,7 @@ class _Inter_ActionsState extends State<Inter_Actions> {
     );
   }
 }
-
-Widget inter_Actions(img, name, notifi, time) {
+Widget inter_Actions (img,name,notifi,time){
   return Column(
     children: [
       Row(
@@ -126,9 +107,11 @@ Widget inter_Actions(img, name, notifi, time) {
             height: 50.h,
             width: 50.w,
             decoration: BoxDecoration(
+                color: Colors.yellow,
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                    image: NetworkImage(img), fit: BoxFit.fill)),
+                    image: NetworkImage(
+                        img),fit: BoxFit.fill)),
           ),
           SizedBox(
             width: 27.w,
@@ -141,7 +124,7 @@ Widget inter_Actions(img, name, notifi, time) {
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w700,
-                        fontSize: 12.sp,
+                        fontSize: 14.sp,
                         color: Color.fromRGBO(0, 0, 0, 1))),
               ),
               SizedBox(
@@ -152,33 +135,32 @@ Widget inter_Actions(img, name, notifi, time) {
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: 12.sp,
+                        fontSize: 14.sp,
                         color: Color.fromRGBO(45, 45, 45, 1))),
               ),
             ],
           ),
-          Spacer(),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0.w, 0.h, 12.w, 0.h),
-            child: Text(
-              time,
-              style: GoogleFonts.inter(
-                  textStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12.sp,
-                      color: Color.fromRGBO(161, 161, 161, 1))),
-            ),
+          SizedBox(
+            width: 105.w,
+          ),
+          Text(
+            time,
+            style: GoogleFonts.inter(
+                textStyle: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 15.sp,
+                    color: Color.fromRGBO(161, 161, 161, 1))),
           )
         ],
       ),
       Divider(
         thickness: 2,
-        indent: 12,
+        indent:12 ,
         endIndent: 12,
         color: Color.fromRGBO(244, 244, 244, 1),
       ),
       SizedBox(
-        height: 15.h,
+        height:15.h,
       ),
     ],
   );

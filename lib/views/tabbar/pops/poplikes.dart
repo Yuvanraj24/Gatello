@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tuple/tuple.dart';
 import '../../../Others/Routers.dart';
@@ -41,30 +40,22 @@ class _pop_LikesState extends State<pop_Likes> {
       builder: (context,_) {
         return Scaffold(
           appBar: AppBar(
-            leading: GestureDetector(
-                onTap:(){
-                  Navigator.pop(context);
-                },
-                child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment:CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset('assets/pops_asset/back_icon.svg',height:35.h,
-                      width:35.w,),
-                  ],
-                )),
+            leading: GestureDetector(onTap:(){
+              Navigator.pop(context);
+            },child: Icon(Icons.arrow_back,color: Color.fromRGBO(12, 16, 29, 1),)),
             title: InkWell(
               onTap: (){
                 print('dhina:${likeListValueNotifier.value.item2.result.length}');
               },
               child: Text('Pop Likes',style: GoogleFonts.inter(
                 textStyle: TextStyle(
-                  fontWeight: FontWeight.w700,fontSize: 20.sp,color: Color.fromRGBO(0, 0, 0, 1)
+                  fontWeight: FontWeight.w700,fontSize: 24.sp,color: Color.fromRGBO(0, 0, 0, 1)
                 )
               ),),
             ),
           ),
           body: Padding(
-            padding:EdgeInsets.only(top:17,left:10,right: 11),
+            padding: const EdgeInsets.only(top:17,left:10,right: 11),
             child: Column(
               children: [
                 Row(
@@ -94,7 +85,7 @@ class _pop_LikesState extends State<pop_Likes> {
                     ),
                    Spacer(),
                     Padding(
-                      padding:  EdgeInsets.only(right:11),
+                      padding: const EdgeInsets.only(right:11),
                       child: Container(height: 54.h,width: 72.h,
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
                             image:DecorationImage(image: NetworkImage('https://wallpaper-house.com/data/out/8/wallpaper2you_216880.jpg'),
@@ -104,38 +95,27 @@ class _pop_LikesState extends State<pop_Likes> {
                   ],
                 ),
                 SizedBox(height:8.h),
-                Container(height:35.h,width:335.w, decoration: BoxDecoration(
-                    color:Color.fromRGBO(232, 232, 232, 1),borderRadius:BorderRadius.circular(4)),
-                  child: Row(children: [
-                    SizedBox(width:18.w),
-                    Column(crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset('assets/pops_asset/searchicon.svg',height:18.h,
-                          width:18.w,),
-                      ],
+                TextField(
+                  controller: _controller6,
+                  decoration: InputDecoration(
+                    hintText: 'Peter Parker',
+                    hintStyle: GoogleFonts.inter(
+                      textStyle: TextStyle(color: Color.fromRGBO(118, 118, 118, 1),
+                      fontWeight: FontWeight.w400,fontSize:14)
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top:19,left:18),
-                      height:35.h,width:200.w,
-                      child: TextField(controller:_controller6,
-                        cursorColor:Colors.black,
-                        decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1.w,
-                                    color: Colors.transparent),
-                                borderRadius: BorderRadius.circular(10)),
-                            hintText:'Peter Parker',hintStyle:GoogleFonts.inter(
-                            textStyle:TextStyle(fontWeight:FontWeight.w400,fontSize: 14.sp,
-                                color: Color.fromRGBO(118, 118, 118, 1))
-                        )
-                        ),),
-                    )
-                  ],),
+                    prefixIcon: Icon(Icons.search_rounded,size: 35,color: Colors.black,
+                    ),
+                    filled: true,
+                    fillColor: Color.fromRGBO(217, 217, 217, 1),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color.fromRGBO(217, 217, 217, 1),width: 1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color.fromRGBO(217, 217, 217, 1),width: 1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 28.h),
                 Expanded(

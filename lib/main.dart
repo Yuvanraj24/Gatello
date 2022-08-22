@@ -24,6 +24,7 @@ import 'package:gatello/views/tabbar/pops/interactions.dart';
 import 'package:gatello/views/tabbar/pops/newpost.dart';
 import 'package:gatello/views/tabbar/pops/poplikes.dart';
 import 'package:gatello/views/tabbar/pops/pops.dart';
+
 import 'package:gatello/views/tabbar/pops/report.dart';
 import 'package:gatello/views/tabbar/pops/secondreport.dart';
 import 'package:gatello/views/tabbar/pops/share.dart';
@@ -150,7 +151,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar() : LoginScreen();
+                              return (snapshot.data == true) ? Tabbar() :Tabbar();
                             } else {
                               return lottieAnimation(loadingLottie);
                             }

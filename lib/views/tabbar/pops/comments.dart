@@ -171,13 +171,18 @@ class _Command_pageState extends State<Command_page> {
                                                       width:35.w,),
                                                   ],
                                                 )),
-                                            title: Text(
-                                              'Comments',
-                                              style: GoogleFonts.inter(
-                                                  textStyle: TextStyle(
-                                                      fontSize: 18.sp,
-                                                      fontWeight: FontWeight.w400,
-                                                      color: Color.fromRGBO(12, 16, 29, 1))),
+                                            title: InkWell(
+                                              onTap: (){
+                                                print('dhina:${userDetailsValueNotifier.value.item2.result.userId}');
+                                              },
+                                              child: Text(
+                                                'Comments',
+                                                style: GoogleFonts.inter(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 18.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Color.fromRGBO(12, 16, 29, 1))),
+                                              ),
                                             ),
                                           ),
                                            body:

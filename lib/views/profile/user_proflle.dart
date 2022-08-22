@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,6 +7,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
+import '../../Style/Colors.dart';
+import '../../Style/Text.dart';
+import '../../components/SnackBar.dart';
+import '../../components/flatButton.dart';
+import '../../core/Models/Default.dart';
+import '../tabbar/chats/personal_chat_screen/ChatPage.dart';
 import '/core/models/My_Feeds.dart' as myFeedsModel;
 import '../../Authentication/Authentication.dart';
 import '../../Others/Routers.dart';
@@ -27,6 +34,7 @@ class _UserProfileState extends State<UserProfile> {
 
   ValueNotifier<Tuple4> feedsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0,
       exceptionFromJson(loading), "Loading", null));
+  ValueNotifier<Tuple4> followValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   int i=0;
 
   Future profileDetailsApiCall() async {
@@ -44,7 +52,26 @@ class _UserProfileState extends State<UserProfile> {
       body: body,
     );
   }
+  Future followApiCall() async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: followValueNotifier,
+      jsonModel: defaultFromJson,
+      url: followUrl,
+      requestMethod: 1,
+      // body: {"user_id": widget.uid, "following_id": getUID()},
+      body: {"user_id": getUID(), "following_id": widget.uid},
+    );
+  }
 
+  Future unfollowApiCall() async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: followValueNotifier,
+      jsonModel: defaultFromJson,
+      url: unfollowUrl,
+      requestMethod: 1,
+      body: {"user_id": getUID(), "following_id": widget.uid},
+    );
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -214,20 +241,89 @@ class _UserProfileState extends State<UserProfile> {
                                               color: Color.fromRGBO(0, 0, 0, 1))),
                                     ),
                                     Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right:35),
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(elevation: 0,
-                                            shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                            primary:Color.fromRGBO(248, 206, 97, 1),fixedSize: Size(180.w,29.h),
-                                          ),
-                                          onPressed: (){}, child: Text('Follow',style: GoogleFonts.inter(
-                                          textStyle: TextStyle(
-                                              color: Color.fromRGBO(0, 0, 0, 1),fontSize:15,fontWeight: FontWeight.w700
-                                          )
-                                      ),)),
-                                    ),
-
+                                    // Padding(
+                                    //   padding: const EdgeInsets.only(right:35),
+                                    //   child: ElevatedButton(
+                                    //       style: ElevatedButton.styleFrom(elevation: 0,
+                                    //         shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                    //         primary:Color.fromRGBO(248, 206, 97, 1),fixedSize: Size(180.w,29.h),
+                                    //       ),
+                                    //       onPressed: (){}, child: Text('Follow',style: GoogleFonts.inter(
+                                    //       textStyle: TextStyle(
+                                    //           color: Color.fromRGBO(0, 0, 0, 1),fontSize:15,fontWeight: FontWeight.w700
+                                    //       )
+                                    //   ),)),
+                                    // ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                    //   child: Row(
+                                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    //     children: [
+                                    //       Flexible(
+                                    //         child: flatButton(
+                                    //             onPressed: (followValueNotifier.value.item1 == 0)
+                                    //                 ? null
+                                    //                 : (profileDetailsValueNotifier.value.item2.result.isFollowing)
+                                    //                 ? () {
+                                    //               return unfollowApiCall().whenComplete(() async {
+                                    //                 if (followValueNotifier.value.item1 == 1) {
+                                    //                   if (!mounted) return;
+                                    //                   setState(() {
+                                    //                     profileDetailsValueNotifier.value.item2.result.isFollowing = false;
+                                    //                     profileDetailsValueNotifier.value.item2.result.profileDetails.followersCount -= 1;
+                                    //                   });
+                                    //                 } else if (followValueNotifier.value.item1 == 2 || followValueNotifier.value.item1 == 3) {
+                                    //                   final snackBar = snackbar(content: followValueNotifier.value.item3.toString());
+                                    //                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    //                 }
+                                    //               });
+                                    //             }
+                                    //                 : () {
+                                    //               return followApiCall().whenComplete(() async {
+                                    //                 if (followValueNotifier.value.item1 == 1) {
+                                    //                   if (!mounted) return;
+                                    //                   setState(() {
+                                    //                     profileDetailsValueNotifier.value.item2.result.isFollowing = true;
+                                    //                     profileDetailsValueNotifier.value.item2.result.profileDetails.followersCount += 1;
+                                    //                   });
+                                    //                 } else if (followValueNotifier.value.item1 == 2 || followValueNotifier.value.item1 == 3) {
+                                    //                   final snackBar = snackbar(content: followValueNotifier.value.item3.toString());
+                                    //                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    //                 }
+                                    //               });
+                                    //             },
+                                    //             size: Size(MediaQuery.of(context).size.width, 45),
+                                    //             backgroundColor: Color(accent),
+                                    //             child: Text(
+                                    //               (profileDetailsValueNotifier.value.item2.result.isFollowing) ? "Unfollow" : "Follow",
+                                    //               style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 12, color: Color(materialBlack))),
+                                    //             )
+                                    //         ),
+                                    //       ),
+                                    //       (!kIsWeb)
+                                    //           ? SizedBox(
+                                    //         width: 10,
+                                    //       )
+                                    //           : Container(),
+                                    //       (!kIsWeb)
+                                    //           ? Flexible(
+                                    //         child: flatButton(
+                                    //             onPressed: () {
+                                    //               Navigator.push(context,
+                                    //                   MaterialPageRoute(builder: (context) => ChatPage(uid: getUID(), puid: widget.uid, state: 0)));
+                                    //             },
+                                    //             size: Size(MediaQuery.of(context).size.width, 45),
+                                    //             border: true,
+                                    //             textbuttonBackgroundColor: Color(white),
+                                    //             child: Text(
+                                    //               "Message",
+                                    //               style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 12)),
+                                    //             )),
+                                    //       )
+                                    //           : Container(),
+                                    //     ],
+                                    //   ),
+                                    // )
                                   ],
                                 ),
                                 Row(

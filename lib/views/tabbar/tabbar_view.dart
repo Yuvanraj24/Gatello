@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
 import 'package:gatello/views/tabbar/pops/newpost.dart';
+import 'package:gatello/views/tabbar/pops/pops.dart';
 import 'package:gatello/views/tabbar/pops/pops.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +16,7 @@ import '../../handler/Network.dart';
 import '../invite_friends.dart';
 import '../profile/profile_details.dart';
 import 'Delete1Dialog.dart';
-import '/core/models/profile_detail.dart'as profileDetailsModel ;
+import '/core/models/profile_detail.dart'as profileDetailsModel;
 class Tabbar extends StatefulWidget {
   const Tabbar({Key? key}) : super(key: key);
   @override
@@ -25,6 +25,7 @@ class Tabbar extends StatefulWidget {
 class _TabState extends State<Tabbar> {
    String? userId;
   int isSelected = 0;
+   final ScrollController storyScrollController = ScrollController();
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0,
       exceptionFromJson(loading), "Loading", null));
   Future profileDetailsApiCall() async {
@@ -40,7 +41,6 @@ class _TabState extends State<Tabbar> {
 
 
   @override
-
   Widget build(BuildContext context) {
 
     initSP();
@@ -448,7 +448,9 @@ class _TabState extends State<Tabbar> {
                                   child: Text("Get it...!"),
                                 ),
                                 PingsChatView(),
-                                Pops_Page(),
+                          //  Pops_Page(),
+                               Story(scrollController: storyScrollController,),
+                              //  Pops_Page(),
                                 Center(
                                   child: Text("Status...!"),
                                 ),
