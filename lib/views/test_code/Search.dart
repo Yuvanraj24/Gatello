@@ -3,12 +3,14 @@ import 'dart:developer';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
+import 'package:gatello/views/tabbar/test_code/UserDetails.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../Authentication/Authentication.dart';
 import '../../Firebase/FirebaseNotifications.dart';
 import '../../Firebase/Writes.dart';
 import '../../Others/Structure.dart';
@@ -23,6 +25,7 @@ import '../../main.dart';
 import '../ContactList.dart';
 import '../tabbar/chats/group_personal_screen/test_code2/CreateGroup.dart';
 import '../tabbar/chats/personal_chat_screen/ChatPage.dart';
+
 class SearchPage extends StatefulWidget {
   //state ==1 is not possible..
   ///* 0->personal chat,1->group chat,2->personal call,3->group call,4->create group,5->add group participants,6->story search,7->add call participants
@@ -50,12 +53,18 @@ class _SearchPageState extends State<SearchPage> {
   bool isLoading = false;
   List<Map<String, dynamic>> groupMemberList = [];
   // List<String> groupMemberList = [];
-  String uid = getUID();
+  String? uid;
   List<String> memberList = [];
-
+  Future<void> _getUID() async {
+    print('uidapi');
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    uid = sharedPrefs.getString("userid");
+    print("ShardPref ${uid}");
+  }
   @override
   void initState() {
     // if (widget.state == 0 || widget.state == 4 || widget.state == 6) {
+    _getUID();
     userChatList(searchQuery: searchTextEditingController.text);
     // } else if (widget.state == 5) {
     //   newParticipantSearch(searchQuery: searchTextEditingController.text);
@@ -183,20 +192,6 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      BuildContext;
-    } catch (e, s) {
-      print("expresss");
-    }
-    Future.delayed(Duration.zero,(){
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Delayed.....!"),
-            );
-          });
-    });
     return SafeArea(
       child: ResponsiveBuilder(builder: (context, sizingInformation) {
         return Scaffold(
@@ -207,7 +202,7 @@ class _SearchPageState extends State<SearchPage> {
               if (groupMemberList.isNotEmpty && memberList.isNotEmpty) {
                 if (widget.state == 4) {
                   if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-                    return await scaffoldAlertDialogBox(context: context, page:  CreateGroup(members: groupMemberList));
+                    return await scaffoldAlertDialogBox(context: context, page: CreateGroup(members: groupMemberList));
                   } else {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => CreateGroup(members: groupMemberList)));
                   }
@@ -379,7 +374,8 @@ class _SearchPageState extends State<SearchPage> {
                                 Icons.search,
                               ),
                             ),
-                          )),
+                          )
+                      ),
                     ),
                   ),
                 )
@@ -512,7 +508,7 @@ class _SearchPageState extends State<SearchPage> {
                       MaterialPageRoute(
                           builder: (context) => ChatPage(
                             state: 0,
-                            uid: getUID(),
+                            uid: uid.toString(),
                             puid: id,
                           )));
                 }
@@ -584,12 +580,12 @@ class _SearchPageState extends State<SearchPage> {
               break;
             case 6:
               {
-                // Navigator.pushReplacement(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => UserDetails(
-                //           uid: id,
-                //         )));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserDetails_Page(
+                          uid: id,
+                        )));
               }
               break;
             case 7:
