@@ -23,6 +23,7 @@ class Tabbar extends StatefulWidget {
   State<Tabbar> createState() => _TabState();
 }
 class _TabState extends State<Tabbar> {
+
    String? userId;
   int isSelected = 0;
    final ScrollController storyScrollController = ScrollController();
@@ -38,8 +39,14 @@ class _TabState extends State<Tabbar> {
       body: {"user_id": (userId != null) ? userId : 's8b6XInslPffQEgz8sVTINsPhcx2', "followee_id": ""},
     );
   }
-
-
+   Future<void> _getUID() async {
+     print('uidapi');
+     SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+     userId = sharedPrefs.getString("userid");
+     print("ShardPref ${userId}");
+   }
+   @override
+   void initstate(){}
   @override
   Widget build(BuildContext context) {
 
@@ -117,7 +124,8 @@ class _TabState extends State<Tabbar> {
                                           width: 25.w,
                                         ),
                                         SvgPicture.asset(
-                                            'assets/tabbar_icons/tab_view_main/search_icon.svg'),
+                                            'assets/tabbar_icons/tab_view_main/search_icon.svg'
+                                        ),
                                         Spacer(),
                                         SizedBox(
                                           width: 20,
@@ -449,7 +457,7 @@ class _TabState extends State<Tabbar> {
                                 ),
                                 PingsChatView(),
                           //  Pops_Page(),
-                               Story(scrollController: storyScrollController,),
+                               Story(scrollController: storyScrollController),
                               //  Pops_Page(),
                                 Center(
                                   child: Text("Status...!"),

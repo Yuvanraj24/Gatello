@@ -25,6 +25,7 @@ import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -92,7 +93,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   bool isSearching = false;
   Map<int, DocumentSnapshot<Map<String, dynamic>>> messages = {};
   int notUserMessages = 0;
-  String uid = "s8b6XInslPffQEgz8sVTINsPhcx2";
+  String? uid;
   bool attachmentShowing = false;
   bool emojiShowing = false;
   Map inverseDataType = dataTypeMap.inverse;
@@ -120,6 +121,11 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   late final AudioCache _audioCache;
   List recentEmojiList = [];
   // ValueNotifier<int> totalChatCount = ValueNotifier<int>(0);
+
+  Future<void> _getUID() async{
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    uid=sharedPrefs.getString("userid")!;
+  }
 
   final ImagePicker _picker = ImagePicker();
   // Future<DocumentSnapshot<Map<String, dynamic>>>? emptyFuture;
@@ -178,7 +184,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
           log(e.toString());
         }
       });
-      WidgetsBinding.instance!.addObserver(lifecycleEventHandler);
+      WidgetsBinding.instance.addObserver(lifecycleEventHandler);
     }
   }
 
@@ -391,7 +397,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
               message: (type == 0) ? message! : dataTypeMap[type]!,
               pic: userDocSnap["pic"],
               state: widget.state,
-              uid: uid,
+              uid: uid.toString(),
               puid: widget.puid);
         }
       } else {
@@ -483,7 +489,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                   message: (type == 0) ? message! : dataTypeMap[type]!,
                   pic: userDocSnap["pic"],
                   state: widget.state,
-                  uid: uid,
+                  uid: uid.toString(),
                   puid: widget.puid);
             }
           } else {
@@ -695,7 +701,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
           message: userDocSnap["name"] + ": " + (type == 0) ? message! : dataTypeMap[type]!,
           pic: groupPic,
           state: widget.state,
-          uid: uid,
+          uid: uid.toString(),
           puid: widget.puid);
     } catch (e) {
       log(e.toString());
@@ -4028,7 +4034,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     bool isRead = false;
     if (widget.state == 1) {
       if (chatRoomSnapshot.data()!["members"] != null && chatRoomSnapshot.data()!["timestamp"] != null) {
-        isRead = groupReadReceipt(members: chatRoomSnapshot.data()!["members"], timestamp: chatRoomSnapshot.data()!["timestamp"], uid: uid);
+        isRead = groupReadReceipt(members: chatRoomSnapshot.data()!["members"], timestamp: chatRoomSnapshot.data()!["timestamp"], uid: uid.toString());
       }
       chatRoomSnapshot.data()!["members"].forEach((k, v) {
         if (k == document.data()!["from"]) {

@@ -35,7 +35,12 @@ import '../../../core/models/exception/pops_exception.dart';
 import '../../../handler/Network.dart';
 import '../../../main.dart';
 import '../../profile/user_proflle.dart';
+import '../test_code/Comments.dart';
+import 'Comments.dart';
+import '../test_code/UserDetails.dart';
+import '../test_code/test_new_post.dart';
 import 'Requests.dart';
+
 import 'comments.dart';
 import 'interactions.dart';
 import 'newpost.dart';
@@ -55,6 +60,7 @@ class Story extends StatefulWidget {
 
 class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story> {
   @override
+
   bool showThumbsUp = false;
   Future? _future;
   String? uid;
@@ -66,7 +72,7 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
   ValueNotifier<Tuple4> likeValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   ValueNotifier<Tuple4> deleteValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   List<PlatformFile> fileList = [];
-  firestore.FirebaseFirestore instance = firestore.FirebaseFirestore.instance;
+ // firestore.FirebaseFirestore instance = firestore.FirebaseFirestore.instance;
   // PreloadPageController preloadPageController = new PreloadPageController();
   // late PreloadPageController preloadPageController;
   Future<FilePickerResult?> files() async => await FilePicker.platform.pickFiles(
@@ -304,13 +310,42 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                         padding: EdgeInsets.only(
                                             bottom: 13.h),
                                         child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      New_Post()),
-                                            );
+                                          // onTap: () {
+                                          //   Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             Post(state:0
+                                          //
+                                          //             )),
+                                          //   );
+                                          // },
+                                          onTap: ()async {
+                                                return await files().then((value) {
+                                              if (value != null && value.files.isNotEmpty) {
+                                                fileList.clear();
+                                                if (value.files.length < 10) {
+                                                  for (int i = 0; i < value.files.length; i++) {
+                                                    if (value.files[i].size < 52428800) {
+                                                      fileList.add(value.files[i]);
+                                                    } else {
+                                                      final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
+                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    }
+                                                  }
+                                                  return Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                                      Post(state: 0,
+                                                          fileList: fileList))).then((value) async {
+                                                    if (value != null) {
+                                                      return await feedsApiCall(uid: uid.toString());
+                                                    }
+                                                  });
+                                                } else {
+                                                  final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
+                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                }
+                                              }
+                                            });
                                           },
                                           child: SvgPicture.asset(
                                             'assets/pops_asset/pops_gallery.svg',
@@ -364,10 +399,10 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  UserProfile(
-                                                                    uid: uid.toString(),
+                                                                  UserDetails_Page(
+                                                                  //  uid: uid.toString(),
 
-                                                                    //  feedsValueNotifier.value.item2.result[index].userId
+                                                                   uid:  feedsValueNotifier.value.item2.result[index].userId
                                                                   )),
                                                         );
                                                       },
@@ -404,10 +439,8 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                                                             child: CircularProgressIndicator(value: downloadProgress.progress),
                                                                           ),
                                                                         ),
-                                                                    imageUrl: userDetailsValueNotifier
-                                                                        .value
-                                                                        .item2
-                                                                        .result
+                                                                    imageUrl:feedsValueNotifier.value.item2
+                                                                        .result[index]
                                                                         .profileUrl,
                                                                     errorWidget: (context, url, error) => SvgPicture.asset('assets/profile_assets/no_profile.svg',fit: BoxFit.fill)
                                                                   )),
@@ -435,7 +468,8 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                                               CrossAxisAlignment.start,
                                                               children: [
                                                                 Text(
-                                                                  userDetailsValueNotifier.value.item2.result.username,
+                                                                  feedsValueNotifier.value.item2.result
+                                                                  [index].username,
                                                                   style:
                                                                   GoogleFonts.inter(textStyle: TextStyle(color: Color.fromRGBO(0, 0, 0, 1), fontSize: 16.sp, fontWeight: FontWeight.w700)),
                                                                 ),
@@ -536,6 +570,12 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                                 children:[ GestureDetector(
                                                   behavior: HitTestBehavior.opaque,
                                                   onTap: (){
+                                                    print('lotus${   feedsValueNotifier
+                                                        .value
+                                                        .item2
+                                                        .result[index]
+                                                        .
+                                                    posts.toString()}');
                                                     setState((){
                                                       height=38.h;
                                                     });
@@ -615,7 +655,8 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                                                             .item2
                                                                             .result[index]
                                                                             .
-                                                                        posts[itemIndex]),
+                                                                        posts[itemIndex]
+                                                                    ),
                                                                     fit: BoxFit
                                                                         .cover)),
                                                           ),
@@ -822,7 +863,18 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                                                   .push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                    builder: (context) => Command_page(postId: feedsValueNotifier.value.item2.result[index].id.oid)),
+                                                                    builder: (context) =>
+
+                                                                        Comments_Page(
+
+                                                                        postId: feedsValueNotifier.value.item2.result[index].id.oid,
+                                                                        FeedData:       feedsValueNotifier
+                                                                        .value
+                                                                        .item2
+                                                                        .result[index]
+                                                                        .
+                                                                    posts[0].toString())
+                                                                ),
                                                               );
                                                             },
                                                             child: SvgPicture
@@ -974,13 +1026,20 @@ Spacer(),
                                                         SizedBox(width: 13.w),
                                                         InkWell(
                                                           onTap: () {
-                                                            Navigator
-                                                                .push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      Command_page(postId: feedsValueNotifier.value.item2.result[index].id.oid)),
-                                                            );
+
+                                                            // Navigator
+                                                            //     .push(
+                                                            //   context,
+                                                            //   MaterialPageRoute(
+                                                            //       builder: (context) => Comments_Page(
+                                                            //
+                                                            //           postId: feedsValueNotifier.value.item2.result[index].id.oid, FeedData:       feedsValueNotifier
+                                                            //           .value
+                                                            //           .item2
+                                                            //           .result[index]
+                                                            //           .
+                                                            //       posts[0].toString())),
+                                                            // );
                                                           },
                                                           child: Text(
                                                             'view all comments...',
