@@ -12,7 +12,6 @@ import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:fluttericon/iconic_icons.dart';
 import 'package:fluttericon/linecons_icons.dart';
 import 'package:fluttericon/typicons_icons.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -36,6 +35,7 @@ import '../../../handler/Network.dart';
 import '../../../main.dart';
 import '../../profile/user_proflle.dart';
 import '../test_code/Comments.dart';
+import '../test_code/new_post.dart';
 import 'Comments.dart';
 import '../test_code/UserDetails.dart';
 import '../test_code/test_new_post.dart';
@@ -72,6 +72,7 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
   ValueNotifier<Tuple4> likeValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   ValueNotifier<Tuple4> deleteValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   List<PlatformFile> fileList = [];
+  TextEditingController _controller=TextEditingController();
  // firestore.FirebaseFirestore instance = firestore.FirebaseFirestore.instance;
   // PreloadPageController preloadPageController = new PreloadPageController();
   // late PreloadPageController preloadPageController;
@@ -188,932 +189,1002 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                     resizeToAvoidBottomInset: false,
                     backgroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
 
-                    body: Align(
-                      alignment: Alignment.topCenter,
-                      child: ConstrainedBox(
-                        constraints:
-                            BoxConstraints(maxWidth: (sizingInformation.deviceScreenType == DeviceScreenType.desktop)
-                             ? MediaQuery.of(context).size.width / 2.5 : double.infinity),
-                        child: (feedsValueNotifier.value.item1 == 1)
-                            ? Column(
-                              children: [
-                                Container(
-                                  height: 77.h,
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 12.w),
-                                  child: Row(
-                                    children: [
-                                      // SizedBox(
-                                      //   width: 12.w,
-                                      // ),
-                                      Container(
-                                        height: 52.h,
-                                        width: 51.w,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                5),
-                                            color: Colors.yellow,
-                                            image: DecorationImage(
-                                                image: NetworkImage(
-                                                    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmVzc2lvbmFsfGVufDB8fDB8fA%3D%3D&w=1000&q=80'),
-                                                fit: BoxFit.fill)),
+                    body: (feedsValueNotifier.value.item1 == 1)
+                        ? Column(
+                          children: [
+                            Container(
+                              height: 77.h,
+                              width: double.infinity,
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 12.w,
+                                  ),
+                                  Container(
+                                    height: 52.h,
+                                    width: 51.w,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmVzc2lvbmFsfGVufDB8fDB8fA%3D%3D&w=1000&q=80'),
+                                            fit: BoxFit.fill)),
+                                  ),
+                                  SizedBox(
+                                    width: 7.w,
+                                  ),
+                                  Container(
+                                    height: 52.h,
+                                    width: 227.w,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      border:
+                                      Border.all(color: Color.fromRGBO(217, 217, 217, 1)),
+                                    ),
+                                    child: TextField(
+                                      controller: _controller,
+                                      decoration: InputDecoration(
+                                        hintMaxLines: 2,
+                                        hintText: 'Pop your photos, videos &\nmessages here...',hintStyle: TextStyle(
+                                          fontSize: 14.sp,fontWeight: FontWeight.w400),
+                                        enabledBorder:OutlineInputBorder(borderSide: BorderSide(color:Colors.transparent,width: 1),),
+                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color:  Colors.transparent,width: 1),),
                                       ),
-                                      SizedBox(
-                                        width: 7.w,
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 13.w,
-                                            vertical: 7.h),
-                                        height: 52.h,
-                                        width: 227.w,
-                                        decoration: BoxDecoration(
-                                          // color: Colors.blue,
-                                          borderRadius:
-                                          BorderRadius.circular(
-                                              6),
-                                          border: Border.all(
-                                              color: Color.fromRGBO(
-                                                  217, 217, 217, 1)),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            // SizedBox(
-                                            //   height: 8.h,
-                                            // ),
-                                            Text(
-                                              'Pop your photos,videos &',
-                                              style: GoogleFonts.inter(
-                                                  textStyle: TextStyle(
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .w400,
-                                                      color: Color
-                                                          .fromRGBO(
-                                                          152,
-                                                          152,
-                                                          152,
-                                                          1),
-                                                      fontSize:
-                                                      14.sp)),
-                                            ),
-
-                                            Text('messages here...',
-                                                style: GoogleFonts.inter(
-                                                    textStyle: TextStyle(
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .w400,
-                                                        color: Color
-                                                            .fromRGBO(
-                                                            152,
-                                                            152,
-                                                            152,
-                                                            1),
-                                                        fontSize:
-                                                        14.sp))),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 14.w,
-                                      ),
-
-                                      // IconButton(onPressed: ()
-                                      // {
-                                      //
-                                      //   Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(builder: (context) =>New_Post()),
-                                      //   );
-                                      //
-                                      //
-                                      //
-                                      // },
-                                      //     icon: Icon(Icons.add)),
-                                      // Padding(
-                                      //   padding:  EdgeInsets.only(bottom: 15),
-                                      //   child: SvgPicture.asset(
-                                      //     'assets/pops_asset/pops_gallery.svg',
-                                      //     width: 38.w,
-                                      //     height: 40.h,
-                                      //   ),
-                                      // ),
-                                      //
-
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            bottom: 13.h),
-                                        child: InkWell(
-                                          // onTap: () {
-                                          //   Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             Post(state:0
-                                          //
-                                          //             )),
-                                          //   );
-                                          // },
-                                          onTap: ()async {
-                                                return await files().then((value) {
-                                              if (value != null && value.files.isNotEmpty) {
-                                                fileList.clear();
-                                                if (value.files.length < 10) {
-                                                  for (int i = 0; i < value.files.length; i++) {
-                                                    if (value.files[i].size < 52428800) {
-                                                      fileList.add(value.files[i]);
-                                                    } else {
-                                                      final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
-                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                    }
-                                                  }
-                                                  return Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                                      Post(state: 0,
-                                                          fileList: fileList))).then((value) async {
-                                                    if (value != null) {
-                                                      return await feedsApiCall(uid: uid.toString());
-                                                    }
-                                                  });
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 14.w,
+                                  ),
+                                  Padding(
+                                    padding:EdgeInsets.only(bottom: 15),
+                                    child: GestureDetector(
+                                    //   onTap: (){
+                                    //   Navigator.push(context, MaterialPageRoute(builder: (context) => Post(state: 0,)));
+                                    // },
+                                      onTap: ()async {
+                                            return await files().then((value) {
+                                          if (value != null && value.files.isNotEmpty) {
+                                            fileList.clear();
+                                            if (value.files.length < 10) {
+                                              for (int i = 0; i < value.files.length; i++) {
+                                                if (value.files[i].size < 52428800) {
+                                                  fileList.add(value.files[i]);
                                                 } else {
-                                                  final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
+                                                  final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
                                                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                                 }
                                               }
-                                            });
-                                          },
-                                          child: SvgPicture.asset(
-                                            'assets/pops_asset/pops_gallery.svg',
-                                            width: 38.w,
-                                            height: 40.h,
-                                          ),
-                                        ),
+                                              return Navigator.push(context, MaterialPageRoute(builder:
+                                                  (context) =>
+                                                  Post(state: 0,
+                                                      fileList: fileList))).then((value) async {
+                                                if (value != null) {
+                                                  return await feedsApiCall(uid: uid.toString());
+                                                }
+                                              });
+                                            } else {
+                                              final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
+                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                            }
+                                          }
+                                        });
+                                      },
+                                      child: SvgPicture.asset(
+                                        'assets/pops_asset/pops_gallery.svg',
+                                        width: 38.w,
+                                        height: 40.h,
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ListView.builder(
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            // Container(
+                            //
+                            //   height: 77.h,
+                            //   width: double.infinity,
+                            //   padding: EdgeInsets.symmetric(
+                            //       horizontal: 12.w),
+                            //   child: Row(
+                            //     children: [
+                            //       // SizedBox(
+                            //       //   width: 12.w,
+                            //       // ),
+                            //       Container(
+                            //         height: 52.h,
+                            //         width: 51.w,
+                            //         decoration: BoxDecoration(
+                            //             borderRadius:
+                            //             BorderRadius.circular(
+                            //                 5),
+                            //             color: Colors.yellow,
+                            //
+                            //             image: DecorationImage(
+                            //                 image: NetworkImage(
+                            //                     'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmVzc2lvbmFsfGVufDB8fDB8fA%3D%3D&w=1000&q=80'),
+                            //                 fit: BoxFit.fill)),
+                            //       ),
+                            //       SizedBox(
+                            //         width: 7.w,
+                            //       ),
+                            //       Container(
+                            //         padding: EdgeInsets.symmetric(
+                            //             horizontal: 13.w,
+                            //             vertical: 7.h),
+                            //         height: 52.h,
+                            //         width: 227.w,
+                            //         decoration: BoxDecoration(
+                            //           // color: Colors.blue,
+                            //           borderRadius:
+                            //           BorderRadius.circular(
+                            //               6),
+                            //           border: Border.all(
+                            //               color: Color.fromRGBO(
+                            //                   217, 217, 217, 1)),
+                            //         ),
+                            //         child: Column(
+                            //           crossAxisAlignment:
+                            //           CrossAxisAlignment
+                            //               .start,
+                            //           children: [
+                            //             // SizedBox(
+                            //             //   height: 8.h,
+                            //             // ),
+                            //             Text(
+                            //               'Pop your photos,videos &',
+                            //               style: GoogleFonts.inter(
+                            //                   textStyle: TextStyle(
+                            //                       fontWeight:
+                            //                       FontWeight
+                            //                           .w400,
+                            //                       color: Color
+                            //                           .fromRGBO(
+                            //                           152,
+                            //                           152,
+                            //                           152,
+                            //                           1),
+                            //                       fontSize:
+                            //                       14.sp)),
+                            //             ),
+                            //
+                            //             Text('messages here...',
+                            //                 style: GoogleFonts.inter(
+                            //                     textStyle: TextStyle(
+                            //                         fontWeight:
+                            //                         FontWeight
+                            //                             .w400,
+                            //                         color: Color
+                            //                             .fromRGBO(
+                            //                             152,
+                            //                             152,
+                            //                             152,
+                            //                             1),
+                            //                         fontSize:
+                            //                         14.sp))),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //       SizedBox(
+                            //         width: 14.w,
+                            //       ),
+                            //
+                            //       // IconButton(onPressed: ()
+                            //       // {
+                            //       //
+                            //       //   Navigator.push(
+                            //       //     context,
+                            //       //     MaterialPageRoute(builder: (context) =>New_Post()),
+                            //       //   );
+                            //       //
+                            //       //
+                            //       //
+                            //       // },
+                            //       //     icon: Icon(Icons.add)),
+                            //
+                            //
+                            //
+                            //       Padding(
+                            //         padding: EdgeInsets.only(
+                            //             bottom: 13.h),
+                            //         child: InkWell(
+                            //           onTap: () {
+                            //             Navigator.push(
+                            //               context,
+                            //               MaterialPageRoute(
+                            //                   builder: (context) =>
+                            //                       New_Post(state: 0,
+                            //
+                            //                       )),
+                            //             );
+                            //           },
+                            //           // onTap: ()async {
+                            //           //       return await files().then((value) {
+                            //           //     if (value != null && value.files.isNotEmpty) {
+                            //           //       fileList.clear();
+                            //           //       if (value.files.length < 10) {
+                            //           //         for (int i = 0; i < value.files.length; i++) {
+                            //           //           if (value.files[i].size < 52428800) {
+                            //           //             fileList.add(value.files[i]);
+                            //           //           } else {
+                            //           //             final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
+                            //           //             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            //           //           }
+                            //           //         }
+                            //           //         return Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                            //           //             Post(state: 0,
+                            //           //                 fileList: fileList))).then((value) async {
+                            //           //           if (value != null) {
+                            //           //             return await feedsApiCall(uid: uid.toString());
+                            //           //           }
+                            //           //         });
+                            //           //       } else {
+                            //           //         final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
+                            //           //         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            //           //       }
+                            //           //     }
+                            //           //   });
+                            //           // },
+                            //           child: SvgPicture.asset(
+                            //             'assets/pops_asset/pops_gallery.svg',
+                            //             width: 38.w,
+                            //             height: 40.h,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            Expanded(
+                              child: ListView.builder(
 
-                                      shrinkWrap: true,
+                                  shrinkWrap: true,
 
-                                     controller: widget.scrollController,
-                                     physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                                      itemCount: feedsValueNotifier.value.item2.result.length,
-                                      itemBuilder: (context, index) {
-                                        return container(
-                                          border: true,
-                                          radius: 0,
-                                          shadow: false,
-                                          // spreadRadius: 2.5,
-                                          // blurRadius: 3.5,
-                                          borderColor: (themedata.value.index == 0) ? Color(dividerGrey) : Color(materialBlack),
-                                          backgroundColor: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                height: 54.h,
-                                                width:
-                                                double.infinity,
-                                                decoration:
-                                                BoxDecoration(
-                                                    color: Color
-                                                        .fromRGBO(
-                                                        248,
-                                                        206,
-                                                        97,
-                                                        1)),
-                                                child: Row(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        Navigator
-                                                            .push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  UserDetails_Page(
-                                                                  //  uid: uid.toString(),
+                                 controller: widget.scrollController,
+                                 physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                                  itemCount: feedsValueNotifier.value.item2.result.length,
+                                  itemBuilder: (context, index) {
+                                    return container(
+                                      border: true,
+                                      radius: 0,
+                                      shadow: false,
+                                      // spreadRadius: 2.5,
+                                      // blurRadius: 3.5,
+                                      borderColor: (themedata.value.index == 0) ? Color(dividerGrey) : Color(materialBlack),
+                                      backgroundColor: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 54.h,
+                                            width:
+                                            double.infinity,
+                                            decoration:
+                                            BoxDecoration(
+                                                color: Color
+                                                    .fromRGBO(
+                                                    248,
+                                                    206,
+                                                    97,
+                                                    1)),
+                                            child: Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator
+                                                        .push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              UserProfile(
+                                                             //   uid: uid.toString(),
 
-                                                                   uid:  feedsValueNotifier.value.item2.result[index].userId
-                                                                  )),
-                                                        );
-                                                      },
-                                                      child: Row(
+                                                               uid:  feedsValueNotifier.value.item2.result[index].userId.toString()
+                                                              )),
+                                                    );
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width:
+                                                        24.9.w,
+                                                      ),
+                                                      InkWell(
+                                                        onTap:
+                                                            () {
+                                                          print(
+                                                              'dhina:${feedsValueNotifier.value.item2.result.length}');
+                                                        },
+                                                        child:
+                                                        Container(
+                                                          height:
+                                                          38.h,
+                                                          width:
+                                                          38.w,
+                                                          child: ClipOval(
+                                                              child: CachedNetworkImage(
+                                                                fit: BoxFit
+                                                                    .fill,
+                                                                fadeInDuration:
+                                                                const Duration(milliseconds: 400),
+                                                                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                                                                    Center(
+                                                                      child:
+                                                                      Container(
+                                                                        width: 20.0,
+                                                                        height: 20.0,
+                                                                        child: CircularProgressIndicator(value: downloadProgress.progress),
+                                                                      ),
+                                                                    ),
+                                                                imageUrl:feedsValueNotifier.value.item2
+                                                                    .result[index]
+                                                                    .profileUrl,
+                                                                errorWidget: (context, url, error) => SvgPicture.asset('assets/profile_assets/no_profile.svg',fit: BoxFit.fill)
+                                                              )),
+                                                        ),
+                                                      ),
+                                                      // CircleAvatar(
+                                                      //   backgroundImage: NetworkImage(
+                                                      //
+                                                      //       userDetailsValueNotifier.value.item2.result.profileUrl
+                                                      //     // 'https://www.whatsappimages.in/wp-content/'
+                                                      //     //     'uploads/2021/12/Creative-Whatsapp-Dp-Pics-Download.jpg'
+                                                      //
+                                                      //   ),
+                                                      //   radius: 20,
+                                                      // ),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(
+                                                            left:
+                                                            9.45),
+                                                        child:
+                                                        Column(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment.center,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                              feedsValueNotifier.value.item2.result
+                                                              [index].username,
+                                                              style:
+                                                              GoogleFonts.inter(textStyle: TextStyle(color: Color.fromRGBO(0, 0, 0, 1), fontSize: 16.sp, fontWeight: FontWeight.w700)),
+                                                            ),
+                                                            SizedBox(
+                                                              height:
+                                                              3.h,
+                                                            ),
+                                                            Text(
+                                                              '23 minutes ago',
+                                                              style:
+                                                              GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400, color: Color.fromRGBO(78, 78, 78, 1), fontSize: 10.sp)),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Spacer(),
+                                                PopupMenuButton(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          5)),
+                                                  itemBuilder:
+                                                      (context) =>
+                                                  [
+                                                    PopupMenuItem(
+                                                      child:
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                         children: [
-                                                          SizedBox(
-                                                            width:
-                                                            24.9.w,
+                                                          Text(
+                                                            'Hide',
+                                                            style:
+                                                            GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400, color: Color.fromRGBO(0, 0, 0, 1))),
                                                           ),
-                                                          InkWell(
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    PopupMenuItem(
+                                                      child:
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                        children: [
+                                                          Text(
+                                                            'Unfollow',
+                                                            style: GoogleFonts.inter(
+                                                                fontWeight: FontWeight.w400,
+                                                                textStyle: TextStyle(color: Color.fromRGBO(0, 0, 0, 1))),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    PopupMenuItem(
+                                                      child:
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                        children: [
+                                                          GestureDetector(
                                                             onTap:
                                                                 () {
-                                                              print(
-                                                                  'dhina:${feedsValueNotifier.value.item2.result.length}');
+                                                              showModalBottomSheet(
+                                                                isScrollControlled: true,
+                                                                context: context,
+                                                                builder: (context) {
+                                                                  return SafeArea(
+                                                                    child: Container(child: Report_Page()),
+                                                                  );
+                                                                },
+                                                              );
                                                             },
                                                             child:
-                                                            Container(
-                                                              height:
-                                                              38.h,
-                                                              width:
-                                                              38.w,
-                                                              child: ClipOval(
-                                                                  child: CachedNetworkImage(
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                    fadeInDuration:
-                                                                    const Duration(milliseconds: 400),
-                                                                    progressIndicatorBuilder: (context, url, downloadProgress) =>
-                                                                        Center(
-                                                                          child:
-                                                                          Container(
-                                                                            width: 20.0,
-                                                                            height: 20.0,
-                                                                            child: CircularProgressIndicator(value: downloadProgress.progress),
-                                                                          ),
-                                                                        ),
-                                                                    imageUrl:feedsValueNotifier.value.item2
-                                                                        .result[index]
-                                                                        .profileUrl,
-                                                                    errorWidget: (context, url, error) => SvgPicture.asset('assets/profile_assets/no_profile.svg',fit: BoxFit.fill)
-                                                                  )),
-                                                            ),
-                                                          ),
-                                                          // CircleAvatar(
-                                                          //   backgroundImage: NetworkImage(
-                                                          //
-                                                          //       userDetailsValueNotifier.value.item2.result.profileUrl
-                                                          //     // 'https://www.whatsappimages.in/wp-content/'
-                                                          //     //     'uploads/2021/12/Creative-Whatsapp-Dp-Pics-Download.jpg'
-                                                          //
-                                                          //   ),
-                                                          //   radius: 20,
-                                                          // ),
-                                                          Padding(
-                                                            padding: EdgeInsets.only(
-                                                                left:
-                                                                9.45),
-                                                            child:
-                                                            Column(
-                                                              mainAxisAlignment:
-                                                              MainAxisAlignment.center,
-                                                              crossAxisAlignment:
-                                                              CrossAxisAlignment.start,
-                                                              children: [
-                                                                Text(
-                                                                  feedsValueNotifier.value.item2.result
-                                                                  [index].username,
-                                                                  style:
-                                                                  GoogleFonts.inter(textStyle: TextStyle(color: Color.fromRGBO(0, 0, 0, 1), fontSize: 16.sp, fontWeight: FontWeight.w700)),
-                                                                ),
-                                                                SizedBox(
-                                                                  height:
-                                                                  3.h,
-                                                                ),
-                                                                Text(
-                                                                  '23 minutes ago',
-                                                                  style:
-                                                                  GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400, color: Color.fromRGBO(78, 78, 78, 1), fontSize: 10.sp)),
-                                                                )
-                                                              ],
+                                                            Text(
+                                                              'Report',
+                                                              style:
+                                                              GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400, color: Color.fromRGBO(255, 40, 40, 1))),
                                                             ),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
-                                                    Spacer(),
-                                                    PopupMenuButton(
-                                                      shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)),
-                                                      itemBuilder:
-                                                          (context) =>
-                                                      [
-                                                        PopupMenuItem(
-                                                          child:
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            children: [
-                                                              Text(
-                                                                'Hide',
-                                                                style:
-                                                                GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400, color: Color.fromRGBO(0, 0, 0, 1))),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        PopupMenuItem(
-                                                          child:
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            children: [
-                                                              Text(
-                                                                'Unfollow',
-                                                                style: GoogleFonts.inter(
-                                                                    fontWeight: FontWeight.w400,
-                                                                    textStyle: TextStyle(color: Color.fromRGBO(0, 0, 0, 1))),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        PopupMenuItem(
-                                                          child:
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            children: [
-                                                              GestureDetector(
-                                                                onTap:
-                                                                    () {
-                                                                  showModalBottomSheet(
-                                                                    isScrollControlled: true,
-                                                                    context: context,
-                                                                    builder: (context) {
-                                                                      return SafeArea(
-                                                                        child: Container(child: Report_Page()),
-                                                                      );
-                                                                    },
-                                                                  );
-                                                                },
-                                                                child:
-                                                                Text(
-                                                                  'Report',
-                                                                  style:
-                                                                  GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400, color: Color.fromRGBO(255, 40, 40, 1))),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
                                                   ],
-                                                ),
-                                              ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
 
-                                              Stack(
-                                                  alignment: Alignment
-                                                      .center,
-                                                children:[ GestureDetector(
-                                                  behavior: HitTestBehavior.opaque,
-                                                  onTap: (){
-                                                    print('lotus${   feedsValueNotifier
-                                                        .value
-                                                        .item2
-                                                        .result[index]
-                                                        .
-                                                    posts.toString()}');
-                                                    setState((){
-                                                      height=38.h;
-                                                    });
-                                                  },
-                                                  onDoubleTap: (likeValueNotifier.value.item1 == 0)
-                                                      ? null
-                                                      : (feedsValueNotifier.value.item2.result[index].likesStatus == true)
-                                                          ? () async {
-                                                              return await unlikeApiCall(
-                                                                      uid: userDetailsValueNotifier.value.item2.result.userId,
-                                                                      postId: feedsValueNotifier.value.item2.result[index].id.oid)
-                                                                  .whenComplete(() async {
-                                                                if (likeValueNotifier.value.item1 == 1) {
-                                                                  if (!mounted) return;
-                                                                  setState(() {
-                                                                    feedsValueNotifier.value.item2.result[index].likesStatus = false;
-                                                                    feedsValueNotifier.value.item2.result[index].likesCount -= 1;
-
-                                                                  });
-                                                                } else if (likeValueNotifier.value.item1 == 2 || likeValueNotifier.value.item1 == 3) {
-                                                                  final snackBar = snackbar(content: likeValueNotifier.value.item3.toString());
-                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                }
+                                          Stack(
+                                              alignment: Alignment
+                                                  .center,
+                                            children:[ GestureDetector(
+                                              behavior: HitTestBehavior.opaque,
+                                              onTap: (){
+                                                print('lotus${   feedsValueNotifier
+                                                    .value
+                                                    .item2
+                                                    .result[index]
+                                                    .
+                                                posts.toString()}');
+                                                setState((){
+                                                  height=38.h;
+                                                });
+                                              },
+                                              onDoubleTap: (likeValueNotifier.value.item1 == 0)
+                                                  ? null
+                                                  : (feedsValueNotifier.value.item2.result[index].likesStatus == true)
+                                                      ? () async {
+                                                          return await unlikeApiCall(
+                                                                  uid: userDetailsValueNotifier.value.item2.result.userId,
+                                                                  postId: feedsValueNotifier.value.item2.result[index].id.oid)
+                                                              .whenComplete(() async {
+                                                            if (likeValueNotifier.value.item1 == 1) {
+                                                              if (!mounted) return;
+                                                              setState(() {
+                                                                feedsValueNotifier.value.item2.result[index].likesStatus = false;
+                                                                feedsValueNotifier.value.item2.result[index].likesCount -= 1;
 
                                                               });
+                                                            } else if (likeValueNotifier.value.item1 == 2 || likeValueNotifier.value.item1 == 3) {
+                                                              final snackBar = snackbar(content: likeValueNotifier.value.item3.toString());
+                                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                                             }
-                                                          : () async {
-                                                              return await likeApiCall(
-                                                                      uid: userDetailsValueNotifier.value.item2.result.userId,
-                                                                      name: userDetailsValueNotifier.value.item2.result.username,
-                                                                      profileUrl: userDetailsValueNotifier.value.item2.result.profileUrl,
-                                                                      postId: feedsValueNotifier.value.item2.result[index].id.oid)
-                                                                  .whenComplete(() async {
-                                                                if (likeValueNotifier.value.item1 == 1) {
-                                                                  if (!mounted) return;
-                                                                  setState(() {
-                                                                    feedsValueNotifier.value.item2.result[index].likesStatus = true;
-                                                                    feedsValueNotifier.value.item2.result[index].likesCount += 1;
-                                                                  });
-                                                                } else if (likeValueNotifier.value.item1 == 2 || likeValueNotifier.value.item1 == 3) {
-                                                                  final snackBar = snackbar(content: likeValueNotifier.value.item3.toString());
-                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                }
+
+                                                          });
+                                                        }
+                                                      : () async {
+                                                          return await likeApiCall(
+                                                                  uid: userDetailsValueNotifier.value.item2.result.userId,
+                                                                  name: userDetailsValueNotifier.value.item2.result.username,
+                                                                  profileUrl: userDetailsValueNotifier.value.item2.result.profileUrl,
+                                                                  postId: feedsValueNotifier.value.item2.result[index].id.oid)
+                                                              .whenComplete(() async {
+                                                            if (likeValueNotifier.value.item1 == 1) {
+                                                              if (!mounted) return;
+                                                              setState(() {
+                                                                feedsValueNotifier.value.item2.result[index].likesStatus = true;
+                                                                feedsValueNotifier.value.item2.result[index].likesCount += 1;
                                                               });
-                                                            },
-                                                    child: CarouselSlider
-                                                        .builder(
+                                                            } else if (likeValueNotifier.value.item1 == 2 || likeValueNotifier.value.item1 == 3) {
+                                                              final snackBar = snackbar(content: likeValueNotifier.value.item3.toString());
+                                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                            }
+                                                          });
+                                                        },
+                                                child: CarouselSlider
+                                                    .builder(
 
-                                                      itemCount: feedsValueNotifier
-                                                          .value
-                                                          .item2
-                                                          .result[index]
-                                                          .posts
-                                                          .length,
-                                                      itemBuilder: (
-                                                          BuildContext context,
-                                                          int itemIndex,
-                                                          int pageViewIndex) =>
-                                                          Container(
+                                                  itemCount: feedsValueNotifier
+                                                      .value
+                                                      .item2
+                                                      .result[index]
+                                                      .posts
+                                                      .length,
+                                                  itemBuilder: (
+                                                      BuildContext context,
+                                                      int itemIndex,
+                                                      int pageViewIndex) =>
+                                                      Container(
 
-                                                            child: Text(
-                                                                "$itemIndex"),
-                                                            height: 259
-                                                                .h,
-                                                            width: MediaQuery
-                                                                .of(
-                                                                context)
-                                                                .size
-                                                                .width,
-                                                            decoration: BoxDecoration(
-                                                                color: Colors
-                                                                    .red,
-                                                                image: DecorationImage(
-                                                                    image: NetworkImage(
-                                                                        feedsValueNotifier
-                                                                            .value
-                                                                            .item2
-                                                                            .result[index]
-                                                                            .
-                                                                        posts[itemIndex]
-                                                                    ),
-                                                                    fit: BoxFit
-                                                                        .cover)),
-                                                          ),
-                                                      options: CarouselOptions(
-                                                        enableInfiniteScroll: false,
-                                                        aspectRatio: 16 /
-                                                            9,
-                                                        viewportFraction: 1,
-                                                      ),
-                                                    )
-                                                  // child: Container(
-                                                  //   child: PreloadPageViewWidget(
-                                                  //     valueNotifier: feedsValueNotifier,
-                                                  //     index: index,
-                                                  //   //  sizingInformation: sizingInformation,
-                                                  //   ),
-                                                  // ),
+                                                        child: Text(
+                                                            "$itemIndex"),
+                                                        height: 259
+                                                            .h,
+                                                        width: MediaQuery
+                                                            .of(
+                                                            context)
+                                                            .size
+                                                            .width,
+                                                        decoration: BoxDecoration(
 
-
-                                                ),
-                                                  Positioned(
-                                                    bottom:12,
-                                                    left: 12.w,
-                                                    right: 12.w,
-                                                    child:AnimatedContainer(
-                                                      height:height,
-                                                      width: 336.w,
-                                                      child:SingleChildScrollView(
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment:
-                                                          CrossAxisAlignment.start,
-                                                          children: [
-                                                            height==119.h?desText():
-                                                            Padding(
-                                                              padding:EdgeInsets.only(left: 16,top:12),
-                                                              child:Row(
-                                                                children: [
-                                                                  Text(
-                                                                    readmore.substring(0,20),
-                                                                    style: GoogleFonts.inter(
-                                                                        textStyle: TextStyle(
-                                                                            fontWeight: FontWeight.w400,
-                                                                            color: Color.fromRGBO(
-                                                                                255, 255, 255, 1),
-                                                                            fontSize: 12.sp)),
-                                                                  ),
-                                                                  GestureDetector(
-                                                                    onTap:(){
-                                                                      setState(() {
-                                                                        height=119.h;
-                                                                      });
-                                                                    },
-
-                                                                    child: Text(
-                                                                      '...more',
-                                                                      style: GoogleFonts.inter(
-                                                                          textStyle: TextStyle(
-                                                                              fontWeight: FontWeight.w400,
-                                                                              color: Color.fromRGBO(
-                                                                                  255, 255, 255, 1),
-                                                                              fontSize: 12.sp)),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(4),
-                                                        color: Color.fromRGBO(180, 180, 180, 0.5),
-                                                      ), duration:Duration(milliseconds:250),
-                                                    ),
-                                                  )]
-                                              ),
-                                              Container(
-
-                                                padding: EdgeInsets
-                                                    .fromLTRB(
-                                                    12, 7, 12, 15),
-                                                height: 108.h,
-                                                width:
-                                                double.infinity,
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        SizedBox(width: 16.w),
-                                                        GestureDetector(
-                                                            behavior: HitTestBehavior.opaque,
-                                                            onTap: (likeValueNotifier.value.item1 == 0)
-                                                                ? null
-                                                                : (feedsValueNotifier.value.item2.result[index].likesStatus == true)
-                                                                    ? () async {
-                                                                        return await unlikeApiCall(
-                                                                                uid: userDetailsValueNotifier.value.item2.result.userId,
-                                                                                postId: feedsValueNotifier.value.item2.result[index].id.oid)
-                                                                            .whenComplete(() async {
-                                                                          if (likeValueNotifier.value.item1 == 1) {
-                                                                            if (!mounted) return;
-                                                                            setState(() {
-                                                                              feedsValueNotifier.value.item2.result[index].likesStatus = false;
-                                                                              feedsValueNotifier.value.item2.result[index].likesCount -= 1;
-                                                                            });
-                                                                          } else if (likeValueNotifier.value.item1 == 2 || likeValueNotifier.value.item1 == 3) {
-                                                                            final snackBar = snackbar(content: likeValueNotifier.value.item3.toString());
-                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                          }
-                                                                        });
-                                                                      }
-                                                                    : () async {
-                                                                        return await likeApiCall(
-                                                                                uid: userDetailsValueNotifier.value.item2.result.userId,
-                                                                                name: userDetailsValueNotifier.value.item2.result.username,
-                                                                                profileUrl: userDetailsValueNotifier.value.item2.result.profileUrl,
-                                                                                postId: feedsValueNotifier.value.item2.result[index].id.oid)
-                                                                            .whenComplete(() async {
-                                                                          if (likeValueNotifier.value.item1 == 1) {
-                                                                            if (!mounted) return;
-                                                                            setState(() {
-                                                                              feedsValueNotifier.value.item2.result[index].likesStatus = true;
-                                                                              feedsValueNotifier.value.item2.result[index].likesCount += 1;
-                                                                            });
-                                                                          } else if (likeValueNotifier.value.item1 == 2 || likeValueNotifier.value.item1 == 3) {
-                                                                            final snackBar = snackbar(content: likeValueNotifier.value.item3.toString());
-                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                          }
-                                                                        });
-                                                                      },
-                                                            child: (feedsValueNotifier.value.item2.result[index].likesStatus == true)
-                                                                ? Icon(
-                                                                Icons
-                                                                     .thumb_up_sharp,
-
-                                                                  )
-                                                                : Icon(
-                                                              Icons.thumb_up_outlined
-                                                                  )),
-                                                        SizedBox(
-                                                          width: 7.w,
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets
-                                                              .fromLTRB(
-                                                              0,
-                                                              5.h,
-                                                              0,
-                                                              0),
-                                                          child: GestureDetector(
-                                                            behavior: HitTestBehavior.opaque,
-                                                            onTap: () async {
-                                                              //dhina
-                                                              // if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-                                                              //   return await scaffoldAlertDialogBox(
-                                                              //       context: context, page: Listview(state: 0, Id:
-                                                              //       feedsValueNotifier.value.item2.result[index].id.oid));
-                                                              // } else {
-                                                              //   Navigator.push(context,
-                                                              //       MaterialPageRoute(builder: (context) =>
-                                                              //       Listview(state: 0, Id: feedsValueNotifier.value.item2.result
-                                                              //       [index].id.oid)));
-                                                              // }
-                                                            },
-                                                            child: Align(
-                                                              alignment: Alignment.centerLeft,
-                                                              child: Text(
-                                                                (feedsValueNotifier.value.item2.result[index].likesCount >= 2)
-                                                                    ? "${feedsValueNotifier.value.item2.result[index].likesCount} "
-                                                                    : (feedsValueNotifier.value.item2.result[index].likesCount == 1)
-                                                                    ? "${feedsValueNotifier.value.item2.result[index].likesCount} "
-                                                                    : "",
-                                                                style: GoogleFonts.inter(
-                                                                    textStyle: TextStyle(
-                                                                      fontSize: 12.sp,
-                                                                      fontWeight:
-                                                                      FontWeight.w400,
-                                                                      color: Color.fromRGBO(
-                                                                          51,
-                                                                          51,
-                                                                          51,
-                                                                          1),
-                                                                    )),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 13.w,
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets
-                                                              .fromLTRB(
-                                                              0,
-                                                              6.h,
-                                                              0,
-                                                              0),
-                                                          child:
-                                                          InkWell(
-                                                            onTap:
-                                                                () {
-                                                              Navigator
-                                                                  .push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) =>
-
-                                                                        Comments_Page(
-
-                                                                        postId: feedsValueNotifier.value.item2.result[index].id.oid,
-                                                                        FeedData:       feedsValueNotifier
+                                                            image: DecorationImage(
+                                                                image: NetworkImage(
+                                                                    feedsValueNotifier
                                                                         .value
                                                                         .item2
                                                                         .result[index]
                                                                         .
-                                                                    posts[0].toString())
+                                                                    posts[itemIndex]
                                                                 ),
-                                                              );
-                                                            },
-                                                            child: SvgPicture
-                                                                .asset(
-                                                                'assets/pops_asset/pops_commentbutton.svg'),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 4.w,
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets
-                                                              .fromLTRB(
-                                                              0,
-                                                              5.h,
-                                                              0,
-                                                              0),
-                                                          child:
-                                                          InkWell(
-                                                            onTap:
-                                                                () {
-                                                              print(
-                                                                  'dhina:${feedsValueNotifier.value.item2.result[index].id.oid}');
-                                                            },
-                                                            child:
-                                                            Text(
-                                                              (feedsValueNotifier.value.item2.result[index].commentsCount >=
-                                                                  2)
-                                                                  ? "${feedsValueNotifier.value.item2.result[index].commentsCount}"
-                                                                  : (feedsValueNotifier.value.item2.result[index].commentsCount == 1)
-                                                                  ? "${feedsValueNotifier.value.item2.result[index].commentsCount}"
-                                                                  : "",
-                                                              //  '3.6k',
-                                                              style: GoogleFonts.inter(
-                                                                  textStyle: TextStyle(
-                                                                    fontSize: 12.sp,
-                                                                    fontWeight:
-                                                                    FontWeight.w400,
-                                                                    color: Color.fromRGBO(
-                                                                        51,
-                                                                        51,
-                                                                        51,
-                                                                        1),
-                                                                  )),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10.w,
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets
-                                                              .fromLTRB(
-                                                              0,
-                                                              2.h,
-                                                              0,
-                                                              0),
-                                                          child:
-                                                          GestureDetector(
-                                                            onTap:
-                                                                () {
-                                                              showModalBottomSheet(
-                                                                shape:
-                                                                RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-                                                                context:
-                                                                context,
-                                                                builder:
-                                                                    (context) {
-                                                                  return Container(child: Share_Page());
-                                                                },
-                                                              );
-                                                            },
-                                                            child: SvgPicture
-                                                                .asset(
-                                                              'assets/pops_asset/pops_sharefinal.svg',
-                                                              height:
-                                                              15.h,
-                                                              width:
-                                                              15.w,
-                                                            ),
-                                                          ),
+                                                                fit: BoxFit
+                                                                    .cover)),
+                                                      ),
+                                                  options: CarouselOptions(
+                                                    enableInfiniteScroll: false,
+                                                    aspectRatio: 16 /
+                                                        9,
+                                                    viewportFraction: 1,
+                                                  ),
+                                                )
+                                              // child: Container(
+                                              //   child: PreloadPageViewWidget(
+                                              //     valueNotifier: feedsValueNotifier,
+                                              //     index: index,
+                                              //   //  sizingInformation: sizingInformation,
+                                              //   ),
+                                              // ),
 
-                                                        ),
-Spacer(),
-                                                        InkWell(
-                                                          onTap: () {
 
-                                                          },
-                                                          child: SvgPicture
-                                                              .asset(
-                                                              'assets/pops_asset/pops_savebutton.svg'),
-                                                        ),
-                                                        SizedBox(width: 13.w)
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 7.h),
-                                                    Row(
+                                            ),
+                                              Positioned(
+                                                bottom:12,
+                                                left: 12.w,
+                                                right: 12.w,
+                                                child:AnimatedContainer(
+                                                  height:height,
+                                                  width: 336.w,
+                                                  child:SingleChildScrollView(
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                       children: [
-                                                        SizedBox(width: 13.w),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            Navigator
-                                                                .push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                      pop_Likes(Id: '62f01f551dfcc621553b119f')),
-                                                            );
-                                                          },
-                                                          child: Row(
+                                                        height==119.h?desText():
+                                                        Padding(
+                                                          padding:EdgeInsets.only(left: 16,top:12),
+                                                          child:Row(
                                                             children: [
                                                               Text(
-                                                                'Liked by',
+                                                                readmore.substring(0,20),
                                                                 style: GoogleFonts.inter(
                                                                     textStyle: TextStyle(
                                                                         fontWeight: FontWeight.w400,
-                                                                        fontSize: 12.sp,
-                                                                        color: Color.fromRGBO(0, 0, 0, 1))),
+                                                                        color: Color.fromRGBO(
+                                                                            255, 255, 255, 1),
+                                                                        fontSize: 12.sp)),
                                                               ),
-                                                              SizedBox(
-                                                                width:
-                                                                6.w,
-                                                              ),
-                                                              Container(
-                                                                width:
-                                                                45.w,
-                                                                child:
-                                                                Stack(
-                                                                  children: [
-                                                                    likedmembers(),
-                                                                    Positioned(
-                                                                        left: 10,
-                                                                        child: likedmembers()),
-                                                                    Positioned(
-                                                                        left: 20,
-                                                                        child: likedmembers())
-                                                                  ],
+                                                              GestureDetector(
+                                                                onTap:(){
+                                                                  setState(() {
+                                                                    height=119.h;
+                                                                  });
+                                                                },
+
+                                                                child: Text(
+                                                                  '...more',
+                                                                  style: GoogleFonts.inter(
+                                                                      textStyle: TextStyle(
+                                                                          fontWeight: FontWeight.w400,
+                                                                          color: Color.fromRGBO(
+                                                                              255, 255, 255, 1),
+                                                                          fontSize: 12.sp)),
                                                                 ),
-                                                              )
+                                                              ),
                                                             ],
                                                           ),
                                                         ),
                                                       ],
                                                     ),
-                                                    SizedBox(height: 7.h),
-                                                    Row(
-                                                      children: [
-                                                        SizedBox(width: 13.w),
-                                                        InkWell(
-                                                          onTap: () {
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(4),
+                                                    color: Color.fromRGBO(180, 180, 180, 0.5),
+                                                  ), duration:Duration(milliseconds:250),
+                                                ),
+                                              )]
+                                          ),
+                                          Container(
 
-                                                            // Navigator
-                                                            //     .push(
-                                                            //   context,
-                                                            //   MaterialPageRoute(
-                                                            //       builder: (context) => Comments_Page(
-                                                            //
-                                                            //           postId: feedsValueNotifier.value.item2.result[index].id.oid, FeedData:       feedsValueNotifier
-                                                            //           .value
-                                                            //           .item2
-                                                            //           .result[index]
-                                                            //           .
-                                                            //       posts[0].toString())),
-                                                            // );
-                                                          },
+                                            padding: EdgeInsets
+                                                .fromLTRB(
+                                                12, 7, 12, 15),
+                                            height: 108.h,
+                                            width:
+                                            double.infinity,
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    SizedBox(width: 16.w),
+                                                    GestureDetector(
+                                                        behavior: HitTestBehavior.opaque,
+                                                        onTap: (likeValueNotifier.value.item1 == 0)
+                                                            ? null
+                                                            : (feedsValueNotifier.value.item2.result[index].likesStatus == true)
+                                                                ? () async {
+                                                                    return await unlikeApiCall(
+                                                                            uid: userDetailsValueNotifier.value.item2.result.userId,
+                                                                            postId: feedsValueNotifier.value.item2.result[index].id.oid)
+                                                                        .whenComplete(() async {
+                                                                      if (likeValueNotifier.value.item1 == 1) {
+                                                                        if (!mounted) return;
+                                                                        setState(() {
+                                                                          feedsValueNotifier.value.item2.result[index].likesStatus = false;
+                                                                          feedsValueNotifier.value.item2.result[index].likesCount -= 1;
+                                                                        });
+                                                                      } else if (likeValueNotifier.value.item1 == 2 || likeValueNotifier.value.item1 == 3) {
+                                                                        final snackBar = snackbar(content: likeValueNotifier.value.item3.toString());
+                                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                      }
+                                                                    });
+                                                                  }
+                                                                : () async {
+                                                                    return await likeApiCall(
+                                                                            uid: userDetailsValueNotifier.value.item2.result.userId,
+                                                                            name: userDetailsValueNotifier.value.item2.result.username,
+                                                                            profileUrl: userDetailsValueNotifier.value.item2.result.profileUrl,
+                                                                            postId: feedsValueNotifier.value.item2.result[index].id.oid)
+                                                                        .whenComplete(() async {
+                                                                      if (likeValueNotifier.value.item1 == 1) {
+                                                                        if (!mounted) return;
+                                                                        setState(() {
+                                                                          feedsValueNotifier.value.item2.result[index].likesStatus = true;
+                                                                          feedsValueNotifier.value.item2.result[index].likesCount += 1;
+                                                                        });
+                                                                      } else if (likeValueNotifier.value.item1 == 2 || likeValueNotifier.value.item1 == 3) {
+                                                                        final snackBar = snackbar(content: likeValueNotifier.value.item3.toString());
+                                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                      }
+                                                                    });
+                                                                  },
+                                                        child: (feedsValueNotifier.value.item2.result[index].likesStatus == true)
+                                                            ? Icon(
+                                                            Icons
+                                                                 .thumb_up_sharp,
+
+                                                              )
+                                                            : Icon(
+                                                          Icons.thumb_up_outlined
+                                                              )),
+                                                    SizedBox(
+                                                      width: 7.w,
+                                                    ),
+                                                    Padding(
+                                                      padding: EdgeInsets
+                                                          .fromLTRB(
+                                                          0,
+                                                          5.h,
+                                                          0,
+                                                          0),
+                                                      child: GestureDetector(
+                                                        behavior: HitTestBehavior.opaque,
+                                                        onTap: () async {
+                                                          //dhina
+                                                          // if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                                                          //   return await scaffoldAlertDialogBox(
+                                                          //       context: context, page: Listview(state: 0, Id:
+                                                          //       feedsValueNotifier.value.item2.result[index].id.oid));
+                                                          // } else {
+                                                          //   Navigator.push(context,
+                                                          //       MaterialPageRoute(builder: (context) =>
+                                                          //       Listview(state: 0, Id: feedsValueNotifier.value.item2.result
+                                                          //       [index].id.oid)));
+                                                          // }
+                                                        },
+                                                        child: Align(
+                                                          alignment: Alignment.centerLeft,
                                                           child: Text(
-                                                            'view all comments...',
-                                                            style: GoogleFonts
-                                                                .inter(
+                                                            (feedsValueNotifier.value.item2.result[index].likesCount >= 2)
+                                                                ? "${feedsValueNotifier.value.item2.result[index].likesCount} "
+                                                                : (feedsValueNotifier.value.item2.result[index].likesCount == 1)
+                                                                ? "${feedsValueNotifier.value.item2.result[index].likesCount} "
+                                                                : "",
+                                                            style: GoogleFonts.inter(
                                                                 textStyle: TextStyle(
+                                                                  fontSize: 12.sp,
                                                                   fontWeight:
                                                                   FontWeight.w400,
                                                                   color: Color.fromRGBO(
-                                                                      98,
-                                                                      98,
-                                                                      98,
+                                                                      51,
+                                                                      51,
+                                                                      51,
                                                                       1),
                                                                 )),
                                                           ),
-                                                        )
-                                                      ],
+                                                        ),
+                                                      ),
                                                     ),
-                                                    Spacer(),
-                                                    Divider(
-                                                      thickness: 1,
-                                                      indent: 5,
-                                                      endIndent: 5,
+                                                    SizedBox(
+                                                      width: 13.w,
+                                                    ),
+                                                    Padding(
+                                                      padding: EdgeInsets
+                                                          .fromLTRB(
+                                                          0,
+                                                          6.h,
+                                                          0,
+                                                          0),
+                                                      child:
+                                                      InkWell(
+                                                        onTap:
+                                                            () {
+                                                          Navigator
+                                                              .push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+
+                                                                    Comments_Page(
+
+                                                                    postId: feedsValueNotifier.value.item2.result[index].id.oid,
+                                                                    FeedData:       feedsValueNotifier
+                                                                    .value
+                                                                    .item2
+                                                                    .result[index]
+                                                                    .
+                                                                posts[0].toString())
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: SvgPicture
+                                                            .asset(
+                                                            'assets/pops_asset/pops_commentbutton.svg'),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 4.w,
+                                                    ),
+                                                    Padding(
+                                                      padding: EdgeInsets
+                                                          .fromLTRB(
+                                                          0,
+                                                          5.h,
+                                                          0,
+                                                          0),
+                                                      child:
+                                                      InkWell(
+                                                        onTap:
+                                                            () {
+                                                          print(
+                                                              'dhina:${feedsValueNotifier.value.item2.result[index].id.oid}');
+                                                        },
+                                                        child:
+                                                        Text(
+                                                          (feedsValueNotifier.value.item2.result[index].commentsCount >=
+                                                              2)
+                                                              ? "${feedsValueNotifier.value.item2.result[index].commentsCount}"
+                                                              : (feedsValueNotifier.value.item2.result[index].commentsCount == 1)
+                                                              ? "${feedsValueNotifier.value.item2.result[index].commentsCount}"
+                                                              : "",
+                                                          //  '3.6k',
+                                                          style: GoogleFonts.inter(
+                                                              textStyle: TextStyle(
+                                                                fontSize: 12.sp,
+                                                                fontWeight:
+                                                                FontWeight.w400,
+                                                                color: Color.fromRGBO(
+                                                                    51,
+                                                                    51,
+                                                                    51,
+                                                                    1),
+                                                              )),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.w,
+                                                    ),
+                                                    Padding(
+                                                      padding: EdgeInsets
+                                                          .fromLTRB(
+                                                          0,
+                                                          2.h,
+                                                          0,
+                                                          0),
+                                                      child:
+                                                      GestureDetector(
+                                                        onTap:
+                                                            () {
+                                                          showModalBottomSheet(
+                                                            shape:
+                                                            RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                                                            context:
+                                                            context,
+                                                            builder:
+                                                                (context) {
+                                                              return Container(child: Share_Page());
+                                                            },
+                                                          );
+                                                        },
+                                                        child: SvgPicture
+                                                            .asset(
+                                                          'assets/pops_asset/pops_sharefinal.svg',
+                                                          height:
+                                                          15.h,
+                                                          width:
+                                                          15.w,
+                                                        ),
+                                                      ),
+
+                                                    ),
+Spacer(),
+                                                    InkWell(
+                                                      onTap: () {
+
+                                                      },
+                                                      child: SvgPicture
+                                                          .asset(
+                                                          'assets/pops_asset/pops_savebutton.svg'),
+                                                    ),
+                                                    SizedBox(width: 13.w)
+                                                  ],
+                                                ),
+                                                SizedBox(height: 7.h),
+                                                Row(
+                                                  children: [
+                                                    SizedBox(width: 13.w),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator
+                                                            .push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                  pop_Likes(Id: '62f01f551dfcc621553b119f')),
+                                                        );
+                                                      },
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                            'Liked by',
+                                                            style: GoogleFonts.inter(
+                                                                textStyle: TextStyle(
+                                                                    fontWeight: FontWeight.w400,
+                                                                    fontSize: 12.sp,
+                                                                    color: Color.fromRGBO(0, 0, 0, 1))),
+                                                          ),
+                                                          SizedBox(
+                                                            width:
+                                                            6.w,
+                                                          ),
+                                                          Container(
+                                                            width:
+                                                            45.w,
+                                                            child:
+                                                            Stack(
+                                                              children: [
+                                                                likedmembers(),
+                                                                Positioned(
+                                                                    left: 10,
+                                                                    child: likedmembers()),
+                                                                Positioned(
+                                                                    left: 20,
+                                                                    child: likedmembers())
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
-                                              ),
+                                                SizedBox(height: 7.h),
+                                                Row(
+                                                  children: [
+                                                    SizedBox(width: 13.w),
+                                                    InkWell(
+                                                      onTap: () {
 
-                                            ],
+                                                        Navigator
+                                                            .push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) => Comments_Page(
+
+                                                                  postId: feedsValueNotifier.value.item2.result[index].id.oid,
+                                                                  FeedData:       feedsValueNotifier
+                                                                  .value
+                                                                  .item2
+                                                                  .result[index]
+                                                                  .
+                                                              posts[0].toString())),
+                                                        );
+                                                      },
+                                                      child: Text(
+                                                        'view all comments...',
+                                                        style: GoogleFonts
+                                                            .inter(
+                                                            textStyle: TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.w400,
+                                                              color: Color.fromRGBO(
+                                                                  98,
+                                                                  98,
+                                                                  98,
+                                                                  1),
+                                                            )),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+
+
+                                              ],
+                                            ),
                                           ),
-                                        );
-                                      }),
-                                ),
-                              ],
-                            )
-                            : Padding(
-                                padding: const EdgeInsets.only(left: 20, right: 20),
-                                child: Center(
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: lottieAnimation(emptyTimelineLottie),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text("Sorry, Your timeline is empty"),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: flatButton(
-                                            onPressed: () async {
-                                              return await feedsApiCall(uid:uid.toString());
-                                            },
-                                            backgroundColor: Color(accent),
-                                            textStyle: GoogleFonts.poppins(textStyle: textStyle(fontSize: 20)),
-                                            child: Text("Try Again"),
-                                          ),
-                                        )
-                                      ],
+
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ],
+                        )
+                        : Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: Center(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: lottieAnimation(emptyTimelineLottie),
                                     ),
-                                  ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Sorry, Your timeline is empty"),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: flatButton(
+                                        onPressed: () async {
+                                          return await feedsApiCall(uid:uid.toString());
+                                        },
+                                        backgroundColor: Color(accent),
+                                        textStyle: GoogleFonts.poppins(textStyle: textStyle(fontSize: 20)),
+                                        child: Text("Try Again"),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                      ),
-                    ),
+                            ),
+                          ),
                       floatingActionButton:SpeedDial(
                         overlayOpacity:0,
                         spacing:17,
                         spaceBetweenChildren: 17,
-                        activeIcon:Icons.keyboard_arrow_up_rounded,
-                        icon: Icons.keyboard_arrow_down_rounded,
+                        activeIcon:Icons.keyboard_arrow_down_rounded,
+                        icon: Icons.keyboard_arrow_up_rounded,
                         backgroundColor:Color.fromRGBO(248, 206, 97, 1),
                         foregroundColor:Colors.black,
                         children: [
@@ -1129,7 +1200,7 @@ Spacer(),
                           SpeedDialChild( backgroundColor:Color.fromRGBO(248, 206, 97, 1),
                               onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) =>
                                   Requests_Page())),
-                              child: SvgPicture.asset('assets/pops_asset/pop_request.svg',height:18.h,
+                              child: SvgPicture.asset('assets/pops_asset/No_Request_Icon.svg',height:18.h,
                                 width:18.w,)
                           )
 

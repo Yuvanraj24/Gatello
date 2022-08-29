@@ -188,7 +188,7 @@
 //                           color: Color.fromRGBO(12, 16, 29, 1))),
 //                 ),
 //               ),
-//               leading: Icon(Icons.arrow_back, color: Color.fromRGBO(12, 16, 29, 1)),
+//               leading: InkWell(onTap: (){Navigator.pop(context);},child: Icon(Icons.arrow_back, color: Color.fromRGBO(12, 16, 29, 1))),
 //             ),
 //             body: Padding(
 //               padding: const EdgeInsets.only(right: 12, left: 12, top: 13),
@@ -280,44 +280,7 @@
 //                         padding:  EdgeInsets.only(left:13,top:13),
 //                         child: Row(crossAxisAlignment: CrossAxisAlignment.start,
 //                           children: [
-//                             Flexible(
-//                               child: Stack(children: [
-//                                 Container(
-//                                   height: 34.h,
-//                                   width: 32.w,
-//                                   decoration: BoxDecoration(
-//                                       borderRadius: BorderRadius.circular(5),
-//                                       image: DecorationImage(
-//                                           image: NetworkImage(
-//                                               'https://www.setaswall.com/wp-content/uploads/2021/01/Captain-America-Wallpaper-1080x1920-002.jpg'),
-//                                           fit: BoxFit.fill)),
-//                                 ),
-//                       Container(height:20,
-//                         width:20,child: Center(child: Text("${fileList.length.toString()}",)),decoration: BoxDecoration(shape: BoxShape.circle,color: Colors.pink.shade100,),)
-//                       //       (fileUrlList[pageIndex].contains("mp4") || fileUrlList[pageIndex].contains("mpeg4"))
-//                       //     ? VideoPlayerContainer(
-//                       //   videoUrl: fileUrlList[pageIndex],
-//                       // )
-//                       // // : Image.network(
-//                       // //     fileUrlList[pageIndex],
-//                       // //     fit: BoxFit.cover,
-//                       // //   );
-//                       //     : CachedNetworkImage(
-//                       //   fit: BoxFit.cover,
-//                       //   fadeInDuration: const Duration(milliseconds: 400),
-//                       //   progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-//                       //     child: Container(
-//                       //       width: 20.0,
-//                       //       height: 20.0,
-//                       //       child: CircularProgressIndicator(value: downloadProgress.progress),
-//                       //     ),
-//                       //   ),
-//                       //   imageUrl: fileUrlList[pageIndex],
-//                       //   errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
-//                       // )
 //
-//                               ],),
-//                             ),
 //                             Container(height: 100.h,width: 280.w,
 //                               child: TextFormField(
 //                                 cursorColor: Colors.black,
@@ -649,6 +612,94 @@
 //                         ),
 //                         SizedBox(
 //                           height: 77.h,
+//                          ),
+//                         MaterialButton(
+//                           elevation: 0,
+//                           shape: CircleBorder(),
+//                           color: Color(accent),
+//                           padding: EdgeInsets.all(20),
+//                           onPressed: (isLoading)
+//                               ? null
+//                               : (widget.state == 0)
+//                               ? () async {
+//                             print('lotus:${fileList.length}');
+//                             if (!mounted) return;
+//                             setState(() {
+//                               isLoading = true;
+//                             });
+//                             if (_formKey.currentState!.validate()) {
+//
+//                               return await userDetailsApiCall().whenComplete(() async {
+//                                 if (userDetailsValueNotifier.value.item1 == 1) {
+//                                   return await createPostApiCall(
+//                                       uid: userDetailsValueNotifier.value.item2.result.userId,
+//                                       name: userDetailsValueNotifier.value.item2.result.username,
+//                                       profilePic: userDetailsValueNotifier.value.item2.result.profileUrl,
+//                                       description: descriptionTextEditingController.text)
+//                                       .whenComplete(() async {
+//                                     if (createPostValueNotifier.value.item1 == 1) {
+//                                       Navigator.pop(context, true);
+//                                     } else if (createPostValueNotifier.value.item1 == 2 ||
+//                                         createPostValueNotifier.value.item1 == 3) {
+//                                       if (!mounted) return;
+//                                       setState(() {
+//                                         isLoading = false;
+//                                       });
+//                                       final snackBar = snackbar(content: createPostValueNotifier.value.item3.toString());
+//                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//                                     }
+//                                   });
+//                                 } else if (userDetailsValueNotifier.value.item1 == 2 || userDetailsValueNotifier.value.item1 == 3) {
+//                                   if (!mounted) return;
+//                                   setState(() {
+//                                     isLoading = false;
+//                                   });
+//                                   final snackBar = snackbar(content: userDetailsValueNotifier.value.item3.toString());
+//                                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//                                 }
+//                               });
+//                             } else {
+//                               if (!mounted) return;
+//                               setState(() {
+//                                 isLoading = false;
+//                               });
+//                               final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
+//                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//                             }
+//                           }
+//                               : () async {
+//                             if (!mounted) return;
+//                             setState(() {
+//                               isLoading = true;
+//                             });
+//                             if (_formKey.currentState!.validate()) {
+//                               return await updatePostApiCall().whenComplete(() async {
+//                                 if (updatePostValueNotifier.value.item1 == 1) {
+//                                   Navigator.pop(context, true);
+//                                 } else if (updatePostValueNotifier.value.item1 == 2 || updatePostValueNotifier.value.item1 == 3) {
+//                                   if (!mounted) return;
+//                                   setState(() {
+//                                     isLoading = false;
+//                                   });
+//                                   final snackBar = snackbar(content: updatePostValueNotifier.value.item3.toString());
+//                                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//                                 }
+//                               });
+//                             } else {
+//                               if (!mounted) return;
+//                               setState(() {
+//                                 isLoading = false;
+//                               });
+//                               final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
+//                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//                             }
+//                           },
+//                           child: (isLoading)
+//                               ? CircularProgressIndicator()
+//                               : Icon(
+//                             Icons.send_outlined,
+//                             color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+//                           ),
 //                         ),
 //                         ElevatedButton(
 //                             style: ElevatedButton.styleFrom(
@@ -658,87 +709,81 @@
 //                               primary: Color.fromRGBO(248, 206, 97, 1),
 //                               fixedSize: Size(194.w, 43.h),
 //                             ),
-//                             onPressed: () {
+//                             onPressed: (isLoading)
+//                                 ? null
+//                                 : (widget.state == 0)
+//                                 ? () async {
 //                               print('lotus:${fileList.length}');
-//                               // params =
-//                               //     "?user_id=${uid}&username=${username}&profile_url=${profile_url}&description=${description}";
-//                               // print(params);
-//                               // print("Description : $description");
-//                               // var body = jsonEncode(<String, dynamic>{});
-//                               // createPost(body);
-//                               onPressed: (isLoading)
-//                                   ? null
-//                                   : (widget.state == 0)
-//                                   ? () async {
+//                               if (!mounted) return;
+//                               setState(() {
+//                                 isLoading = true;
+//                               });
+//                               if (_formKey.currentState!.validate()) {
+//
+//                                 return await userDetailsApiCall().whenComplete(() async {
+//                                   if (userDetailsValueNotifier.value.item1 == 1) {
+//                                     return await createPostApiCall(
+//                                         uid: userDetailsValueNotifier.value.item2.result.userId,
+//                                         name: userDetailsValueNotifier.value.item2.result.username,
+//                                         profilePic: userDetailsValueNotifier.value.item2.result.profileUrl,
+//                                         description: descriptionTextEditingController.text)
+//                                         .whenComplete(() async {
+//                                       if (createPostValueNotifier.value.item1 == 1) {
+//                                         Navigator.pop(context, true);
+//                                       } else if (createPostValueNotifier.value.item1 == 2 ||
+//                                           createPostValueNotifier.value.item1 == 3) {
+//                                         if (!mounted) return;
+//                                         setState(() {
+//                                           isLoading = false;
+//                                         });
+//                                         final snackBar = snackbar(content: createPostValueNotifier.value.item3.toString());
+//                                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//                                       }
+//                                     });
+//                                   } else if (userDetailsValueNotifier.value.item1 == 2 || userDetailsValueNotifier.value.item1 == 3) {
+//                                     if (!mounted) return;
+//                                     setState(() {
+//                                       isLoading = false;
+//                                     });
+//                                     final snackBar = snackbar(content: userDetailsValueNotifier.value.item3.toString());
+//                                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//                                   }
+//                                 });
+//                               } else {
 //                                 if (!mounted) return;
 //                                 setState(() {
-//                                   isLoading = true;
+//                                   isLoading = false;
 //                                 });
-//                                 if (_formKey.currentState!.validate()) {
-//                                   return await userDetailsApiCall().whenComplete(() async {
-//                                     if (userDetailsValueNotifier.value.item1 == 1) {
-//                                       return await createPostApiCall(
-//                                           uid: userDetailsValueNotifier.value.item2.result.userId,
-//                                           name: userDetailsValueNotifier.value.item2.result.username,
-//                                           profilePic: userDetailsValueNotifier.value.item2.result.profileUrl,
-//                                           description: descriptionTextEditingController.text)
-//                                           .whenComplete(() async {
-//                                         if (createPostValueNotifier.value.item1 == 1) {
-//                                           Navigator.pop(context, true);
-//                                         } else if (createPostValueNotifier.value.item1 == 2 || createPostValueNotifier.value.item1 == 3) {
-//                                           if (!mounted) return;
-//                                           setState(() {
-//                                             isLoading = false;
-//                                           });
-//                                           final snackBar = snackbar(content:createPostValueNotifier.value.item3.toString());
-//                                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//                                         }
-//                                       });
-//                                     } else if (userDetailsValueNotifier.value.item1 == 2 || userDetailsValueNotifier.value.item1 == 3) {
-//                                       if (!mounted) return;
-//                                       setState(() {
-//                                         isLoading = false;
-//                                       });
-//                                       final snackBar = snackbar(content: userDetailsValueNotifier.value.item3.toString());
-//                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//                                     }
-//                                   });
-//                                 } else {
-//                                   if (!mounted) return;
-//                                   setState(() {
-//                                     isLoading = false;
-//                                   });
-//                                   final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
-//                                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//                                 }
+//                                 final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
+//                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
 //                               }
-//                                   : () async {
+//                             }
+//                                 : () async {
+//                               if (!mounted) return;
+//                               setState(() {
+//                                 isLoading = true;
+//                               });
+//                               if (_formKey.currentState!.validate()) {
+//                                 return await updatePostApiCall().whenComplete(() async {
+//                                   if (updatePostValueNotifier.value.item1 == 1) {
+//                                     Navigator.pop(context, true);
+//                                   } else if (updatePostValueNotifier.value.item1 == 2 || updatePostValueNotifier.value.item1 == 3) {
+//                                     if (!mounted) return;
+//                                     setState(() {
+//                                       isLoading = false;
+//                                     });
+//                                     final snackBar = snackbar(content: updatePostValueNotifier.value.item3.toString());
+//                                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//                                   }
+//                                 });
+//                               } else {
 //                                 if (!mounted) return;
 //                                 setState(() {
-//                                   isLoading = true;
+//                                   isLoading = false;
 //                                 });
-//                                 if (_formKey.currentState!.validate()) {
-//                                   return await updatePostApiCall().whenComplete(() async {
-//                                     if (updatePostValueNotifier.value.item1 == 1) {
-//                                       Navigator.pop(context, true);
-//                                     } else if (updatePostValueNotifier.value.item1 == 2 || updatePostValueNotifier.value.item1 == 3) {
-//                                       if (!mounted) return;
-//                                       setState(() {
-//                                         isLoading = false;
-//                                       });
-//                                       final snackBar = snackbar(content: updatePostValueNotifier.value.item3.toString());
-//                                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//                                     }
-//                                   });
-//                                 } else {
-//                                   if (!mounted) return;
-//                                   setState(() {
-//                                     isLoading = false;
-//                                   });
-//                                   final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
-//                                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//                                 }
-//                               };
+//                                 final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
+//                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//                               }
 //                             },
 //                             child: Text(
 //                               'Post',

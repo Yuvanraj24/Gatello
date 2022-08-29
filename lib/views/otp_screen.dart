@@ -85,7 +85,7 @@ class _OtpState extends State<Otp> {
                   ),
                   SizedBox(height: 16.h),
                   Text(
-                    '98745 32789',
+                    widget.mobileNo,
                     style: GoogleFonts.roboto(
                         textStyle: TextStyle(
                             fontSize: 20.sp,

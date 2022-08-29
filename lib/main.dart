@@ -11,6 +11,9 @@ import 'package:gatello/views/profile/user_proflle.dart';
 import 'package:gatello/views/profile/profile_details.dart';
 import 'package:gatello/views/profile/privateaccount.dart';
 import 'package:gatello/views/profile/tabbarprofile.dart';
+import 'package:gatello/views/status/others_status.dart';
+import 'package:gatello/views/status/showpage.dart';
+import 'package:gatello/views/storage/storage_S1.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
 import 'package:gatello/views/tabbar/calls/incomingcall.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/contact_card.dart';
@@ -151,7 +154,8 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar() :Tabbar();
+                              return (snapshot.data == true) ? Tabbar():Tabbar();
+
                             } else {
                               return lottieAnimation(loadingLottie);
                             }
@@ -172,3 +176,128 @@ class _MyAppState extends State<MyApp> {
     });
   }
 }
+
+
+//
+// import 'package:flutter/material.dart';
+// import 'package:story_view/story_view.dart';
+//
+// void main() => runApp(MyApp());
+//
+// class MyApp extends StatelessWidget {
+//   // This widget is the root of your application.
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//         title: 'Flutter Demo',
+//         debugShowCheckedModeBanner: false,
+//         theme: ThemeData(
+//           primarySwatch: Colors.red,
+//         ),
+//         home: Home());
+//   }
+// }
+//
+// class Home extends StatelessWidget {
+//   final StoryController controller = StoryController();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Story View example"),
+//       ),
+//       body: Container(
+//         margin: EdgeInsets.all(
+//           8,
+//         ),
+//         child: ListView(
+//           children: <Widget>[
+//             Container(
+//               height: 300,
+//               child: StoryView(
+//                 controller: controller,
+//                 storyItems: [
+//                   StoryItem.text(
+//                     title:
+//                     "Hello world!\nHave a look at some great packages of flutter. \n\nTap!",
+//                     backgroundColor: Colors.orange,
+//                     roundedTop: false,
+//                   ),
+//                   StoryItem.inlineImage(
+//                     url:"https://i.pinimg.com/originals/81/5d/89/815d895b4721c14cbe7c86c63806d6c8.gif",
+//                     controller: controller,
+//                     caption: Text(
+//                       "Rock Concert; You will love this show if taken as supper.",
+//                       style: TextStyle(
+//                         color: Colors.white,
+//                         backgroundColor: Colors.black54,
+//                         fontSize: 17,
+//                       ),
+//                     ),
+//                   ),
+//                   StoryItem.inlineImage(
+//                     url:
+//                     "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRRtnKMaJELWjO00mgYXttUMe1UfRJSnDxodA&usqp=CAU",
+//                     controller: controller,
+//                     caption: Text(
+//                       "My welcome Chatbot .........!",
+//                       style: TextStyle(
+//                         color: Colors.white,
+//                         backgroundColor: Colors.black54,
+//                         fontSize: 17,
+//                       ),
+//                     ),
+//                   )
+//                 ],
+//                 onStoryShow: (s) {
+//                   print("Showing a story");
+//                 },
+//                 onComplete: () {
+//                   print("Completed a cycle");
+//                 },
+//                 progressPosition: ProgressPosition.bottom,
+//                 repeat: false,
+//                 inline: true,
+//               ),
+//             ),
+//             Material(
+//               child: GestureDetector(
+//                 onTap: () {
+//                   // Navigator.of(context).push(
+//                   //     MaterialPageRoute(builder: (context) => MoreStories()));
+//                 },
+//                 child: Container(
+//                   decoration: BoxDecoration(
+//                       color: Colors.black54,
+//                       borderRadius:
+//                       BorderRadius.vertical(bottom: Radius.circular(8))),
+//                   padding: EdgeInsets.symmetric(vertical: 8),
+//                   child: Row(
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     children: <Widget>[
+//                       Icon(
+//                         Icons.arrow_forward,
+//                         color: Colors.white,
+//                       ),
+//                       SizedBox(
+//                         width: 16,
+//                       ),
+//                       Text(
+//                         "View more stories",
+//                         style: TextStyle(fontSize: 16, color: Colors.white),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+

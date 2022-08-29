@@ -28,6 +28,7 @@ import '../../../components/SnackBar.dart';
 import '../../../components/TextFormField.dart';
 import '../../../components/VideoPlayerContainer.dart';
 import '../../../core/Models/Default.dart';
+import '../../../core/Models/Feeds.dart';
 import '../../../core/models/exception/pops_exception.dart';
 import '../../../handler/Network.dart';
 import '../../../main.dart';
@@ -72,7 +73,7 @@ class _PostState extends State<Post> {
   ValueNotifier<Tuple4> createPostValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   ValueNotifier<Tuple4> updatePostValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   ValueNotifier<Tuple4> userDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
-
+  ValueNotifier<Tuple4> feedsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
   PageController pageController = PageController();
   TextEditingController descriptionTextEditingController = TextEditingController();
   int currentPageIndex = 0;
@@ -105,7 +106,16 @@ class _PostState extends State<Post> {
       formData: formData,
     );
   }
-
+  Future feedsApiCall({required String uid}) async {
+    print('feedsapi');
+    return await ApiHandler().apiHandler(
+      valueNotifier: feedsValueNotifier,
+      jsonModel: feedsFromJson,
+      url: feedsUrl,
+      requestMethod: 1,
+      body: {"user_id": uid},
+    );
+  }
   Future updatePostApiCall() async {
     return await ApiHandler().apiHandler(
       valueNotifier: updatePostValueNotifier,
@@ -160,23 +170,7 @@ final data2=await initialiser();
   @override
   void initState() {
 _future=sendData();
-// if (widget.state == 0 && fileList != null) {
-//   print('55555555');
-//   fileList = fileList;
-//   if (!mounted) return;
-//   setState(() {
-//     initLoading = false;
-//   });
-//   print(6666);
-// } else if (widget.state == 1 && widget.stringList != null && widget.description != null) {
-//   print('7777777777');
-//   fileUrlList = widget.stringList!;
-//   if (!mounted) return;
-//   setState(() {
-//     descriptionTextEditingController.text = widget.description!;
-//     initLoading = false;
-//   });
-// }
+
     super.initState();
   }
 
@@ -194,9 +188,10 @@ _future=sendData();
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: AnimatedBuilder(
-          animation: Listenable.merge([createPostValueNotifier, userDetailsValueNotifier]),
+          animation: Listenable.merge([createPostValueNotifier, userDetailsValueNotifier,feedsValueNotifier]),
           builder: (context, _) {
             if (initLoading == false) {
               return FutureBuilder(
@@ -240,7 +235,42 @@ _future=sendData();
                               constraints: BoxConstraints(maxWidth: 800.0),
                               child: Column(
                                 children: [
-
+                                  InkWell(
+                                    onTap: ()async {
+                                          return await files().then((value) {
+                                        if (value != null && value.files.isNotEmpty) {
+                                          fileList.clear();
+                                          if (value.files.length < 10) {
+                                            for (int i = 0; i < value.files.length; i++) {
+                                              if (value.files[i].size < 52428800) {
+                                                fileList.add(value.files[i]);
+                                              } else {
+                                                final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
+                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                              }
+                                            }
+                                            return Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                                Post(state: 0,
+                                                    fileList: fileList))).then((value) async {
+                                              if (value != null) {
+                                                return await feedsApiCall(uid: uid.toString());
+                                              }
+                                            });
+                                          } else {
+                                            final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
+                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                          }
+                                        }
+                                      });
+                                    },
+                                    child: Text(
+                                      'Add photo and videos',
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16.sp,
+                                          color: Color.fromRGBO(0, 0, 0, 1)),
+                                    ),
+                                  ),
                                   // InkWell(
                                   //   onTap: () async {
                                   //     return await files().then((value) {

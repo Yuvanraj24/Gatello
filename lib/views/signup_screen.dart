@@ -595,6 +595,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 Spacer(),
                 ElevatedButton(
+                  style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
+                  shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(27)),
+                    fixedSize: Size(234.w, 50.h)),
                   onPressed: () {
 
                     if (widget.first!.isNotEmpty && widget.last!.isNotEmpty) {
@@ -608,9 +611,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SelectBirthday(
-                                name: name,
-                              )));
+                              builder: (context) => SelectBirthday()));
                     } else {
                       showDialog(
                           context: context,
@@ -623,22 +624,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                    },
                   child: Text(
-                    'Sign Up',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600),
+                    'Sign Up',style:GoogleFonts.inter(fontWeight:FontWeight.w600,fontSize:14.sp,
+                  color:Colors.black)),
                   ),
-                  style: ElevatedButton.styleFrom(
-                      elevation: 5,
-                      onPrimary: Colors.black,
-                      //   padding: EdgeInsets.all(10),
-                      minimumSize: Size(234.w, 48.h),
-                      primary: HexColor('#F8CE61'),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(35),
-                      )),
-                ),
+                  // style: ElevatedButton.styleFrom(
+                  //     elevation: 5,
+                  //     onPrimary: Colors.black,
+                  //     //   padding: EdgeInsets.all(10),
+                  //     minimumSize: Size(234.w, 48.h),
+                  //     primary: HexColor('#F8CE61'),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(35),
+                  //     )),
               ],
             ),
           ),

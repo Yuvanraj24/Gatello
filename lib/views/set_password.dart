@@ -160,7 +160,7 @@ child: SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),
                             mainAxisAlignment: MainAxisAlignment.start,
                              children: [
                                Text(
-                  'Must be at 8 characters and contain at least\none Letter,none symbol & one number.',
+                  'Must be at 8 characters and contain at least\none letter,one symbol & one number.',
                   style: GoogleFonts.inter(
                       textStyle: TextStyle(
                                 fontSize: 11.sp,

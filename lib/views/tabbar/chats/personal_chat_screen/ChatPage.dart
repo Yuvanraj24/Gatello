@@ -1677,44 +1677,44 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                         child: textField(
 
                                                            prefix:
-                                                          // IconButton(
-                                                          // splashColor: Colors.transparent,
-                                                          // highlightColor: Colors.transparent,
-                                                          // hoverColor: Colors.transparent,
-                                                          // onPressed: () async {
-                                                          //   recentEmojiList = await getRecentEmoji();
-                                                          //   if (!mounted) return;
-                                                          //   setState(() {
-                                                          //     if (attachmentShowing) {
-                                                          //       attachmentShowing = false;
-                                                          //     }
-                                                          //     emojiShowing = !emojiShowing;
-                                                          //     if (!emojiShowing) {
-                                                          //       focusNode.requestFocus();
-                                                          //     } else {
-                                                          //       focusNode.unfocus();
-                                                          //
-                                                          //     }
-                                                          //   });
-                                                          // },
-                                                          //     icon: Icon(Icons.emoji_emotions_outlined,
-                                                          //     color: Color.fromRGBO(12, 16, 29, 1))),
+                                                          IconButton(
+                                                          splashColor: Colors.transparent,
+                                                          highlightColor: Colors.transparent,
+                                                          hoverColor: Colors.transparent,
+                                                          onPressed: () async {
+                                                            recentEmojiList = await getRecentEmoji();
+                                                            if (!mounted) return;
+                                                            setState(() {
+                                                              if (attachmentShowing) {
+                                                                attachmentShowing = false;
+                                                              }
+                                                              emojiShowing = !emojiShowing;
+                                                              if (!emojiShowing) {
+                                                                focusNode.requestFocus();
+                                                              } else {
+                                                                focusNode.unfocus();
+
+                                                              }
+                                                            });
+                                                          },
+                                                              icon: Icon(Icons.emoji_emotions_outlined,
+                                                              color: Color.fromRGBO(12, 16, 29, 1))),
 
 
-                                                           IconButton(
-                                                               splashColor: Colors.transparent,
-                                                               highlightColor: Colors.transparent,
-                                                               hoverColor: Colors.transparent,
-                                                               onPressed: () {
-                                                                 if (!mounted) return;
-                                                                 setState(() {
-                                                                   if (emojiShowing) {
-                                                                     emojiShowing = false;
-                                                                   }
-                                                                   attachmentShowing = !attachmentShowing;
-                                                                 });
-                                                               },
-                                                               icon: Icon(Icons.attach_file)),
+                                                           // IconButton(
+                                                           //     splashColor: Colors.transparent,
+                                                           //     highlightColor: Colors.transparent,
+                                                           //     hoverColor: Colors.transparent,
+                                                           //     onPressed: () {
+                                                           //       if (!mounted) return;
+                                                           //       setState(() {
+                                                           //         if (emojiShowing) {
+                                                           //           emojiShowing = false;
+                                                           //         }
+                                                           //         attachmentShowing = !attachmentShowing;
+                                                           //       });
+                                                           //     },
+                                                           //     icon: Icon(Icons.attach_file)),
                                                           focusNode: focusNode,
                                                           textStyle: GoogleFonts.inter(
                                                               textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white))),

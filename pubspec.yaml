@@ -100,6 +100,7 @@ dependencies:
   adaptive_theme: ^3.1.1
   firebase_dynamic_links: ^4.3.4
   flutter_speed_dial: ^6.0.0
+  story_view: ^0.13.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -128,7 +129,6 @@ flutter:
   assets:
     - assets/appbar_action/Rectangle 7.png
     - assets/profile_page/profile_pic_logo.png
-    - assets/birthday_image/birthday_logo.png
     - assets/splash_1/glogo.png
     - assets/splash2_image/splah2 _image.png
     - assets/splash3_image/splash3_image.png
@@ -172,6 +172,7 @@ flutter:
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/gallery_icon_container.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_icon_container.png
     - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_icon_container.png
+    - assets/tabbar_icons/Tabbar_search.svg
     - assets/icons_assets/green_tick.svg
     - assets/select_contact/invite friends.svg
     - assets/select_contact/new contact.svg
@@ -200,7 +201,6 @@ flutter:
     - assets/pops_asset/Tag_people.svg
     - assets/pops_asset/Location_image.svg
     - assets/pops_asset/liked.svg
-    - assets/pops_asset/norequestpops.svg
     - assets/pops_asset/searchicon.svg
     - assets/tabbar_icons/tab_view_main/back_icon.svg
     - assets/pops_asset/floating_comment.svg
@@ -233,11 +233,48 @@ flutter:
     - assets/profile_assets/searchicon.svg
     - assets/profile_assets/profilelanguage.svg
     - assets/tabbar_icons/pops_getit.svg
+    - assets/tabbar_icons/Pops_icon.svg
     - assets/tabbar_icons/pings_icon.svg
     - assets/tabbar_icons/status_icon.svg
     - assets/tabbar_icons/pops_call.svg
+    - assets/pops_asset/pings_icon.svg
+    - assets/pops_asset/interaction_icon.svg
+    - assets/pops_asset/pop_request.svg
     - assets/pops_asset/gatello_loading.gif
     - assets/profile_assets/no_profile.svg
+    - assets/storage_assets/all_files.svg
+    - assets/storage_assets/back-icon.svg
+    - assets/storage_assets/filemanager_icon.svg
+    - assets/storage_assets/elipse.svg
+    - assets/storage_assets/forward_icon.svg
+    - assets/storage_assets/photos_icon.svg
+    - assets/storage_assets/videos_icon.svg
+    - assets/storage_assets/create_folder.svg
+    - assets/storage_assets/play_icon.svg
+    - assets/storage_assets/audio_icon.svg
+    - assets/storage_assets/documents.svg
+    - assets/storage_assets/all_files.svg
+    - assets/storage_assets/back-icon.svg
+    - assets/storage_assets/filemanager_icon.svg
+    - assets/storage_assets/elipse.svg
+    - assets/storage_assets/forward_icon.svg
+    - assets/storage_assets/photos_icon.svg
+    - assets/storage_assets/videos_icon.svg
+    - assets/storage_assets/create_folder.svg
+    - assets/storage_assets/play_icon.svg
+    - assets/storage_assets/audio_icon.svg
+    - assets/storage_assets/documents.svg
+    - assets/status_assets/camera_icon.svg
+    - assets/status_assets/back_icon.svg
+    - assets/status_assets/delete_icon.svg
+    - assets/status_assets/statusview_icon.svg
+    - assets/status_assets/statusdetails.svg
+    - assets/status_assets/status_text.svg
+    - assets/status_assets/chat_attachment.svg
+    - assets/status_assets/chat_camera.svg
+    - assets/status_assets/voicemsg_icon.svg
+    - assets/birthday_image/birthday_icon.svg
+    - assets/pops_asset/No_Request_Icon.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

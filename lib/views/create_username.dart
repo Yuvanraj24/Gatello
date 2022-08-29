@@ -155,15 +155,9 @@ class _CreateUsernameState extends State<CreateUsername> {
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black)),
                       ),
-                      style: ElevatedButton.styleFrom(
-                          elevation: 5,
-                          onPrimary: Colors.black,
-                          //  padding: EdgeInsets.all(10),
-                          minimumSize: Size(234.w, 48.h),
-                          primary: Color.fromRGBO(248, 206, 97, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(35),
-                          )),
+                      style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
+                          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(27)),
+                          fixedSize: Size(234.w, 50.h)),
                     ),
                   ]),
             ),

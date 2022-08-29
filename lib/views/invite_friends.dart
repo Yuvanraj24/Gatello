@@ -90,7 +90,9 @@ class _InviteFriendsState extends State<InviteFriends> {
                             ),
                           )),
                       TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Tabbar(),));
+                          },
                           style: TextButton.styleFrom(
                               primary: Color.fromRGBO(0, 0, 0, 0.44)),
                           child: Text("Skip",

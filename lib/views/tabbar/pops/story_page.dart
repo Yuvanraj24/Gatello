@@ -17,19 +17,26 @@ class _Story_PageState extends State<Story_Page> {
       appBar: AppBar(
       title: Text('upload'),
     ),
-      body: Column(children: [
+      body: Column(
+        children: [
         Row(
           children: [
             IconButton(
-                onPressed: (){}, icon: Icon(Icons.close)),
+                onPressed: (){
+
+                }, icon: Icon(Icons.close)),
             Spacer(),
             IconButton(
-                onPressed: (){}, icon: Icon(Icons.check_rounded)),
+                onPressed: (){
+
+                },
+                icon: Icon(Icons.check_rounded)),
           ],
         ),
 
         Center(
-          child: Container(height:650,width:double.infinity,
+          child: Container(
+            height:650,width:double.infinity,
             child: Image.network('https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80'),
           ),
         ),

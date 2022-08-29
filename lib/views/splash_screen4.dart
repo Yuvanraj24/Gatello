@@ -22,6 +22,7 @@ class _Splash4State extends State<Splash4> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset:false,
         body: Container(
           
          padding: EdgeInsets.only(
