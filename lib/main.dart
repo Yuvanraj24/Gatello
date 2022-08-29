@@ -11,7 +11,7 @@ import 'package:gatello/views/profile/user_proflle.dart';
 import 'package:gatello/views/profile/profile_details.dart';
 import 'package:gatello/views/profile/privateaccount.dart';
 import 'package:gatello/views/profile/tabbarprofile.dart';
-import 'package:gatello/views/status/others_status.dart';
+
 import 'package:gatello/views/status/showpage.dart';
 import 'package:gatello/views/storage/storage_S1.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
