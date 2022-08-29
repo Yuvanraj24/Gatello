@@ -1,53 +1,38 @@
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-void main() => runApp(MyApp());
+class Birthday extends StatefulWidget {
+  const Birthday({Key? key}) : super(key: key);
 
-class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          primarySwatch: Colors.blue,
-          textTheme: TextTheme(bodyText1: TextStyle(fontSize: 15))
-      ),
-      home: Home(),
-    );
-  }
+  State<Birthday> createState() => _BirthdayState();
 }
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-class _HomeState extends State<Home> {
-     DateTime? _dateTime;
+class _BirthdayState extends State<Birthday> {
+  late DateTime _myDateTime;
+  String time='';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:[
-            Text(_dateTime == null ? 'Nothing has been picked yet' : _dateTime.toString()),
-            ElevatedButton(
-              child: Text('Pick a date'),
-              onPressed: () {
-                showDatePicker(
-                    context: context,
-                    initialDate: _dateTime == null ? DateTime.now() : _dateTime!,
-                    firstDate: DateTime(1950),
-                    lastDate: DateTime(2023)
-                ).then((date) {
+      body:Center(
+        child: Column(mainAxisAlignment:MainAxisAlignment.center,
+          children: [
+            Text(time),
+            ElevatedButton(onPressed: ()async {
+
+                  _myDateTime = (await  showDatePicker(context: context,
+                 initialDate: DateTime.now(),
+                 firstDate: DateTime(1950),
+                 lastDate: DateTime(2050)))!;
                   setState(() {
-                    _dateTime = date;
+                    time = DateFormat('dd-MM-yyyy').format(_myDateTime);
                   });
-                });
-              },
-            )
+            }, child: Text('Tap me')),
           ],
         ),
       ),
     );
+
   }
 }

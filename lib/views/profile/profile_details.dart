@@ -42,7 +42,7 @@ class _ProfileState extends State<Profile> {
 
   ValueNotifier<Tuple4> feedsValueNotifier = ValueNotifier<Tuple4>(
       Tuple4(0, exceptionFromJson(loading), "Loading", null));
-  int i = 0;
+  int i=0;
 
   Future profileDetailsApiCall() async {
     print('dhina:${widget.userId} ');
@@ -605,7 +605,7 @@ class _ProfileState extends State<Profile> {
                           SizedBox(height: 14.h),
                           Row(
                             children: [
-                              InkWell(
+                              GestureDetector(
                                 onTap: () {},
                                 child: Text('Biog',
                                     style: GoogleFonts.inter(

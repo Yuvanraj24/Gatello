@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/create_username.dart';
-import 'package:scroll_date_picker/scroll_date_picker.dart';
-import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
+
+
+
+import 'birthday_on_gatello.dart';
 
 class SelectBirthday extends StatefulWidget {
-  String name = "";
-  String? birthday;
 
-  SelectBirthday({
-    required this.name,
-  });
+
+
+
 
   @override
   State<SelectBirthday> createState() => _SelectBirthdayState();
@@ -17,93 +21,90 @@ class SelectBirthday extends StatefulWidget {
 
 class _SelectBirthdayState extends State<SelectBirthday> {
   DateTime? _selectedDate;
+  late DateTime _myDateTime;
+  String time='';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset:false,
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(
-            left: 10,
-            top: 15,
-          ),
-          child: Text(
-            "Back",
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
+        leading: Center(
+            child: TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Back',
+                style: GoogleFonts.roboto(
+                    textStyle: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black)),
+              ),
+            )),
         actions: [
           Text("Gatello"),
         ],
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 150, left: 15, right: 15, bottom: 10),
+        padding: EdgeInsets.only(top: 150.h, left: 15.w, right: 15.w, bottom: 35.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "When's your birthday?",
-              style: TextStyle(
-                  fontSize: 25,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
+              'What\'s Your Name?',
+              style: GoogleFonts.fredoka(
+                  textStyle: TextStyle(
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black)),
             ),
             TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(textStyle: TextStyle(fontSize: 12)),
-                child: Text("Why do I need to provide my date of birth?")),
+                onPressed: () {
+                  Navigator.push(context,MaterialPageRoute(builder: (context) =>
+                  BirthdayGatello()));
+                },
+                child: Text("Why do I need to provide my date of birth?",style:
+                  GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:11.sp))),
             TextFormField(
-              onTap: () {},
-              controller: TextEditingController(text: _selectedDate.toString()),
-              decoration: InputDecoration(labelText: "Birthday"),
+              cursorColor:Colors.white,
+              onTap: () async {
+                _myDateTime = (await  showDatePicker(context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(1950),
+                lastDate: DateTime(2050)))!;
+                setState(() {
+                time = DateFormat('dd-MM-yyyy').format(_myDateTime);
+                });
+              },
+              controller: TextEditingController(text: time.toString()),
+              decoration: InputDecoration(labelText: "Birthday",
+              hintText:time),
             ),
             SizedBox(height: 30),
 
-            DatePickerWidget(
-              looping: true, // default is not looping
-              firstDate: DateTime.now(), //DateTime(1960),
-              //  lastDate: DateTime(2002, 1, 1),
-              //initialDate: DateTime.now(),// DateTime(1994),
-              dateFormat:
 
-              "dd/MMMM/yyyy",
-
-              onChange: (DateTime newDate, _) {
-                setState(() {
-                  _selectedDate = newDate;
-                });
-                print(_selectedDate);
-              },
-              pickerTheme: DateTimePickerTheme(
-                itemHeight: 20,
-                itemTextStyle: TextStyle(
-                    color: Color.fromRGBO(248, 206, 97, 1), fontSize: 19),
-                dividerColor: Colors.black,
-              ),
-            ),
             Spacer(),
             ElevatedButton(
                 onPressed: () {
-                  widget.birthday = _selectedDate.toString();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CreateUsername(birthDay: widget.birthday.toString(),name: widget.name,),
+                        builder: (context) => CreateUsername(name: '', birthDay: '',),
                       ));
 
-                  print(widget.name);
-                  print(widget.birthday);
                 },
-                style: ElevatedButton.styleFrom(
-                  side: BorderSide(color: Color.fromRGBO(248, 206, 97, 1)),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)),
-                  fixedSize: Size(180, 40),
-                  primary: Color.fromRGBO(248, 206, 97, 1),
-                ),
+                style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
+                    shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(27)),
+                    fixedSize: Size(234.w, 50.h)),
                 child: Text(
                   "Continue",
-                  style: TextStyle(color: Colors.black),
+                  style: GoogleFonts.inter(
+                      textStyle: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black)),
                 )),
           ],
         ),

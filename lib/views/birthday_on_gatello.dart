@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -39,9 +40,7 @@ class _BirthdayGatelloState extends State<BirthdayGatello> {
           padding: EdgeInsets.only(top: 55.h,  left: 13.w, right: 13.w),
           child: Column(children: [
             Center(
-              child: Image(
-                  image:
-                      AssetImage("assets/birthday_image/birthday_logo.png"),width:252.w ,),
+              child:SvgPicture.asset('assets/birthday_image/birthday_icon.svg'),
             ),
             SizedBox(height:21.h),
             Text(
@@ -63,7 +62,7 @@ class _BirthdayGatelloState extends State<BirthdayGatello> {
                               fontWeight: FontWeight.w400,
                               color: HexColor('#494949'))),
                     ),
-    
+        SizedBox(height:5.h),
              Text(
                       "you see and helps us keep the Gatello community",
                       style: GoogleFonts.inter(
@@ -72,7 +71,7 @@ class _BirthdayGatelloState extends State<BirthdayGatello> {
                               fontWeight: FontWeight.w400,
                               color: HexColor('#494949'))),
                     ),
-                    
+            SizedBox(height:5.h),
              Text(
                       "safe. You can find your date of birth under",
                       style: GoogleFonts.inter(
@@ -81,7 +80,7 @@ class _BirthdayGatelloState extends State<BirthdayGatello> {
                               fontWeight: FontWeight.w400,
                               color: HexColor('#494949'))),
                     ),
-                               
+            SizedBox(height:5.h),
              Text(
                       "“Personalinformation” in your account settings.",
                       style: GoogleFonts.inter(

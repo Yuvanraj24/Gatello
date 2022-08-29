@@ -15,6 +15,7 @@ import '../../core/models/exception/pops_exception.dart';
 import '../../handler/Network.dart';
 import '../invite_friends.dart';
 import '../profile/profile_details.dart';
+import '../status/status.dart';
 import 'Delete1Dialog.dart';
 import '/core/models/profile_detail.dart'as profileDetailsModel;
 class Tabbar extends StatefulWidget {
@@ -460,7 +461,7 @@ class _TabState extends State<Tabbar> {
                                Story(scrollController: storyScrollController),
                               //  Pops_Page(),
                                 Center(
-                                  child: Text("Status...!"),
+                                  child:Status(),
                                 ),
                                 Center(
                                   child: Text("Calls...!"),
