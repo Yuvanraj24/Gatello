@@ -1058,7 +1058,8 @@ Spacer(),
                                                           MaterialPageRoute(
                                                               builder:
                                                                   (context) =>
-                                                                  pop_Likes(Id: '62f01f551dfcc621553b119f')),
+                                                                  pop_Likes(Id:feedsValueNotifier.value.item2.result
+                                                                  [index].id.oid)),
                                                         );
                                                       },
                                                       child: Row(
