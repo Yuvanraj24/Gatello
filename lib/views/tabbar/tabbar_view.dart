@@ -112,7 +112,7 @@ void initState() {
                                                     color: Color.fromRGBO(
                                                         0, 0, 0, 1),
                                                   ))),
-                                          SizedBox(width: 145.w),
+                                         SizedBox(width:120.w),
                                           GestureDetector(
                                             onTap: () {
                                               Navigator.push(
@@ -279,7 +279,7 @@ void initState() {
                                     )) :
                                 Expanded(child: Container(
                                   padding: EdgeInsets.only(
-                                      left: 15, right: 15, bottom: 8, top: 5),
+                                      left: 15.w, right: 15.h, bottom:8.h, top:5.h),
                                   child: Row(children: [
                                     SvgPicture.asset(
                                         'assets/tabbar_icons/tab_view_main/back_icon.svg',
@@ -294,7 +294,7 @@ void initState() {
                                               color: Color.fromRGBO(
                                                   0, 0, 0, 1),))),
                                     Spacer(),
-                                    InkWell(
+                                    GestureDetector(
                                       child: SvgPicture.asset(
                                           'assets/tabbar_icons/tab_view_main/downarchieved.svg'),
                                       onTap: () {

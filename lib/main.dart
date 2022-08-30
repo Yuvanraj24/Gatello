@@ -3,7 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:gatello/views/profile/allpops.dart';
+import 'package:gatello/views/profile/editprofile.dart';
+import 'package:gatello/views/profile/followers.dart';
+import 'package:gatello/views/profile/othermenu.dart';
+import 'package:gatello/views/profile/user_proflle.dart';
+import 'package:gatello/views/profile/profile_details.dart';
+import 'package:gatello/views/profile/privateaccount.dart';
+import 'package:gatello/views/profile/tabbarprofile.dart';
 
 import 'package:gatello/views/status/showpage.dart';
 import 'package:gatello/views/storage/storage_S1.dart';
@@ -169,4 +176,3 @@ class _MyAppState extends State<MyApp> {
     });
   }
 }
-

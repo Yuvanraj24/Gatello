@@ -239,7 +239,6 @@ flutter:
     - assets/tabbar_icons/pops_call.svg
     - assets/pops_asset/pings_icon.svg
     - assets/pops_asset/interaction_icon.svg
-    - assets/pops_asset/pop_request.svg
     - assets/pops_asset/gatello_loading.gif
     - assets/profile_assets/no_profile.svg
     - assets/storage_assets/all_files.svg
@@ -275,6 +274,7 @@ flutter:
     - assets/status_assets/voicemsg_icon.svg
     - assets/birthday_image/birthday_icon.svg
     - assets/pops_asset/No_Request_Icon.svg
+    - assets/pops_asset/back_button.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
