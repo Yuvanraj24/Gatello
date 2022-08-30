@@ -2415,6 +2415,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                     //   } else {
                     //     return Container();
                     //   }
+
                     // })
                     else if (widget.state == 1) {
                       if (chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["claim"] != "removed") {
@@ -4004,9 +4005,11 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Chip(
+        elevation: 2,
+        side: BorderSide(color: Colors.transparent),
         label: Text(getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: document["timestamp"])),
-            style: GoogleFonts.inter(textStyle: textStyle(fontSize: 12, color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack)))),
-        backgroundColor: Color(accent),
+            style: GoogleFonts.inter(textStyle: textStyle(fontSize: 12, color: (themedata.value.index == 0) ? Colors.black : Color(materialBlack)))),
+        backgroundColor: Color.fromRGBO(252, 252, 252, 1),
       ),
     );
   }
@@ -4075,7 +4078,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
                         alignment: Alignment.centerRight,
                         clipper: ChatBubbleClipper5(type: BubbleType.sendBubble),
-                        backGroundColor: Color(accent),
+                        backGroundColor: Color.fromRGBO(248, 206, 97, 1),
                         elevation: 0,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -4270,7 +4273,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         )
         //*if it is sent by other
             : Padding(
-          padding: const EdgeInsets.only(left: 20, right: 50, top: 8, bottom: 8),
+          padding: const EdgeInsets.only(left: 10, right: 50, top: 8, bottom: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -4288,130 +4291,140 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                             document: document,
                             chatRoomSnapshot: chatRoomSnapshot);
                       },
-                      child: ChatBubble(
-                        alignment: Alignment.centerLeft,
-                        elevation: 0,
-                        clipper: ChatBubbleClipper5(type: BubbleType.receiverBubble),
-                        backGroundColor: (themedata.value.index == 0) ? Color.fromRGBO(252, 252, 252, 1) : Colors.green,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            (document["forwardCount"] == 0)
-                                ? SizedBox()
-                                : Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Entypo.forward,
-                                  color: Color(grey),
-                                  size: 10,
-                                ),
-                                Text(
-                                  (document["forwardCount"] <= 5) ? " forwarded" : " forwarded many times",
-                                  style: GoogleFonts.inter(
-                                    textStyle: textStyle(fontSize: 10, color: Color(grey)),
+                      // Receiver Message Box------------
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: 100,
+                          maxWidth: MediaQuery.of(context).size.width
+                        ),
+                        child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(
+                              15),
+                              topRight: Radius.circular(
+                                  15),
+                              bottomRight: Radius
+                                  .circular(15))),
+                              margin: EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+                          child: Stack(
+                            children: [
+                              (document["forwardCount"] == 0)
+                                  ? SizedBox()
+                                  : Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Entypo.forward,
+                                    color: Color(grey),
+                                    size: 10,
                                   ),
-                                ),
-                              ],
-                            ),
-                            // (widget.state == 0)
-                            //     ? messageBuilder(document)
-                            //     :
-                            (document["reply"] != null)
-                                ? Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Text(
-                                //   (widget.state == 0) ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"]) : userName,
-                                //   overflow: TextOverflow.ellipsis,
-                                //   maxLines: 1,
-                                //   softWrap: true,
-                                //   style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, color: Color(accent))),
-                                // ),
-                                Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: (themedata.value.index == 0) ? Color(lightBlack).withOpacity(.1) : Color(lightBlack).withOpacity(.1),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(12.0),
-                                    ),
-                                  ),
-                                  child: IntrinsicHeight(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          color: Color(yellow),
-                                          width: 4,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              (document["reply"]["from"] != widget.uid)
-                                                  ? (widget.state == 0)
-                                                  ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"])
-                                                  : replyUserName
-                                                  : "You",
-                                              style: GoogleFonts.inter(
-                                                textStyle: textStyle(fontSize: 14, color: Color(accent)),
-                                              ),
-                                              maxLines: 1,
-                                              softWrap: true,
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              (inverseDataType[document.data()!["reply"]["type"]] == 0)
-                                                  ? document.data()!["reply"]["data"]["text"]
-                                                  : document.data()!["reply"]["type"],
-                                              style: GoogleFonts.inter(
-                                                textStyle: textStyle(
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              maxLines: 2,
-                                              softWrap: true,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Padding(padding: const EdgeInsets.only(top: 8),
-                                    child: messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot))
-                              ],
-                            )
-                                : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Text(
-                                //   (widget.state == 0) ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"]) : userName,
-                                //   overflow: TextOverflow.ellipsis,
-                                //   maxLines: 1,
-                                //   softWrap: true,
-                                //   style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, color: Color(accent))),
-                                // ),
-                                Padding(
-                                    padding: const EdgeInsets.only(top: 8),
-                                    child: messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot)),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    formatTime(getDateTimeSinceEpoch(datetime: document["timestamp"])),
+                                  Text(
+                                    (document["forwardCount"] <= 5) ? " forwarded" : " forwarded many times",
                                     style: GoogleFonts.inter(
-                                        fontSize: 14,
-                                        textStyle: textStyle(
-                                          color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
-                                        )),
+                                      textStyle: textStyle(fontSize: 10, color: Color(grey)),
+                                    ),
                                   ),
-                                )
+                                ],
+                              ),
+                              // (widget.state == 0)
+                              //     ? messageBuilder(document)
+                              //     :
+                              (document["reply"] != null)
+                                  ? Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Text(
+                                  //   (widget.state == 0) ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"]) : userName,
+                                  //   overflow: TextOverflow.ellipsis,
+                                  //   maxLines: 1,
+                                  //   softWrap: true,
+                                  //   style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, color: Color(accent))),
+                                  // ),
+                                  Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(12.0),
+                                      ),
+                                    ),
+                                    child: IntrinsicHeight(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            color: Color(yellow),
+                                            width: 4,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                (document["reply"]["from"] != widget.uid)
+                                                    ? (widget.state == 0)
+                                                    ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"])
+                                                    : replyUserName
+                                                    : "You",
+                                                style: GoogleFonts.inter(
+                                                  textStyle: textStyle(fontSize: 14, color: Color(accent)),
+                                                ),
+                                                maxLines: 1,
+                                                softWrap: true,
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                (inverseDataType[document.data()!["reply"]["type"]] == 0)
+                                                    ? document.data()!["reply"]["data"]["text"]
+                                                    : document.data()!["reply"]["type"],
+                                                style: GoogleFonts.inter(
+                                                  textStyle: textStyle(
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                maxLines: 2,
+                                                softWrap: true,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(padding: const EdgeInsets.only(top: 8),
+                                      child: messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot))
+                                ],
+                              )
+                                  : Stack(
 
-                              ],
-                            ),
-                          ],
+                                children: [
+                                  // Text(
+                                  //   (widget.state == 0) ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"]) : userName,
+                                  //   overflow: TextOverflow.ellipsis,
+                                  //   maxLines: 1,
+                                  //   softWrap: true,
+                                  //   style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, color: Color(accent))),
+                                  // ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(top: 5,right: 60,bottom: 20,left: 10),
+                                      child: messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot)),
+                                  Positioned(
+                                    bottom: 5,
+                                    right: 10,
+                                    child: Text(
+                                      formatTime(getDateTimeSinceEpoch(datetime: document["timestamp"])),
+                                      style: GoogleFonts.inter(
+                                          fontSize: 14,
+                                          textStyle: textStyle(
+                                            color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
+                                          )),
+                                    ),
+                                  )
+
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

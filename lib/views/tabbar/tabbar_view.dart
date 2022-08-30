@@ -12,9 +12,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 import '../../Others/Routers.dart';
+import '../../Others/components/LottieComposition.dart';
 import '../../Others/exception_string.dart';
+import '../../Others/lottie_strings.dart';
+import '../../Style/Colors.dart';
 import '../../core/models/exception/pops_exception.dart';
 import '../../handler/Network.dart';
+import '../../main.dart';
 import '../invite_friends.dart';
 import '../profile/profile_details.dart';
 import 'Delete1Dialog.dart';
@@ -38,7 +42,7 @@ Future? _future;
       jsonModel: profileDetailsModel.profileDetailsFromJson,
       url: profileDetailsUrl,
       requestMethod: 1,
-      body: {"user_id": (userId != null) ? userId : 's8b6XInslPffQEgz8sVTINsPhcx2', "followee_id": ""},
+      body: {"user_id": (userId != null) ? userId : _getUID(), "followee_id": ""},
     );
   }
 
@@ -51,7 +55,6 @@ Future<void> _getUID() async {
 Future<dynamic> sendData() async {
   final data1 = await _getUID();
   final data2 = await profileDetailsApiCall();
-
 
   return [data1, data2];
 }
@@ -112,7 +115,7 @@ void initState() {
                                                     color: Color.fromRGBO(
                                                         0, 0, 0, 1),
                                                   ))),
-                                         SizedBox(width:120.w),
+                                          SizedBox(width: 120.w),
                                           GestureDetector(
                                             onTap: () {
                                               Navigator.push(
@@ -279,7 +282,7 @@ void initState() {
                                     )) :
                                 Expanded(child: Container(
                                   padding: EdgeInsets.only(
-                                      left: 15.w, right: 15.h, bottom:8.h, top:5.h),
+                                      left: 15, right: 15, bottom: 8, top: 5),
                                   child: Row(children: [
                                     SvgPicture.asset(
                                         'assets/tabbar_icons/tab_view_main/back_icon.svg',
@@ -294,7 +297,7 @@ void initState() {
                                               color: Color.fromRGBO(
                                                   0, 0, 0, 1),))),
                                     Spacer(),
-                                    GestureDetector(
+                                    InkWell(
                                       child: SvgPicture.asset(
                                           'assets/tabbar_icons/tab_view_main/downarchieved.svg'),
                                       onTap: () {
@@ -563,7 +566,16 @@ void initState() {
           );
         }
         else{
-          return CircleIndicator();
+          return Scaffold(
+            body: Container(
+                color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+                child: Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [lottieAnimation(loadingLottie), Text("Loading")],
+                      ),
+                    ))),
+          );
         }
       }
     );

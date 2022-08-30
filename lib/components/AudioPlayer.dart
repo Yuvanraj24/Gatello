@@ -29,9 +29,9 @@ class _PlayAudioState extends State<PlayAudio> with TickerProviderStateMixin {
   AnimationController? _animationIconController1;
   AudioCache? audioCache;
   AudioPlayer? audioPlayer;
-  Duration _duration = new Duration();
-  Duration _position = new Duration();
-  Duration _slider = new Duration(seconds: 0);
+  Duration _duration =  Duration();
+  Duration _position =  Duration();
+  Duration _slider =  Duration(seconds: 0);
   double? durationValue;
   bool isSongPlaying = false;
   bool isPlaying = false;
@@ -142,7 +142,7 @@ class _PlayAudioState extends State<PlayAudio> with TickerProviderStateMixin {
                       imageUrl: widget.profilePic!,
                       errorWidget: (context, url, error) => Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
                     )
-                        : Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
+                        : Image.asset("assets/profile_page/profile_pic_logo.png", fit: BoxFit.cover),
                   )),
               Positioned(bottom: 0, right: 0, child: Icon(Icons.mic, color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white)))
             ],
@@ -205,7 +205,7 @@ class _PlayAudioState extends State<PlayAudio> with TickerProviderStateMixin {
                     max: _duration.inSeconds.toDouble(),
                     onChanged: (double value) {
                       seekToSeconds(value.toInt());
-                      value = value;
+                      _position = value as Duration;
                     },
                   ),
                 ),

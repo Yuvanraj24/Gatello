@@ -68,8 +68,8 @@ class _PingsChatViewState extends State<PingsChatView> {
     // readData();
     // getChatList();
 
-    return FutureBuilder(
-      future: _getUID(),
+    return StreamBuilder(
+      stream: Stream.value(_getUID()),
         builder: (context, snapshot)
       {
         if(snapshot.hasData)

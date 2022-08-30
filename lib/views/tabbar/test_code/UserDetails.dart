@@ -153,43 +153,43 @@
 //                                 highlightColor: Colors.transparent,
 //                                 hoverColor: Colors.transparent,
 //                                 onPressed: () async {
-//                                   if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-//                                     return await scaffoldAlertDialogBox(
-//                                         context: context,
-//                                         page: SearchPage(
-//                                           state: 6,
-//                                           sizingInformation: sizingInformation,
-//                                         ));
-//                                   } else {
-//                                     Navigator.push(
-//                                         context,
-//                                         MaterialPageRoute(
-//                                             builder: (context) => SearchPage(
-//                                                   state: 6,
-//                                                   sizingInformation: sizingInformation,
-//                                                 )));
-//                                   }
+//                                   // if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+//                                   //   return await scaffoldAlertDialogBox(
+//                                   //       context: context,
+//                                   //       page: SearchPage(
+//                                   //         state: 6,
+//                                   //         sizingInformation: sizingInformation,
+//                                   //       ));
+//                                   // } else {
+//                                   //   Navigator.push(
+//                                   //       context,
+//                                   //       MaterialPageRoute(
+//                                   //           builder: (context) => SearchPage(
+//                                   //                 state: 6,
+//                                   //                 sizingInformation: sizingInformation,
+//                                   //               )));
+//                                   // }
 //                                 },
 //                                 icon: Icon(Icons.search))
 //                             : GestureDetector(
-//                                 onTap: () async {
-//                                   if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-//                                     return await scaffoldAlertDialogBox(
-//                                         context: context,
-//                                         page: SearchPage(
-//                                           state: 6,
-//                                           sizingInformation: sizingInformation,
-//                                         ));
-//                                   } else {
-//                                     Navigator.push(
-//                                         context,
-//                                         MaterialPageRoute(
-//                                             builder: (context) => SearchPage(
-//                                                   state: 6,
-//                                                   sizingInformation: sizingInformation,
-//                                                 )));
-//                                   }
-//                                 },
+//                                 // onTap: () async {
+//                                 //   if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+//                                 //     return await scaffoldAlertDialogBox(
+//                                 //         context: context,
+//                                 //         page: SearchPage(
+//                                 //           state: 6,
+//                                 //           sizingInformation: sizingInformation,
+//                                 //         ));
+//                                 //   } else {
+//                                 //     Navigator.push(
+//                                 //         context,
+//                                 //         MaterialPageRoute(
+//                                 //             builder: (context) => SearchPage(
+//                                 //                   state: 6,
+//                                 //                   sizingInformation: sizingInformation,
+//                                 //                 )));
+//                                 //   }
+//                                 // },
 //                                 child: Padding(
 //                                   padding: const EdgeInsets.all(8.0),
 //                                   child: container(
