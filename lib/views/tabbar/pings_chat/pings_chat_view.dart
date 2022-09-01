@@ -10,7 +10,9 @@ import 'package:gatello/views/tabbar/chats/personal_chat_screen/ChatPage.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../components/ScaffoldDialog.dart';
 import '../../../firebase_options.dart';
 import '../chats/personal_chat_screen/pesrsonal_chat.dart';
 
@@ -30,6 +32,8 @@ class PingsChatView extends StatefulWidget {
 class _PingsChatViewState extends State<PingsChatView> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   String? uid;
+  String? puid;
+  bool isChatting = false;
   List<PingsChatListModel> tileData = [];
   final _isSelected = Map();
   bool selects = false;
@@ -74,18 +78,49 @@ class _PingsChatViewState extends State<PingsChatView> {
       {
         if(snapshot.hasData)
           {
-          return Scaffold(
-          backgroundColor: Color.fromRGBO(26, 52, 130, 0.06),
-          // body: isChatListLoaded?getChatList():getChatList(),
-          body: getChatList(),
+          return ResponsiveBuilder(builder: (context, sizingInformation) {
+              return Scaffold(
+              backgroundColor: Color.fromRGBO(26, 52, 130, 0.06),
+              // body: isChatListLoaded?getChatList():getChatList(),
+              body: getChatList(),
 
-          floatingActionButton: FloatingActionButton(
-          onPressed: () {
-          Navigator.push(context,
-          MaterialPageRoute(builder: (context) => SelectContact()));
-          },
-          backgroundColor: Color.fromRGBO(248, 206, 97, 1),
-          child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
+              floatingActionButton: FloatingActionButton(
+                  onPressed: () async {
+                    if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                      return await scaffoldAlertDialogBox(
+                          context: context,
+                          page: SearchPage(
+                            state: 0,
+                            sizingInformation: sizingInformation,
+                          )).then((value) {
+                        if (value != null) {
+                          if (!mounted) return;
+                          setState(() {
+                            isChatting = true;
+                            puid = value;
+                          });
+                        }
+                      });
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchPage(
+                                state: 0,
+                                sizingInformation: sizingInformation,
+                              )));
+                    }
+                  },
+
+                  // onPressed: () {
+              //
+              // Navigator.push(context,
+              // MaterialPageRoute(builder: (context) => SelectContact()));
+              // },
+              backgroundColor: Color.fromRGBO(248, 206, 97, 1),
+              child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
+              );
+            }
           );
           }
         return getChatList();
