@@ -19,6 +19,7 @@ class _Story_PageState extends State<Story_Page> {
     ),
       body: Column(
         children: [
+
         Row(
           children: [
             IconButton(

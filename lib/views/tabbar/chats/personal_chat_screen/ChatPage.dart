@@ -718,6 +718,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   //   initUpdateFuture = initGroupMessageUpdate();
   // }
   initialiser() async {
+    _getUID();
     log("initState");
     if (widget.state == 0) {
       if (tempPuid != widget.puid) {
@@ -731,6 +732,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     } else {
       if (tempPuid != widget.puid) {
         initUpdateFuture = (widget.state == 0) ? instance.collection("user-detail").doc(widget.puid).get() : instance.collection("group-detail").doc(widget.puid).get();
+
         lifecycleHandler();
         groupDetailDoc();
         initGroupMessageUpdate();
@@ -1354,8 +1356,10 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text((widget.state == 0) ? emptyChatRoomDetails.data!.data()!["name"] : emptyChatRoomDetails.data!.data()!["title"],
-                                                  style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16,color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.w500))),
+                                              Text((widget.state == 0) ? emptyChatRoomDetails.data!.data()!["name"]
+                                                  : emptyChatRoomDetails.data!.data()!["title"],
+                                                  style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16,
+                                                      color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.w500))),
                                               StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                                                   stream: instance.collection("user-detail").doc(widget.puid).snapshots(),
                                                   builder: (context, peerSnapshot) {
@@ -1364,20 +1368,32 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                       builder: (context, userSnapshot) {
                                                         if (userSnapshot.connectionState == ConnectionState.active &&
                                                             peerSnapshot.connectionState == ConnectionState.active) {
+                                                       
                                                           return Text(
-                                                            (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
+
+                                                            (userSnapshot.data!.data()!["onlineStatus"] == true &&
+                                                                peerSnapshot.data!.data()!["onlineStatus"] == true)
                                                                 ? (peerSnapshot.data!.data()!["status"] == "online")
                                                                 ? "Online"
                                                                 : (userSnapshot.data!.data()!["lastseenStatus"] == true &&
                                                                 peerSnapshot.data!.data()!["lastseenStatus"] == true)
-                                                                ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
+                                                                ? "Last seen ${getDateTimeInChat(datetime:
+                                                            getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
+                                                                " at ${formatTime(getDateTimeSinceEpoch(
+                                                                datetime: peerSnapshot.data!.data()!["status"]))}"
                                                                 : "Tap here for user info"
                                                                 : "Tap here for user info",
                                                             style: GoogleFonts.inter(
-                                                                textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color.fromRGBO(0, 0, 0, 1))),
+                                                                textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500,
+                                                                    color: Color.fromRGBO(0, 0, 0, 1))),
                                                           );
                                                         } else {
-                                                          return Container();
+print('divya${formatTime(getDateTimeSinceEpoch(
+    datetime: peerSnapshot.data!.data()!["status"]))}');
+
+                                                          return Container(
+
+                                                          );
                                                         }
                                                       },
                                                     );
@@ -3735,25 +3751,27 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       new Text((widget.state == 0) ? emptyChatRoomDetails.data!.data()!["name"] : emptyChatRoomDetails.data!.data()!["title"],
-                                          style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, fontWeight: FontWeight.w500))),
+                                          style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 16, fontWeight: FontWeight.w500))),
                                       StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                                           stream: instance.collection("user-detail").doc(widget.puid).snapshots(),
                                           builder: (context, peerSnapshot) {
                                             return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                                               stream: instance.collection("user-detail").doc(widget.uid).snapshots(),
                                               builder: (context, userSnapshot) {
-                                                if (userSnapshot.connectionState == ConnectionState.active && peerSnapshot.connectionState == ConnectionState.active) {
+                                                if (userSnapshot.connectionState == ConnectionState.active
+                                                    && peerSnapshot.connectionState == ConnectionState.active) {
                                                   return MarqueeWidget(
                                                     direction: Axis.horizontal,
                                                     child: Text(
-                                                      (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
+                                                      (userSnapshot.data!.data()!["onlineStatus"] ==
+                                                          true && peerSnapshot.data!.data()!["onlineStatus"] == true)
                                                           ? (peerSnapshot.data!.data()!["status"] == "online")
                                                           ? "Online"
                                                           : (userSnapshot.data!.data()!["lastseenStatus"] == true && peerSnapshot.data!.data()!["lastseenStatus"] == true)
                                                           ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
                                                           : "Tap here for user info"
                                                           : "Tap here for user info",
-                                                      style: GoogleFonts.inter(textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(grey))),
+                                                      style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(grey))),
                                                     ),
                                                   );
                                                 } else {
@@ -3765,6 +3783,41 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                     ],
                                   ),
                                 )
+                                // Flexible(
+                                //   child: Column(
+                                //     crossAxisAlignment: CrossAxisAlignment.start,
+                                //     children: [
+                                //       new Text((widget.state == 0) ? emptyChatRoomDetails.data!.data()!["name"] : emptyChatRoomDetails.data!.data()!["title"],
+                                //           style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, fontWeight: FontWeight.w500))),
+                                //       StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                                //           stream: instance.collection("user-detail").doc(widget.puid).snapshots(),
+                                //           builder: (context, peerSnapshot) {
+                                //             return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                                //               stream: instance.collection("user-detail").doc(widget.uid).snapshots(),
+                                //               builder: (context, userSnapshot) {
+                                //                 if (userSnapshot.connectionState == ConnectionState.active && peerSnapshot.connectionState == ConnectionState.active) {
+                                //                   return MarqueeWidget(
+                                //                     direction: Axis.horizontal,
+                                //                     child: Text(
+                                //                       (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
+                                //                           ? (peerSnapshot.data!.data()!["status"] == "online")
+                                //                           ? "Online"
+                                //                           : (userSnapshot.data!.data()!["lastseenStatus"] == true && peerSnapshot.data!.data()!["lastseenStatus"] == true)
+                                //                           ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
+                                //                           : "Tap here for user info"
+                                //                           : "Tap here for user info",
+                                //                       style: GoogleFonts.inter(textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(grey))),
+                                //                     ),
+                                //                   );
+                                //                 } else {
+                                //                   return Container();
+                                //                 }
+                                //               },
+                                //             );
+                                //           })
+                                //     ],
+                                //   ),
+                                // )
                               ],
                             ),
                           ),

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gatello/views/profile/tabbarprofile.dart';
 import 'package:gatello/views/status/showpage.dart';
 import 'package:gatello/views/storage/storage_S1.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
@@ -144,7 +145,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar():LoginScreen();
+                              return (snapshot.data == true) ? Tabbar():Tabbar();
 
                             } else {
                               return lottieAnimation(loadingLottie);
