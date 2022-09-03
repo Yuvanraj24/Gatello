@@ -34,14 +34,15 @@ import '../../../core/models/exception/pops_exception.dart';
 import '../../../handler/Network.dart';
 import '../../../main.dart';
 import '../../profile/user_proflle.dart';
+
 import '../test_code/Comments.dart';
 import '../test_code/new_post.dart';
-import 'Comments.dart';
 import '../test_code/UserDetails.dart';
 import '../test_code/test_new_post.dart';
 import 'Requests.dart';
 
-import 'comments.dart';
+
+
 import 'interactions.dart';
 import 'newpost.dart';
 import 'poplikes.dart';
@@ -256,7 +257,7 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                               }
                                               return Navigator.push(context, MaterialPageRoute(builder:
                                                   (context) =>
-                                                  Post(state: 0,
+                                                      Post_Page(state: 0,
                                                       fileList: fileList))).then((value) async {
                                                 if (value != null) {
                                                   return await feedsApiCall(uid: uid.toString());
@@ -476,11 +477,10 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              UserProfile(
-                                                             //   uid: uid.toString(),
+                                                          UserProfile(uid: uid.toString())
+                                                             //  Us
 
-                                                               uid:  feedsValueNotifier.value.item2.result[index].userId.toString()
-                                                              )),
+                                                      ),
                                                     );
                                                   },
                                                   child: Row(

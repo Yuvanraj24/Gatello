@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../Authentication/Authentication.dart';
 import '../../../Firebase.dart';
@@ -60,6 +61,10 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
+  Future<void> _getUID() async{
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    uid=sharedPrefs.getString("userid")!;
+  }
   FirebaseFirestore instance = FirebaseFirestore.instance;
   String? uid;
   String? puid;
@@ -71,7 +76,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     tabController = TabController(vsync: this, length: 2);
-    uid = getUID();
+    uid = _getUID().toString();
     super.initState();
   }
 
@@ -161,7 +166,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
                               MaterialPageRoute(
                                   builder: (context) => ChatPage(
                                     state: 0,
-                                    uid: getUID(),
+                                    uid: _getUID().toString(),
                                     puid: puid!,
                                   ))).then((value) {
                             if (value == true) {
@@ -267,7 +272,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
                               MaterialPageRoute(
                                   builder: (context) => ChatPage(
                                     state: 1,
-                                    uid: getUID(),
+                                    uid: _getUID().toString(),
                                     puid: puid!,
                                   ))).then((value) {
                             if (value == true) {

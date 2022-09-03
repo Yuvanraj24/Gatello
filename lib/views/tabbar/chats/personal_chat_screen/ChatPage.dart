@@ -127,6 +127,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     uid=sharedPrefs.getString("userid")!;
   }
 
+
   final ImagePicker _picker = ImagePicker();
   // Future<DocumentSnapshot<Map<String, dynamic>>>? emptyFuture;
   Future<FilePickerResult?> files() async => await FilePicker.platform.pickFiles(
@@ -778,6 +779,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    uid = _getUID().toString();
     voiceRecordAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
@@ -786,7 +788,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(seconds: 3),
     );
-    unreadMessageAnimation = ColorTween(begin: Color(accent).withOpacity(0.2), end: Color(transparent)).animate(unreadMessageAnimationController)
+    unreadMessageAnimation = ColorTween(
+        begin: Color(accent).withOpacity(0.2), end: Color(transparent))
+        .animate(unreadMessageAnimationController)
       ..addListener(() {
         if (!mounted) return;
         setState(() {});
@@ -806,7 +810,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       prefix: 'assets/audio/',
       fixedPlayer: AudioPlayer()..setReleaseMode(ReleaseMode.STOP),
     );
-
     super.initState();
   }
 
@@ -1388,12 +1391,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                     color: Color.fromRGBO(0, 0, 0, 1))),
                                                           );
                                                         } else {
-print('divya${formatTime(getDateTimeSinceEpoch(
-    datetime: peerSnapshot.data!.data()!["status"]))}');
-
-                                                          return Container(
-
-                                                          );
+                                                          return Container();
                                                         }
                                                       },
                                                     );
@@ -1584,7 +1582,7 @@ print('divya${formatTime(getDateTimeSinceEpoch(
                                       Container(
 
                                         // height: 66,
-                                        color: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
+                                        color: Colors.transparent,
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [

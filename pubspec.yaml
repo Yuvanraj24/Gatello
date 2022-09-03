@@ -276,6 +276,7 @@ flutter:
     - assets/pops_asset/No_Request_Icon.svg
     - assets/chatLightBg.jpg
     - assets/pops_asset/back_button.svg
+    - assets/noProfile.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

@@ -166,6 +166,7 @@ class _AddEmailState extends State<AddEmail> {
 
                           if (_formKey.currentState!.validate()) {
                             registerFirebase(widget.name, widget.email, widget.password);
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddProfilePic(),));
 
           } else {
             return null;

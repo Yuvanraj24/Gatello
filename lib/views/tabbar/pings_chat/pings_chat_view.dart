@@ -14,6 +14,8 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../components/ScaffoldDialog.dart';
 import '../../../firebase_options.dart';
+
+
 import '../chats/personal_chat_screen/pesrsonal_chat.dart';
 
 
@@ -277,7 +279,8 @@ class _PingsChatViewState extends State<PingsChatView> {
                                                 ChatPage(state: 0,
                                                     uid: uid.toString(),
                                                     puid: docs[index]
-                                                        .data()["members"]["$uid"]["peeruid"])));
+                                                        .data()["members"]["$uid"]["peeruid"])
+                                        ));
                          }
 
                       // Navigator.push(
@@ -358,7 +361,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                           SizedBox(height: 3.h),
 
                          // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
-                         (docs[index].data()["members"]["${docs[index].data()["members"]["$uid"]["peeruid"]}"]["unreadCount"]==0)?
+                         (docs[index].data()["members"]["$uid"]["unreadCount"]==0)?
                              SizedBox():
                          Container(
                              decoration: BoxDecoration(
@@ -374,8 +377,9 @@ class _PingsChatViewState extends State<PingsChatView> {
                              child: Center(
                                child:
                                Text(
-                                   docs[index].data()["members"]["${docs[index].data()["members"]["$uid"]["peeruid"]}"]["unreadCount"].toString(),
-                                   style: GoogleFonts.inter(
+                                   "${docs[index].data()["members"]["$uid"]
+                                   ["unreadCount"]}",
+                                    style: GoogleFonts.inter(
                                      textStyle: TextStyle(
                                          fontSize: 11.sp,
                                          color:

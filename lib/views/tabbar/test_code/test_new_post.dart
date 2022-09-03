@@ -44,7 +44,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tuple/tuple.dart';
 
 
-class Post extends StatefulWidget {
+class Post_Page extends StatefulWidget {
 
   ///*0->create post; 1->edit post
   final int state;
@@ -55,13 +55,13 @@ class Post extends StatefulWidget {
   final String? description;
   final String? postId;
 
-  const Post({Key? key, required this.state, this.postId, this.description, this.fileList, this.stringList}) : super(key: key);
+  const Post_Page({Key? key, required this.state, this.postId, this.description, this.fileList, this.stringList}) : super(key: key);
 
   @override
-  _PostState createState() => _PostState();
+  _Post_PageState createState() => _Post_PageState();
 }
 
-class _PostState extends State<Post> {
+class _Post_PageState extends State<Post_Page> {
   Future? _future;
   String? uid;
   final _formKey = GlobalKey<FormState>();
@@ -236,33 +236,33 @@ _future=sendData();
                               child: Column(
                                 children: [
                                   InkWell(
-                                    onTap: ()async {
-                                          return await files().then((value) {
-                                        if (value != null && value.files.isNotEmpty) {
-                                          fileList.clear();
-                                          if (value.files.length < 10) {
-                                            for (int i = 0; i < value.files.length; i++) {
-                                              if (value.files[i].size < 52428800) {
-                                                fileList.add(value.files[i]);
-                                              } else {
-                                                final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
-                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                              }
-                                            }
-                                            return Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                                Post(state: 0,
-                                                    fileList: fileList))).then((value) async {
-                                              if (value != null) {
-                                                return await feedsApiCall(uid: uid.toString());
-                                              }
-                                            });
-                                          } else {
-                                            final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
-                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                          }
-                                        }
-                                      });
-                                    },
+                                    // onTap: ()async {
+                                    //       return await files().then((value) {
+                                    //     if (value != null && value.files.isNotEmpty) {
+                                    //       fileList.clear();
+                                    //       if (value.files.length < 10) {
+                                    //         for (int i = 0; i < value.files.length; i++) {
+                                    //           if (value.files[i].size < 52428800) {
+                                    //             fileList.add(value.files[i]);
+                                    //           } else {
+                                    //             final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
+                                    //             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    //           }
+                                    //         }
+                                    //         return Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                    //             Post(state: 0,
+                                    //                 fileList: fileList))).then((value) async {
+                                    //           if (value != null) {
+                                    //             return await feedsApiCall(uid: uid.toString());
+                                    //           }
+                                    //         });
+                                    //       } else {
+                                    //         final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
+                                    //         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    //       }
+                                    //     }
+                                    //   });
+                                    // },
                                     child: Text(
                                       'Add photo and videos',
                                       style: GoogleFonts.inter(

@@ -29,6 +29,7 @@ class Tabbar extends StatefulWidget {
   State<Tabbar> createState() => _TabState();
 }
 class _TabState extends State<Tabbar> {
+  int overallUnreadChatList = 1;
 Future? _future;
    String? userId;
   int isSelected = 0;
@@ -166,27 +167,32 @@ void initState() {
                                                 [
                                                   PopupMenuItem(
 
-                                                      child: Container(
-                                                        width: 150.w,
-                                                        child: Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                                'assets/tabbar_icons/tab_view_main/new group tab.svg'),
-                                                            SizedBox(
-                                                              width: 12.w,
-                                                            ),
-                                                            Text("New Group",
-                                                                style: GoogleFonts
-                                                                    .inter(
-                                                                    textStyle: TextStyle(
-                                                                      fontSize: 14
-                                                                          .sp,
-                                                                      color: Color
-                                                                          .fromRGBO(
-                                                                          0, 0,
-                                                                          0, 1),
-                                                                    )))
-                                                          ],
+                                                      child: GestureDetector(
+                                                        onTap:(){
+
+                                                          },
+                                                        child: Container(
+                                                          width: 150.w,
+                                                          child: Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                  'assets/tabbar_icons/tab_view_main/new group tab.svg'),
+                                                              SizedBox(
+                                                                width: 12.w,
+                                                              ),
+                                                              Text("New Group",
+                                                                  style: GoogleFonts
+                                                                      .inter(
+                                                                      textStyle: TextStyle(
+                                                                        fontSize: 14
+                                                                            .sp,
+                                                                        color: Color
+                                                                            .fromRGBO(
+                                                                            0, 0,
+                                                                            0, 1),
+                                                                      )))
+                                                            ],
+                                                          ),
                                                         ),
                                                       )),
                                                   PopupMenuItem(
@@ -442,7 +448,7 @@ void initState() {
                                                     width: 15,
                                                     height: 15,
                                                     child: Center(
-                                                        child: Text("${5}",
+                                                        child: Text("${overallUnreadChatList}",
                                                             style: GoogleFonts
                                                                 .fredoka(
                                                                 textStyle: TextStyle(
