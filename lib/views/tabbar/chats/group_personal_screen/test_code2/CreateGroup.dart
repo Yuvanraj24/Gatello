@@ -1,8 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
-
-// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -12,9 +10,8 @@ import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:fluttericon/linecons_icons.dart';
 import 'package:fluttericon/typicons_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:image_picker/image_picker.dart';
 import 'package:nanoid/nanoid.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../Authentication/Authentication.dart';
 import '../../../../../Firebase/Writes.dart';
 import '../../../../../Others/Structure.dart';
@@ -27,15 +24,14 @@ import '../../../../../components/SnackBar.dart';
 import '../../../../../components/TextField.dart';
 import '../../../../../components/TextFormField.dart';
 import '../../../../../validator/validator.dart';
-
 class CreateGroup extends StatefulWidget {
   final List<Map<String, dynamic>> members;
-  const CreateGroup({Key? key, required this.members}) : super(key: key);
+  final String uid;
+  const CreateGroup({Key? key, required this.members,required this.uid}) : super(key: key);
 
   @override
   _CreateGroupState createState() => _CreateGroupState();
 }
-
 class _CreateGroupState extends State<CreateGroup> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
@@ -50,16 +46,25 @@ class _CreateGroupState extends State<CreateGroup> {
   TextEditingController titleTextEditingController = TextEditingController();
   TextEditingController descriptionTextEditingController = TextEditingController();
   Future<DocumentSnapshot<Map<String, dynamic>>>? adminDetailFuture;
-  String? uid;
+  //String? uid;
   String? contentType;
   Future<DocumentSnapshot<Map<String, dynamic>>> adminDetails() async {
-    return await instance.collection("user-detail").doc(uid!).get();
+    // final data1=await _getUID();
+    // final data2=await instance.collection("user-detail").doc(uid!).get();
+    // return [data1,data2];
+    return await instance.collection("user-detail").doc(widget.uid).get();
   }
-
+  // Future<void> _getUID() async {
+  //   print('uidapi');
+  //   SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+  //   uid = sharedPrefs.getString("userid");
+  //   print("ShardPref ${uid}");
+  //
+  // }
   @override
   void initState() {
-    uid = getUID();
-    adminDetailFuture = adminDetails();
+  //  _getUID();
+    adminDetailFuture= adminDetails() ;
     super.initState();
   }
 
@@ -73,133 +78,137 @@ class _CreateGroupState extends State<CreateGroup> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-          future: adminDetailFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null && adminDetailFuture != null) {
-              return Scaffold(
-                floatingActionButton: FloatingActionButton(
-                  onPressed: (isLoading)
-                      ? null
-                      : () async {
-                    try {
-                      if (!mounted) return;
-                      setState(() {
-                        isLoading = true;
-                      });
-                      if (_formKey.currentState!.validate() && widget.members.isNotEmpty) {
-                        String gid = nanoid(30);
 
-                        WriteBatch writeBatch = instance.batch();
-                        String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-                        String? url;
-                        if (groupPicture != null && contentType != null) {
-                          TaskSnapshot taskSnapshot = await Write().groupProfile(guid: gid, file: groupPicture!, fileName: timestamp, contentType: contentType!);
-                          url = await taskSnapshot.ref.getDownloadURL();
+          child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              future:adminDetailFuture ,
+              builder: (context, snapshot) {
+
+                if ( snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null && adminDetailFuture != null ) {
+                  print('Divya:111111');
+                  return Scaffold(
+                    floatingActionButton: FloatingActionButton(
+                      onPressed: (isLoading)
+                          ? null
+                          : () async {
+                        try {
+                          if (!mounted) return;
+                          setState(() {
+                            isLoading = true;
+                          });
+                          if (_formKey.currentState!.validate() && widget.members.isNotEmpty) {
+                            String gid = nanoid(30);
+
+                            WriteBatch writeBatch = instance.batch();
+                            String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+                            String? url;
+                            if (groupPicture != null && contentType != null) {
+                              TaskSnapshot taskSnapshot = await Write().groupProfile(guid: gid, file: groupPicture!, fileName: timestamp, contentType: contentType!);
+                              url = await taskSnapshot.ref.getDownloadURL();
+                            }
+                            writeBatch.set(instance.collection("group-detail").doc(gid), {
+                              "gid": gid,
+                              "title": titleTextEditingController.text,
+                              "pic": (url != null) ? url : null,
+                              "description": (descriptionTextEditingController.text.isNotEmpty) ? descriptionTextEditingController.text : null,
+                              "createdAt": timestamp,
+                              "createdBy": widget.uid,
+                              "updateAt": null,
+                              "timestamp": timestamp,
+                              "lastMessage": null,
+                              "messageBy": null,
+                              "members": createGroupMembersMap(
+                                  adminPic: (snapshot.data!.data()!["pic"] != null) ? snapshot.data!.data()!["pic"] : null,
+                                  adminName: snapshot.data!.data()!["name"],
+                                  adminUid:widget.uid,
+                                  members: widget.members)
+                            });
+                            // for (String uid in userList) {
+                            //   writeBatch.set(
+                            //       instance.collection("personal-group-list").doc(uid),
+                            //       {
+                            //         "groupList": FieldValue.arrayUnion([gid])
+                            //       },
+                            //       SetOptions(merge: true));
+                            // }
+                            writeBatch.commit();
+                            if (!mounted) return;
+                            setState(() {
+                              isLoading = false;
+                            });
+                            return Navigator.of(context).popUntil((route) => route.isFirst);
+                          } else {
+                            if (!mounted) return;
+                            setState(() {
+                              isLoading = false;
+                            });
+                            final snackBar = snackbar(content: "Please fill out the title. Description is optional.");
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          }
+                        } catch (e) {
+                          log(e.toString());
                         }
-                        writeBatch.set(instance.collection("group-detail").doc(gid), {
-                          "gid": gid,
-                          "title": titleTextEditingController.text,
-                          "pic": (url != null) ? url : null,
-                          "description": (descriptionTextEditingController.text.isNotEmpty) ? descriptionTextEditingController.text : null,
-                          "createdAt": timestamp,
-                          "createdBy": uid!,
-                          "updateAt": null,
-                          "timestamp": timestamp,
-                          "lastMessage": null,
-                          "messageBy": null,
-                          "members": createGroupMembersMap(
-                              adminPic: (snapshot.data!.data()!["pic"] != null) ? snapshot.data!.data()!["pic"] : null,
-                              adminName: snapshot.data!.data()!["name"],
-                              adminUid: uid!,
-                              members: widget.members)
-                        });
-                        // for (String uid in userList) {
-                        //   writeBatch.set(
-                        //       instance.collection("personal-group-list").doc(uid),
-                        //       {
-                        //         "groupList": FieldValue.arrayUnion([gid])
-                        //       },
-                        //       SetOptions(merge: true));
-                        // }
-                        writeBatch.commit();
-                        if (!mounted) return;
-                        setState(() {
-                          isLoading = false;
-                        });
-                        return Navigator.of(context).popUntil((route) => route.isFirst);
-                      } else {
-                        if (!mounted) return;
-                        setState(() {
-                          isLoading = false;
-                        });
-                        final snackBar = snackbar(content: "Please fill out the title. Description is optional.");
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
-                    } catch (e) {
-                      log(e.toString());
-                    }
-                  },
-                  child: Icon(Icons.done),
-                ),
-                appBar: AppBar(
-                  centerTitle: false,
-                  automaticallyImplyLeading: false,
-                  elevation: 0,
-                  leading: IconButton(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  title: Text(
-                    "Create Group",
-                    style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                  ),
-                ),
-                body: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5, bottom: 5),
-                          child: Row(
-                            children: [
-                              userImagePicker(),
-                              Flexible(
-                                child: Form(
-                                    key: _formKey,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: title(),
-                                    )),
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, bottom: 8),
-                          child: description(),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: adminDetail(pic: (snapshot.data!.data()!["pic"] != null) ? snapshot.data!.data()!["pic"] : null, name: snapshot.data!.data()!["name"]),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: memberDetail(),
-                        )
-                      ],
+                      },
+                      child: Icon(Icons.done),
                     ),
-                  ),
-                ),
-              );
-            } else {
-              return exceptionScaffold(context: context, lottieString: loadingLottie, subtitle: "Loading");
-            }
-          }),
+                    appBar: AppBar(
+                      centerTitle: false,
+                      automaticallyImplyLeading: false,
+                      elevation: 0,
+                      leading: IconButton(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      title: Text(
+                        "Create Group",
+                        style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                      ),
+                    ),
+                    body: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5, bottom: 5),
+                              child: Row(
+                                children: [
+                                  userImagePicker(),
+                                  Flexible(
+                                    child: Form(
+                                        key: _formKey,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 8.0),
+                                          child: title(),
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8, bottom: 8),
+                              child: description(),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10, bottom: 10),
+                              child: adminDetail(pic: (snapshot.data!.data()!["pic"] != null) ? snapshot.data!.data()!["pic"] : null, name: snapshot.data!.data()!["name"]),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10, bottom: 10),
+                              child: memberDetail(),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return exceptionScaffold(context: context, lottieString: loadingLottie, subtitle: "Loading");
+                }
+              })
+
     );
   }
 

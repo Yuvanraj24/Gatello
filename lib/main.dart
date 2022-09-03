@@ -68,10 +68,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   runApp(MyApp());
-
-
 }
 const String ip = 'http://3.108.219.188:5000';
 const String signUpip = '$ip/signup';
@@ -145,7 +142,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar():LoginScreen();
+                              return (snapshot.data == true) ? Tabbar():Tabbar();
 
                             } else {
                               return lottieAnimation(loadingLottie);
