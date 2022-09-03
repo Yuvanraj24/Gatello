@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -405,31 +406,31 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
                                     hoverColor:
                                     Colors.transparent,
                                     onPressed: () async {
-                                      // if (sizingInformation
-                                      //     .deviceScreenType ==
-                                      //     DeviceScreenType
-                                      //         .desktop) {
-                                      //   return await scaffoldAlertDialogBox(
-                                      //       context: context,
-                                      //       page: SearchPage(
-                                      //         state: 4,
-                                      //         sizingInformation:
-                                      //         sizingInformation,
-                                      //       )
-                                      //   );
-                                      // } else {
-                                      //   Navigator.push(
-                                      //       context,
-                                      //       MaterialPageRoute(
-                                      //           builder:
-                                      //               (context) =>
-                                      //               SearchPage(
-                                      //                 sizingInformation:
-                                      //                 sizingInformation,
-                                      //                 state:
-                                      //                 4,
-                                      //               )));
-                                      // }
+                                      if (sizingInformation
+                                          .deviceScreenType ==
+                                          DeviceScreenType
+                                              .desktop) {
+                                        return await scaffoldAlertDialogBox(
+                                            context: context,
+                                            page: SearchPage(
+                                              state: 4,
+                                              sizingInformation:
+                                              sizingInformation,
+                                            )
+                                        );
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (context) =>
+                                                    SearchPage(
+                                                      sizingInformation:
+                                                      sizingInformation,
+                                                      state:
+                                                      4,
+                                                    )));
+                                      }
                                     },
                                     icon: Icon(Icons.add))
                                     : Container(),
@@ -443,35 +444,35 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
                                 Icons.add,
                               ),
                               onPressed: () async {
-                                // if (sizingInformation
-                                //     .deviceScreenType ==
-                                //     DeviceScreenType.desktop) {
-                                //   return await scaffoldAlertDialogBox(
-                                //       context: context,
-                                //       page: SearchPage(
-                                //         state: 0,
-                                //         sizingInformation:
-                                //         sizingInformation,
-                                //       )).then((value) {
-                                //     if (value != null) {
-                                //       if (!mounted) return;
-                                //       setState(() {
-                                //         isChatting = true;
-                                //         puid = value;
-                                //       });
-                                //     }
-                                //   });
-                                // } else {
-                                //   Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //           builder: (context) =>
-                                //               SearchPage(
-                                //                 state: 0,
-                                //                 sizingInformation:
-                                //                 sizingInformation,
-                                //               )));
-                                // }
+                                if (sizingInformation
+                                    .deviceScreenType ==
+                                    DeviceScreenType.desktop) {
+                                  return await scaffoldAlertDialogBox(
+                                      context: context,
+                                      page: SearchPage(
+                                        state: 0,
+                                        sizingInformation:
+                                        sizingInformation,
+                                      )).then((value) {
+                                    if (value != null) {
+                                      if (!mounted) return;
+                                      setState(() {
+                                        isChatting = true;
+                                        puid = value;
+                                      });
+                                    }
+                                  });
+                                } else {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SearchPage(
+                                                state: 0,
+                                                sizingInformation:
+                                                sizingInformation,
+                                              )));
+                                }
                               },
                             )
                                 : null
@@ -547,54 +548,54 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
               Icons.add,
             ),
             onPressed: () async {
-              // if (sizingInformation.deviceScreenType ==
-              //     DeviceScreenType.desktop) {
-              //   return await scaffoldAlertDialogBox(
-              //       context: context,
-              //       page: SearchPage(
-              //         state: 0,
-              //         sizingInformation: sizingInformation,
-              //       )).then((value) {
-              //     if (value != null) {
-              //       if (!mounted) return;
-              //       setState(() {
-              //         isChatting = true;
-              //         puid = value;
-              //       });
-              //     }
-              //   });
-              // } else {
-              //   Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //           builder: (context) => SearchPage(
-              //             state: 0,
-              //             sizingInformation:
-              //             sizingInformation,
-              //           )));
-              // }
+              if (sizingInformation.deviceScreenType ==
+                  DeviceScreenType.desktop) {
+                return await scaffoldAlertDialogBox(
+                    context: context,
+                    page: SearchPage(
+                      state: 0,
+                      sizingInformation: sizingInformation,
+                    )).then((value) {
+                  if (value != null) {
+                    if (!mounted) return;
+                    setState(() {
+                      isChatting = true;
+                      puid = value;
+                    });
+                  }
+                });
+              } else {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SearchPage(
+                          state: 0,
+                          sizingInformation:
+                          sizingInformation,
+                        )));
+              }
             },
           )
               : FloatingActionButton(
               onPressed: () async {
-                // if (sizingInformation.deviceScreenType ==
-                //     DeviceScreenType.desktop) {
-                //   return await scaffoldAlertDialogBox(
-                //       context: context,
-                //       page: SearchPage(
-                //         state: 4,
-                //         sizingInformation: sizingInformation,
-                //       ));
-                // } else {
-                //   Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => SearchPage(
-                //             sizingInformation:
-                //             sizingInformation,
-                //             state: 4,
-                //           )));
-                // }
+                if (sizingInformation.deviceScreenType ==
+                    DeviceScreenType.desktop) {
+                  return await scaffoldAlertDialogBox(
+                      context: context,
+                      page: SearchPage(
+                        state: 4,
+                        sizingInformation: sizingInformation,
+                      ));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SearchPage(
+                            sizingInformation:
+                            sizingInformation,
+                            state: 4,
+                          )));
+                }
               },
               child: Icon(Icons.add))
               : null,
