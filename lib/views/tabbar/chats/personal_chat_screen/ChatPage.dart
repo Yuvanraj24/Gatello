@@ -2492,7 +2492,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                   appBar: AppBar(
                                     centerTitle: false,
                                     automaticallyImplyLeading: false,
-                                    backgroundColor: (themedata.value.index == 0) ? Colors.yellow : Colors.red,
+                                    backgroundColor: (themedata.value.index == 0) ? Color.fromRGBO(248, 206, 97, 1) : Colors.red,
                                     elevation: 0,
                                     leading: (sizingInformation.deviceScreenType != DeviceScreenType.desktop)
                                         ? IconButton(
@@ -4287,7 +4287,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                     )
                                         : Icon(
                                       Icons.done_all,
-                                      color: (themedata.value.index == 0) ? Colors.white : Colors.red,
+                                      color: (themedata.value.index == 0) ? Colors.white : Colors.black,
                                     )
                                         : Icon(
                                       Icons.done_all,
@@ -4296,11 +4296,11 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                         : (isRead)
                                         ? Icon(
                                       Icons.done_all,
-                                      color:  Colors.red,
+                                      color:  Colors.black,
                                     )
                                         : Icon(
                                       Icons.done_all,
-                                      color: (themedata.value.index == 0) ? Colors.red: Colors.red,
+                                      color: (themedata.value.index == 0) ? Colors.white: Colors.black,
                                     ),
                                   ],
                                 ),

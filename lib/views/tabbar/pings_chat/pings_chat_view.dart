@@ -49,6 +49,7 @@ class PingsChatView extends StatefulWidget {
 }
 
 class _PingsChatViewState extends State<PingsChatView> {
+  FirebaseFirestore instance = FirebaseFirestore.instance;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   String? uid;
   String? puid;
@@ -105,13 +106,9 @@ class _PingsChatViewState extends State<PingsChatView> {
               // body: isChatListLoaded?getChatList():getChatList(),
               body: Column(
                 children: [
-                  Container(
-                    child: Expanded(child: getChatList())
-                  ),
+                  Expanded(child: getChatList()),
 
-                  Container(
-                    child: Expanded(child: personalGroupList(sizingInformation)),
-                  )
+                  Expanded(child: personalGroupList(sizingInformation))
 
                 ],
               ),
@@ -178,26 +175,18 @@ class _PingsChatViewState extends State<PingsChatView> {
 
   }
 
-  // final SharedPreferences prefs = await _prefs;
+
 
   Widget personalGroupList(SizingInformation sizingInformation) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: db
-            .collection("group-detail")
-            .where("members.$uid.claim", isNotEqualTo: "removed")
-            .snapshots(),
+        stream: instance.collection("group-detail").where("members.$uid.claim", isNotEqualTo: "removed").snapshots(),
         builder: (context, groupRoomDetailSnapshot) {
-          if (groupRoomDetailSnapshot.connectionState ==
-              ConnectionState.active &&
+          if (groupRoomDetailSnapshot.connectionState == ConnectionState.active &&
               groupRoomDetailSnapshot.hasData &&
               groupRoomDetailSnapshot.data != null &&
               groupRoomDetailSnapshot.data!.docs.isNotEmpty) {
-            List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
-                groupRoomDetailSnapshot.data!.docs;
-            docs.sort((b, a) => getDateTimeSinceEpoch(
-                datetime: a.data()["timestamp"])
-                .compareTo(
-                getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
+            List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = groupRoomDetailSnapshot.data!.docs;
+            docs.sort((b, a) => getDateTimeSinceEpoch(datetime: a.data()["timestamp"]).compareTo(getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
 
             return ListView.separated(
                 itemCount: docs.length,
@@ -207,9 +196,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                   child: Divider(
                     thickness: 1,
                     height: 1,
-                    color: (themedata.value.index == 0)
-                        ? Color(lightGrey)
-                        : Color(lightBlack),
+                    color: (themedata.value.index == 0) ? Color(lightGrey) : Color(lightBlack),
                   ),
                 ),
                 itemBuilder: (context, index) {
@@ -223,15 +210,14 @@ class _PingsChatViewState extends State<PingsChatView> {
                       isChatting = true;
                       if (!mounted) return;
                       setState(() {});
-                      if (sizingInformation.deviceScreenType !=
-                          DeviceScreenType.desktop) {
+                      if (sizingInformation.deviceScreenType != DeviceScreenType.desktop) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ChatPage(
-                                  state: 0,
-                                  uid: _getUID().toString(),
-                                  puid: puid.toString(),
+                                  state: 1,
+                                  uid: uid.toString(),
+                                  puid: puid!,
                                 ))).then((value) {
                           if (value == true) {
                             if (!mounted) return;
@@ -245,8 +231,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                     }
                         : null,
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 20, right: 20, top: 10, bottom: 10),
+                      padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                       child: buildItem(
                         id: docs[index].data()["gid"],
                         pic: docs[index].data()["pic"],
@@ -255,10 +240,8 @@ class _PingsChatViewState extends State<PingsChatView> {
                         timestamp: docs[index].data()["timestamp"],
                         messageBy: docs[index].data()["messageBy"],
                         members: docs[index].data()["members"],
-                        lastRead: docs[index].data()["members"][uid]
-                        ["lastRead"],
-                        unreadCount: docs[index].data()["members"][uid]
-                        ["unreadCount"],
+                        lastRead: docs[index].data()["members"][uid]["lastRead"],
+                        unreadCount: docs[index].data()["members"][uid]["unreadCount"],
                         document: docs[index],
                       ),
                     ),
@@ -269,16 +252,111 @@ class _PingsChatViewState extends State<PingsChatView> {
                 child: Center(
                     child: SingleChildScrollView(
                       child: Column(
-                        children: [
-                          lottieAnimation(emptyChatLottie),
-                          Text(
-                              "Your shelves are empty ! \nCreate a group to start the conversation")
-                        ],
+                        children: [lottieAnimation(emptyChatLottie), Text("Your shelves are empty ! \nCreate a group to start the conversation")],
                       ),
                     )));
           }
         });
   }
+  // Widget personalGroupList(SizingInformation sizingInformation) {
+  //   return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+  //       stream: db
+  //           .collection("group-detail")
+  //           .where("members.$uid.claim", isNotEqualTo: "removed")
+  //           .snapshots(),
+  //       builder: (context, groupRoomDetailSnapshot) {
+  //         if (groupRoomDetailSnapshot.connectionState ==
+  //             ConnectionState.active &&
+  //             groupRoomDetailSnapshot.hasData &&
+  //             groupRoomDetailSnapshot.data != null &&
+  //             groupRoomDetailSnapshot.data!.docs.isNotEmpty) {
+  //           List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
+  //               groupRoomDetailSnapshot.data!.docs;
+  //           docs.sort((b, a) => getDateTimeSinceEpoch(
+  //               datetime: a.data()["timestamp"])
+  //               .compareTo(
+  //               getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
+  //
+  //           return ListView.separated(
+  //               itemCount: docs.length,
+  //               shrinkWrap: true,
+  //               separatorBuilder: (context, index) => Padding(
+  //                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+  //                 child: Divider(
+  //                   thickness: 1,
+  //                   height: 1,
+  //                   color: (themedata.value.index == 0)
+  //                       ? Color(lightGrey)
+  //                       : Color(lightBlack),
+  //                 ),
+  //               ),
+  //               itemBuilder: (context, index) {
+  //                 return GestureDetector(
+  //                   behavior: HitTestBehavior.opaque,
+  //                   onTap: (widget.state == null)
+  //                       ? () {
+  //                     isChatting = false;
+  //
+  //                     puid = docs[index].data()["gid"];
+  //                     isChatting = true;
+  //                     if (!mounted) return;
+  //                     setState(() {});
+  //                     if (sizingInformation.deviceScreenType !=
+  //                         DeviceScreenType.desktop) {
+  //                       Navigator.push(
+  //                           context,
+  //                           MaterialPageRoute(
+  //                               builder: (context) => ChatPage(
+  //                                 state: 1,
+  //                                 uid: _getUID().toString(),
+  //                                 puid: puid.toString(),
+  //                               ))).then((value) {
+  //                         if (value == true) {
+  //                           if (!mounted) return;
+  //                           setState(() {
+  //                             isChatting = false;
+  //                             puid = null;
+  //                           });
+  //                         }
+  //                       });
+  //                     }
+  //                   }
+  //                       : null,
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.only(
+  //                         left: 20, right: 20, top: 10, bottom: 10),
+  //                     child: buildItem(
+  //                       id: docs[index].data()["gid"],
+  //                       pic: docs[index].data()["pic"],
+  //                       name: docs[index].data()["title"],
+  //                       lastMessage: docs[index].data()["lastMessage"],
+  //                       timestamp: docs[index].data()["timestamp"],
+  //                       messageBy: docs[index].data()["messageBy"],
+  //                       members: docs[index].data()["members"],
+  //                       lastRead: docs[index].data()["members"][uid]
+  //                       ["lastRead"],
+  //                       unreadCount: docs[index].data()["members"][uid]
+  //                       ["unreadCount"],
+  //                       document: docs[index],
+  //                     ),
+  //                   ),
+  //                 );
+  //               });
+  //         } else {
+  //           return Container(
+  //               child: Center(
+  //                   child: SingleChildScrollView(
+  //                     child: Column(
+  //                       children: [
+  //                         lottieAnimation(emptyChatLottie),
+  //                         Text(
+  //                             "Your shelves are empty ! \nCreate a group to start the conversation")
+  //                       ],
+  //                     ),
+  //                   )));
+  //         }
+  //       });
+  // }
 
   Widget buildItem({
     required String? pic,
