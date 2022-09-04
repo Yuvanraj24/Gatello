@@ -47,7 +47,8 @@ class _OtherstatusState extends State<Otherstatus> with TickerProviderStateMixin
     bool emojiShowing = false;
     return Scaffold(
       body:Stack(
-          children:[Container(height:double.infinity.h,width:double.infinity.w,decoration:BoxDecoration(
+          children:[
+            Container(height:double.infinity.h,width:double.infinity.w,decoration:BoxDecoration(
              color:Colors.black, image:DecorationImage(image:NetworkImage('https://images.unsplash.com/photo-1589419621083-1ead66c96fa7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWlja2V5JTIwbW91c2V8ZW58MHx8MHx8&w=1000&q=80'),
                 )
           ),),
@@ -103,237 +104,224 @@ class _OtherstatusState extends State<Otherstatus> with TickerProviderStateMixin
                 )
               ]),
             ),
-          ]),
-      bottomNavigationBar: Container(
-        padding:EdgeInsets.symmetric(horizontal:20.w),
-        height: 50.h,color:Colors.black,child:   Row(children: [
-        //textField for personal chat
-        Flexible(
-          child: textField(
-              prefix:
-              IconButton(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  onPressed: () async {
-                    recentEmojiList = await getRecentEmoji();
-                    if (!mounted) return;
-                    setState(() {
-                      if (attachmentShowing) {
-                        attachmentShowing = false;
-                      }
-                      emojiShowing = !emojiShowing;
-                      if (!emojiShowing) {
-                        focusNode.requestFocus();
-                      } else {
-                        focusNode.unfocus();
+            Container(
+              padding:EdgeInsets.symmetric(horizontal:20.w),
+              height: 40.h,color:Colors.red,
+              child:Row(children: [
+                //textField for personal chat
+                Flexible(
+                  child: textField(
+                      prefix:
+                      IconButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          onPressed: () async {
+                            recentEmojiList = await getRecentEmoji();
+                            if (!mounted) return;
+                            setState(() {
+                              if (attachmentShowing) {
+                                attachmentShowing = false;
+                              }
+                              emojiShowing = !emojiShowing;
+                              if (!emojiShowing) {
+                                focusNode.requestFocus();
+                              } else {
+                                focusNode.unfocus();
+                              }
+                            });
+                          },
+                          icon: Icon(Icons.emoji_emotions_outlined,
+                              color: Color.fromRGBO(12, 16, 29, 1))),
+                      focusNode: focusNode,
+                      textStyle: GoogleFonts.inter(
+                          textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white))),
+                      textEditingController: textEditingController,
+                      hintText: "Ping here...",
+                      hintStyle: GoogleFonts.inter(
+                          textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey))),
+                      border: false,
+                      onSubmitted:(v) {
 
-                      }
-                    });
-                  },
-                  icon: Icon(Icons.emoji_emotions_outlined,
-                      color: Color.fromRGBO(12, 16, 29, 1))),
-              focusNode: focusNode,
-              textStyle: GoogleFonts.inter(
-                  textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white))),
-              textEditingController: textEditingController,
-              hintText: "Ping here...",
-              hintStyle: GoogleFonts.inter(
-                  textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey))),
-              border: false,
-              onSubmitted:(v) {
-
-              },
-              maxLines: 5,
-              fillColor: (themedata.value.index == 0) ? Color(white) : Color(lightBlack),
-              suffixIcon: Container(
-                width: 80,
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      child:SvgPicture.asset("assets/status_assets/chat_attachment.svg"),
-                      onTap: () {
-                        showModalBottomSheet(
-                            backgroundColor: Colors
-                                .transparent,
-                            context: context,
-                            builder: (
-                                BuildContext context) {
-                              return Container(
-                                height: 250,
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width -
-                                    20,
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius
-                                          .circular(
-                                          15),
-                                      side: BorderSide(
+                      },
+                      maxLines: 5,
+                      fillColor: (themedata.value.index == 0) ? Color(white) : Color(lightBlack),
+                      suffixIcon: Container(
+                        width: 80,
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              child:SvgPicture.asset("assets/status_assets/chat_attachment.svg"),
+                              onTap: () {
+                                showModalBottomSheet(
+                                    backgroundColor: Colors
+                                        .transparent,
+                                    context: context,
+                                    builder: (
+                                        BuildContext context) {
+                                      return Container(
+                                        height: 250,
+                                        width: MediaQuery
+                                            .of(context)
+                                            .size
+                                            .width -
+                                            20,
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(
+                                                  15),
+                                              side: BorderSide(
+                                                  color: Color
+                                                      .fromRGBO(
+                                                      246,
+                                                      207,
+                                                      70,
+                                                      1))),
                                           color: Color
                                               .fromRGBO(
-                                              246,
-                                              207,
-                                              70,
-                                              1))),
-                                  color: Color
-                                      .fromRGBO(
-                                      255, 255,
-                                      255, 1),
-                                  margin: EdgeInsets
-                                      .all(30),
-                                  child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .spaceEvenly,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .spaceEvenly,
-                                          children: [
+                                              255, 255,
+                                              255, 1),
+                                          margin: EdgeInsets
+                                              .all(30),
+                                          child: Column(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceEvenly,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceEvenly,
+                                                  children: [
 
-                                            GestureDetector(
-                                              onTap: () {
+                                                    GestureDetector(
+                                                      onTap: () {
 
-                                              },
+                                                      },
 
-                                              child:
-                                              iconCreation(
-                                                  "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/document_icon_container.png",
-                                                  "Document"),
-                                            ),
-                                            GestureDetector(
-                                              onTap: ()  {
+                                                      child:
+                                                      iconCreation(
+                                                          "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/document_icon_container.png",
+                                                          "Document"),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: ()  {
 
-                                              },
+                                                      },
 
-                                              child: iconCreation(
-                                                  "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png",
-                                                  "Camera"
+                                                      child: iconCreation(
+                                                          "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png",
+                                                          "Camera"
 
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: ()  {
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: ()  {
 
-                                              },
+                                                      },
 
-                                              child: iconCreation(
-                                                  "assets/tabbar_icons/tab_view_m"
-                                                      "ain/chats_image/attachment_icon"
-                                                      "_container/gallery_icon_container.png",
-                                                  "Gallery"),
-                                            )
-                                          ],
+                                                      child: iconCreation(
+                                                          "assets/tabbar_icons/tab_view_m"
+                                                              "ain/chats_image/attachment_icon"
+                                                              "_container/gallery_icon_container.png",
+                                                          "Gallery"),
+                                                    )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceEvenly,
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: ()  {
+
+                                                      },
+
+                                                      child: iconCreation(
+                                                          "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_icon_container.png",
+                                                          "Audio"),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: ()  {
+
+                                                      },
+
+                                                      child: iconCreation(
+                                                          "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_icon_container.png",
+                                                          "Location"),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: ()  {
+
+                                                      },
+
+                                                      child: iconCreation(
+                                                          "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_icon_container.png",
+                                                          "Contact"),
+                                                    )
+                                                  ],
+                                                )
+                                              ]),
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .spaceEvenly,
-                                          children: [
-                                            GestureDetector(
-                                              onTap: ()  {
+                                      );
+                                    });
+                              },
+                            ),
+                            SizedBox(width:25.w),
+                            GestureDetector(
+                              child:SvgPicture.asset("assets/status_assets/chat_camera.svg"),
+                              onTap: () {
 
-                                              },
+                              },
+                            ),
 
-                                              child: iconCreation(
-                                                  "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_icon_container.png",
-                                                  "Audio"),
-                                            ),
-                                            GestureDetector(
-                                              onTap: ()  {
-
-                                              },
-
-                                              child: iconCreation(
-                                                  "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_icon_container.png",
-                                                  "Location"),
-                                            ),
-                                            GestureDetector(
-                                              onTap: ()  {
-
-                                              },
-
-                                              child: iconCreation(
-                                                  "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_icon_container.png",
-                                                  "Contact"),
-                                            )
-                                          ],
-                                        )
-                                      ]),
-                                ),
-                              );
-                            });
-                      },
-                    ),
-                    SizedBox(width:25.w),
-                    GestureDetector(
-                      child:SvgPicture.asset("assets/status_assets/chat_camera.svg"),
-                      onTap: () {
-
-                      },
+                          ],
+                        ),
+                      )
+                  ),
+                ),
+                SizedBox(width:16.w),
+                (canSend)
+                    ? GestureDetector(
+                  // elevation: 0,
+                    child: Container(
+                      height: 45,
+                      width: 45,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(accent),
+                      ),
+                      child: Icon(
+                        Icons.send,
+                        color: (themedata.value.index == 0) ? Color((canSend) ? white : grey) : Color(grey),
+                      ),
                     ),
 
-                  ],
-                ),
-              )
-          ),
-        ),
+                    onTap: canSend
+                        ? () async {}: null) :
+                RecordButton(
+                    controller: voiceRecordAnimationController,
+                    valueNotifier: recordAudioValueNotifier,
+                    function: () async {File file = File(recordAudioValueNotifier.value);
+                    if (file.existsSync()) {int length = await file.length();
+                    Uint8List bytes = await file.readAsBytes();
 
+                    if (length < 52428800) {
 
-        Padding(
-          padding:  EdgeInsets.only(left: 8.0, right: 8.0),
-          // padding: EdgeInsets.zero,
-          child: (canSend)
-              ? GestureDetector(
-            // elevation: 0,
-              child: Container(
-                height: 45,
-                width: 45,
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(accent),
-                ),
-                child: Icon(
-                  Icons.send,
-                  color: (themedata.value.index == 0) ? Color((canSend) ? white : grey) : Color(grey),
-                ),
+                    } else {
+                      final snackBar = snackbar(content: "File size is greater than 50MB");
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                    }
+                    }),
+              ],
               ),
-              // padding: EdgeInsets.all(20),
-              // shape: CircleBorder(),
-              // color: Color(accent),
-              onTap: canSend
-                  ? () async {
-
-
-              }
-                  : null)
-              : RecordButton(
-              controller: voiceRecordAnimationController,
-              valueNotifier: recordAudioValueNotifier,
-              function: () async {
-                File file = File(recordAudioValueNotifier.value);
-                if (file.existsSync()) {
-                  int length = await file.length();
-                  Uint8List bytes = await file.readAsBytes();
-
-                  if (length < 52428800) {
-
-                  } else {
-                    final snackBar = snackbar(content: "File size is greater than 50MB");
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                }
-              }),
-        ),
-      ],
-      ),
-       ),
+            ),
+          ]),
     );
   }
 }
@@ -416,23 +404,6 @@ class _StatusdetailsState extends State<Statusdetails> {
               color:Color.fromRGBO(121, 117, 117, 1))),
         ],
       ),
-    );
-  }
-}
-
-class Storyborder extends StatefulWidget {
-  const Storyborder({Key? key}) : super(key: key);
-
-  @override
-  State<Storyborder> createState() => _StoryborderState();
-}
-
-class _StoryborderState extends State<Storyborder> {
-  var statusList=[];
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-
     );
   }
 }

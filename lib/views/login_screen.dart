@@ -26,6 +26,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool isHidden= true;
     final _formkey = GlobalKey<FormState>();
   TextEditingController _mobileNumber = TextEditingController();
   TextEditingController _password = TextEditingController();
@@ -37,37 +38,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return SafeArea(
       child: Scaffold(
-
         resizeToAvoidBottomInset: false,
-
         body: Form(
           key: _formkey,
           child: Container(
-            padding:
-                EdgeInsets.only(bottom: 180.h, top: 120.h, left: 12.w, right: 12.w),
+            padding:EdgeInsets.only(bottom: 180.h, top: 120.h, left: 12.w, right: 12.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
+              children: [Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Welcome to',
-                      style: GoogleFonts.fredoka(
-                          textStyle: TextStyle(
-                              fontSize: 24.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black)),
+                  children: [Text('Welcome to',
+                      style: GoogleFonts.fredoka(textStyle: TextStyle(
+                              fontSize: 24.sp,fontWeight: FontWeight.w500,color: Colors.black)),
                     ),
-                    SizedBox(
-                      width: 8.w,
-                    ),
-                    Text(
-                      'Gatello',
-                      style: TextStyle(
-                        fontSize: 25.sp,
-                      ),
-                    )
+                    SizedBox(width: 8.w),
+                    Text('Gatello', style: TextStyle(fontSize: 25.sp))
                   ],
                 ),
                 SizedBox(height: 19.h),
@@ -131,8 +116,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextFormField(
               keyboardType:TextInputType.number ,
    validator: (value) => phoneValidator(value),
-                                        
-                   
                     style: TextStyle(
                         fontSize:13.sp, fontWeight: FontWeight.w500),
                     cursorColor: Colors.black,
@@ -214,18 +197,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize:13.sp,
                          fontWeight: FontWeight.w500),
                     cursorColor: Colors.black,
-                    controller: _password,
+                    obscureText:isHidden,
+                    controller:_password,
                     onChanged: (val){
                         widget.pw = _password.text.toString();
                     },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 8.h),
-                    
-                      suffixIcon: Icon(
-                        Icons.visibility,
-                        size: 18.sp,
-                        color: Colors.black,
-                      ),
+                      suffixIcon: GestureDetector(
+                        onTap:() {
+                           setState(() {
+                             isHidden=!isHidden;
+                           });
+                        },
+                        child:isHidden?Icon(Icons.visibility_off, size: 18.sp,color: Colors.black):
+                        Icon(Icons.visibility, size: 18.sp,color: Colors.black)),
                       labelText: 'PASSWORD',
                       labelStyle: GoogleFonts.inter(
                           textStyle: TextStyle(
@@ -245,20 +231,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 13.h),
                 Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  InkWell(
-                    child: Text(
-                      'Forgot Password?',
-              
-                      style: GoogleFonts.inter(
-                          textStyle: TextStyle(
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w400,
-                              color: HexColor('#00A3FF'))),
-                    ),
+                  InkWell(child: Text('Forgot Password?',
+                      style: GoogleFonts.inter(textStyle: TextStyle(fontSize: 11.sp,
+                          fontWeight: FontWeight.w400, color: HexColor('#00A3FF')))),
         onTap:(){
-        
-           Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
+           Navigator.push(context,MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
         }
         
                   ),

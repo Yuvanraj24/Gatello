@@ -139,7 +139,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
                   itemCount: docs.length,
                   shrinkWrap: true,
                   separatorBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    padding:EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Divider(
                       thickness: 1,
                       height: 1,

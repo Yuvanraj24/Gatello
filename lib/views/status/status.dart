@@ -12,8 +12,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 
-
-
 class Status extends StatefulWidget {
   const Status({Key? key}) : super(key: key);
 
@@ -57,9 +55,6 @@ class _StatusState extends State<Status> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-
-
-
 
     return SafeArea(
       child: Scaffold(
@@ -111,7 +106,8 @@ class _StatusState extends State<Status> with TickerProviderStateMixin{
                 Divider(color:Color.fromRGBO(242, 242, 242, 1),thickness:1.5.w),
                 SizedBox(height:12.h),
                selectValue==0?
-               Column(children: [
+               Column(crossAxisAlignment:CrossAxisAlignment.start,
+                   children: [
                  Row(mainAxisAlignment:MainAxisAlignment.center,
                    children: [GestureDetector(onTap:(){Navigator.push(context,MaterialPageRoute(builder:
                        (context) => MoreStories()
@@ -254,8 +250,8 @@ class _StatusState extends State<Status> with TickerProviderStateMixin{
         ),
         floatingActionButton:SpeedDial(
           overlayOpacity:0, spacing:17,
-          spaceBetweenChildren: 17, activeIcon:Icons.keyboard_arrow_up_rounded,
-          icon: Icons.keyboard_arrow_down_rounded, backgroundColor:Color.fromRGBO(248, 206, 97, 1),
+          spaceBetweenChildren: 17, activeIcon:Icons.keyboard_arrow_down_rounded,
+          icon: Icons.keyboard_arrow_up_rounded, backgroundColor:Color.fromRGBO(248, 206, 97, 1),
           foregroundColor:Colors.black,
           children: [SpeedDialChild(
                 onTap:() {
@@ -267,9 +263,7 @@ class _StatusState extends State<Status> with TickerProviderStateMixin{
                 child:SvgPicture.asset('assets/status_assets/status_text.svg')
             ),
             SpeedDialChild(
-              onTap:() {
-                pickimage();
-              },
+              onTap:() {pickimage();},
                 backgroundColor:Color.fromRGBO(248, 206, 97, 1),
                 child:SvgPicture.asset('assets/status_assets/camera_icon.svg')
             ),
@@ -450,7 +444,8 @@ class _StatusState extends State<Status> with TickerProviderStateMixin{
     );
   }
   Widget popStatus(){
-    return Column(children: [
+    return Column(crossAxisAlignment:CrossAxisAlignment.start,
+        children: [
       Row(mainAxisAlignment:MainAxisAlignment.center,
         children: [GestureDetector(onTap:(){Navigator.push(context,MaterialPageRoute(builder:
             (context) =>MoreStories()

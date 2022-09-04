@@ -59,26 +59,26 @@ Future? _future;
       body: body,
     );
   }
-  // Future followApiCall() async {
-  //   return await ApiHandler().apiHandler(
-  //     valueNotifier: followValueNotifier,
-  //     jsonModel: defaultFromJson,
-  //     url: followUrl,
-  //     requestMethod: 1,
-  //     // body: {"user_id": widget.uid, "following_id": getUID()},
-  //     body: {"user_id": getUID(), "following_id": widget.uid},
-  //   );
-  // }
-  //
-  // Future unfollowApiCall() async {
-  //   return await ApiHandler().apiHandler(
-  //     valueNotifier: followValueNotifier,
-  //     jsonModel: defaultFromJson,
-  //     url: unfollowUrl,
-  //     requestMethod: 1,
-  //     body: {"user_id": getUID(), "following_id": widget.uid},
-  //   );
-  // }
+  Future followApiCall() async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: followValueNotifier,
+      jsonModel: defaultFromJson,
+      url: followUrl,
+      requestMethod: 1,
+      // body: {"user_id": widget.uid, "following_id": getUID()},
+      body: {"user_id": getUID(), "following_id": widget.uid},
+    );
+  }
+
+  Future unfollowApiCall() async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: followValueNotifier,
+      jsonModel: defaultFromJson,
+      url: unfollowUrl,
+      requestMethod: 1,
+      body: {"user_id": getUID(), "following_id": widget.uid},
+    );
+  }
   Future myFeedsApiCall() async {
     return await ApiHandler().apiHandler(
       valueNotifier: myFeedsValueNotifier,
@@ -345,6 +345,47 @@ if(snapshot.hasData) {
                                               .w700,
                                           color: Color.fromRGBO(
                                               0, 0, 0, 1))),
+                                ),
+                                Flexible(
+                                  child: flatButton(
+                                      onPressed: (followValueNotifier.value.item1 == 0)
+                                          ? null
+                                          : (profileDetailsValueNotifier.value.item2.result.isFollowing)
+                                          ? () {
+                                        return unfollowApiCall().whenComplete(() async {
+                                          if (followValueNotifier.value.item1 == 1) {
+                                            if (!mounted) return;
+                                            setState(() {
+                                              profileDetailsValueNotifier.value.item2.result.isFollowing = false;
+                                              profileDetailsValueNotifier.value.item2.result.profileDetails.followersCount -= 1;
+                                            });
+                                          } else if (followValueNotifier.value.item1 == 2 || followValueNotifier.value.item1 == 3) {
+                                            final snackBar = snackbar(content: followValueNotifier.value.item3.toString());
+                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                          }
+                                        });
+                                      }
+                                          : () {
+                                        return followApiCall().whenComplete(() async {
+                                          if (followValueNotifier.value.item1 == 1) {
+                                            if (!mounted) return;
+                                            setState(() {
+                                              profileDetailsValueNotifier.value.item2.result.isFollowing = true;
+                                              profileDetailsValueNotifier.value.item2.result.profileDetails.followersCount += 1;
+                                            });
+                                          } else if (followValueNotifier.value.item1 == 2 || followValueNotifier.value.item1 == 3) {
+                                            final snackBar = snackbar(content: followValueNotifier.value.item3.toString());
+                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                          }
+                                        });
+                                      },
+                                      size: Size(MediaQuery.of(context).size.width, 45),
+                                      backgroundColor: Colors.pink,
+                                      child: Text(
+                                        (profileDetailsValueNotifier.value.item2.result.isFollowing) ? "Unfollow" : "Follow",
+                                        style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 12, color: Color(materialBlack))),
+                                      )
+                                  ),
                                 ),
                                 Spacer(),
 // Padding(

@@ -10,6 +10,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gatello/views/tabbar/test_code/UserDetails.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -270,18 +272,29 @@ class _SearchPageState extends State<SearchPage> {
                   centerTitle: false,
                   automaticallyImplyLeading: false,
                   elevation: 0,
-                  leading: IconButton(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  actions: (sizingInformation.deviceScreenType ==
-                      DeviceScreenType.desktop)
-                      ? null
-                      : [
+                  leading: GestureDetector(
+                      onTap:(){
+                        Navigator.pop(context);
+                      },
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment:CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/pops_asset/back_button.svg',height:35.h,
+                            width:35.w,),
+                        ],
+                      )),
+                  actions:
+                  // (sizingInformation.deviceScreenType ==
+                  //     DeviceScreenType.desktop)
+                  //     ? null :
+                  [
+                    SvgPicture.asset(
+                        'assets/tabbar_icons/Tabbar_search.svg',height:21.h,width:21.w,
+                    ),
+                    SizedBox(width:22.w),
                     PopupMenuButton(
+                      icon:Icon(Icons.more_vert_rounded,color:Colors.black),
+                        iconSize:30,
                         onSelected: (value) {
                           switch (value) {
                             case 1:
@@ -297,30 +310,40 @@ class _SearchPageState extends State<SearchPage> {
                         itemBuilder: (context) =>
                         [
                           PopupMenuItem(
-                            child: Text("Invite a friend"),
+                            child: Text("Refresh",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                                fontSize:12.sp,color:Colors.black))),
+
                             value: 1,
-                          ),
+                          ),PopupMenuItem(child:Text("Help",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                            fontSize:12.sp,color:Colors.black))))
                         ])
                   ],
-                  title: Text(
-                    (widget.state == 0)
-                        ? "Search Contact Name"
-                    // : (widget.state == 1)
-                    //     ? "Search Group Name"
-                        : (widget.state == 4)
-                        ? (memberList.isEmpty)
-                        ? "Search Contact Name"
-                        : "${memberList.length}/49 Selected"
-                        : (widget.state == 5)
-                        ? "${memberList.length +
-                        widget.participants!.length}/50 Selected"
-                        : (widget.state == 6)
-                        ? "Search Account"
-                        : (widget.state == 7)
-                        ? "Search Participant"
-                        : "",
-                    style: GoogleFonts.poppins(textStyle: textStyle(
-                        fontSize: 18, fontWeight: FontWeight.w500)),
+                  title: Column(crossAxisAlignment:CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (widget.state == 0)
+                            ? "Select contact"
+                        // : (widget.state == 1)
+                        //     ? "Search Group Name"
+                        //     : (widget.state == 4)
+                        //     ? (memberList.isEmpty)
+                        //     ? "Select contact"
+                        //     : "${memberList.length}/49 Selected"
+                        //     : (widget.state == 5)
+                        //     ? "${memberList.length +
+                        //     widget.participants!.length}/50 Selected"
+                        //     : (widget.state == 6)
+                        //     ? "Search Account"
+                        //     : (widget.state == 7)
+                        //     ? "Search Participant"
+                            : "",
+                        style: GoogleFonts.inter(textStyle:TextStyle(
+                            fontSize: 16.sp, fontWeight: FontWeight.w400,color:Colors.black)),
+                      ),
+                      SizedBox(height:2.h),
+                      Text('260 contacts',style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                      fontSize:12.sp,color:Colors.black)),)
+                    ],
                   ),
                 ),
                 body: NestedScrollView(

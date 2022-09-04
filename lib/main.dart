@@ -3,7 +3,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gatello/views/profile/allpops.dart';
+import 'package:gatello/views/profile/editprofile.dart';
+import 'package:gatello/views/profile/followers.dart';
+import 'package:gatello/views/profile/othermenu.dart';
+import 'package:gatello/views/profile/user_proflle.dart';
+import 'package:gatello/views/profile/profile_details.dart';
+import 'package:gatello/views/profile/privateaccount.dart';
 import 'package:gatello/views/profile/tabbarprofile.dart';
+
 import 'package:gatello/views/status/showpage.dart';
 import 'package:gatello/views/storage/storage_S1.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
@@ -19,6 +27,7 @@ import 'package:gatello/views/tabbar/pops/interactions.dart';
 import 'package:gatello/views/tabbar/pops/newpost.dart';
 import 'package:gatello/views/tabbar/pops/poplikes.dart';
 import 'package:gatello/views/tabbar/pops/pops.dart';
+
 import 'package:gatello/views/tabbar/pops/report.dart';
 import 'package:gatello/views/tabbar/pops/secondreport.dart';
 import 'package:gatello/views/tabbar/pops/share.dart';
@@ -114,36 +123,19 @@ class _MyAppState extends State<MyApp> {
             primarySwatch: Palette.light,
             accentColor: Color(accent),
             scaffoldBackgroundColor: Color(materialBlack),
-            buttonColor: Color(white),
-            bottomAppBarColor: Color(materialBlack),
+            buttonColor: Color(white),bottomAppBarColor: Color(materialBlack),
             bottomNavigationBarTheme: BottomNavigationBarThemeData(backgroundColor: Color(materialBlack)),
-            appBarTheme:AppBarTheme(
-                iconTheme: IconThemeData(color: Color(white)),
-                backgroundColor: Color(materialBlack),
+            appBarTheme:AppBarTheme(iconTheme: IconThemeData(color: Color(white)),backgroundColor: Color(materialBlack),
                 titleTextStyle: GoogleFonts.poppins(textStyle: textStyle(color: Color(white))))),
-        initial: widget.savedThemeMode ?? AdaptiveThemeMode.light,
-        builder: (theme, darkTheme) {
-          return ScreenUtilInit(
-            designSize: Size(360,800),
-            minTextAdapt: true,
-            splitScreenMode: true,
-            builder: (context, child) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                    appBarTheme: AppBarTheme(
-                        shadowColor: Colors.transparent,
-                        backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
-                home: FutureBuilder(
-                    future: getVisitedFlag(),
-                    builder: (context, snapshot) {
-                      themedata = AdaptiveTheme.of(context).modeChangeNotifier;
-                      return ValueListenableBuilder(
-                          valueListenable: themedata,
-                          builder: (context, value, _) {
-                            if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar():LoginScreen();
-
+        initial: widget.savedThemeMode ?? AdaptiveThemeMode.light,builder: (theme, darkTheme) {
+          return ScreenUtilInit(designSize: Size(360,800),
+            minTextAdapt:true, splitScreenMode:true, builder: (context,child) {
+              return MaterialApp(debugShowCheckedModeBanner:false,theme: ThemeData(appBarTheme: AppBarTheme(
+                        shadowColor:Colors.transparent,backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
+                home: FutureBuilder(future: getVisitedFlag(),builder: (context, snapshot) {themedata = AdaptiveTheme.of(context).modeChangeNotifier;
+                      return ValueListenableBuilder(valueListenable: themedata,
+                          builder: (context, value, _) {if (snapshot.connectionState == ConnectionState.done) {
+                              return (snapshot.data == true)?Tabbar():LoginScreen();
                             } else {
                               return lottieAnimation(loadingLottie);
                             }
@@ -164,4 +156,3 @@ class _MyAppState extends State<MyApp> {
     });
   }
 }
-
