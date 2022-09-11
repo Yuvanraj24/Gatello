@@ -22,8 +22,7 @@ import 'package:gatello/views/tabbar/pops/pops.dart';
 import 'package:gatello/views/tabbar/pops/report.dart';
 import 'package:gatello/views/tabbar/pops/secondreport.dart';
 import 'package:gatello/views/tabbar/pops/share.dart';
-// import 'package:gatello/reset_password.dart';
-// import 'package:gatello/select_contact.dart';
+
 import 'package:gatello/views/add_email.dart';
 import 'package:gatello/views/add_mob_no.dart';
 import 'package:gatello/views/add_profile_pic.dart';
