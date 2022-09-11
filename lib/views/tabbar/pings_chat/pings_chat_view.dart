@@ -37,123 +37,560 @@ import '../chats/personal_chat_screen/pesrsonal_chat.dart';
 
 
 class PingsChatView extends StatefulWidget {
+
   final Map<int, DocumentSnapshot<Map<String, dynamic>>>? messages;
+  final String? postDescription;
+  final String? postId;
+  final String? postTitle;
+  final String? postUrl;
   final int? state;
+  final String uid;
+  final int? storyContentType;
   PingsChatView({
-   this.state,
-   this.messages
-});
+    Key? key,
+    this.postTitle,
+    this.postId,
+    this.postDescription,
+    this.postUrl,
+    this.storyContentType,
+    this.state,
+    this.messages,
+    required this.uid,
+
+  });
 
   @override
-  State<PingsChatView> createState() => _PingsChatViewState();
+  State<PingsChatView> createState() =>
+      _PingsChatViewState();
 }
 
-class _PingsChatViewState extends State<PingsChatView> {
-  FirebaseFirestore instance = FirebaseFirestore.instance;
+class _PingsChatViewState extends State<PingsChatView> with SingleTickerProviderStateMixin {
+  int index = 0;
+  late TabController tabController;
+
+  final db=FirebaseFirestore.instance;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  String? uid;
+  // String? uid;
   String? puid;
   bool isChatting = false;
   List<PingsChatListModel> tileData = [];
   final _isSelected = Map();
   bool selects = false;
   bool change = false;
-
   bool longPressedFlag=false;
   late List? selectedItems=[];
   bool isFirstTime=true;
   bool isChatListLoaded=false;
 
-  int index = 1;
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState(){
+    tabController = TabController(vsync: this, length: 2);
+
     super.initState();
     // uid=_getUID() as String?;
-    print("Current UID:${uid}");
+
     tileData = pingsChatListData();
 
   }
-  void initSP()
-  async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    uid=prefs.getString("userid");
 
-    // isChatListLoaded=true;
+  // void initSP()
+  // async {
+  //   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  //   final SharedPreferences prefs = await _prefs;
+  //   uid=prefs.getString("userid");
+  //
+  //   // isChatListLoaded=true;
+  //
+  //   Fluttertoast.showToast(msg: prefs.getString("userid").toString(), toastLength: Toast.LENGTH_LONG,
+  //       timeInSecForIosWeb: 1);
+  // }
 
-    Fluttertoast.showToast(msg: prefs.getString("userid").toString(), toastLength: Toast.LENGTH_LONG,
-        timeInSecForIosWeb: 1);
-  }
-  final db=FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
+    tabController.addListener(() {
+      if (tabController.indexIsChanging) {
+        if (!mounted) return;
+        setState(() {
+          isChatting = false;
+          index = tabController.index;
+        });
+      }
+    });
+    List<Widget> tabs = [
+      Tab(
+        child: Text(
+          "Personal",
+          style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 14.sp, fontWeight: FontWeight.w500,color: Colors.black)),
+        ),
+      ),
+      Tab(
+        child: Text(
+          "Group",
+          style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 14.sp, fontWeight: FontWeight.w500,color: Colors.black)),
+        ),
+      )
+    ];
+    Widget getChatList(SizingInformation sizingInformation) {
+      return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: db.collection("personal-chat-room-detail").where("members.${widget.uid}.isBlocked", isNotEqualTo: true).snapshots(),
+          builder: (context, chatRoomDetailSnapshot) {
+            if (chatRoomDetailSnapshot.connectionState == ConnectionState.active &&
+                chatRoomDetailSnapshot.hasData &&
+                chatRoomDetailSnapshot.data != null &&
+                chatRoomDetailSnapshot.data!.docs.isNotEmpty) {
+              List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = chatRoomDetailSnapshot.data!.docs;
+              docs.sort((b, a) => getDateTimeSinceEpoch(datetime: a.data()["timestamp"]).compareTo(getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
 
-    // readChat();
-    // readData();
-    // getChatList();
-
-    return StreamBuilder(
-      stream: Stream.value(_getUID()),
-        builder: (context, snapshot)
-      {
-        if(snapshot.hasData)
-          {
-          return ResponsiveBuilder(builder: (context, sizingInformation) {
-              return Scaffold(
-              backgroundColor: Color.fromRGBO(26, 52, 130, 0.06),
-              // body: isChatListLoaded?getChatList():getChatList(),
-              body: Column(
-                children: [
-                  Expanded(child: getChatList()),
-
-                  Expanded(child: personalGroupList(sizingInformation))
-
-                ],
-              ),
-
-              floatingActionButton: FloatingActionButton(
-                  onPressed: () async {
-                    if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-                      return await scaffoldAlertDialogBox(
-                          context: context,
-                          page: SearchPage(
-                            state: 0,
-                            sizingInformation: sizingInformation,
-                          )).then((value) {
-                        if (value != null) {
-                          if (!mounted) return;
-                          setState(() {
-                            isChatting = true;
-                            puid = value;
+              return ListView.separated(
+                  itemCount: docs.length,
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: Divider(
+                      thickness: 1,
+                      height: 1,
+                      color: (themedata.value.index == 0) ? Color(lightGrey) : Color(lightBlack),
+                    ),
+                  ),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: (widget.state == null)
+                          ? () {
+                        if (!mounted) return;
+                        setState(() {
+                          isChatting = false;
+                          puid = docs[index].data()["members"]["${widget.uid}"]["peeruid"];
+                          isChatting = true;
+                        });
+                        if (sizingInformation.deviceScreenType != DeviceScreenType.desktop) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatPage(
+                                    state: 0,
+                                    uid: widget.uid,
+                                    puid: puid!,
+                                  ))).then((value) {
+                            if (value == true) {
+                              if (!mounted) return;
+                              setState(() {
+                                isChatting = false;
+                                puid = null;
+                              });
+                            }
                           });
                         }
-                      });
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SearchPage(
-                                state: 0,
-                                sizingInformation: sizingInformation,
-                              )));
-                    }
-                  },
-
-                  // onPressed: () {
-              //
-              // Navigator.push(context,
-              // MaterialPageRoute(builder: (context) => SelectContact()));
-              // },
-              backgroundColor: Color.fromRGBO(248, 206, 97, 1),
-              child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
-              );
+                      }
+                          : null,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                        child: buildItem(
+                          id: docs[index].data()["members"]["${widget.uid}"]["peeruid"],
+                          pic: docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["pic"],
+                          name: docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["name"],
+                          lastMessage: docs[index].data()["lastMessage"],
+                          timestamp: docs[index].data()["timestamp"],
+                          lastRead: docs[index].data()["members"]["${widget.uid}"]["lastRead"],
+                          peerLastRead: docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["lastRead"],
+                          unreadCount: docs[index].data()["members"]["${widget.uid}"]["unreadCount"],
+                          messageBy: docs[index].data()["messageBy"],
+                          document: docs[index],
+                        ),
+                      ),
+                    );
+                  });
+            } else {
+              return Container(
+                  child: Center(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [lottieAnimation(emptyChatLottie), Text("Your shelves are empty !\nAdd people to start the conversation")],
+                        ),
+                      )));
             }
-          );
-          }
-        return getChatList();
-      },);
+          });
+    }
+
+    Widget personalGroupList(SizingInformation sizingInformation) {
+      return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: db.collection("group-detail").where("members.${widget.uid}.claim", isNotEqualTo: "removed").snapshots(),
+          builder: (context, groupRoomDetailSnapshot) {
+            if (groupRoomDetailSnapshot.connectionState == ConnectionState.active &&
+                groupRoomDetailSnapshot.hasData &&
+                groupRoomDetailSnapshot.data != null &&
+                groupRoomDetailSnapshot.data!.docs.isNotEmpty) {
+              List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = groupRoomDetailSnapshot.data!.docs;
+              docs.sort((b, a) => getDateTimeSinceEpoch(datetime: a.data()["timestamp"]).compareTo(getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
+
+              return ListView.separated(
+                  itemCount: docs.length,
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: Divider(
+                      thickness: 1,
+                      height: 1,
+                      color: (themedata.value.index == 0) ? Color(lightGrey) : Color(lightBlack),
+                    ),
+                  ),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: (widget.state == null)
+                          ? () {
+                        isChatting = false;
+
+                        puid = docs[index].data()["gid"];
+                        isChatting = true;
+                        if (!mounted) return;
+                        setState(() {});
+                        if (sizingInformation.deviceScreenType != DeviceScreenType.desktop) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatPage(
+                                    state: 1,
+                                    uid: widget.uid,
+                                    puid: puid!,
+                                  ))).then((value) {
+                            if (value == true) {
+                              if (!mounted) return;
+                              setState(() {
+                                isChatting = false;
+                                puid = null;
+                              });
+                            }
+                          });
+                        }
+                      }
+                          : null,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                        child: buildItem(
+                          id: docs[index].data()["gid"],
+                          pic: docs[index].data()["pic"],
+                          name: docs[index].data()["title"],
+                          lastMessage: docs[index].data()["lastMessage"],
+                          timestamp: docs[index].data()["timestamp"],
+                          messageBy: docs[index].data()["messageBy"],
+                          members: docs[index].data()["members"],
+                          lastRead: docs[index].data()["members"][widget.uid]["lastRead"],
+                          unreadCount: docs[index].data()["members"][widget.uid]["unreadCount"],
+                          document: docs[index],
+                        ),
+                      ),
+                    );
+                  });
+            } else {
+              return Container(
+                  child: Center(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [lottieAnimation(emptyChatLottie), Text("Your shelves are empty ! \nCreate a group to start the conversation")],
+                        ),
+                      )));
+            }
+          });
+    }
+
+    return SafeArea(
+      child: ResponsiveBuilder(builder: (context, sizingInformation) {
+        return (sizingInformation.deviceScreenType == DeviceScreenType.desktop)
+            ? Scaffold(
+          body: DefaultTabController(
+            length: 2,
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    constraints: BoxConstraints(minHeight: kToolbarHeight, maxHeight: 175.0, maxWidth: 350.0),
+                    child: Material(
+                      color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+                      child: TabBar(
+                        controller: tabController,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        labelColor: (themedata.value.index == 0) ? Color(black) : Color(white),
+                        unselectedLabelColor: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
+                        indicatorColor: (themedata.value.index == 0) ? Color(black) : Color(white),
+                        tabs: tabs,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Scaffold(
+                            appBar: AppBar(
+                              centerTitle: false,
+                              automaticallyImplyLeading: false,
+                              leading: (widget.state == null)
+                                  ? null
+                                  : IconButton(
+                                icon: Icon(Icons.arrow_back),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              elevation: 0,
+                              title: (widget.state == null)
+                                  ? null
+                                  : Text((widget.state == 0) ? "Share Post" : "Forward Message",
+                                  style:
+                                  GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
+                              backgroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
+                              actions: (widget.state == null)
+                                  ? [
+                                (index == 1)
+                                    ? IconButton(
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    onPressed: () async {
+                                      if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                                        return await scaffoldAlertDialogBox(
+                                            context: context,
+                                            page: SearchPage(
+                                              state: 4,
+                                              sizingInformation: sizingInformation,
+                                            ));
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => SearchPage(
+                                                  sizingInformation: sizingInformation,
+                                                  state: 4,
+                                                )));
+                                      }
+                                    },
+                                    icon: Icon(Icons.add))
+                                    : Container(),
+                              ]
+                                  : null,
+                            ),
+                            floatingActionButton: (widget.state == null)
+                                ? (index == 0)
+                                ?   FloatingActionButton(
+                                onPressed: () async {
+                                  if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                                    return await scaffoldAlertDialogBox(
+                                        context: context,
+                                        page: SearchPage(
+                                          state: 0,
+                                          sizingInformation: sizingInformation,
+                                        )).then((value) {
+                                      if (value != null) {
+                                        if (!mounted) return;
+                                        setState(() {
+                                          isChatting = true;
+                                          puid = value;
+                                        });
+                                      }
+                                    });
+                                  } else {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => SearchPage(
+                                              state: 0,
+                                              sizingInformation: sizingInformation,
+                                            )));
+                                  }
+                                },
+                                // onPressed: () {
+                                //
+                                // Navigator.push(context,
+                                // MaterialPageRoute(builder: (context) => SelectContact()));
+                                // },
+                                backgroundColor: Color.fromRGBO(248, 206, 97, 1),
+                                child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg"))
+                                : null
+                                : null,
+                            body: TabBarView(controller: tabController, children: [getChatList( sizingInformation),personalGroupList(sizingInformation)]),
+                          ),
+                        ),
+                        VerticalDivider(
+                          color: Color(lightGrey),
+                          width: 1,
+                          thickness: 1,
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: (isChatting != false && puid != null)
+                              ? ChatPage(
+                            state: (index == 0) ? 0 : 1,
+                            uid: widget.uid,
+                            puid: puid!,
+                          )
+                              : Scaffold(
+                            backgroundColor: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+                            body: Center(
+                              child: Text("Select a chat to start chatting"),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+            : Scaffold(
+          appBar: (widget.state == null)
+              ? null
+              : AppBar(
+            centerTitle: false,
+            automaticallyImplyLeading: false,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: Text((widget.state == 0) ? "Share Post" : "Forward Messages",
+                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
+          ),
+          floatingActionButton: (widget.state == null)
+              ? (index == 0)
+              ? FloatingActionButton(
+            backgroundColor: Color.fromRGBO(248, 206, 97, 1),
+            child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg"),
+            onPressed: () async {
+              if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                return await scaffoldAlertDialogBox(
+                    context: context,
+                    page: SearchPage(
+                      state: 0,
+                      sizingInformation: sizingInformation,
+                    )).then((value) {
+                  if (value != null) {
+                    if (!mounted) return;
+                    setState(() {
+                      isChatting = true;
+                      puid = value;
+                    });
+                  }
+                });
+              } else {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SearchPage(
+                          state: 0,
+                          sizingInformation: sizingInformation,
+                        )));
+              }
+            },
+          )
+              : FloatingActionButton(
+              onPressed: () async {
+                if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                  return await scaffoldAlertDialogBox(
+                      context: context,
+                      page: SearchPage(
+                        state: 4,
+                        sizingInformation: sizingInformation,
+                      ));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SearchPage(
+                            sizingInformation: sizingInformation,
+                            state: 4,
+                          )));
+                }
+              },
+              backgroundColor: Color.fromRGBO(248, 206, 97, 1),
+              child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg"))
+              : null,
+          body: DefaultTabController(
+            length: 2,
+            child: Column(
+              children: [
+                Container(
+                  constraints: BoxConstraints(maxHeight: 150.0),
+                  child: Material(
+                    color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+                    child: TabBar(
+                      controller: tabController,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicatorColor: (themedata.value.index == 0) ? Color(black) : Color(white),
+                      tabs: tabs,
+                    ),
+                  ),
+                ),
+                Expanded(child: TabBarView(controller: tabController, children: [getChatList( sizingInformation), personalGroupList(sizingInformation)])),
+              ],
+            ),
+          ),
+        );
+      }),
+    );
+    //  return ResponsiveBuilder(builder: (context, sizingInformation) {
+    // return Scaffold(body: SingleChildScrollView(
+    //   child: Column(
+    //     children: [
+    //       getChatList(),
+    //       personalGroupList(sizingInformation),
+    //     ],
+    //   ),
+    // ),
+    //   floatingActionButton: FloatingActionButton(
+    //       onPressed: () async {
+    //         if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+    //           return await scaffoldAlertDialogBox(
+    //               context: context,
+    //               page: SearchPage(
+    //                 state: 0,
+    //                 sizingInformation: sizingInformation,
+    //               )).then((value) {
+    //             if (value != null) {
+    //               if (!mounted) return;
+    //               setState(() {
+    //                 isChatting = true;
+    //                 puid = value;
+    //               });
+    //             }
+    //           });
+    //         } else {
+    //           Navigator.push(
+    //               context,
+    //               MaterialPageRoute(
+    //                   builder: (context) => SearchPage(
+    //                     state: 0,
+    //                     sizingInformation: sizingInformation,
+    //                   )));
+    //         }
+    //       },
+    //
+    //       // onPressed: () {
+    //       //
+    //       // Navigator.push(context,
+    //       // MaterialPageRoute(builder: (context) => SelectContact()));
+    //       // },
+    //       backgroundColor: Color.fromRGBO(248, 206, 97, 1),
+    //       child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
+    // );
+    //  }
+    //  );
+
   }
 
 
@@ -165,7 +602,7 @@ class _PingsChatViewState extends State<PingsChatView> {
 
     print("Reading");
     // await db.collection("personal-chat-room-detail").get().then((event) {
-    await db.collection("personal-chat-room-detail").where("members.$uid.isblocked").get().then((event) {
+    await db.collection("personal-chat-room-detail").where("members.${widget.uid}.isblocked").get().then((event) {
 
       for (var doc in event.docs) {
         print("${doc.id} => ${doc.data()}");
@@ -177,186 +614,8 @@ class _PingsChatViewState extends State<PingsChatView> {
 
 
 
-  Widget personalGroupList(SizingInformation sizingInformation) {
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: instance.collection("group-detail").where("members.$uid.claim", isNotEqualTo: "removed").snapshots(),
-        builder: (context, groupRoomDetailSnapshot) {
-          if (groupRoomDetailSnapshot.connectionState == ConnectionState.active &&
-              groupRoomDetailSnapshot.hasData &&
-              groupRoomDetailSnapshot.data != null &&
-              groupRoomDetailSnapshot.data!.docs.isNotEmpty) {
-            List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = groupRoomDetailSnapshot.data!.docs;
-            docs.sort((b, a) => getDateTimeSinceEpoch(datetime: a.data()["timestamp"]).compareTo(getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
 
-            return ListView.separated(
-                itemCount: docs.length,
-                shrinkWrap: true,
-                separatorBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: Divider(
-                    thickness: 1,
-                    height: 1,
-                    color: (themedata.value.index == 0) ? Color(lightGrey) : Color(lightBlack),
-                  ),
-                ),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: (widget.state == null)
-                        ? () {
-                      isChatting = false;
 
-                      puid = docs[index].data()["gid"];
-                      isChatting = true;
-                      if (!mounted) return;
-                      setState(() {});
-                      if (sizingInformation.deviceScreenType != DeviceScreenType.desktop) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChatPage(
-                                  state: 1,
-                                  uid: uid.toString(),
-                                  puid: puid!,
-                                ))).then((value) {
-                          if (value == true) {
-                            if (!mounted) return;
-                            setState(() {
-                              isChatting = false;
-                              puid = null;
-                            });
-                          }
-                        });
-                      }
-                    }
-                        : null,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                      child: buildItem(
-                        id: docs[index].data()["gid"],
-                        pic: docs[index].data()["pic"],
-                        name: docs[index].data()["title"],
-                        lastMessage: docs[index].data()["lastMessage"],
-                        timestamp: docs[index].data()["timestamp"],
-                        messageBy: docs[index].data()["messageBy"],
-                        members: docs[index].data()["members"],
-                        lastRead: docs[index].data()["members"][uid]["lastRead"],
-                        unreadCount: docs[index].data()["members"][uid]["unreadCount"],
-                        document: docs[index],
-                      ),
-                    ),
-                  );
-                });
-          } else {
-            return Container(
-                child: Center(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [lottieAnimation(emptyChatLottie), Text("Your shelves are empty ! \nCreate a group to start the conversation")],
-                      ),
-                    )));
-          }
-        });
-  }
-  // Widget personalGroupList(SizingInformation sizingInformation) {
-  //   return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-  //       stream: db
-  //           .collection("group-detail")
-  //           .where("members.$uid.claim", isNotEqualTo: "removed")
-  //           .snapshots(),
-  //       builder: (context, groupRoomDetailSnapshot) {
-  //         if (groupRoomDetailSnapshot.connectionState ==
-  //             ConnectionState.active &&
-  //             groupRoomDetailSnapshot.hasData &&
-  //             groupRoomDetailSnapshot.data != null &&
-  //             groupRoomDetailSnapshot.data!.docs.isNotEmpty) {
-  //           List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
-  //               groupRoomDetailSnapshot.data!.docs;
-  //           docs.sort((b, a) => getDateTimeSinceEpoch(
-  //               datetime: a.data()["timestamp"])
-  //               .compareTo(
-  //               getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
-  //
-  //           return ListView.separated(
-  //               itemCount: docs.length,
-  //               shrinkWrap: true,
-  //               separatorBuilder: (context, index) => Padding(
-  //                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-  //                 child: Divider(
-  //                   thickness: 1,
-  //                   height: 1,
-  //                   color: (themedata.value.index == 0)
-  //                       ? Color(lightGrey)
-  //                       : Color(lightBlack),
-  //                 ),
-  //               ),
-  //               itemBuilder: (context, index) {
-  //                 return GestureDetector(
-  //                   behavior: HitTestBehavior.opaque,
-  //                   onTap: (widget.state == null)
-  //                       ? () {
-  //                     isChatting = false;
-  //
-  //                     puid = docs[index].data()["gid"];
-  //                     isChatting = true;
-  //                     if (!mounted) return;
-  //                     setState(() {});
-  //                     if (sizingInformation.deviceScreenType !=
-  //                         DeviceScreenType.desktop) {
-  //                       Navigator.push(
-  //                           context,
-  //                           MaterialPageRoute(
-  //                               builder: (context) => ChatPage(
-  //                                 state: 1,
-  //                                 uid: _getUID().toString(),
-  //                                 puid: puid.toString(),
-  //                               ))).then((value) {
-  //                         if (value == true) {
-  //                           if (!mounted) return;
-  //                           setState(() {
-  //                             isChatting = false;
-  //                             puid = null;
-  //                           });
-  //                         }
-  //                       });
-  //                     }
-  //                   }
-  //                       : null,
-  //                   child: Padding(
-  //                     padding: const EdgeInsets.only(
-  //                         left: 20, right: 20, top: 10, bottom: 10),
-  //                     child: buildItem(
-  //                       id: docs[index].data()["gid"],
-  //                       pic: docs[index].data()["pic"],
-  //                       name: docs[index].data()["title"],
-  //                       lastMessage: docs[index].data()["lastMessage"],
-  //                       timestamp: docs[index].data()["timestamp"],
-  //                       messageBy: docs[index].data()["messageBy"],
-  //                       members: docs[index].data()["members"],
-  //                       lastRead: docs[index].data()["members"][uid]
-  //                       ["lastRead"],
-  //                       unreadCount: docs[index].data()["members"][uid]
-  //                       ["unreadCount"],
-  //                       document: docs[index],
-  //                     ),
-  //                   ),
-  //                 );
-  //               });
-  //         } else {
-  //           return Container(
-  //               child: Center(
-  //                   child: SingleChildScrollView(
-  //                     child: Column(
-  //                       children: [
-  //                         lottieAnimation(emptyChatLottie),
-  //                         Text(
-  //                             "Your shelves are empty ! \nCreate a group to start the conversation")
-  //                       ],
-  //                     ),
-  //                   )));
-  //         }
-  //       });
-  // }
 
   Widget buildItem({
     required String? pic,
@@ -372,9 +631,8 @@ class _PingsChatViewState extends State<PingsChatView> {
     required QueryDocumentSnapshot<Map<String, dynamic>> document,
   }) {
     bool isRead = false;
-    if (members != null && timestamp != null) {
-      isRead =
-          groupReadReceipt(members: members, timestamp: timestamp, uid: uid.toString());
+    if (members != null && timestamp != null && index == 1) {
+      isRead = groupReadReceipt(members: members, timestamp: timestamp, uid: widget.uid);
     }
     return Container(
       child: Row(
@@ -391,25 +649,17 @@ class _PingsChatViewState extends State<PingsChatView> {
                           ? CachedNetworkImage(
                         fit: BoxFit.cover,
                         fadeInDuration: const Duration(milliseconds: 400),
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) => Center(
+                        progressIndicatorBuilder: (context, url, downloadProgress) => Center(
                           child: Container(
                             width: 20.0,
                             height: 20.0,
-                            child: CircularProgressIndicator(
-                                value: downloadProgress.progress),
+                            child: CircularProgressIndicator(value: downloadProgress.progress),
                           ),
                         ),
                         imageUrl: pic,
-                        errorWidget: (context, url, error) => Image.asset(
-                            "assets/noProfile.jpg",
-                            fit: BoxFit.cover),
+                        errorWidget: (context, url, error) => Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
                       )
-                          : Image.asset(
-                         
-                              
-                               "assets/noGroupProfile.jpg",
-                          fit: BoxFit.cover),
+                          : Image.asset((index == 0) ? "assets/noProfile.jpg" : "assets/noGroupProfile.jpg", fit: BoxFit.cover),
                     )),
                 Flexible(
                   child: Padding(
@@ -419,9 +669,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                       children: [
                         Text(
                           name,
-                          style: GoogleFonts.poppins(
-                              textStyle: textStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w500)),
+                          style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           softWrap: true,
@@ -430,12 +678,10 @@ class _PingsChatViewState extends State<PingsChatView> {
                             padding: const EdgeInsets.only(top: 3),
                             child: (lastRead == null)
                                 ? Text(
-                              
-                                   "You are added to $name group.Either respond back or block if it is a spam.",
-                              style: GoogleFonts.poppins(
-                                  textStyle: textStyle(
-                                      fontSize: 12,
-                                      color: Color(accent))),
+                              (index == 0)
+                                  ? "$name is trying to text you. Either respond back or block if the user spams around."
+                                  : "You are added to $name group.Either respond back or block if it is a spam.",
+                              style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 12, color: Color(accent))),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               softWrap: true,
@@ -443,37 +689,21 @@ class _PingsChatViewState extends State<PingsChatView> {
                                 : Row(
                               children: [
                                 (index == 0)
-                                    ? (timestamp != null &&
-                                    peerLastRead != null)
-                                    ? (messageBy == uid)
-                                    ? (getDateTimeSinceEpoch(
-                                    datetime:
-                                    peerLastRead)
-                                    .difference(
-                                    getDateTimeSinceEpoch(
-                                        datetime:
-                                        timestamp))
-                                    .inMicroseconds >
-                                    0)
+                                    ? (timestamp != null && peerLastRead != null)
+                                    ? (messageBy == widget.uid)
+                                    ? (getDateTimeSinceEpoch(datetime: peerLastRead).difference(getDateTimeSinceEpoch(datetime: timestamp)).inMicroseconds > 0)
                                     ? Icon(
                                   Icons.done_all,
                                   color: Color(accent),
                                 )
                                     : Icon(
                                   Icons.done_all,
-                                  color: (themedata
-                                      .value
-                                      .index ==
-                                      0)
-                                      ? Color(grey)
-                                      : Color(
-                                      lightGrey),
+                                  color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
                                 )
                                     : Container()
                                     : Container()
-                                    : (timestamp != null &&
-                                    members != null)
-                                    ? (messageBy == uid)
+                                    : (timestamp != null && members != null)
+                                    ? (messageBy == widget.uid)
                                     ? (isRead)
                                     ? Icon(
                                   Icons.done_all,
@@ -481,33 +711,22 @@ class _PingsChatViewState extends State<PingsChatView> {
                                 )
                                     : Icon(
                                   Icons.done_all,
-                                  color: (themedata
-                                      .value
-                                      .index ==
-                                      0)
-                                      ? Color(grey)
-                                      : Color(
-                                      lightGrey),
+                                  color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
                                 )
                                     : Container()
                                     : Container(),
                                 Flexible(
                                   child: (lastMessage != null)
                                       ? Text(
-                                    (document.data()["delete"] ==
-                                        true)
-                                        ? (messageBy == uid)
+                                    (document.data()["delete"] == true)
+                                        ? (messageBy == widget.uid)
                                         ? "∅ You have deleted this message"
                                         : "∅ This message have been deleted"
                                         : lastMessage,
                                     style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         textStyle: textStyle(
-                                          color: (themedata.value
-                                              .index ==
-                                              0)
-                                              ? Color(grey)
-                                              : Color(lightGrey),
+                                          color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
                                         )),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
@@ -517,10 +736,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                                     (index == 0)
                                         ? "$name is trying to text you. Either respond back or block if the user spams around."
                                         : "You are added to $name group.Either respond back or block if it is a spam.",
-                                    style: GoogleFonts.poppins(
-                                        textStyle: textStyle(
-                                            fontSize: 12,
-                                            color: Color(accent))),
+                                    style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 12, color: Color(accent))),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     softWrap: true,
@@ -543,11 +759,8 @@ class _PingsChatViewState extends State<PingsChatView> {
               children: [
                 (timestamp != null)
                     ? Text(
-                  getDateTimeChat(
-                      datetime: getDateTimeSinceEpoch(
-                          datetime: timestamp)),
-                  style: GoogleFonts.poppins(
-                      textStyle: textStyle(fontSize: 10)),
+                  getDateTimeChat(datetime: getDateTimeSinceEpoch(datetime: timestamp)),
+                  style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 10)),
                 )
                     : Container(),
                 Padding(
@@ -558,12 +771,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                     backgroundColor: Color(accent),
                     label: Text(
                       unreadCount.toString(),
-                      style: GoogleFonts.poppins(
-                          textStyle: textStyle(
-                              fontSize: 10,
-                              color: (themedata.value.index == 0)
-                                  ? Color(white)
-                                  : Color(materialBlack))),
+                      style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 10, color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack))),
                     ),
                   ),
                 ),
@@ -582,47 +790,38 @@ class _PingsChatViewState extends State<PingsChatView> {
                   // } else {
                   //   await writeGroupShareMessage(type: 5, groupName: name, groupPic: pic, members: members!, uid: uid!, puid: id);
                   // }
-                  // String storyUrl =
-                  //     postDetailsUrl + "?post_id=" + widget.postId!;
-                  // ShareableLink _shareableLink = ShareableLink(
-                  //     widget.postTitle!,
-                  //     widget.postDescription!,
-                  //     storyUrl,
-                  //     (widget.postUrl!.contains("mp4") ||
-                  //         widget.postUrl!.contains("mpeg4"))
-                  //         ? null
-                  //         : widget.postUrl);
-                  // Uri _link = await _shareableLink
-                  //     .createDynamicLink(short: false);
-                  // if (id.length == 28) {
-                  //   await writeUserMessage(
-                  //       type: 5,
-                  //       peerName: name,
-                  //       peerPic: pic,
-                  //       uid: uid!,
-                  //       puid: id,
-                  //       state: 0,
-                  //       forwardCount: 0,
-                  //       storyContentType: widget.storyContentType,
-                  //       storyContentUrl: widget.postUrl,
-                  //       storyDescription: widget.postDescription,
-                  //       storyUrl: _link.toString());
-                  // } 
-                  // else {
-                  //   await writeGroupMessage(
-                  //       type: 5,
-                  //       groupName: name,
-                  //       groupPic: pic,
-                  //       members: members!,
-                  //       uid: uid!,
-                  //       puid: id,
-                  //       forwardCount: 0,
-                  //       state: 1,
-                  //       storyContentType: widget.storyContentType,
-                  //       storyContentUrl: widget.postUrl,
-                  //       storyDescription: widget.postDescription,
-                  //       storyUrl: _link.toString());
-                  // }
+                  String storyUrl = postDetailsUrl + "?post_id=" + widget.postId!;
+                  ShareableLink _shareableLink = ShareableLink(widget.postTitle!, widget.postDescription!, storyUrl,
+                      (widget.postUrl!.contains("mp4") || widget.postUrl!.contains("mpeg4")) ? null : widget.postUrl);
+                  Uri _link = await _shareableLink.createDynamicLink(short: false);
+                  if (id.length == 28) {
+                    await writeUserMessage(
+                        type: 5,
+                        peerName: name,
+                        peerPic: pic,
+                        uid: widget.uid,
+                        puid: id,
+                        state: 0,
+                        forwardCount: 0,
+                        storyContentType: widget.storyContentType,
+                        storyContentUrl: widget.postUrl,
+                        storyDescription: widget.postDescription,
+                        storyUrl: _link.toString());
+                  } else {
+                    await writeGroupMessage(
+                        type: 5,
+                        groupName: name,
+                        groupPic: pic,
+                        members: members!,
+                        uid: widget.uid,
+                        puid: id,
+                        forwardCount: 0,
+                        state: 1,
+                        storyContentType: widget.storyContentType,
+                        storyContentUrl: widget.postUrl,
+                        storyDescription: widget.postDescription,
+                        storyUrl: _link.toString());
+                  }
                 }
                     : () async {
                   widget.messages!.forEach((key, value) async {
@@ -657,110 +856,74 @@ class _PingsChatViewState extends State<PingsChatView> {
                       }
                     }
 
-                    Uint8List? file = await downloadToBytes(getUrl(
-                        dataTypeMap
-                            .inverse[value.data()!["type"]]!));
+                    Uint8List? file = await downloadToBytes(getUrl(dataTypeMap.inverse[value.data()!["type"]]!));
 
                     if (id.length == 28) {
                       await writeUserMessage(
-                        type: dataTypeMap
-                            .inverse[value.data()!["type"]]!,
+                        type: dataTypeMap.inverse[value.data()!["type"]]!,
                         peerName: name,
                         peerPic: pic,
-                        uid: uid.toString(),
+                        uid: widget.uid,
                         puid: id,
                         state: 0,
                         forwardCount: value.data()!["forwardCount"],
-                        message: getMessage(dataTypeMap
-                            .inverse[value.data()!["type"]]!),
+                        message: getMessage(dataTypeMap.inverse[value.data()!["type"]]!),
                         file: file,
                         // replyMap: (value.data()!["reply"] != null) ? Map.from(value.data()!["reply"]) : null,
                         contentType: value.data()!["contentType"],
-                        storyContentType: (dataTypeMap.inverse[
-                        value.data()!["type"]] ==
-                            5)
-                            ? (value.data()!["data"]["image"] !=
-                            null)
+                        storyContentType: (dataTypeMap.inverse[value.data()!["type"]] == 5)
+                            ? (value.data()!["data"]["image"] != null)
                             ? 0
                             : 1
                             : null,
-                        storyContentUrl: (dataTypeMap.inverse[
-                        value.data()!["type"]] ==
-                            5)
-                            ? (value.data()!["data"]["image"] !=
-                            null)
+                        storyContentUrl: (dataTypeMap.inverse[value.data()!["type"]] == 5)
+                            ? (value.data()!["data"]["image"] != null)
                             ? value.data()!["data"]["image"]
                             : value.data()!["data"]["video"]
                             : null,
-                        storyDescription: (dataTypeMap.inverse[
-                        value.data()!["type"]] ==
-                            5)
-                            ? value.data()!["data"]["text"]
-                            : null,
-                        storyUrl: (dataTypeMap.inverse[
-                        value.data()!["type"]] ==
-                            5)
-                            ? value.data()!["data"]["story"]
-                            : null,
+                        storyDescription: (dataTypeMap.inverse[value.data()!["type"]] == 5) ? value.data()!["data"]["text"] : null,
+                        storyUrl: (dataTypeMap.inverse[value.data()!["type"]] == 5) ? value.data()!["data"]["story"] : null,
                       );
                     } else {
                       await writeGroupMessage(
-                        type: dataTypeMap
-                            .inverse[value.data()!["type"]]!,
+                        type: dataTypeMap.inverse[value.data()!["type"]]!,
                         groupName: name,
                         groupPic: pic,
                         members: members!,
-                        uid: uid.toString(),
+                        uid: widget.uid,
                         puid: id,
                         state: 1,
                         // replyMap: (value.data()!["reply"]!=null)?Map.from(value.data()!["reply"]):null,
                         forwardCount: value.data()!["forwardCount"],
-                        message: getMessage(dataTypeMap
-                            .inverse[value.data()!["type"]]!),
+                        message: getMessage(dataTypeMap.inverse[value.data()!["type"]]!),
                         file: file,
                         contentType: value.data()!["contentType"],
-                        storyContentType: (dataTypeMap.inverse[
-                        value.data()!["type"]] ==
-                            5)
-                            ? (value.data()!["data"]["image"] !=
-                            null)
+                        storyContentType: (dataTypeMap.inverse[value.data()!["type"]] == 5)
+                            ? (value.data()!["data"]["image"] != null)
                             ? 0
                             : 1
                             : null,
-                        storyContentUrl: (dataTypeMap.inverse[
-                        value.data()!["type"]] ==
-                            5)
-                            ? (value.data()!["data"]["image"] !=
-                            null)
+                        storyContentUrl: (dataTypeMap.inverse[value.data()!["type"]] == 5)
+                            ? (value.data()!["data"]["image"] != null)
                             ? value.data()!["data"]["image"]
                             : value.data()!["data"]["video"]
                             : null,
-                        storyDescription: (dataTypeMap.inverse[
-                        value.data()!["type"]] ==
-                            5)
-                            ? value.data()!["data"]["text"]
-                            : null,
-                        storyUrl: (dataTypeMap.inverse[
-                        value.data()!["type"]] ==
-                            5)
-                            ? value.data()!["data"]["story"]
-                            : null,
+                        storyDescription: (dataTypeMap.inverse[value.data()!["type"]] == 5) ? value.data()!["data"]["text"] : null,
+                        storyUrl: (dataTypeMap.inverse[value.data()!["type"]] == 5) ? value.data()!["data"]["story"] : null,
                       );
                     }
                   });
                 },
                 child: Text(
                   "Send",
-                  style: GoogleFonts.poppins(
-                      textStyle: textStyle(fontSize: 10)),
+                  style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 10)),
                 )),
           )
         ],
       ),
     );
   }
-  
-  
+
   //-----------------------------------------
   Future writeUserMessage({
     required int type,
@@ -1042,278 +1205,7 @@ class _PingsChatViewState extends State<PingsChatView> {
     }
   }
 
-  Widget getChatList()
-  {
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>
-      (
 
-        stream: db.collection("personal-chat-room-detail").where("members.$uid.isBlocked", isNotEqualTo: true).snapshots(),
-        builder: (context,chatRoomdetailsnap) {
-          if (chatRoomdetailsnap.connectionState == ConnectionState.active &&
-              chatRoomdetailsnap.hasData &&
-              chatRoomdetailsnap.data != null &&
-              chatRoomdetailsnap.data!.docs.isNotEmpty) {
-            List<QueryDocumentSnapshot<
-                Map<String, dynamic>>> docs = chatRoomdetailsnap.data!.docs;
-            docs.sort((b, a) =>
-                getDateTimeSinceEpoch(datetime: a.data()["timestamp"])
-                    .compareTo(
-                    getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
-            // print(docs.toString());
-            // print("LENGTH:${docs.length}");
-            return ListView.builder(
-              itemCount: docs.length,
-              itemBuilder: (context, index) {
-                if (!_isSelected.containsKey(index)) // important
-                  _isSelected[index] = false;
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  child: ListTile(
-                    selected: _isSelected[index],
-                    tileColor: Colors.white,
-                    selectedTileColor: Color.fromRGBO(248, 206, 97, 0.31),
-                    // onLongPress: () {
-                    //   setState((){
-                    //     _isSelected[index] = !_isSelected[index];
-                    //     print("OP: ${_isSelected[index]}=!${_isSelected} ");
-                    //     selects = true;
-                    //     print("Long Press");
-                    //   });
-                    //
-                    // }
-                      onLongPress: () {
-                        setState((){
-                          _isSelected[index] = !_isSelected[index];
-
-                          if(isFirstTime) {
-                            if (selectedItems!.isEmpty) {
-                              print("First Time Long Pressing...x");
-                              selectedItems!.add(index);
-                              isFirstTime=false;
-                              longPressedFlag=true;
-                            }
-                          }
-                          else {
-                            if (selectedItems!.contains(index)) {
-                              print("EXISTS So removing...");
-                              selectedItems!.remove(index);
-                              print("Selected$index");
-                              print("Selected items$selectedItems");
-                            }
-                            else{
-                              selectedItems!.add(index);
-                              print("Selected$index");
-                              print("Selected items$selectedItems");
-                              print("Long Press Triggers");
-                              longPressedFlag=true;
-                            }
-
-                            if(selectedItems!.isEmpty && isFirstTime==false)
-                              {
-                                print("Deselect all");
-                                isFirstTime=true;
-                                longPressedFlag=false;
-                              }
-
-                          }
-
-                        });
-                      }
-                      ,
-
-                    onTap: ()
-                    {
-                      print("Long Press Flag:${longPressedFlag}");
-                      if(longPressedFlag)
-                        {
-                        setState(() {
-                          _isSelected[index] = !_isSelected[index];
-                          if(selectedItems!.isEmpty)
-                            {
-                              longPressedFlag=false;
-                            }
-                          else{
-                            print("Tapping...x");
-
-                            if (selectedItems!.contains(index)) {
-                              print("EXISTS So removing...");
-                              selectedItems!.remove(index);
-                              print("Selected$index");
-                              print("Selected items$selectedItems");
-                            }
-                            else
-                              {
-                                selectedItems!.add(index);
-                                print("Selected$index");
-                                print("Selected items$selectedItems");
-                                print("Tap Triggers");
-                                longPressedFlag=true;
-                              }
-                          }
-                        });
-
-                        if(selectedItems!.isEmpty && isFirstTime==false)
-                        {
-                          print("Deselect all");
-                          isFirstTime=true;
-                          longPressedFlag=false;
-                        }
-                        }
-                      else
-                        {
-                          print("Page Open");
-                          Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-
-                                            builder: (context) =>
-                                                ChatPage(state: 0,
-                                                    uid: uid.toString(),
-                                                    puid: docs[index]
-                                                        .data()["members"]["$uid"]["peeruid"])
-                                        ));
-                         }
-
-                      // Navigator.push(
-                      //               context,
-                      //               MaterialPageRoute(
-                      //
-                      //                   builder: (context) =>
-                      //                       PersonalChat(state: 0,
-                      //                           uid: uid!,
-                      //                           puid: docs[index]
-                      //                               .data()["members"]["$uid"]["peeruid"])));
-                    },
-
-                    // onTap: () {
-                    //
-                    //   print("Array LENGTH: ${_isSelected.length}");
-                    //   if(_isSelected.length==0)
-                    //     {
-                    //       selects=false;
-                    //     }
-                    //   else {
-                    //     if (selects == true) {
-                    //       setState(() {
-                    //         _isSelected[index] = !_isSelected[index];
-                    //         print("Tile Selected1");
-                    //
-                    //         //_isSelected.removeWhere((key, value) => true);
-                    //       });
-                    //     }
-                    //     else {
-                    //       Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //
-                    //               builder: (context) =>
-                    //                   PersonalChat(state: 0,
-                    //                       uid: uid!,
-                    //                       puid: docs[index]
-                    //                           .data()["members"]["$uid"]["peeruid"])));
-                    //     }
-                    //   }
-                    //   },
-
-                    contentPadding: EdgeInsets.only(
-                        left: 10, right: 10, top: 4, bottom: 4),
-                    //  contentPadding: EdgeInsets.all(10),
-                    leading: CircleAvatar(
-                      radius: 25.5.h,
-                      backgroundImage: NetworkImage(tileData[index].dp),
-                    ),
-
-
-                    title: Text(
-                      docs[index].data()["members"]["${docs[index].data()["members"]["$uid"]["peeruid"]}"]["name"],
-                      style: GoogleFonts.inter(
-                          textStyle: TextStyle(
-                              fontSize: 16.sp,
-                              color: Color.fromRGBO(0, 0, 0, 1),
-                              fontWeight: FontWeight.w700)),
-                    ),
-                    subtitle: Text(docs[index].data()["lastMessage"],
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 14.sp,
-                                color: Color.fromRGBO(12, 16, 29, 0.6),
-                                fontWeight: FontWeight.w400))),
-                    trailing: Padding(
-                      padding: EdgeInsets.only(top: 8),
-                      child: Column(
-                        children: [
-                          Text(readTimestamp(int.parse(docs[index].data()["timestamp"])),
-                              style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 10.sp,
-                                    color: Color.fromRGBO(0, 0, 0, 1),
-                                    fontWeight: FontWeight.w400),
-                              )),
-                          SizedBox(height: 3.h),
-
-                         // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
-                         (docs[index].data()["members"]["$uid"]["unreadCount"]==0)?
-                             SizedBox():
-                         Container(
-                             decoration: BoxDecoration(
-                               //borderRadius: BorderRadius.circular(15),
-                                 border: Border.all(
-                                   color:
-                                   Color.fromRGBO(255, 202, 40, 1),
-                                 ),
-                                 shape: BoxShape.circle,
-                                 color: Color.fromRGBO(255, 202, 40, 1)),
-                             width: 22.w,
-                             height: 22.h,
-                             child: Center(
-                               child:
-                               Text(
-                                   "${docs[index].data()["members"]["$uid"]
-                                   ["unreadCount"]}",
-                                    style: GoogleFonts.inter(
-                                     textStyle: TextStyle(
-                                         fontSize: 11.sp,
-                                         color:
-                                         Color.fromRGBO(0, 0, 0, 1),
-                                         fontWeight: FontWeight.w400),
-                                   )),
-                             )),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-          else {
-            return Container(
-                padding: EdgeInsets.only(top: 110),
-                child: Center(
-                  child: Column(
-                    children: [
-                      Image.asset(
-                          "assets/tabbar_icons/tab_view_main/chats_image/emptyChat.png"),
-                      Text("No Conversation",
-                          style: GoogleFonts.raleway(
-                              textStyle: TextStyle(
-                                  color: Color.fromRGBO(0, 0, 0, 1),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700))),
-                      Text(
-                        "You don't made any conversation yet",
-                        style: GoogleFonts.raleway(
-                            color: Color.fromRGBO(122, 122, 122, 1),
-                            fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ));
-          }
-        }
-            );
-  }
 
 
 
@@ -1324,7 +1216,7 @@ class _PingsChatViewState extends State<PingsChatView> {
 
 
     await db.collection("personal-chat-room-details").get().then((event) {
-    // await db.collection("personal-chat-room-detail").where("members.$uid.isblocked").get().then((event) {
+      // await db.collection("personal-chat-room-detail").where("members.$uid.isblocked").get().then((event) {
       for (var doc in event.docs) {
         print("${doc.id} => ${doc.data()}");
       }
@@ -1359,10 +1251,6 @@ class _PingsChatViewState extends State<PingsChatView> {
     return time;
   }
 
-  Future<void> _getUID() async{
-    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
-    uid=sharedPrefs.getString("userid");
-  }
 }
 
 
