@@ -1492,7 +1492,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                               (userSnapshot.data!.data()!["onlineStatus"] == true &&
                                                                   peerSnapshot.data!.data()!["onlineStatus"] == true)
                                                                   ? (peerSnapshot.data!.data()!["status"] == "online")
-                                                                  ? "Online"
+                                                                  ? "Online":
+                                                                (peerSnapshot.data!.data()!["status"] == "typing")?
+                                                              "Typing 1..."
                                                                   : (userSnapshot.data!.data()!["lastseenStatus"] == false &&
                                                                   peerSnapshot.data!.data()!["lastseenStatus"] == false)
                                                                   ? "Last seen ${getDateTimeInChat(datetime:
@@ -4000,7 +4002,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                           ? (peerSnapshot.data!.data()!["status"] == "online")
                                                           ? "Online":
                                                           (peerSnapshot.data!.data()!["status"] == "typing")?
-                                                            "Typing..."
+                                                            "Typing 2..."
 
 
                                                           : (userSnapshot.data!.data()!["lastseenStatus"] == true && peerSnapshot.data!.data()!["lastseenStatus"] == true)
@@ -4037,7 +4039,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                     child: Text(
                                                       (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
                                                           ? (peerSnapshot.data!.data()!["status"] == "online")
-                                                          ? "Online"
+                                                          ? "Online":
+                                                        (peerSnapshot.data!.data()!["status"] == "typing")?
+                                                        "Typing 3..."
                                                           : (userSnapshot.data!.data()!["lastseenStatus"] == true && peerSnapshot.data!.data()!["lastseenStatus"] == true)
                                                           ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
                                                           : "Tap here for user info"
