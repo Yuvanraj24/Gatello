@@ -102,6 +102,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   bool _isRequesting = false;
   bool _isFinish = false;
   List<DocumentSnapshot<Map<String, dynamic>>> chatList = [];
+
   StreamController<List<DocumentSnapshot<Map<String, dynamic>>>> _streamController = StreamController<List<DocumentSnapshot<Map<String, dynamic>>>>();
   StreamController<DocumentSnapshot<Map<String, dynamic>>> _chatRoomStreamController = StreamController<DocumentSnapshot<Map<String, dynamic>>>();
   TextEditingController textEditingController = TextEditingController();
@@ -379,12 +380,12 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
           "contentType": (type == 1 || type == 2 || type == 3 || type == 4) ? contentType : null,
           "read": {"uid": widget.puid, "timestamp": null},
           "reply": (replyMap != null) ? replyMap : null,
-          "delete": {"everyone": false, "personal": null}
+          "delete": {"everyone": false, "personal": false, "peerdelete":false}
         });
         writeBatch.update(instance.collection("personal-chat-room-detail").doc(roomid), {
           "timestamp": timestamp,
           "messageBy": "${widget.uid}",
-          "lastMessage": (type == 0) ? message! : dataTypeMap[type],
+          "lastMessage": (type == 0) ? message! :   [type],
           "members.${widget.puid}.unreadCount": FieldValue.increment(1),
           "delete": false
         });
@@ -478,7 +479,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
               "contentType": (type == 1 || type == 2 || type == 3 || type == 4) ? contentType : null,
               "read": {"uid": widget.puid, "timestamp": null},
               "reply": (replyMap != null) ? replyMap : null,
-              "delete": {"everyone": false, "personal": null}
+              "delete": {"everyone": false, "personal": false, "peerdelete": false}
             });
             writeBatch.commit();
             DocumentSnapshot<Map<String, dynamic>> peerDocSnap = await instance.collection("user-detail").doc(widget.puid).get();
@@ -675,7 +676,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         "contentType": (type == 1 || type == 2 || type == 3 || type == 4) ? contentType : null,
         "read": null,
         "reply": (replyMap != null) ? replyMap : null,
-        "delete": {"everyone": false, "personal": null}
+        "delete": {"everyone": false, "personal": false, "peerdelete": false}
       });
       writeBatch.set(
           instance.collection("group-detail").doc(widget.puid),
@@ -1168,9 +1169,10 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                         },
                                         icon: Icon(Entypo.reply))
                                         : Container(),
-                                    (notUserMessages == 0)
+                                    (notUserMessages != 0||notUserMessages == 0)
                                         ? IconButton(
                                         onPressed: () async {
+                                          (notUserMessages == 0)?
                                           await alertDialogBox(
                                               context: context,
                                               title: "Delete ${messages.length} messages?",
@@ -1231,6 +1233,120 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                           },
                                                           child: Text(
                                                             "Delete for Everyone",
+                                                            style: GoogleFonts.poppins(
+                                                                textStyle:
+                                                                textStyle(fontSize: 12, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
+                                                          )),
+                                                    ),
+                                                    Align(
+                                                      alignment: Alignment.centerRight,
+                                                      child: TextButton(
+                                                          onPressed: () async {
+                                                            String roomid = roomId(uid: widget.uid, puid: widget.puid);
+                                                            messages.forEach((key, value) async {
+                                                              await instance
+                                                                  .collection("personal-chat")
+                                                                  .doc(roomid)
+                                                                  .collection("messages")
+                                                                  .doc(value.data()!["timestamp"])
+                                                                  .update({
+                                                                "delete.personal": true,
+                                                              });
+                                                              if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
+                                                                await instance.collection("personal-chat-room-detail").doc(roomid).update({
+                                                                  "delete": true,
+                                                                });
+                                                              }
+                                                              DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
+                                                                  .collection("personal-chat")
+                                                                  .doc(roomid)
+                                                                  .collection("messages")
+                                                                  .doc(value.data()!["timestamp"])
+                                                                  .get();
+                                                              // DocumentSnapshot<Map<String, dynamic>> message =
+                                                              //     chatList[chatList.indexWhere((element) => element.id == value.id)];
+
+                                                              // chatList[chatList.indexWhere((element) => element.id == value.id)] =
+                                                              //     message.data()!["delete"].update("everyone", (value) => true);
+                                                              chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
+                                                              _streamController.add(chatList);
+                                                            });
+                                                            // if(!mounted)return;
+                                                            // setState((){});
+
+                                                            Navigator.pop(context);
+                                                          },
+                                                          child: Text(
+                                                            "Delete for Me",
+                                                            style: GoogleFonts.poppins(
+                                                                textStyle:
+                                                                textStyle(fontSize: 12, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
+                                                          )),
+                                                    ),
+                                                  ]),
+                                                ),
+                                              )):
+                                          await alertDialogBox(
+                                              context: context,
+                                              title: "Delete ${messages.length} messages?",
+                                              subtitle: "",
+                                              bodyWidget: IntrinsicWidth(
+                                                child: IntrinsicHeight(
+                                                  child: Column(children: [
+                                                    Align(
+                                                      alignment: Alignment.centerRight,
+                                                      child: TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(context);
+                                                          },
+                                                          child: Text(
+                                                            "Cancel",
+                                                            style: GoogleFonts.poppins(
+                                                                textStyle:
+                                                                textStyle(fontSize: 12, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
+                                                          )),
+                                                    ),
+
+                                                    Align(
+                                                      alignment: Alignment.centerRight,
+                                                      child: TextButton(
+                                                          onPressed: () async {
+                                                            String roomid = roomId(uid: widget.uid, puid: widget.puid);
+                                                            messages.forEach((key, value) async {
+                                                              await instance
+                                                                  .collection("personal-chat")
+                                                                  .doc(roomid)
+                                                                  .collection("messages")
+                                                                  .doc(value.data()!["timestamp"])
+                                                                  .update({
+                                                                "delete.peerdelete": true,
+                                                              });
+                                                              if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
+                                                                await instance.collection("personal-chat-room-detail").doc(roomid).update({
+                                                                  "delete": true,
+                                                                });
+                                                              }
+                                                              DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
+                                                                  .collection("personal-chat")
+                                                                  .doc(roomid)
+                                                                  .collection("messages")
+                                                                  .doc(value.data()!["timestamp"])
+                                                                  .get();
+                                                              // DocumentSnapshot<Map<String, dynamic>> message =
+                                                              //     chatList[chatList.indexWhere((element) => element.id == value.id)];
+
+                                                              // chatList[chatList.indexWhere((element) => element.id == value.id)] =
+                                                              //     message.data()!["delete"].update("everyone", (value) => true);
+                                                              chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
+                                                              _streamController.add(chatList);
+                                                            });
+                                                            // if(!mounted)return;
+                                                            // setState((){});
+
+                                                            Navigator.pop(context);
+                                                          },
+                                                          child: Text(
+                                                            "Delete for Me",
                                                             style: GoogleFonts.poppins(
                                                                 textStyle:
                                                                 textStyle(fontSize: 12, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
@@ -1538,6 +1654,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                           onLongPress: (element.data()!["delete"]["everyone"] == true)
                                                               ? null
                                                               : () {
+                                                            print("check count ${notUserMessages}");
+                                                            print("selected white msg...................");
+                                                            print("uid is ${widget.uid}");
                                                             if (messages.isEmpty == true) {
                                                               // if (!mounted) return;
                                                               // setState(() {
@@ -1571,7 +1690,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                 messages.remove(messages.inverse[element]);
                                                                 // });
                                                                 if (element.data()!["from"] != widget.uid) {
-                                                                  notUserMessages -= 1;
+                                                                  notUserMessages += 1;
                                                                 }
                                                               } else {
                                                                 // if (!mounted) return;
@@ -1593,18 +1712,34 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                               // }
                                                             }
                                                             if (!mounted) return;
-                                                            setState(() {});
+                                                            setState(() {
+
+                                                            });
                                                             log(notUserMessages.toString());
                                                             log(messages.length.toString());
                                                           },
                                                           child: Container(
+
 
                                                             color: (index <= lastUnreadCount && lastUnreadCount != 0)
                                                                 ? unreadMessageAnimation.value
                                                                 : (messages.values.contains(element))
                                                                 ? Color(accent).withOpacity(0.2)
                                                                 : Color(transparent),
-                                                            child: buildItem(
+                                                            child: (element.data()!["delete"]["personal"] == true)?
+                                                             (element.data()!["from"] == widget.uid)?
+                                                                SizedBox():
+                                                             buildItem(
+                                                                 sizingInformation: sizingInformation,
+                                                                 document: element,
+                                                                 // sizingInformation: sizingInformation,
+                                                                 chatRoomSnapshot: chatRoomSnapshot.data!,
+                                                                 // userDetailSnapshot: userDetailSnapshot.data!,
+                                                                 index: index,
+                                                                 replyIndex: (snapshot.data!.length + 1) - index):
+                                                              (element.data()!["delete"]["peerdelete"] == true)?
+                                                                  SizedBox():
+                                                            buildItem(
                                                                 sizingInformation: sizingInformation,
                                                                 document: element,
                                                                 // sizingInformation: sizingInformation,
@@ -1732,7 +1867,16 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                       //textField for personal chat
                                                       Flexible(
                                                         child: textField(
-
+                                                            onChanged : (val) async {
+                                                              try {
+                                                                await instance.collection("user-detail").doc(uid).update({
+                                                                  "status": "typing",
+                                                                  "chattingWith": null,
+                                                                });
+                                                              } catch (e) {
+                                                                log(e.toString());
+                                                              }
+                                                            },
                                                            prefix:
                                                           IconButton(
                                                           splashColor: Colors.transparent,
@@ -2008,7 +2152,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                               attachmentShowing = false;
                                                                                             });
                                                                                             // Navigator.pop(context);
-
                                                                                             return await video().then((value) async {
                                                                                               if (value!.files.isNotEmpty) {
                                                                                                 Navigator.push(
@@ -2183,7 +2326,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                           },
 
                                                                                           child: iconCreation(
-                                                                                              "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_icon_container.png",
+                                                                                              "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png",
                                                                                               "Audio"),
                                                                                         ),
                                                                                         GestureDetector(
@@ -2200,6 +2343,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                                     .then((response) async {
                                                                                                   Map<String, dynamic> body = jsonDecode(response.body);
                                                                                                   if (widget.state == 0) {
+                                                                                                    print('Yuvan1');
                                                                                                     await writeUserMessage(
                                                                                                       type: 7,
                                                                                                       // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
@@ -2214,6 +2358,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                                           body["Response"]['View'][0]["Result"][0]
                                                                                                           ['Location']['Address']['Label'],
                                                                                                     );
+                                                                                                    print('Yuvan2');
                                                                                                     if (replyMessageMap != null &&
                                                                                                         replyUserName != null) {
                                                                                                       if (!mounted) return;
@@ -2862,8 +3007,8 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                           },
                                           icon: Icon(Entypo.reply))
                                           : Container(),
-                                      (notUserMessages == 0)
-                                          ? IconButton(
+                                      (notUserMessages != 0||notUserMessages == 0)
+                                          ? IconButton (
                                           onPressed: () async {
                                             await alertDialogBox(
                                                 context: context,
@@ -2926,6 +3071,51 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                             child: Text(
                                                               "Delete for Everyone",
                                                               style: GoogleFonts.inter(
+                                                                  textStyle:
+                                                                  textStyle(fontSize: 12, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
+                                                            )),
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment.centerRight,
+                                                        child: TextButton(
+                                                            onPressed: () async {
+                                                              String roomid = roomId(uid: widget.uid, puid: widget.puid);
+                                                              messages.forEach((key, value) async {
+                                                                await instance
+                                                                    .collection("personal-chat")
+                                                                    .doc(roomid)
+                                                                    .collection("messages")
+                                                                    .doc(value.data()!["timestamp"])
+                                                                    .update({
+                                                                  "delete.personal": true,
+                                                                });
+                                                                if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
+                                                                  await instance.collection("personal-chat-room-detail").doc(roomid).update({
+                                                                    "delete": true,
+                                                                  });
+                                                                }
+                                                                DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
+                                                                    .collection("personal-chat")
+                                                                    .doc(roomid)
+                                                                    .collection("messages")
+                                                                    .doc(value.data()!["timestamp"])
+                                                                    .get();
+                                                                // DocumentSnapshot<Map<String, dynamic>> message =
+                                                                //     chatList[chatList.indexWhere((element) => element.id == value.id)];
+
+                                                                // chatList[chatList.indexWhere((element) => element.id == value.id)] =
+                                                                //     message.data()!["delete"].update("everyone", (value) => true);
+                                                                chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
+                                                                _streamController.add(chatList);
+                                                              });
+                                                              // if(!mounted)return;
+                                                              // setState((){});
+
+                                                              Navigator.pop(context);
+                                                            },
+                                                            child: Text(
+                                                              "Delete for Me",
+                                                              style: GoogleFonts.poppins(
                                                                   textStyle:
                                                                   textStyle(fontSize: 12, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
                                                             )),
@@ -3165,7 +3355,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                       },
                                                       child: GestureDetector(
                                                         behavior: HitTestBehavior.opaque,
-                                                        onLongPress: (element.data()!["delete"]["everyone"] == true)
+                                                        onLongPress: (element.data()!["delete"]["everyone"] == true)||(element.data()!["delete"]["personal"] == true)
                                                             ? null
                                                             : () {
                                                           if (messages.isEmpty == true) {
@@ -3200,13 +3390,13 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                               messages.remove(messages.inverse[element]);
                                                               // });
                                                               if (element.data()!["from"] != widget.uid) {
-                                                                notUserMessages -= 1;
+                                                                notUserMessages += 1;
                                                               }
                                                             } else {
                                                               // if (!mounted) return;
                                                               // setState(() {
                                                               // messages.add(element);
-                                                              if (element.data()!["delete"]["everyone"] == false) {
+                                                              if (element.data()!["delete"]["everyone"] == false && element.data()!["delete"]["personal"] == false) {
                                                                 messages[index] = element;
                                                               }
                                                               // });
@@ -3231,7 +3421,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                               : (messages.values.contains(element))
                                                               ? Color(accent).withOpacity(0.2)
                                                               : Color(transparent),
-                                                          child: buildItem(
+                                                          child: (element.data()!["delete"]["personal"])?
+                                                              SizedBox():
+                                                          buildItem(
                                                               document: element,
                                                               chatRoomSnapshot: chatRoomSnapshot.data!,
                                                               sizingInformation: sizingInformation,
@@ -3804,10 +3996,13 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                   return MarqueeWidget(
                                                     direction: Axis.horizontal,
                                                     child: Text(
-                                                      (userSnapshot.data!.data()!["onlineStatus"] ==
-                                                          true && peerSnapshot.data!.data()!["onlineStatus"] == true)
+                                                      (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
                                                           ? (peerSnapshot.data!.data()!["status"] == "online")
-                                                          ? "Online"
+                                                          ? "Online":
+                                                          (peerSnapshot.data!.data()!["status"] == "typing")?
+                                                            "Typing"
+
+
                                                           : (userSnapshot.data!.data()!["lastseenStatus"] == true && peerSnapshot.data!.data()!["lastseenStatus"] == true)
                                                           ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
                                                           : "Tap here for user info"
@@ -4168,145 +4363,157 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                           chatRoomSnapshot: chatRoomSnapshot,
                         );
                       },
-                      child: ChatBubble(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
 
-                        alignment: Alignment.centerRight,
-                        clipper: ChatBubbleClipper5(type: BubbleType.sendBubble),
-                        backGroundColor: Color.fromRGBO(248, 206, 97, 1),
-                        elevation: 0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            (document["forwardCount"] == 0)
-                                ? SizedBox()
-                                : Row(
-                              mainAxisSize: MainAxisSize.min,
+                        ),
+                        child: Card(
+                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(
+                              15),
+                              topRight: Radius.circular(
+                                  15),
+                              bottomRight: Radius
+                                  .circular(15))),
+                          color: Color.fromRGBO(248, 206, 97, 1),
+                          elevation: 0,
+                          child: Padding(
+                            padding:  EdgeInsets.only(left: 11.w,right: 12.w,top: 10.h,bottom: 7.h),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(
-                                  Entypo.forward,
-                                  color: Color(grey),
-                                  size: 10,
-                                ),
-                                Text(
-                                  (document["forwardCount"] <= 5) ? " forwarded" : " forwarded many times",
-                                  style: GoogleFonts.inter(
-                                    textStyle: textStyle(fontSize: 10, color: Color(grey)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            (document["reply"] != null)
-                                ? Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: (themedata.value.index == 0) ? Color(lightBlack).withOpacity(.1) :
-                                    Color(lightBlack).withOpacity(.1),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(12.0),
+                                (document["forwardCount"] == 0)
+                                    ? SizedBox()
+                                    : Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Entypo.forward,
+                                      color: Color(grey),
+                                      size: 10,
                                     ),
-                                  ),
-                                  child: IntrinsicHeight(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          color: Color(yellow),
-                                          width: 4,
+                                    Text(
+                                      (document["forwardCount"] <= 5) ? " forwarded" : " forwarded many times",
+                                      style: GoogleFonts.inter(
+                                        textStyle: textStyle(fontSize: 10, color: Color(grey)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                (document["reply"] != null)
+                                    ? Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: (themedata.value.index == 0) ? Color(lightBlack).withOpacity(.1) :
+                                        Color(lightBlack).withOpacity(.1),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(12.0),
                                         ),
-                                        const SizedBox(width: 8),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                      ),
+                                      child: IntrinsicHeight(
+                                        child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Text(
-                                              (document["reply"]["from"] != widget.uid)
-                                                  ? (widget.state == 0)
-                                                  ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"])
-                                                  : replyUserName
-                                                  : "You",
-                                              style: GoogleFonts.inter(
-                                                textStyle: textStyle(fontSize: 14, color: Color(yellow)),
-                                              ),
-                                              maxLines: 1,
-                                              softWrap: true,
+                                            Container(
+                                              color: Color(yellow),
+                                              width: 4,
                                             ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              (inverseDataType[document.data()!["reply"]["type"]] == 0)
-                                                  ? document.data()!["reply"]["data"]["text"]
-                                                  : document.data()!["reply"]["type"],
-                                              style: GoogleFonts.inter(
-                                                textStyle: textStyle(
-                                                  fontSize: 14,
+                                            const SizedBox(width: 8),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  (document["reply"]["from"] != widget.uid)
+                                                      ? (widget.state == 0)
+                                                      ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"])
+                                                      : replyUserName
+                                                      : "You",
+                                                  style: GoogleFonts.inter(
+                                                    textStyle: textStyle(fontSize: 14, color: Color(yellow)),
+                                                  ),
+                                                  maxLines: 1,
+                                                  softWrap: true,
                                                 ),
-                                              ),
-                                              maxLines: 2,
-                                              softWrap: true,
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  (inverseDataType[document.data()!["reply"]["type"]] == 0)
+                                                      ? document.data()!["reply"]["data"]["text"]
+                                                      : document.data()!["reply"]["type"],
+                                                  style: GoogleFonts.inter(
+                                                    textStyle: textStyle(
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                  maxLines: 2,
+                                                  softWrap: true,
+                                                ),
+                                              ],
                                             ),
                                           ],
+                                        ),
+                                      ),
+                                    ),
+                                    messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot)
+                                  ],
+                                )
+                                    : messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot),
+                                Container(
+                                  width:125,
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 5),
+                                          child: Text(
+                                            formatTime(getDateTimeSinceEpoch(datetime: document["timestamp"])),
+                                            style: GoogleFonts.inter(
+                                                fontSize: 14,
+                                                textStyle: textStyle(
+                                                  color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
+                                                )),
+                                          ),
+                                        ),
+                                        SizedBox(width: 3.6.w),
+                                        (widget.state == 0)
+                                            ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["lastRead"] != null)
+                                            ? (getDateTimeSinceEpoch(datetime: chatRoomSnapshot.data()!["members"]["${widget.puid}"]["lastRead"])
+                                            .difference(getDateTimeSinceEpoch(datetime: document["timestamp"]))
+                                            .inMicroseconds >
+                                            0)
+                                            ? Icon(
+                                          Icons.done_all,
+                                          color: Color.fromRGBO(0, 0, 0, 1),
+                                        )
+                                            : Icon(
+                                          Icons.done_all,
+                                          color: (themedata.value.index == 0) ? Colors.white : Colors.black,
+                                        )
+                                            : Icon(
+                                          Icons.done_all,
+                                          color: (themedata.value.index == 0) ? Colors.brown : Colors.pink,
+                                        )
+                                            : (isRead)
+                                            ? Icon(
+                                          Icons.done_all,
+                                          color:  Colors.black,
+                                        )
+                                            : Icon(
+                                          Icons.done_all,
+                                          color: (themedata.value.index == 0) ? Colors.white: Colors.black,
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot)
                               ],
-                            )
-                                : messageBuilder(document: document, chatRoomSnapshot: chatRoomSnapshot),
-                            Container(
-                              width:125,
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 5),
-                                      child: Text(
-                                        formatTime(getDateTimeSinceEpoch(datetime: document["timestamp"])),
-                                        style: GoogleFonts.inter(
-                                            fontSize: 14,
-                                            textStyle: textStyle(
-                                              color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
-                                            )),
-                                      ),
-                                    ),
-                                    (widget.state == 0)
-                                        ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["lastRead"] != null)
-                                        ? (getDateTimeSinceEpoch(datetime: chatRoomSnapshot.data()!["members"]["${widget.puid}"]["lastRead"])
-                                        .difference(getDateTimeSinceEpoch(datetime: document["timestamp"]))
-                                        .inMicroseconds >
-                                        0)
-                                        ? Icon(
-                                      Icons.done_all,
-                                      color: Color.fromRGBO(0, 0, 0, 1),
-                                    )
-                                        : Icon(
-                                      Icons.done_all,
-                                      color: (themedata.value.index == 0) ? Colors.white : Colors.black,
-                                    )
-                                        : Icon(
-                                      Icons.done_all,
-                                      color: (themedata.value.index == 0) ? Colors.brown : Colors.pink,
-                                    )
-                                        : (isRead)
-                                        ? Icon(
-                                      Icons.done_all,
-                                      color:  Colors.black,
-                                    )
-                                        : Icon(
-                                      Icons.done_all,
-                                      color: (themedata.value.index == 0) ? Colors.white: Colors.black,
-                                    ),
-                                  ],
-                                ),
-                              ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
@@ -4539,6 +4746,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       case 0:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
+
         // : Text(
         //     document.data()!["data"]["text"],
         //     softWrap: true,
@@ -4548,7 +4756,25 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         //           color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white),
         //         )),
         //   );
-            : SubstringHighlight(
+        :(document.data()!["delete"]["personal"] == true)?
+          (document.data()!["from"] == widget.uid)?
+            Text("delete for me"):
+          SubstringHighlight(
+            text: document.data()!["data"]["text"],
+            term: searchTextEditingController.text,
+            textStyle: GoogleFonts.inter(
+                fontSize: 14,
+                textStyle: textStyle(
+                  color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white),
+                )),
+            textStyleHighlight: TextStyle(
+              // highlight style
+              backgroundColor: Colors.white,
+            ),
+          )
+            : (document.data()!["delete"]["peerdelete"] == true)?
+            Text("Peer msg delete for me"):
+        SubstringHighlight(
           text: document.data()!["data"]["text"],
           term: searchTextEditingController.text,
           textStyle: GoogleFonts.inter(
@@ -4564,6 +4790,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       case 1:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
+
             : Container(
             width: MediaQuery.of(context).size.width / 4,
             height: MediaQuery.of(context).size.width / 4,
@@ -4608,6 +4835,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       case 2:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
+
             : GestureDetector(
           onTap: () {
             Navigator.push(
@@ -4633,14 +4861,17 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       case 3:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
+
             : PlayAudio(url: document.data()!["data"]["audio"], type: 0);
       case 4:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
+
             : DocumentDownloader(url: document.data()!["data"]["document"],);
       case 5:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
+
             : GestureDetector(
           onTap: () {
             // log(Uri.decodeFull(document.data()!["data"]["story"]).toString());
@@ -4730,6 +4961,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       case 6:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
+
             : Container(
             width: MediaQuery.of(context).size.width / 4,
             height: MediaQuery.of(context).size.width / 4,
@@ -4774,13 +5006,14 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       case 7:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
+
             : GestureDetector(
           onTap: () async {
             String uri = document.data()!["data"]["location"].split("\n").first;
-            if (await canLaunch(uri)) {
-              await launch(uri);
+            if (await canLaunchUrl(Uri.parse(uri))) {
+              await launchUrl(Uri.parse(uri));
             } else {
-              throw 'Could not launch $uri';
+              throw 'Could not launch ${Uri.parse(uri)}';
             }
           },
           child: Text(
@@ -4796,6 +5029,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       case 8:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
+
             : GestureDetector(
           onTap: () async {
             await saveContactInPhone(
@@ -4814,6 +5048,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       case 9:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
+
             : PlayAudio(
             url: document.data()!["data"]["voice"],
             type: 1,

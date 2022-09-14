@@ -39,9 +39,12 @@ import '../chats/personal_chat_screen/pesrsonal_chat.dart';
 class PingsChatView extends StatefulWidget {
   final Map<int, DocumentSnapshot<Map<String, dynamic>>>? messages;
   final int? state;
+  bool? appbarChange = false;
   PingsChatView({
-   this.state,
-   this.messages
+    this.state,
+    this.messages,
+    this.appbarChange
+
 });
 
   @override
@@ -55,17 +58,18 @@ class _PingsChatViewState extends State<PingsChatView> {
   String? puid;
   bool isChatting = false;
   List<PingsChatListModel> tileData = [];
+
+  bool sel = false;
+
   final _isSelected = Map();
   bool selects = false;
   bool change = false;
-
   bool longPressedFlag=false;
   late List? selectedItems=[];
   bool isFirstTime=true;
   bool isChatListLoaded=false;
-
-  int index = 1;
-
+  int index = 0;
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = [];
   @override
   void initState(){
     super.initState();
@@ -101,58 +105,99 @@ class _PingsChatViewState extends State<PingsChatView> {
         if(snapshot.hasData)
           {
           return ResponsiveBuilder(builder: (context, sizingInformation) {
+            print('11111');
               return Scaffold(
               backgroundColor: Color.fromRGBO(26, 52, 130, 0.06),
               // body: isChatListLoaded?getChatList():getChatList(),
               body: Column(
                 children: [
-                  Expanded(child: getChatList()),
+                  Expanded(child: getChatList(sel)),
 
                   Expanded(child: personalGroupList(sizingInformation))
 
                 ],
               ),
 
-              floatingActionButton: FloatingActionButton(
-                  onPressed: () async {
-                    if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-                      return await scaffoldAlertDialogBox(
-                          context: context,
-                          page: SearchPage(
-                            state: 0,
-                            sizingInformation: sizingInformation,
-                          )).then((value) {
-                        if (value != null) {
-                          if (!mounted) return;
-                          setState(() {
-                            isChatting = true;
-                            puid = value;
-                          });
+              floatingActionButton:
+              Column(
+                children: [
+                  FloatingActionButton(
+                      child: Text("Select all"),
+                      onPressed: (){
+                        longPressedFlag = true;
+                      for(int i =0; i<docs.length; i++){
+
+                        selectedItems!.add(i);
+                        print("Document Data... ${i}");
+                        print("Document Data... ${selectedItems}");
+                      }
+                  }),
+                  FloatingActionButton(
+                    child: Text("Delete"),
+                      onPressed: (){
+
+                        for (int i = 0; i < selectedItems!.length; i++) {
+                          var sell = db.collection("personal-chat-room-detail")
+                              .doc(
+                              "${docs[selectedItems![i]].id}"
+
+                          );
+                          print("${docs[selectedItems![i]].id}");
+                          sell.update({"members.$uid.delete" : true});
+                          //selectedItems!.remove;
+
                         }
-                      });
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SearchPage(
+                        selectedItems = [];
+
+
+                        print(docs[index].data()["members"]["${docs[index].data()["members"]["$uid"]["peeruid"]}"]);
+
+
+                        print("Uid is a $puid");
+                        //print("this is select index $sell");
+                  }),
+                  FloatingActionButton(
+                      onPressed: () async {
+                        if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                          return await scaffoldAlertDialogBox(
+                              context: context,
+                              page: SearchPage(
                                 state: 0,
                                 sizingInformation: sizingInformation,
-                              )));
-                    }
-                  },
+                              )).then((value) {
+                            if (value != null) {
+                              if (!mounted) return;
+                              setState(() {
+                                isChatting = true;
+                                puid = value;
+                              });
+                            }
+                          });
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SearchPage(
+                                    state: 0,
+                                    sizingInformation: sizingInformation,
+                                  )));
+                        }
+                      },
 
-                  // onPressed: () {
-              //
-              // Navigator.push(context,
-              // MaterialPageRoute(builder: (context) => SelectContact()));
-              // },
-              backgroundColor: Color.fromRGBO(248, 206, 97, 1),
-              child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
+                      // onPressed: () {
+                  //
+                  // Navigator.push(context,
+                  // MaterialPageRoute(builder: (context) => SelectContact()));
+                  // },
+                  backgroundColor: Color.fromRGBO(248, 206, 97, 1),
+                  child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
+                ],
+              ),
               );
             }
           );
           }
-        return getChatList();
+        return getChatList(sel);
       },);
   }
 
@@ -176,10 +221,11 @@ class _PingsChatViewState extends State<PingsChatView> {
   }
 
 
-
   Widget personalGroupList(SizingInformation sizingInformation) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+
         stream: instance.collection("group-detail").where("members.$uid.claim", isNotEqualTo: "removed").snapshots(),
+
         builder: (context, groupRoomDetailSnapshot) {
           if (groupRoomDetailSnapshot.connectionState == ConnectionState.active &&
               groupRoomDetailSnapshot.hasData &&
@@ -868,6 +914,7 @@ class _PingsChatViewState extends State<PingsChatView> {
               "messageBy": "${uid}",
               "members": {
                 "${uid}": {
+                  "delete":false,
                   "isBlocked": false,
                   "peeruid": "${puid}",
                   "pic": value.data()!["pic"],
@@ -876,6 +923,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                   "unreadCount": 0,
                 },
                 "${puid}": {
+                  "delete":false,
                   "isBlocked": false,
                   "peeruid": "${uid}",
                   "pic": peerPic,
@@ -913,7 +961,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                       : null,
                   "read": {"uid": puid, "timestamp": null},
                   "reply": (replyMap != null) ? replyMap : null,
-                  "delete": {"everyone": false, "personal": null}
+                  "delete": {"everyone": false, "personal": false}
                 });
             writeBatch.commit();
             DocumentSnapshot<Map<String, dynamic>> peerDocSnap =
@@ -1004,7 +1052,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                 : null,
             "read": null,
             "reply": (replyMap != null) ? replyMap : null,
-            "delete": {"everyone": false, "personal": null}
+            "delete": {"everyone": false, "personal": false}
           });
       writeBatch.set(
           db.collection("group-detail").doc(puid),
@@ -1042,19 +1090,18 @@ class _PingsChatViewState extends State<PingsChatView> {
     }
   }
 
-  Widget getChatList()
+  Widget  getChatList(select)
   {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>
       (
 
-        stream: db.collection("personal-chat-room-detail").where("members.$uid.isBlocked", isNotEqualTo: true).snapshots(),
+        stream: db.collection("personal-chat-room-detail").where("members.$uid.delete",isEqualTo: false).snapshots(),
         builder: (context,chatRoomdetailsnap) {
           if (chatRoomdetailsnap.connectionState == ConnectionState.active &&
               chatRoomdetailsnap.hasData &&
               chatRoomdetailsnap.data != null &&
               chatRoomdetailsnap.data!.docs.isNotEmpty) {
-            List<QueryDocumentSnapshot<
-                Map<String, dynamic>>> docs = chatRoomdetailsnap.data!.docs;
+             docs = chatRoomdetailsnap.data!.docs;
             docs.sort((b, a) =>
                 getDateTimeSinceEpoch(datetime: a.data()["timestamp"])
                     .compareTo(
@@ -1073,6 +1120,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                     selected: _isSelected[index],
                     tileColor: Colors.white,
                     selectedTileColor: Color.fromRGBO(248, 206, 97, 0.31),
+
                     // onLongPress: () {
                     //   setState((){
                     //     _isSelected[index] = !_isSelected[index];
@@ -1082,16 +1130,31 @@ class _PingsChatViewState extends State<PingsChatView> {
                     //   });
                     //
                     // }
+
                       onLongPress: () {
                         setState((){
                           _isSelected[index] = !_isSelected[index];
+                          pingsChatTabbar = true;
+
+                          //_isSelected.isNotEmpty ? this.widget.appbarChange = true: this.widget.appbarChange = false;
 
                           if(isFirstTime) {
                             if (selectedItems!.isEmpty) {
+
+
                               print("First Time Long Pressing...x");
                               selectedItems!.add(index);
+                              print(selectedItems);
+                              print("Before ${widget.appbarChange}");
+                              setState(() {
+                                widget.appbarChange = true;
+                              });
+                              print("After ${widget.appbarChange}");
                               isFirstTime=false;
                               longPressedFlag=true;
+                              print("this is selected index ${selectedItems![0]}");
+                              print("this peerid ${docs[index].id}");
+
                             }
                           }
                           else {
@@ -1114,6 +1177,7 @@ class _PingsChatViewState extends State<PingsChatView> {
                                 print("Deselect all");
                                 isFirstTime=true;
                                 longPressedFlag=false;
+
                               }
 
                           }

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,6 +23,7 @@ import '../../Others/lottie_strings.dart';
 import '../../Style/Colors.dart';
 import '../../components/ScaffoldDialog.dart';
 import '../../core/models/exception/pops_exception.dart';
+import '../../handler/LifeCycle.dart';
 import '../../handler/Network.dart';
 import '../../main.dart';
 import '../invite_friends.dart';
@@ -28,18 +32,19 @@ import 'Delete1Dialog.dart';
 import '/core/models/profile_detail.dart'as profileDetailsModel;
 class Tabbar extends StatefulWidget {
   const Tabbar({Key? key}) : super(key: key);
+
   @override
   State<Tabbar> createState() => _TabState();
 }
 class _TabState extends State<Tabbar> {
 
 
-
   int overallUnreadChatList = 1;
 Future? _future;
    String? userId;
-  int isSelected = 0;
+  bool? isSelected;
   String? puid;
+  var lifecycleEventHandler;
    final ScrollController storyScrollController = ScrollController();
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0,
       exceptionFromJson(loading), "Loading", null));
@@ -54,7 +59,38 @@ Future? _future;
     );
   }
 
-Future<void> _getUID() async {
+  Future lifecycleInit() async {
+    print("aaaaaaa");
+    String? uid = userId;
+    FirebaseFirestore instance = FirebaseFirestore.instance;
+
+    await instance.collection("user-detail").doc(uid).update({"status": "online", "chattingWith": null, "callStatus": false});
+    print("bbbbb");
+    if (uid != null && WidgetsBinding.instance != null) {
+      lifecycleEventHandler = LifecycleEventHandler(detachedCallBack: () async {
+        try {
+          await instance.collection("user-detail").doc(uid).update({
+            "status": DateTime.now().millisecondsSinceEpoch.toString(),
+            "chattingWith": null,
+          });
+        } catch (e) {
+          log(e.toString());
+        }
+      }, resumeCallBack: () async {
+        try {
+          await instance.collection("user-detail").doc(uid).update({
+            "status": "online",
+          });
+        } catch (e) {
+          log(e.toString());
+        }
+      });
+      WidgetsBinding.instance!.addObserver(lifecycleEventHandler);
+    }
+  }
+
+
+  Future<void> _getUID() async {
   print('uidapi');
   SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
   userId = sharedPrefs.getString("userid");
@@ -63,27 +99,39 @@ Future<void> _getUID() async {
 Future<dynamic> sendData() async {
   final data1 = await _getUID();
   final data2 = await profileDetailsApiCall();
-
-  return [data1, data2];
+  final data3 = await lifecycleInit();
+  return [data1, data2, data3];
 }
 @override
 void initState() {
+    print('works');
   _future = sendData();
+
  // lifecycleInit();
+
   // TODO: implement initState
   super.initState();
 }
-   @override
-   void initstate(){
 
-   }
+  // @override
+  // void dispose() {
+  //   storyScrollController.dispose();
+  //   if (lifecycleEventHandler != null) {
+  //     WidgetsBinding.instance!.removeObserver(lifecycleEventHandler);
+  //   }
+  //   super.dispose();
+  // }
+
+
+
   @override
   Widget build(BuildContext context) {
 
-    initSP();
-    return FutureBuilder(
-      future:_future,
+
+    return StreamBuilder(
+      stream: Stream.value(_future),
       builder: (context,snap) {
+        print('Lotusss${userId}');
         if(snap.hasData) {
           return SafeArea(
             child: DefaultTabController(
@@ -103,7 +151,7 @@ void initState() {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    isSelected == 0 ?
+                                    (isSelected == true)?
                                     Expanded(
                                         child: Container(
                                           padding: EdgeInsets.only(
@@ -327,6 +375,7 @@ void initState() {
                                           child: SvgPicture.asset(
                                               'assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/delete.svg'),
                                           onTap: () {
+                                            print("this a sss");
                                             // showDialog(
                                             //     context: context,
                                             //     builder: (BuildContext context) {
