@@ -4000,7 +4000,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                           ? (peerSnapshot.data!.data()!["status"] == "online")
                                                           ? "Online":
                                                           (peerSnapshot.data!.data()!["status"] == "typing")?
-                                                            "Typing"
+                                                            "Typing..."
 
 
                                                           : (userSnapshot.data!.data()!["lastseenStatus"] == true && peerSnapshot.data!.data()!["lastseenStatus"] == true)
