@@ -52,7 +52,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'Database/StorageManager.dart';
-
 import 'Others/components/LottieComposition.dart';
 import 'Others/lottie_strings.dart';
 import 'Style/Colors.dart';
@@ -60,7 +59,6 @@ import 'Style/Text.dart';
 import 'firebase_options.dart';
 import 'views/tabbar/pings_chat/select_contact/select_contact.dart';
 import 'package:timezone/data/latest.dart' as tz;
-
 Future<void> main() async {
   tz.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
