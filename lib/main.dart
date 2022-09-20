@@ -67,12 +67,15 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+
   runApp(MyApp());
 }
 const String ip = 'http://3.108.219.188:5000';
 const String signUpip = '$ip/signup';
 const String loginip = '$ip/login';
 
+var pingsChatTabbar = false;
 
 late ValueNotifier<AdaptiveThemeMode> themedata;
 class MyApp extends StatefulWidget {
@@ -139,7 +142,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar():Tabbar();
+                              return (snapshot.data == true) ? Tabbar():LoginScreen();
 
                             } else {
                               return lottieAnimation(loadingLottie);
