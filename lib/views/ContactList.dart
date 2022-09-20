@@ -1,20 +1,12 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fast_contacts/fast_contacts.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import '../Assets/GatelloIcon.dart';
-import '../Others/components/LottieComposition.dart';
-import '../Others/lottie_strings.dart';
-import '../Style/Text.dart';
-import '../components/SnackBar.dart';
-import '../components/flatButton.dart';
 
 class ContactList extends StatefulWidget {
   ///* 0-> invite ; 1-> share
@@ -29,43 +21,58 @@ class ContactList extends StatefulWidget {
 class _ContactListState extends State<ContactList> {
   FirebaseFirestore instance = FirebaseFirestore.instance;
   List<String> selectedContactsId = [];
-  List<Contact> selectedContacts = [];
+  List selectedContacts = [];
   late Future<List<Contact>> _contacts;
   List<Contact> contacts = [];
+  List <Contact> filteredContacts=[];
+  var listData;
+
+  TextEditingController searchController= TextEditingController();
 
   @override
+
+  filterContacts(){
+    List<Contact> _contact=[];
+    _contact.addAll(contacts);
+    if ( searchController.text.isNotEmpty){
+      _contact.retainWhere( (contact){
+        String searchTerm = searchController.text.toLowerCase();
+        String contactName = contact.displayName!.toLowerCase();
+        return contactName.contains(searchTerm);
+      });
+      setState(() {
+
+        filteredContacts=_contact;
+        for(var i=0; i<filteredContacts.length; i++){
+          print(filteredContacts[i].displayName);
+          listData = filteredContacts[i].displayName;
+        }
+      });
+    }
+  }
+
   void initState() {
     _contacts = getContacts();
     super.initState();
+    searchController.addListener(() {
+      filterContacts();
+    });
   }
 
   Future<List<Contact>> getContacts() async {
     PermissionStatus contactpermission = await Permission.contacts.request();
-    List<Contact> contactList = [];
     if (contactpermission.isGranted || contactpermission.isLimited) {
       contacts = await FastContacts.allContacts;
 
-      // for (Contact contact in contacts) {
-      //   var userDoc = await instance
-      //       .collection("user-detail")
-      //       .where("phone", isGreaterThanOrEqualTo: contact.phones.first)
-      //       .where("phone", isGreaterThanOrEqualTo: contact.phones.first + '\uf8ff')
-      //       .get();
-      //   if (userDoc.docs.isEmpty) {
-      //     contactList.add(contact);
-      //   }
-      // }
     } else {
-      final snackBar = snackbar(content: "Please enable contact permission");
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
 
-    return contacts;
-    // return contactList;
+    }
+    return contacts;// return contactList;
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isSearching = searchController.text.isNotEmpty;
     return SafeArea(
         child: ResponsiveBuilder(
             builder: (context, sizingInformation) => Scaffold(
@@ -74,17 +81,15 @@ class _ContactListState extends State<ContactList> {
                 centerTitle: false,
                 automaticallyImplyLeading: false,
                 elevation: 0,
-                leading: IconButton(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                title: Text(
-                  (selectedContactsId.isEmpty) ? 'Contact List' : '${selectedContacts.length}/${contacts.length} Selected',
-                  style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                ),
+                leading: GestureDetector(
+                    onTap:(){
+                      Navigator.pop(context);
+                    },
+                    child:Center(
+                      child: Text('     Back',style:GoogleFonts.inter(
+                          textStyle:TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600,color:Colors.black)
+                      )),
+                    )),
               ),
               floatingActionButton: (widget.state == 0)
                   ? null
@@ -101,93 +106,158 @@ class _ContactListState extends State<ContactList> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.data!.isNotEmpty) {
-                        return ListView.builder(
-                            itemCount: snapshot.data?.length ?? 0,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              if (snapshot.data == null) {
-                                return Container();
-                              } else {
-                                return Padding(
-                                  padding: const EdgeInsets.only(left: 20, right: 20),
-                                  child: ListTile(
-                                    title: Text(snapshot.data![index].displayName),
-                                    subtitle: Text(snapshot.data![index].phones[0]),
-                                    trailing: (widget.state == 0)
-                                        ? Icon(DeejosIcon.chat_2_outline)
-                                        : (selectedContactsId.contains(snapshot.data![index].id))
-                                        ? Icon(Icons.done)
-                                        : null,
-                                    onTap: (widget.state == 0)
-                                        ? () async {
-                                      String uri =
-                                          'sms:${snapshot.data![index].phones[0]}?body=${Uri.encodeComponent('''Hi ${snapshot.data![index].displayName}! I am using Gatello. You can download it from https://play.google.com/store/apps/details?id=com.gatello.user''')}';
-                                      if (await canLaunch(uri)) {
-                                        await launch(uri);
-                                      } else {
-                                        throw 'Could not launch $uri';
-                                      }
-                                    }
-                                        : () async {
-                                      if (!selectedContactsId.contains(snapshot.data![index].id)) {
-                                        if (!mounted) return;
-                                        setState(() {
-                                          selectedContactsId.add(snapshot.data![index].id);
-                                          selectedContacts.add(snapshot.data![index]);
-                                        });
-                                      } else {
-                                        if (!mounted) return;
-                                        setState(() {
-                                          selectedContactsId.remove(snapshot.data![index].id);
-                                          selectedContacts.remove(snapshot.data![index]);
-                                        });
-                                      }
-                                    },
-                                  ),
-                                );
-                              }
-                            });
-                      } else {
-                        return Container(
-                            child: Center(
-                                child: SingleChildScrollView(
-                                  child: Column(
+                        return Container(padding:EdgeInsets.only(left:12.w,right:12.w,top:20.h),
+                          child: Column(children: [
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(height:48.h,width:48.w,decoration:BoxDecoration(color:
+                                  Color.fromRGBO(248, 206, 97, 1),shape:BoxShape.circle,border:Border.all(
+                                      color:Colors.black
+                                  )),child:Column(crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      lottieAnimation(invalidLottie),
-                                      Text("No Contacts Found"),
-                                      flatButton(
-                                          onPressed: () async {
-                                            _contacts = getContacts();
-                                          },
-                                          child: Text("Retry"))
+                                      SvgPicture.asset('assets/invite_friends/invitefriends.svg',
+                                          height:28.h,width: 28.w),
+                                    ],
+                                  ),),
+                                  Text("Invite Your Friends",
+                                      style: GoogleFonts.fredoka(
+                                        textStyle: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color.fromRGBO(0, 0, 0, 1),
+                                        ),
+                                      )),
+                                  TextButton(
+                                      onPressed: () {
+
+                                      },
+                                      style: TextButton.styleFrom(
+                                          primary: Color.fromRGBO(0, 0, 0, 0.44)),
+                                      child: Text("Skip",
+                                          style: GoogleFonts.inter(
+                                            textStyle: TextStyle(
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )))
+                                ]),
+                            SizedBox(height:17.h),
+                            Container(
+                              height: 36.h,
+                              width: 337.w,
+                              child: TextFormField(
+                                controller:searchController,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(top:4,right:10),
+                                  border: OutlineInputBorder(
+                                    //   borderSide: BorderSide(),
+                                      borderRadius: BorderRadius.circular(40)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black, width: 1.w),
+                                      // borderRadius: BorderRadius.circular(5.w)
+                                      borderRadius: BorderRadius.circular(40)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.black, width: 1.w),
+                                      //  borderRadius: BorderRadius.circular(5.w)
+                                      borderRadius: BorderRadius.circular(40)
+                                  ),
+                                  prefixIcon:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset('assets/tabbar_icons/Tabbar_search.svg'),
                                     ],
                                   ),
-                                )));
+                                  //  labelStyle: TextStyle(fontSize: 12
+                                  //),
+                                  hintText: "  Search...",
+                                  hintStyle: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w300)),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height:20.h),
+                            Expanded(
+                              child: ListView.builder(
+                                  itemCount:isSearching == true?filteredContacts.length:contacts.length,
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    Contact contact = isSearching==true? filteredContacts[index]:contacts[index];
+                                    if (snapshot.data == null) {
+                                      return Container();
+                                    } else {
+                                      return Column(children: [
+                                        ListTile(
+                                          leading:Container(height:48.h,width:48.w,child:
+                                          SvgPicture.asset('assets/invite_friends/profilepicture.svg')),
+                                          title: Text(contact.displayName,style:
+                                          GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:14.sp)),
+                                          subtitle: Text(contact.phones[0],style:
+                                          GoogleFonts.inter(fontWeight:FontWeight.w400,fontSize:12.sp,color:
+                                          Color.fromRGBO(12, 16, 29, 0.6))),
+                                          trailing: (widget.state == 0)
+                                              ?  ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  shape: new RoundedRectangleBorder(
+                                                    borderRadius:
+                                                    new BorderRadius.circular(5),
+                                                  ),
+                                                  fixedSize: Size(75.w, 26.h),
+                                                  primary:
+                                                  Color.fromRGBO(248, 206, 97, 1)),
+                                              onPressed: (widget.state == 0)?() async{
+                                                String uri =
+                                                    'sms:${contact.phones[0]}?body=${Uri.encodeComponent('''Hi ${contact.displayName}! I am using Gatello. You can download it from https://play.google.com/store/apps/details?id=com.gatello.user''')}';
+                                                if (await canLaunchUrl(Uri.parse(uri))) {
+                                                  await launchUrl(Uri.parse(uri));
+                                                } else {
+                                                  throw 'Could not launch $uri';
+                                                }
+                                              }: () async {
+                                                if (!selectedContactsId.contains(snapshot.data![index].id)) {
+                                                  if (!mounted) return;
+                                                  setState(() {
+                                                    selectedContactsId.add(contact.displayName);
+                                                    selectedContacts.add(contact.phones[0]);
+                                                  });
+                                                } else {
+                                                  if (!mounted) return;
+                                                  setState(() {
+                                                    selectedContactsId.remove(snapshot.data![index].id);
+                                                    selectedContacts.remove(snapshot.data![index]);
+                                                  });
+                                                }
+                                              },
+                                              child:Column(crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  SvgPicture.asset('assets/invite_friends/add_icon.svg',
+                                                    height:28.h,width: 28.w,),
+                                                ],
+                                              ))
+                                              : (selectedContactsId.contains(snapshot.data![index].id))
+                                              ? Icon(Icons.done)
+                                              : null,
+                                        ),
+                                        Divider(color:Color.fromRGBO(0, 0, 0, 0.14),thickness:0.8.h,indent:12.w,)
+                                      ],
+                                      );
+                                    }
+                                  }),
+                            ),
+                          ],
+                          ),
+                        );
+                      } else {
+                        return Container();
                       }
                     } else if (snapshot.connectionState == ConnectionState.none) {
-                      return Container(
-                          child: Center(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    lottieAnimation(invalidLottie),
-                                    Text("No Contacts Found"),
-                                    flatButton(
-                                        onPressed: () async {
-                                          _contacts = getContacts();
-                                        },
-                                        child: Text("Retry"))
-                                  ],
-                                ),
-                              )));
+                      return Container();
                     } else {
-                      return Container(
-                          child: Center(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [lottieAnimation(loadingLottie, repeat: true), Text("Loading")],
-                                ),
-                              )));
+                      return Container();
                     }
                   }),
             )));

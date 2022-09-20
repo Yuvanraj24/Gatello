@@ -1,14 +1,15 @@
 import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../Authentication/Authentication.dart';
 import '../Others/Structure.dart';
-
-
 class Write {
+  final uid;
+  Write({
+    required this.uid,
+});
+
   FirebaseStorage instance = FirebaseStorage.instance;
-  var uid = getUID();
   Future<TaskSnapshot> personalChat({required String roomId, required Uint8List file, required String fileName, required String contentType}) async =>
       await instance.ref('personal-chat/$roomId/${(uid + "-" + fileName + "." + contentType.split("/").last).trim()}').putData(file, SettableMetadata(contentType: contentType));
   Future<TaskSnapshot> groupChat({required String guid, required Uint8List file, required String fileName, required String contentType}) async =>
@@ -18,9 +19,10 @@ class Write {
   Future<TaskSnapshot> groupProfile({required String guid, required Uint8List file, required String fileName, required String contentType}) async =>
       await instance.ref('group-profile/$guid/${(uid + "-" + fileName + "." + contentType.split("/").last).trim()}').putData(file, SettableMetadata(contentType: contentType));
 }
-
 Future WriteLog(
-    {required String timestamp,
+    {
+      required String uid,
+      required String timestamp,
       //*0->personal chat; 1->group chat
       required int chatType,
       required String callerId,
@@ -30,7 +32,7 @@ Future WriteLog(
       String?name,
       required DocumentSnapshot<Map<String, dynamic>> document}) async {
   FirebaseFirestore instance = FirebaseFirestore.instance;
-  String uid = getUID();
+ // String uid = 's8b6XInslPffQEgz8sVTINsPhcx2';
   DocumentSnapshot<Map<String, dynamic>>? userDocumentSnapshot;
   if (chatType == 0) {
     userDocumentSnapshot = await instance.collection("user-detail").doc(uid).get();
@@ -50,7 +52,6 @@ Future WriteLog(
         : createCallMembersGroup(groupDetailDocument: document.data()!, callerUID: uid),
   });
 }
-
 Future UpdateWriteLog({required String documentId, required String uid, required Map<String, dynamic> userDetailDoc}) async {
   FirebaseFirestore instance = FirebaseFirestore.instance;
   DocumentReference<Map<String, dynamic>> callLogDocRef = instance.collection("call-logs").doc(documentId);

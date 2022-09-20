@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,8 +23,10 @@ import '../../Others/lottie_strings.dart';
 import '../../Style/Colors.dart';
 import '../../components/ScaffoldDialog.dart';
 import '../../core/models/exception/pops_exception.dart';
+import '../../handler/LifeCycle.dart';
 import '../../handler/Network.dart';
 import '../../main.dart';
+import '../ContactList.dart';
 import '../invite_friends.dart';
 import '../profile/profile_details.dart';
 import 'Delete1Dialog.dart';
@@ -32,9 +37,9 @@ class Tabbar extends StatefulWidget {
   State<Tabbar> createState() => _TabState();
 }
 class _TabState extends State<Tabbar> {
+  FirebaseFirestore instance = FirebaseFirestore.instance;
 
-
-
+  var lifecycleEventHandler;
   int overallUnreadChatList = 1;
   Future? _future;
   String? userId;
@@ -53,7 +58,33 @@ class _TabState extends State<Tabbar> {
       body: {"user_id": (userId != null) ? userId : userId, "followee_id": ""},
     );
   }
+  Future lifecycleInit() async {
+    String? uid = userId;
+    FirebaseFirestore instance = FirebaseFirestore.instance;
 
+    await instance.collection("user-detail").doc(uid).update({"status": "online", "chattingWith": null, "callStatus": false});
+    if (uid != null && WidgetsBinding.instance != null) {
+      lifecycleEventHandler = LifecycleEventHandler(detachedCallBack: () async {
+        try {
+          await instance.collection("user-detail").doc(uid).update({
+            "status": DateTime.now().millisecondsSinceEpoch.toString(),
+            "chattingWith": null,
+          });
+        } catch (e) {
+          log(e.toString());
+        }
+      }, resumeCallBack: () async {
+        try {
+          await instance.collection("user-detail").doc(uid).update({
+            "status": "online",
+          });
+        } catch (e) {
+          log(e.toString());
+        }
+      });
+      WidgetsBinding.instance!.addObserver(lifecycleEventHandler);
+    }
+  }
   Future<void> _getUID() async {
     print('uidapi');
     SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
@@ -63,9 +94,10 @@ class _TabState extends State<Tabbar> {
   Future<dynamic> sendData() async {
     final data1 = await _getUID();
     final data2 = await profileDetailsApiCall();
-
-    return [data1, data2];
+    final data3= await lifecycleInit();
+    return [data1, data2,data3];
   }
+
   @override
   void initState() {
     _future = sendData();
@@ -75,11 +107,12 @@ class _TabState extends State<Tabbar> {
   @override
   Widget build(BuildContext context) {
 
-    // initSP();
+
     return SafeArea(
       child: FutureBuilder(
           future:_future,
           builder: (context,snap) {
+
             if(snap.hasData) {
               return DefaultTabController(
                 initialIndex: 0,
@@ -234,7 +267,7 @@ class _TabState extends State<Tabbar> {
                                                                     MaterialPageRoute(
                                                                         builder: (
                                                                             context) =>
-                                                                            InviteFriends()));
+                                                                            ContactList(state: 0)));
                                                               },
                                                               child: Container(
                                                                 width: 150.w,
@@ -264,6 +297,7 @@ class _TabState extends State<Tabbar> {
                                                               ),
                                                             )),
                                                         PopupMenuItem(
+
                                                             child: Container(
                                                               width: 150.w,
                                                               child: Row(
@@ -286,6 +320,7 @@ class _TabState extends State<Tabbar> {
                                                                           )))
                                                                 ],
                                                               ),
+
                                                             ))
                                                       ]),
                                                 ),

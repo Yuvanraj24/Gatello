@@ -149,6 +149,7 @@ class _SearchPageState extends State<SearchPage> {
   //     _isRequesting = true;
   //     if (body.isEmpty) {
   //       querySnapshot = await instance
+
   //           .collection("group-detail")
   //           .where("title", isGreaterThanOrEqualTo: searchQuery)
   //           .where("title", isLessThanOrEqualTo: searchQuery + '\uf8ff')

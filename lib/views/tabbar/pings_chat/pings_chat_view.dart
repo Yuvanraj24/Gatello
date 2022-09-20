@@ -30,7 +30,6 @@ import '../../../components/flatButton.dart';
 import '../../../firebase_options.dart';
 import 'dart:developer' as dev;
 
-
 import '../../../main.dart';
 import '../../../utils/DynamicLinkParser.dart';
 import '../chats/personal_chat_screen/pesrsonal_chat.dart';
@@ -65,10 +64,11 @@ class PingsChatView extends StatefulWidget {
 }
 
 class _PingsChatViewState extends State<PingsChatView> with SingleTickerProviderStateMixin {
+  bool isSent=false;
   int index = 0;
   late TabController tabController;
-
-  final db=FirebaseFirestore.instance;
+  bool sel = false;
+  final instance =FirebaseFirestore.instance;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   // String? uid;
   String? puid;
@@ -76,12 +76,16 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
   List<PingsChatListModel> tileData = [];
   final _isSelected = Map();
   bool selects = false;
+
   bool change = false;
   bool longPressedFlag=false;
   late List? selectedItems=[];
   bool isFirstTime=true;
   bool isChatListLoaded=false;
-
+//  List <bool> onChange = [true];
+  bool onChange=true;
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = [];
+  List selectedDocs=[];
   @override
   void dispose() {
     tabController.dispose();
@@ -105,7 +109,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
   //   final SharedPreferences prefs = await _prefs;
   //   uid=prefs.getString("userid");
   //
-  //   // isChatListLoaded=true;
+  //
   //
   //   Fluttertoast.showToast(msg: prefs.getString("userid").toString(), toastLength: Toast.LENGTH_LONG,
   //       timeInSecForIosWeb: 1);
@@ -123,6 +127,8 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
         });
       }
     });
+
+
     List<Widget> tabs = [
       Tab(
         child: Text(
@@ -137,91 +143,583 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
         ),
       )
     ];
-    Widget getChatList(SizingInformation sizingInformation) {
-      return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: db.collection("personal-chat-room-detail").where("members.${widget.uid}.isBlocked", isNotEqualTo: true).snapshots(),
-          builder: (context, chatRoomDetailSnapshot) {
-            if (chatRoomDetailSnapshot.connectionState == ConnectionState.active &&
-                chatRoomDetailSnapshot.hasData &&
-                chatRoomDetailSnapshot.data != null &&
-                chatRoomDetailSnapshot.data!.docs.isNotEmpty) {
-              List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = chatRoomDetailSnapshot.data!.docs;
-              docs.sort((b, a) => getDateTimeSinceEpoch(datetime: a.data()["timestamp"]).compareTo(getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
+    Widget  getChatList(SizingInformation sizingInformation)
+    {
+      return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>
+        (
 
-              return ListView.separated(
-                  itemCount: docs.length,
-                  shrinkWrap: true,
-                  separatorBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Divider(
-                      thickness: 1,
-                      height: 1,
-                      color: (themedata.value.index == 0) ? Color(lightGrey) : Color(lightBlack),
-                    ),
-                  ),
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: (widget.state == null)
-                          ? () {
-                        if (!mounted) return;
-                        setState(() {
-                          isChatting = false;
-                          puid = docs[index].data()["members"]["${widget.uid}"]["peeruid"];
-                          isChatting = true;
+          stream: instance.collection("personal-chat-room-detail").where("members.${widget.uid}.delete",isEqualTo: false).snapshots(),
+          builder: (context,chatRoomdetailsnap) {
+            if (chatRoomdetailsnap.connectionState == ConnectionState.active &&
+                chatRoomdetailsnap.hasData &&
+                chatRoomdetailsnap.data != null &&
+                chatRoomdetailsnap.data!.docs.isNotEmpty) {
+              docs = chatRoomdetailsnap.data!.docs;
+              docs.sort((b, a) =>
+                  getDateTimeSinceEpoch(datetime: a.data()["timestamp"])
+                      .compareTo(
+                      getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
+              // print(docs.toString());
+              // print("LENGTH:${docs.length}");
+              return ListView.builder(
+                itemCount: docs.length,
+                itemBuilder: (context, index) {
+                  if (!_isSelected.containsKey(index)) // important
+                    _isSelected[index] = false;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: ListTile(
+                      selected: _isSelected[index],
+                      tileColor: Colors.white,
+                      selectedTileColor: Color.fromRGBO(248, 206, 97, 0.31),
+
+                      // onLongPress: () {
+                      //   setState((){
+                      //     _isSelected[index] = !_isSelected[index];
+                      //     print("OP: ${_isSelected[index]}=!${_isSelected} ");
+                      //     selects = true;
+                      //     print("Long Press");
+                      //   });
+                      //
+                      // }
+
+                      onLongPress: () {
+                        setState((){
+                          _isSelected[index] = !_isSelected[index];
+
+
+                          //_isSelected.isNotEmpty ? this.widget.appbarChange = true: this.widget.appbarChange = false;
+
+                          if(isFirstTime) {
+                            if (selectedItems!.isEmpty) {
+
+
+
+                              selectedItems!.add(index);
+
+
+
+                              isFirstTime=false;
+                              longPressedFlag=true;
+
+                            }
+                          }
+                          else {
+                            if (selectedItems!.contains(index)) {
+                              print("EXISTS So removing...");
+                              selectedItems!.remove(index);
+                              print("Selected$index");
+                              print("Selected items$selectedItems");
+                            }
+                            else{
+                              selectedItems!.add(index);
+                              print("Selected$index");
+                              print("Selected items$selectedItems");
+                              print("Long Press Triggers");
+                              longPressedFlag=true;
+                            }
+
+                            if(selectedItems!.isEmpty && isFirstTime==false)
+                            {
+                              print("Deselect all");
+                              isFirstTime=true;
+                              longPressedFlag=false;
+
+                            }
+
+                          }
+
                         });
-                        if (sizingInformation.deviceScreenType != DeviceScreenType.desktop) {
+                      }
+                      ,
+
+                      onTap: ()
+                      {
+                        print("Long Press Flag:${longPressedFlag}");
+                        if(longPressedFlag)
+                        {
+                          setState(() {
+                            _isSelected[index] = !_isSelected[index];
+                            if(selectedItems!.isEmpty)
+                            {
+                              longPressedFlag=false;
+                            }
+                            else{
+                              print("Tapping...x");
+
+                              if (selectedItems!.contains(index)) {
+                                print("EXISTS So removing...");
+                                selectedItems!.remove(index);
+                                print("Selected$index");
+                                print("Selected items$selectedItems");
+                              }
+                              else
+                              {
+                                selectedItems!.add(index);
+                                print("Selected$index");
+                                print("Selected items$selectedItems");
+                                print("Tap Triggers");
+                                longPressedFlag=true;
+                              }
+                            }
+                          });
+
+                          if(selectedItems!.isEmpty && isFirstTime==false)
+                          {
+                            print("Deselect all");
+                            isFirstTime=true;
+                            longPressedFlag=false;
+                          }
+                        }
+                        else
+                        {
+                          print("Page Open");
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ChatPage(
-                                    state: 0,
-                                    uid: widget.uid,
-                                    puid: puid!,
-                                  ))).then((value) {
-                            if (value == true) {
-                              if (!mounted) return;
-                              setState(() {
-                                isChatting = false;
-                                puid = null;
-                              });
-                            }
-                          });
+
+                                  builder: (context) =>
+                                      ChatPage(state: 0,
+                                          uid: widget.uid,
+                                          puid: docs[index]
+                                              .data()["members"]["${widget.uid}"]["peeruid"])
+                              ));
                         }
-                      }
-                          : null,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                        child: buildItem(
-                          id: docs[index].data()["members"]["${widget.uid}"]["peeruid"],
-                          pic: docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["pic"],
-                          name: docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["name"],
-                          lastMessage: docs[index].data()["lastMessage"],
-                          timestamp: docs[index].data()["timestamp"],
-                          lastRead: docs[index].data()["members"]["${widget.uid}"]["lastRead"],
-                          peerLastRead: docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["lastRead"],
-                          unreadCount: docs[index].data()["members"]["${widget.uid}"]["unreadCount"],
-                          messageBy: docs[index].data()["messageBy"],
-                          document: docs[index],
+
+                        // Navigator.push(
+                        //               context,
+                        //               MaterialPageRoute(
+                        //
+                        //                   builder: (context) =>
+                        //                       PersonalChat(state: 0,
+                        //                           uid: uid!,
+                        //                           puid: docs[index]
+                        //                               .data()["members"]["$uid"]["peeruid"])));
+                      },
+
+                      // onTap: () {
+                      //
+                      //   print("Array LENGTH: ${_isSelected.length}");
+                      //   if(_isSelected.length==0)
+                      //     {
+                      //       selects=false;
+                      //     }
+                      //   else {
+                      //     if (selects == true) {
+                      //       setState(() {
+                      //         _isSelected[index] = !_isSelected[index];
+                      //         print("Tile Selected1");
+                      //
+                      //         //_isSelected.removeWhere((key, value) => true);
+                      //       });
+                      //     }
+                      //     else {
+                      //       Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //
+                      //               builder: (context) =>
+                      //                   PersonalChat(state: 0,
+                      //                       uid: uid!,
+                      //                       puid: docs[index]
+                      //                           .data()["members"]["$uid"]["peeruid"])));
+                      //     }
+                      //   }
+                      //   },
+
+                      contentPadding: EdgeInsets.only(
+                          left: 10, right: 10, top: 4, bottom: 4),
+                      //  contentPadding: EdgeInsets.all(10),
+                      leading: CircleAvatar(
+                        radius: 25.5.h,
+                        backgroundImage: NetworkImage(tileData[index].dp),
+                      ),
+
+
+                      title: Text(
+                        docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["name"],
+                        style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                                fontSize: 16.sp,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                                fontWeight: FontWeight.w700)),
+                      ),
+                      subtitle: Text(docs[index].data()["lastMessage"],
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Color.fromRGBO(12, 16, 29, 0.6),
+                                  fontWeight: FontWeight.w400))),
+                      trailing: Padding(
+                        padding: EdgeInsets.only(top: 8),
+                        child: Column(
+                          children: [
+                            Text(readTimestamp(int.parse(docs[index].data()["timestamp"])),
+                                style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 10.sp,
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                      fontWeight: FontWeight.w400),
+                                )),
+                            SizedBox(height: 3.h),
+
+                            // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
+                            (docs[index].data()["members"]["${widget.uid}"]["unreadCount"]==0)?
+                            SizedBox():
+                            Container(
+                                decoration: BoxDecoration(
+                                  //borderRadius: BorderRadius.circular(15),
+                                    border: Border.all(
+                                      color:
+                                      Color.fromRGBO(255, 202, 40, 1),
+                                    ),
+                                    shape: BoxShape.circle,
+                                    color: Color.fromRGBO(255, 202, 40, 1)),
+                                width: 22.w,
+                                height: 22.h,
+                                child: Center(
+                                  child:
+                                  Text(
+                                      "${docs[index].data()["members"]["${widget.uid}"]
+                                      ["unreadCount"]}",
+                                      style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                            fontSize: 11.sp,
+                                            color:
+                                            Color.fromRGBO(0, 0, 0, 1),
+                                            fontWeight: FontWeight.w400),
+                                      )),
+                                )),
+                          ],
                         ),
                       ),
-                    );
-                  });
-            } else {
-              return Container(
-                  child: Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [lottieAnimation(emptyChatLottie), Text("Your shelves are empty !\nAdd people to start the conversation")],
-                        ),
-                      )));
+                    ),
+                  );
+                },
+              );
             }
-          });
+            else {
+              return Container(
+                  padding: EdgeInsets.only(top: 110),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Image.asset(
+                            "assets/tabbar_icons/tab_view_main/chats_image/emptyChat.png"),
+                        Text("No Conversation",
+                            style: GoogleFonts.raleway(
+                                textStyle: TextStyle(
+                                    color: Color.fromRGBO(0, 0, 0, 1),
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700))),
+                        Text(
+                          "You don't made any conversation yet",
+                          style: GoogleFonts.raleway(
+                              color: Color.fromRGBO(122, 122, 122, 1),
+                              fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ));
+            }
+          }
+      );
     }
 
+    // Widget  getChatList(select)
+    // {
+    //   return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>
+    //     (
+    //
+    //       stream: instance.collection("personal-chat-room-detail").where("members.${widget.uid}.delete",isEqualTo: false).snapshots(),
+    //       builder: (context,chatRoomdetailsnap) {
+    //         if (chatRoomdetailsnap.connectionState == ConnectionState.active &&
+    //             chatRoomdetailsnap.hasData &&
+    //             chatRoomdetailsnap.data != null &&
+    //             chatRoomdetailsnap.data!.docs.isNotEmpty) {
+    //           docs = chatRoomdetailsnap.data!.docs;
+    //           docs.sort((b, a) =>
+    //               getDateTimeSinceEpoch(datetime: a.data()["timestamp"])
+    //                   .compareTo(
+    //                   getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
+    //           // print(docs.toString());
+    //           // print("LENGTH:${docs.length}");
+    //           return ListView.builder(
+    //             itemCount: docs.length,
+    //             itemBuilder: (context, index) {
+    //               if (!_isSelected.containsKey(index)) // important
+    //                 _isSelected[index] = false;
+    //
+    //               return Padding(
+    //                 padding: const EdgeInsets.only(bottom: 2),
+    //                 child: ListTile(
+    //                   selected: _isSelected[index],
+    //                   tileColor: Colors.white,
+    //                   selectedTileColor: Color.fromRGBO(248, 206, 97, 0.31),
+    //
+    //                   // onLongPress: () {
+    //                   //   setState((){
+    //                   //     _isSelected[index] = !_isSelected[index];
+    //                   //     print("OP: ${_isSelected[index]}=!${_isSelected} ");
+    //                   //     selects = true;
+    //                   //     print("Long Press");
+    //                   //   });
+    //                   //
+    //                   // }
+    //
+    //                   // onLongPress: () {
+    //                   //   setState((){
+    //                   //     _isSelected[index] = !_isSelected[index];
+    //                   //     pingsChatTabbar = true;
+    //                   //
+    //                   //     //_isSelected.isNotEmpty ? this.widget.appbarChange = true: this.widget.appbarChange = false;
+    //                   //
+    //                   //     if(isFirstTime) {
+    //                   //       if (selectedItems!.isEmpty) {
+    //                   //
+    //                   //
+    //                   //         print("First Time Long Pressing...x");
+    //                   //         selectedItems!.add(index);
+    //                   //         print(selectedItems);
+    //                   //         print("Before ${widget.appbarChange}");
+    //                   //         setState(() {
+    //                   //           widget.appbarChange = true;
+    //                   //         });
+    //                   //         print("After ${widget.appbarChange}");
+    //                   //         isFirstTime=false;
+    //                   //         longPressedFlag=true;
+    //                   //         print("this is selected index ${selectedItems![0]}");
+    //                   //         print("this peerid ${docs[index].id}");
+    //                   //
+    //                   //       }
+    //                   //     }
+    //                   //     else {
+    //                   //       if (selectedItems!.contains(index)) {
+    //                   //         print("EXISTS So removing...");
+    //                   //         selectedItems!.remove(index);
+    //                   //         print("Selected$index");
+    //                   //         print("Selected items$selectedItems");
+    //                   //       }
+    //                   //       else{
+    //                   //         selectedItems!.add(index);
+    //                   //         print("Selected$index");
+    //                   //         print("Selected items$selectedItems");
+    //                   //         print("Long Press Triggers");
+    //                   //         longPressedFlag=true;
+    //                   //       }
+    //                   //
+    //                   //       if(selectedItems!.isEmpty && isFirstTime==false)
+    //                   //       {
+    //                   //         print("Deselect all");
+    //                   //         isFirstTime=true;
+    //                   //         longPressedFlag=false;
+    //                   //
+    //                   //       }
+    //                   //
+    //                   //     }
+    //                   //
+    //                   //   });
+    //                   // }
+    //                   // ,
+    //
+    //                   onTap: ()
+    //                   {
+    //                     print("Long Press Flag:${longPressedFlag}");
+    //                     if(longPressedFlag)
+    //                     {
+    //                       setState(() {
+    //                         _isSelected[index] = !_isSelected[index];
+    //                         if(selectedItems!.isEmpty)
+    //                         {
+    //                           longPressedFlag=false;
+    //                         }
+    //                         else{
+    //                           print("Tapping...x");
+    //
+    //                           if (selectedItems!.contains(index)) {
+    //                             print("EXISTS So removing...");
+    //                             selectedItems!.remove(index);
+    //                             print("Selected$index");
+    //                             print("Selected items$selectedItems");
+    //                           }
+    //                           else
+    //                           {
+    //                             selectedItems!.add(index);
+    //                             print("Selected$index");
+    //                             print("Selected items$selectedItems");
+    //                             print("Tap Triggers");
+    //                             longPressedFlag=true;
+    //                           }
+    //                         }
+    //                       });
+    //
+    //                       if(selectedItems!.isEmpty && isFirstTime==false)
+    //                       {
+    //                         print("Deselect all");
+    //                         isFirstTime=true;
+    //                         longPressedFlag=false;
+    //                       }
+    //                     }
+    //                     else
+    //                     {
+    //                       print("Page Open");
+    //                       Navigator.push(
+    //                           context,
+    //                           MaterialPageRoute(
+    //
+    //                               builder: (context) =>
+    //                                   ChatPage(state: 0,
+    //                                       uid: {widget.uid}.toString(),
+    //                                       puid: docs[index]
+    //                                           .data()["members"]["${widget.uid}"]["peeruid"])
+    //                           ));
+    //                     }
+    //
+    //                     // Navigator.push(
+    //                     //               context,
+    //                     //               MaterialPageRoute(
+    //                     //
+    //                     //                   builder: (context) =>
+    //                     //                       PersonalChat(state: 0,
+    //                     //                           uid: uid!,
+    //                     //                           puid: docs[index]
+    //                     //                               .data()["members"]["$uid"]["peeruid"])));
+    //                   },
+    //
+    //                   // onTap: () {
+    //                   //
+    //                   //   print("Array LENGTH: ${_isSelected.length}");
+    //                   //   if(_isSelected.length==0)
+    //                   //     {
+    //                   //       selects=false;
+    //                   //     }
+    //                   //   else {
+    //                   //     if (selects == true) {
+    //                   //       setState(() {
+    //                   //         _isSelected[index] = !_isSelected[index];
+    //                   //         print("Tile Selected1");
+    //                   //
+    //                   //         //_isSelected.removeWhere((key, value) => true);
+    //                   //       });
+    //                   //     }
+    //                   //     else {
+    //                   //       Navigator.push(
+    //                   //           context,
+    //                   //           MaterialPageRoute(
+    //                   //
+    //                   //               builder: (context) =>
+    //                   //                   PersonalChat(state: 0,
+    //                   //                       uid: uid!,
+    //                   //                       puid: docs[index]
+    //                   //                           .data()["members"]["$uid"]["peeruid"])));
+    //                   //     }
+    //                   //   }
+    //                   //   },
+    //
+    //                   contentPadding: EdgeInsets.only(
+    //                       left: 10, right: 10, top: 4, bottom: 4),
+    //                   //  contentPadding: EdgeInsets.all(10),
+    //                   leading: CircleAvatar(
+    //                     radius: 25.5.h,
+    //                     backgroundImage: NetworkImage(tileData[index].dp),
+    //                   ),
+    //
+    //
+    //                   title: Text(
+    //                     docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["name"],
+    //                     style: GoogleFonts.inter(
+    //                         textStyle: TextStyle(
+    //                             fontSize: 16.sp,
+    //                             color: Color.fromRGBO(0, 0, 0, 1),
+    //                             fontWeight: FontWeight.w700)),
+    //                   ),
+    //                   subtitle: Text(docs[index].data()["lastMessage"],
+    //                       style: GoogleFonts.inter(
+    //                           textStyle: TextStyle(
+    //
+    //                               overflow: TextOverflow.ellipsis,
+    //                               fontSize: 14.sp,
+    //                               color: Color.fromRGBO(12, 16, 29, 0.6),
+    //                               fontWeight: FontWeight.w400))),
+    //                   trailing: Padding(
+    //                     padding: EdgeInsets.only(top: 8),
+    //                     child: Column(
+    //                       children: [
+    //                         Text(readTimestamp(int.parse(docs[index].data()["timestamp"])),
+    //                             style: GoogleFonts.inter(
+    //                               textStyle: TextStyle(
+    //                                   fontSize: 10.sp,
+    //                                   color: Color.fromRGBO(0, 0, 0, 1),
+    //                                   fontWeight: FontWeight.w400),
+    //                             )),
+    //                         SizedBox(height: 3.h),
+    //
+    //                         // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
+    //                         (docs[index].data()["members"]["${widget.uid}"]["unreadCount"]==0)?
+    //                         SizedBox():
+    //                         Container(
+    //                             decoration: BoxDecoration(
+    //                               //borderRadius: BorderRadius.circular(15),
+    //                                 border: Border.all(
+    //                                   color:
+    //                                   Color.fromRGBO(255, 202, 40, 1),
+    //                                 ),
+    //                                 shape: BoxShape.circle,
+    //                                 color: Color.fromRGBO(255, 202, 40, 1)),
+    //                             width: 22.w,
+    //                             height: 22.h,
+    //                             child: Center(
+    //                               child:
+    //                               Text(
+    //                                   "${docs[index].data()["members"]["${widget.uid}"]
+    //                                   ["unreadCount"]}",
+    //                                   style: GoogleFonts.inter(
+    //                                     textStyle: TextStyle(
+    //                                         fontSize: 11.sp,
+    //                                         color:
+    //                                         Color.fromRGBO(0, 0, 0, 1),
+    //                                         fontWeight: FontWeight.w400),
+    //                                   )),
+    //                             )),
+    //                       ],
+    //                     ),
+    //                   ),
+    //                 ),
+    //               );
+    //             },
+    //           );
+    //         }
+    //         else {
+    //           return Container(
+    //               padding: EdgeInsets.only(top: 110),
+    //               child: Center(
+    //                 child: Column(
+    //                   children: [
+    //                     Image.asset(
+    //                         "assets/tabbar_icons/tab_view_main/chats_image/emptyChat.png"),
+    //                     Text("No Conversation",
+    //                         style: GoogleFonts.raleway(
+    //                             textStyle: TextStyle(
+    //                                 color: Color.fromRGBO(0, 0, 0, 1),
+    //                                 fontSize: 22,
+    //                                 fontWeight: FontWeight.w700))),
+    //                     Text(
+    //                       "You don't made any conversation yet",
+    //                       style: GoogleFonts.raleway(
+    //                           color: Color.fromRGBO(122, 122, 122, 1),
+    //                           fontSize: 14),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ));
+    //         }
+    //       }
+    //   );
+    // }
     Widget personalGroupList(SizingInformation sizingInformation) {
       return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: db.collection("group-detail").where("members.${widget.uid}.claim", isNotEqualTo: "removed").snapshots(),
+          stream: instance.collection("group-detail").where("members.${widget.uid}.claim", isNotEqualTo: "removed").snapshots(),
           builder: (context, groupRoomDetailSnapshot) {
             if (groupRoomDetailSnapshot.connectionState == ConnectionState.active &&
                 groupRoomDetailSnapshot.hasData &&
@@ -381,44 +879,81 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                               ]
                                   : null,
                             ),
-                            floatingActionButton: (widget.state == null)
-                                ? (index == 0)
-                                ?   FloatingActionButton(
-                                onPressed: () async {
-                                  if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-                                    return await scaffoldAlertDialogBox(
-                                        context: context,
-                                        page: SearchPage(
-                                          state: 0,
-                                          sizingInformation: sizingInformation,
-                                        )).then((value) {
-                                      if (value != null) {
-                                        if (!mounted) return;
-                                        setState(() {
-                                          isChatting = true;
-                                          puid = value;
-                                        });
+                            floatingActionButton:
+                            Column(
+                              children: [
+                                FloatingActionButton(
+                                    child: Text("Select all"),
+                                    onPressed: (){
+                                      longPressedFlag = true;
+                                      for(int i =0; i<docs.length; i++){
+
+                                        selectedItems!.add(i);
+                                        print("Document Data... ${i}");
+                                        print("Document Data... ${selectedItems}");
                                       }
-                                    });
-                                  } else {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => SearchPage(
+                                    }),
+                                FloatingActionButton(
+                                    child: Text("Delete"),
+                                    onPressed: (){
+
+                                      for (int i = 0; i < selectedItems!.length; i++) {
+                                        var sell = instance.collection("personal-chat-room-detail")
+                                            .doc(
+                                            "${docs[selectedItems![i]].id}"
+
+                                        );
+                                        print("${docs[selectedItems![i]].id}");
+                                        sell.update({"members.${widget.uid}.delete" : true});
+                                        //selectedItems!.remove;
+
+                                      }
+                                      selectedItems = [];
+
+
+                                      print(docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]);
+
+
+                                      print("Uid is a $puid");
+                                      //print("this is select index $sell");
+                                    }),
+                                FloatingActionButton(
+                                    onPressed: () async {
+                                      if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                                        return await scaffoldAlertDialogBox(
+                                            context: context,
+                                            page: SearchPage(
                                               state: 0,
                                               sizingInformation: sizingInformation,
-                                            )));
-                                  }
-                                },
-                                // onPressed: () {
-                                //
-                                // Navigator.push(context,
-                                // MaterialPageRoute(builder: (context) => SelectContact()));
-                                // },
-                                backgroundColor: Color.fromRGBO(248, 206, 97, 1),
-                                child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg"))
-                                : null
-                                : null,
+                                            )).then((value) {
+                                          if (value != null) {
+                                            if (!mounted) return;
+                                            setState(() {
+                                              isChatting = true;
+                                              puid = value;
+                                            });
+                                          }
+                                        });
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => SearchPage(
+                                                  state: 0,
+                                                  sizingInformation: sizingInformation,
+                                                )));
+                                      }
+                                    },
+
+                                    // onPressed: () {
+                                    //
+                                    // Navigator.push(context,
+                                    // MaterialPageRoute(builder: (context) => SelectContact()));
+                                    // },
+                                    backgroundColor: Color.fromRGBO(248, 206, 97, 1),
+                                    child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
+                              ],
+                            ),
                             body: TabBarView(controller: tabController, children: [getChatList( sizingInformation),personalGroupList(sizingInformation)]),
                           ),
                         ),
@@ -468,36 +1003,105 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
           ),
           floatingActionButton: (widget.state == null)
               ? (index == 0)
-              ? FloatingActionButton(
-            backgroundColor: Color.fromRGBO(248, 206, 97, 1),
-            child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg"),
-            onPressed: () async {
-              if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-                return await scaffoldAlertDialogBox(
-                    context: context,
-                    page: SearchPage(
-                      state: 0,
-                      sizingInformation: sizingInformation,
-                    )).then((value) {
-                  if (value != null) {
-                    if (!mounted) return;
-                    setState(() {
-                      isChatting = true;
-                      puid = value;
-                    });
-                  }
-                });
-              } else {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SearchPage(
-                          state: 0,
-                          sizingInformation: sizingInformation,
-                        )));
-              }
-            },
+              ? Column(
+            children: [
+              FloatingActionButton(
+                  child: Text("Select all"),
+                  onPressed: (){
+                    longPressedFlag = true;
+                    for(int i =0; i<docs.length; i++){
+
+                      selectedItems!.add(i);
+                      print("Document Data... ${i}");
+                      print("Document Data... ${selectedItems}");
+                    }
+                  }),
+              FloatingActionButton(
+                  child: Text("Delete"),
+                  onPressed: (){
+
+                    for (int i = 0; i < selectedItems!.length; i++) {
+                      var sell = instance.collection("personal-chat-room-detail")
+                          .doc(
+                          "${docs[selectedItems![i]].id}"
+
+                      );
+                      print("${docs[selectedItems![i]].id}");
+                      sell.update({"members.${widget.uid}.delete" : true});
+                      //selectedItems!.remove;
+                    }
+                    selectedItems = [];
+                    print(docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]);
+                    print("Uid is a $puid");
+                    //print("this is select index $sell");
+                  }),
+              FloatingActionButton(
+                  onPressed: () async {
+                    if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                      return await scaffoldAlertDialogBox(
+                          context: context,
+                          page: SearchPage(
+                            state: 0,
+                            sizingInformation: sizingInformation,
+                          )).then((value) {
+                        if (value != null) {
+                          if (!mounted) return;
+                          setState(() {
+                            isChatting = true;
+                            puid = value;
+                          });
+                        }
+                      });
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchPage(
+                                state: 0,
+                                sizingInformation: sizingInformation,
+                              )));
+                    }
+                  },
+
+                  // onPressed: () {
+                  //
+                  // Navigator.push(context,
+                  // MaterialPageRoute(builder: (context) => SelectContact()));
+                  // },
+                  backgroundColor: Color.fromRGBO(248, 206, 97, 1),
+                  child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
+            ],
           )
+          // FloatingActionButton(
+          //   backgroundColor: Color.fromRGBO(248, 206, 97, 1),
+          //   child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg"),
+          //   onPressed: () async {
+          //     if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+          //       return await scaffoldAlertDialogBox(
+          //           context: context,
+          //           page: SearchPage(
+          //             state: 0,
+          //             sizingInformation: sizingInformation,
+          //           )).then((value) {
+          //         if (value != null) {
+          //           if (!mounted) return;
+          //           setState(() {
+          //             isChatting = true;
+          //             puid = value;
+          //           });
+          //         }
+          //       });
+          //     } else {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //               builder: (context) => SearchPage(
+          //                 state: 0,
+          //                 sizingInformation: sizingInformation,
+          //               )));
+          //     }
+          //   },
+          // )
               : FloatingActionButton(
               onPressed: () async {
                 if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
@@ -602,7 +1206,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
 
     print("Reading");
     // await db.collection("personal-chat-room-detail").get().then((event) {
-    await db.collection("personal-chat-room-detail").where("members.${widget.uid}.isblocked").get().then((event) {
+    await instance.collection("personal-chat-room-detail").where("members.${widget.uid}.isblocked").get().then((event) {
 
       for (var doc in event.docs) {
         print("${doc.id} => ${doc.data()}");
@@ -611,12 +1215,6 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
     });
 
   }
-
-
-
-
-
-
   Widget buildItem({
     required String? pic,
     required String name,
@@ -783,8 +1381,11 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
             child: flatButton(
                 size: Size(75, 30),
                 backgroundColor: Color(accent),
-                onPressed: (widget.state == 0)
+                onPressed:(widget.state ==0)
                     ? () async {
+
+
+                 print('Lotus1');
                   // if (id.length == 28) {
                   //   await writeUserShareMessage(type: 5, peerName: name, peerPic: pic, uid: uid!, puid: id);
                   // } else {
@@ -795,6 +1396,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                       (widget.postUrl!.contains("mp4") || widget.postUrl!.contains("mpeg4")) ? null : widget.postUrl);
                   Uri _link = await _shareableLink.createDynamicLink(short: false);
                   if (id.length == 28) {
+                    print('Lotus2');
                     await writeUserMessage(
                         type: 5,
                         peerName: name,
@@ -807,7 +1409,9 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                         storyContentUrl: widget.postUrl,
                         storyDescription: widget.postDescription,
                         storyUrl: _link.toString());
-                  } else {
+                  }
+                  else {
+                    print('Lotus3');
                     await writeGroupMessage(
                         type: 5,
                         groupName: name,
@@ -822,11 +1426,15 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                         storyDescription: widget.postDescription,
                         storyUrl: _link.toString());
                   }
+
                 }
-                    : () async {
+                    : ()  {
+
                   widget.messages!.forEach((key, value) async {
+                    print('Lotus5');
                     dev.log(key.toString());
                     String getUrl(int type) {
+                      print('Lotus6');
                       switch (type) {
                         case 1:
                           return value.data()!["data"]["image"];
@@ -842,6 +1450,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                     }
 
                     String? getMessage(int type) {
+                      print('Lotus7');
                       switch (type) {
                         case 0:
                           return value.data()!["data"]["text"];
@@ -853,71 +1462,147 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                           return value.data()!["data"]["contact"];
                         default:
                           return null;
+
                       }
+
                     }
 
                     Uint8List? file = await downloadToBytes(getUrl(dataTypeMap.inverse[value.data()!["type"]]!));
+                    if(!selectedDocs.contains(id)) {
+                      selectedDocs.add(id);
 
-                    if (id.length == 28) {
-                      await writeUserMessage(
-                        type: dataTypeMap.inverse[value.data()!["type"]]!,
-                        peerName: name,
-                        peerPic: pic,
-                        uid: widget.uid,
-                        puid: id,
-                        state: 0,
-                        forwardCount: value.data()!["forwardCount"],
-                        message: getMessage(dataTypeMap.inverse[value.data()!["type"]]!),
-                        file: file,
-                        // replyMap: (value.data()!["reply"] != null) ? Map.from(value.data()!["reply"]) : null,
-                        contentType: value.data()!["contentType"],
-                        storyContentType: (dataTypeMap.inverse[value.data()!["type"]] == 5)
-                            ? (value.data()!["data"]["image"] != null)
-                            ? 0
-                            : 1
-                            : null,
-                        storyContentUrl: (dataTypeMap.inverse[value.data()!["type"]] == 5)
-                            ? (value.data()!["data"]["image"] != null)
-                            ? value.data()!["data"]["image"]
-                            : value.data()!["data"]["video"]
-                            : null,
-                        storyDescription: (dataTypeMap.inverse[value.data()!["type"]] == 5) ? value.data()!["data"]["text"] : null,
-                        storyUrl: (dataTypeMap.inverse[value.data()!["type"]] == 5) ? value.data()!["data"]["story"] : null,
-                      );
-                    } else {
-                      await writeGroupMessage(
-                        type: dataTypeMap.inverse[value.data()!["type"]]!,
-                        groupName: name,
-                        groupPic: pic,
-                        members: members!,
-                        uid: widget.uid,
-                        puid: id,
-                        state: 1,
-                        // replyMap: (value.data()!["reply"]!=null)?Map.from(value.data()!["reply"]):null,
-                        forwardCount: value.data()!["forwardCount"],
-                        message: getMessage(dataTypeMap.inverse[value.data()!["type"]]!),
-                        file: file,
-                        contentType: value.data()!["contentType"],
-                        storyContentType: (dataTypeMap.inverse[value.data()!["type"]] == 5)
-                            ? (value.data()!["data"]["image"] != null)
-                            ? 0
-                            : 1
-                            : null,
-                        storyContentUrl: (dataTypeMap.inverse[value.data()!["type"]] == 5)
-                            ? (value.data()!["data"]["image"] != null)
-                            ? value.data()!["data"]["image"]
-                            : value.data()!["data"]["video"]
-                            : null,
-                        storyDescription: (dataTypeMap.inverse[value.data()!["type"]] == 5) ? value.data()!["data"]["text"] : null,
-                        storyUrl: (dataTypeMap.inverse[value.data()!["type"]] == 5) ? value.data()!["data"]["story"] : null,
-                      );
+                      if (id.length == 28) {
+                        print('works');
+                        await writeUserMessage(
+                          type: dataTypeMap.inverse[value.data()!["type"]]!,
+                          peerName: name,
+                          peerPic: pic,
+                          uid: widget.uid,
+                          puid: id,
+                          state: 0,
+                          forwardCount: value.data()!["forwardCount"],
+                          message: getMessage(
+                              dataTypeMap.inverse[value.data()!["type"]]!),
+                          file: file,
+                          // replyMap: (value.data()!["reply"] != null) ? Map.from(value.data()!["reply"]) : null,
+                          contentType: value.data()!["contentType"],
+                          storyContentType: (dataTypeMap.inverse[value
+                              .data()!["type"]] == 5)
+                              ? (value.data()!["data"]["image"] != null)
+                              ? 0
+                              : 1
+                              : null,
+                          storyContentUrl: (dataTypeMap.inverse[value
+                              .data()!["type"]] == 5)
+                              ? (value.data()!["data"]["image"] != null)
+                              ? value.data()!["data"]["image"]
+                              : value.data()!["data"]["video"]
+                              : null,
+                          storyDescription: (dataTypeMap.inverse[value
+                              .data()!["type"]] == 5) ? value
+                              .data()!["data"]["text"] : null,
+                          storyUrl: (dataTypeMap.inverse[value
+                              .data()!["type"]] == 5) ? value
+                              .data()!["data"]["story"] : null,
+
+                        );
+                        setState(() {
+                          onChange=!onChange;
+                        });
+                      }
+
+                      // setState(() {
+                      //   if(!selectedDocs.contains(id)){
+                      //     selectedDocs.add(id);
+                      //   }
+                      //   else{
+                      //     print("this already entered..................");
+                      //   }
+                      //   print('Lotus8:${selectedDocs}');
+                      //   });
+                      // setState(() {
+                      //   if(selectedDocs.contains(docs[index].toString())){
+                      //
+                      //
+                      //   }
+                      //   else{
+                      //     print('22222222222222');
+                      //     selectedDocs.add(docs[index].toString());
+                      //
+                      //   }
+                      // });
+                      // print('Lotus1:${selectedDocs.toString()}');
+
+
+
+                      else if(!selectedDocs.contains(id)){
+                        print('Lotus9');
+                        await writeGroupMessage(
+                          type: dataTypeMap.inverse[value.data()!["type"]]!,
+                          groupName: name,
+                          groupPic: pic,
+                          members: members!,
+                          uid: widget.uid,
+                          puid: id,
+                          state: 1,
+                          // replyMap: (value.data()!["reply"]!=null)?Map.from(value.data()!["reply"]):null,
+                          forwardCount: value.data()!["forwardCount"],
+                          message: getMessage(
+                              dataTypeMap.inverse[value.data()!["type"]]!),
+                          file: file,
+                          contentType: value.data()!["contentType"],
+                          storyContentType: (dataTypeMap.inverse[value
+                              .data()!["type"]] == 5)
+                              ? (value.data()!["data"]["image"] != null)
+                              ? 0
+                              : 1
+                              : null,
+                          storyContentUrl: (dataTypeMap.inverse[value
+                              .data()!["type"]] == 5)
+                              ? (value.data()!["data"]["image"] != null)
+                              ? value.data()!["data"]["image"]
+                              : value.data()!["data"]["video"]
+                              : null,
+                          storyDescription: (dataTypeMap.inverse[value
+                              .data()!["type"]] == 5) ? value
+                              .data()!["data"]["text"] : null,
+                          storyUrl: (dataTypeMap.inverse[value
+                              .data()!["type"]] == 5) ? value
+                              .data()!["data"]["story"] : null,
+                        );
+                      }
+
+                    }
+                    else{
+                      print('ffffffffffffffffffff');
                     }
                   });
+
+                  // setState(() {
+                  //   onChange[];
+                  // });
+                  // print('L0tus66:${onChange}');
+                  //
+                  // setState(() {
+                  //   if(selectedDocs.contains(docs[index].toString())){
+                  //     print('11111111111${selectedDocs}');
+                  //
+                  //   }
+                  //   else{
+                  //     print('22222222222222');
+                  //     selectedDocs.add(docs[index].toString());
+                  //
+                  //   }
+                  // });
+                  // print('Lotus1:${selectedDocs.toString()}');
+
                 },
                 child: Text(
-                  "Send",
+                onChange?  'send':'sent',
                   style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 10)),
-                )),
+                )
+            )
+
           )
         ],
       ),
@@ -948,7 +1633,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
     String? url;
     String roomid = roomId(uid: uid, puid: puid);
     if (file != null && type != 0 && contentType != null) {
-      taskSnapshot = await Write().personalChat(
+      taskSnapshot = await Write(uid: widget.uid).personalChat(
           roomId: roomid,
           file: file,
           fileName: timestamp,
@@ -958,16 +1643,16 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
       url = message;
     }
     dev.log(url.toString());
-    WriteBatch writeBatch = db.batch();
+    WriteBatch writeBatch = instance.batch();
     try {
       DocumentSnapshot<Map<String, dynamic>> personalChatRoomDoc =
-      await db
+      await instance
           .collection("personal-chat-room-detail")
           .doc(roomid)
           .get();
       if (personalChatRoomDoc.exists) {
         writeBatch.set(
-            db
+            instance
                 .collection("personal-chat")
                 .doc(roomid)
                 .collection("messages")
@@ -994,7 +1679,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
               "delete": {"everyone": false, "personal": null}
             });
         writeBatch.update(
-            db.collection("personal-chat-room-detail").doc(roomid), {
+            instance.collection("personal-chat-room-detail").doc(roomid), {
           "timestamp": timestamp,
           "messageBy": "${uid}",
           "lastMessage": (type == 0) ? message.toString() : dataTypeMap[type],
@@ -1003,9 +1688,9 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
         });
         writeBatch.commit();
         DocumentSnapshot<Map<String, dynamic>> peerDocSnap =
-        await db.collection("user-detail").doc(puid).get();
+        await instance.collection("user-detail").doc(puid).get();
         DocumentSnapshot<Map<String, dynamic>> userDocSnap =
-        await db.collection("user-detail").doc(uid).get();
+        await instance.collection("user-detail").doc(uid).get();
         if (peerDocSnap.data()!["chattingWith"] != uid &&
             peerDocSnap["token"] != null) {
           return await sendNotificationForChat(
@@ -1019,11 +1704,11 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
         }
       } else {
         Future<DocumentSnapshot<Map<String, dynamic>>> userDetail =
-        db.collection("user-detail").doc(uid).get();
+        instance.collection("user-detail").doc(uid).get();
         await userDetail.then((value) async {
           if (value.exists && value.data() != null) {
             writeBatch.set(
-                db.collection("personal-chat-room-detail").doc(roomid), {
+                instance.collection("personal-chat-room-detail").doc(roomid), {
               "roomId": roomid,
               "timestamp": timestamp,
               "lastMessage": (type == 0) ? message.toString() : dataTypeMap[type],
@@ -1050,7 +1735,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
             });
 
             writeBatch.set(
-                db
+                instance
                     .collection("personal-chat")
                     .doc(roomid)
                     .collection("messages")
@@ -1080,9 +1765,9 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                 });
             writeBatch.commit();
             DocumentSnapshot<Map<String, dynamic>> peerDocSnap =
-            await db.collection("user-detail").doc(puid).get();
+            await instance.collection("user-detail").doc(puid).get();
             DocumentSnapshot<Map<String, dynamic>> userDocSnap =
-            await db.collection("user-detail").doc(uid).get();
+            await instance.collection("user-detail").doc(uid).get();
             if (peerDocSnap.data()!["chattingWith"] != uid &&
                 peerDocSnap["token"] != null) {
               return await sendNotificationForChat(
@@ -1132,7 +1817,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
     TaskSnapshot? taskSnapshot;
     String? url;
     if (file != null && type != 0 && contentType != null) {
-      taskSnapshot = await Write().groupChat(
+      taskSnapshot = await Write(uid: widget.uid).groupChat(
           guid: puid,
           file: file,
           fileName: timestamp,
@@ -1141,10 +1826,10 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
     } else if ((type == 6 || type == 7 || type == 8) && message != null) {
       url = message;
     }
-    WriteBatch writeBatch = db.batch();
+    WriteBatch writeBatch = instance.batch();
     try {
       writeBatch.set(
-          db
+          instance
               .collection("group-chat")
               .doc(puid)
               .collection("messages")
@@ -1170,7 +1855,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
             "delete": {"everyone": false, "personal": null}
           });
       writeBatch.set(
-          db.collection("group-detail").doc(puid),
+          instance.collection("group-detail").doc(puid),
           {
             "timestamp": timestamp,
             "messageBy": "${uid}",
@@ -1181,11 +1866,11 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
           SetOptions(merge: true));
       writeBatch.commit();
       DocumentSnapshot<Map<String, dynamic>> userDocSnap =
-      await db.collection("user-detail").doc(uid).get();
+      await instance.collection("user-detail").doc(uid).get();
       List<String> userToken = [];
       members.forEach((key, value) async {
         DocumentSnapshot<Map<String, dynamic>> peerDocSnap =
-        await db.collection("user-detail").doc(key).get();
+        await instance.collection("user-detail").doc(key).get();
         if (peerDocSnap.data()!["chattingWith"] != puid) {
           userToken.add(peerDocSnap.data()!["uid"]);
         }
@@ -1250,7 +1935,6 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
 
     return time;
   }
-
 }
 
 

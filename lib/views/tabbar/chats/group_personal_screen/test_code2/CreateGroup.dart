@@ -102,7 +102,7 @@ class _CreateGroupState extends State<CreateGroup> {
                             String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
                             String? url;
                             if (groupPicture != null && contentType != null) {
-                              TaskSnapshot taskSnapshot = await Write().groupProfile(guid: gid, file: groupPicture!, fileName: timestamp, contentType: contentType!);
+                              TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(guid: gid, file: groupPicture!, fileName: timestamp, contentType: contentType!);
                               url = await taskSnapshot.ref.getDownloadURL();
                             }
                             writeBatch.set(instance.collection("group-detail").doc(gid), {

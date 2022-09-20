@@ -101,6 +101,7 @@ dependencies:
   firebase_dynamic_links: ^4.3.4
   flutter_speed_dial: ^6.0.0
   story_view: ^0.13.2
+  clipboard: ^0.1.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -167,11 +168,12 @@ flutter:
     - assets/select_contact/right arrow icon.png
     - assets/icons_assets/visibility_icon.png
     - assets/tabbar_icons/tab_view_main/chats_image/emptyChat.png
-    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/document_icon_container.png
-    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png
-    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/gallery_icon_container.png
-    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_icon_container.png
-    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_icon_container.png
+    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_image.svg
+    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_image.svg
+    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_img.svg
+    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/doc_image.svg
+    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/gallery_image.svg
+    - assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_img.svg
     - assets/tabbar_icons/Tabbar_search.svg
     - assets/icons_assets/green_tick.svg
     - assets/select_contact/invite friends.svg
@@ -277,6 +279,10 @@ flutter:
     - assets/chatLightBg.jpg
     - assets/pops_asset/back_button.svg
     - assets/noProfile.jpg
+    - assets/invite_friends/invitefriends.svg
+    - assets/invite_friends/profilepicture.svg
+    - assets/invite_friends/add_icon.svg
+    - assets/icons_assets/invite_link.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

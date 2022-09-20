@@ -43,6 +43,7 @@ import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
+import 'package:gatello/views/tabbar/test_code/pings_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:gatello/views/tabbar/test_code/home.dart';

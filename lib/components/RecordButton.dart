@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -246,9 +247,11 @@ class _RecordButtonState extends State<RecordButton> {
       child: Transform.scale(
         scale: buttonScaleAnimation.value,
         child: Container(
+
           child: Icon(
-            Icons.mic,
-            color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+            Icons.mic_none_outlined,
+            color: (themedata.value.index == 0) ? Color(black) : Color( black),
+            size: 28,
           ),
           height: size,
           width: size,

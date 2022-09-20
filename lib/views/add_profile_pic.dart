@@ -9,6 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
+
+import 'ContactList.dart';
 class AddProfilePic extends StatefulWidget {
   const AddProfilePic({Key? key}) : super(key: key);
   @override
@@ -133,7 +135,7 @@ class _AddProfilePicState extends State<AddProfilePic> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => InviteFriends()));
+                            builder: (context) => ContactList(state: 0)));
 
 
                   },

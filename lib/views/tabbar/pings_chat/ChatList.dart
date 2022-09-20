@@ -1059,7 +1059,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
     String? url;
     String roomid = roomId(uid: uid, puid: puid);
     if (file != null && type != 0 && contentType != null) {
-      taskSnapshot = await Write().personalChat(
+      taskSnapshot = await Write(uid: uid).personalChat(
           roomId: roomid,
           file: file,
           fileName: timestamp,
@@ -1243,7 +1243,7 @@ class _ChatState extends State<Chat> with SingleTickerProviderStateMixin {
     TaskSnapshot? taskSnapshot;
     String? url;
     if (file != null && type != 0 && contentType != null) {
-      taskSnapshot = await Write().groupChat(
+      taskSnapshot = await Write(uid: uid).groupChat(
           guid: puid,
           file: file,
           fileName: timestamp,
