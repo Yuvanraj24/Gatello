@@ -9,18 +9,17 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fast_contacts/fast_contacts.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-class ContactList extends StatefulWidget {
+class InviteFriends extends StatefulWidget {
   ///* 0-> invite ; 1-> share
   final int state;
 
-  const ContactList({Key? key, required this.state}) : super(key: key);
+  const InviteFriends({Key? key, required this.state}) : super(key: key);
 
   @override
-  State<ContactList> createState() => _ContactListState();
+  State<InviteFriends> createState() => _ContactListState();
 }
 
-class _ContactListState extends State<ContactList> {
+class _ContactListState extends State<InviteFriends> {
   FirebaseFirestore instance = FirebaseFirestore.instance;
   List<String> selectedContactsId = [];
   List selectedContacts = [];

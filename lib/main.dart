@@ -43,6 +43,7 @@ import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/test_code/pings_test.dart';
+import 'package:gatello/views/tabbar/test_folder/testing.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:gatello/views/tabbar/test_code/home.dart';
@@ -51,6 +52,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'Database/StorageManager.dart';
+
 import 'Others/components/LottieComposition.dart';
 import 'Others/lottie_strings.dart';
 import 'Style/Colors.dart';
@@ -58,31 +60,26 @@ import 'Style/Text.dart';
 import 'firebase_options.dart';
 import 'views/tabbar/pings_chat/select_contact/select_contact.dart';
 import 'package:timezone/data/latest.dart' as tz;
+
 Future<void> main() async {
   tz.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-
   runApp(MyApp());
 }
 const String ip = 'http://3.108.219.188:5000';
 const String signUpip = '$ip/signup';
 const String loginip = '$ip/login';
-
 var pingsChatTabbar = false;
-
 late ValueNotifier<AdaptiveThemeMode> themedata;
 class MyApp extends StatefulWidget {
-
   final AdaptiveThemeMode? savedThemeMode;
   const MyApp({Key? key, this.savedThemeMode}) : super(key: key);
   @override
   State<MyApp> createState() => _MyAppState();
 }
-
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
