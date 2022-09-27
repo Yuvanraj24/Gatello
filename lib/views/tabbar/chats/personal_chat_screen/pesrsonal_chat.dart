@@ -241,7 +241,7 @@ class _PersonalChatState extends State<PersonalChat> {
                               actions: [
                                 //   Image.asset('assets/per_chat_icons/call_icon.png'),
                                 //   Image.asset("assets/tabbar_icons/chats_image/video_call_icon.svg"),
-                                InkWell(
+                                GestureDetector(
                                   child: SvgPicture.asset(
                                     'assets/per_chat_icons/call_icon.svg',
                                     height: 18.h,

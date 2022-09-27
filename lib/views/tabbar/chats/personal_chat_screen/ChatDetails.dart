@@ -187,17 +187,6 @@ class _ChatDetailsState extends State<ChatDetails> {
         stream: (widget.state == 0) ? instance.collection("user-detail").doc(widget.puid).snapshots() : instance.collection("group-detail").doc(widget.puid).snapshots(),
         builder: (context, chatDetailSnapshot) {
           if (chatDetailSnapshot.hasData && chatDetailSnapshot.connectionState == ConnectionState.active) {
-            //   if (widget.state == 1 && ids.length != chatDetailSnapshot.data!.data()!["members"].length) {
-            //     chatDetailSnapshot.data!.data()!["members"].forEach((String key, value) {
-            //       ids.add(key);
-            //     });
-            //     log(ids.toString());
-            //     // if (mounted) {
-            //     //   setState(() {
-            //     count = ids.length;
-            //     //   });
-            //     // }
-            //   }
             return ResponsiveBuilder(builder: (context, sizingInformation) {
               return Scaffold(
                   appBar: AppBar(centerTitle: false,
@@ -205,26 +194,12 @@ class _ChatDetailsState extends State<ChatDetails> {
                     backgroundColor:Color.fromRGBO(248, 206, 97, 1),
                     elevation: 0,
                     actions:  [
-                      SvgPicture.asset(
-                        'assets/tabbar_icons/Tabbar_search.svg',height:17.h,width:17.w,
-                      ),
                       SizedBox(width:22.w),
+                      (widget.state == 0)?SizedBox():
                       PopupMenuButton(
                           shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(7)),
                           icon:Icon(Icons.more_vert_rounded,color:Colors.black),
                           iconSize:26,
-                          onSelected: (value) {
-                            switch (value) {
-                              case 1:
-                                {
-                                  Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) =>
-                                          ContactList(state: 0)));
-                                }
-                                break;
-                              default:
-                            }
-                          },
                           itemBuilder: (context) =>
                           [
                             PopupMenuItem(
@@ -252,16 +227,9 @@ class _ChatDetailsState extends State<ChatDetails> {
                               width:35.w,),
                           ],
                         )),
-                    title: Column(crossAxisAlignment:CrossAxisAlignment.start,
-                      children: [
-                        Text((widget.state == 0) ? "Personal Info" : "Group Info",
-                            style: GoogleFonts.inter(fontSize:16.sp,fontWeight:FontWeight.w500,color:
-                            (themedata.value.index == 0) ? Color(black) : Color(white))),
-                        SizedBox(height:4.h),
-                        (widget.state == 0)?SizedBox(height:0.h):Text("260 Participants",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
-                            fontSize:12.sp,color:Colors.black)),)
-                      ],
-                    ),
+                    title: Text((widget.state == 0) ? "Personal Info" : "Group Info",
+                        style: GoogleFonts.inter(fontSize:16.sp,fontWeight:FontWeight.w500,color:
+                        (themedata.value.index == 0) ? Color(black) : Color(white))),
                   ),
                   body: ((widget.state == 0) ? true : chatDetailSnapshot.data!.data()!["members"]["${widget.uid}"]["claim"] != "removed")
                       ? SingleChildScrollView(
@@ -269,22 +237,29 @@ class _ChatDetailsState extends State<ChatDetails> {
                       child: Column(crossAxisAlignment:CrossAxisAlignment.center,
                         children: [Stack(
                             children: [
-                              ClipOval(
-                                child: (chatDetailSnapshot.data!.data()!["pic"] != null)?
-                                CachedNetworkImage(imageUrl: chatDetailSnapshot.data!.data()!["pic"],
-                                  fit: BoxFit.cover,
-                                  height:80.h,
-                                  width: 80.w,
-                                ):
-                                SvgPicture.asset((widget.state == 0) ? "assets/invite_friends/profilepicture.svg" : "assets/invite_friends/profilepicture.svg", fit: BoxFit.cover,
-                                  height:80.h,
-                                  width: 80.w,
-                                ),
+                             (chatDetailSnapshot.data!.data()!["pic"] != null)?
+                          CachedNetworkImage(
+                            imageUrl: chatDetailSnapshot.data!.data()!["pic"],
+                            imageBuilder: (context, imageProvider) => Container(
+                              width: 80.0.w,
+                              height: 80.0.h,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
                               ),
-                              Positioned(right:0.w,top:3.h,
+                            ),
+                            placeholder: (context, url) => CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
+                          ):
+                              SvgPicture.asset((widget.state == 0) ? "assets/invite_friends/profilepicture.svg" : "assets/invite_friends/profilepicture.svg", fit: BoxFit.cover,
+                                height:80.h,
+                                width: 80.w,
+                              ),
+                              Positioned(right:0.w,top:1.h,
                                 child: Container(
-                                  height: 24.h,
-                                  width: 24.w,
+                                  height: 28.h,
+                                  width: 28.w,
                                   child: GestureDetector(
                                     onTap: () async {
                                       String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
@@ -347,8 +322,8 @@ class _ChatDetailsState extends State<ChatDetails> {
                               SizedBox(width:4.w),
                               (widget.state == 1 && chatDetailSnapshot.data!.data()!["members"]["${widget.uid}"]["claim"] == "admin")
                                   ?  Container(
-                                height: 24.h,
-                                width: 24.w,
+                                height: 20.h,
+                                width: 20.w,
                                 child: GestureDetector(
                                   onTap: () async {
                                     if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
@@ -384,6 +359,68 @@ class _ChatDetailsState extends State<ChatDetails> {
                                     shape: BoxShape.circle),
                               )
                                   : SizedBox(height:0)
+                            ],
+                          ),
+                          SizedBox(height:20.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  // Image(
+                                  //   image: AssetImage(
+                                  //     'assets/group_info/calls.png',
+                                  //   ),
+                                  //   width: 42.w,
+                                  // ),
+                                  SvgPicture.asset(
+                                      'assets/group_info/calls icon.svg'),
+
+                                  SizedBox(height: 11.h),
+                                  Text(
+                                    'Call',
+                                    style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black)),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 42.w),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(
+                                      'assets/group_info/video image.svg'),
+                                  SizedBox(height: 11.h),
+                                  Text(
+                                    'Video',
+                                    style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black)),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 42.w),
+                              Column(
+                                children: [
+                                  SvgPicture.asset(
+                                      'assets/group_info/add_participants.svg'),
+                                  SizedBox(height: 11.h),
+                                  Text(
+                                    'Add',
+                                    style: GoogleFonts.inter(
+                                        textStyle: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black)),
+                                  ),
+                                ],
+                              )
                             ],
                           ),
                           SizedBox(height:18.h),
@@ -430,50 +467,13 @@ class _ChatDetailsState extends State<ChatDetails> {
                                             ),
                                           )));
                                 }
-                              })
-                          //             } else {
-                          //               return Container(
-                          //                   child: Center(
-                          //                       child: SingleChildScrollView(
-                          //                 child: Column(
-                          //                   children: [lottieAnimation(invalidLottie), Text("No Groups in common")],
-                          //                 ),
-                          //               )));
-                          //             }
-                          //           } else {
-                          //             return Container(
-                          //                 child: Center(
-                          //                     child: SingleChildScrollView(
-                          //               child: Column(
-                          //                 children: [lottieAnimation(invalidLottie), Text("No Groups in common")],
-                          //               ),
-                          //             )));
-                          //           }
-                          //         });
-                          //   } else {
-                          //     return Container(
-                          //         child: Center(
-                          //             child: SingleChildScrollView(
-                          //       child: Column(
-                          //         children: [lottieAnimation(invalidLottie), Text("No Groups in common")],
-                          //       ),
-                          //     )));
-                          //   }
-                          // })
-                              :
-                          // StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                          //     // stream: instance.collection("user-detail").where("uid", whereIn: ids).snapshots(),
-                          //     // stream: instance.collection("user-detail").where("groupList", arrayContains: widget.puid).snapshots(),
-                          //     //TODO theres pic and name in group detail use that
-                          //     builder: (context, userDetailSnapshot) {
-                          //       if (userDetailSnapshot.hasData && userDetailSnapshot.connectionState == ConnectionState.active) {
-                          //         return
+                              }):
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
                                 //  "${chatDetailSnapshot.data!.data()!["members"].length} Participants",
-                                "Gorup Participants",
+                                "Group Participants",
                                   style: GoogleFonts.inter(textStyle: textStyle(fontSize: 14.sp, fontWeight: FontWeight.w700
                                       ,color:Color.fromRGBO(0, 163, 255, 1)))),
                               SizedBox(height:15.h),
@@ -502,9 +502,9 @@ class _ChatDetailsState extends State<ChatDetails> {
                                                 SearchPage(sizingInformation: sizingInformation, gid: widget.puid, state: 5, participants: participantIds)));
                                   }
                                 },
-                                child: Row(children:[Container(padding:EdgeInsets.all(12),
+                                child: Row(children:[Container(
                                     height:44.h,width:44.w,decoration:BoxDecoration(color:Color.fromRGBO(248, 206, 97, 1),shape:BoxShape.circle),
-                                    child:SvgPicture.asset('assets/tabbar_icons/tab_view_main/invite frds tab.svg')),
+                                    child:SvgPicture.asset('assets/group_info/add_participants.svg',height: 50,width: 50,)),
                                   SizedBox(width:26.w),
                                   Text('Add participants',style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w700,
                                       fontSize:16.sp, color:Colors.black)))]),
@@ -538,21 +538,6 @@ class _ChatDetailsState extends State<ChatDetails> {
                             ],
                           ),
                           (widget.state == 1) ? Divider() :SizedBox(),
-                          // (widget.state == 1)
-                          //     ? ListTile(
-                          //     title: Text("Exit group"),
-                          //     leading: Icon(Icons.exit_to_app),
-                          //     onTap: () async {
-                          //       await changeClaim(type: 3, uid: widget.uid);
-                          //       Navigator.pop(context);
-                          //       Navigator.pop(context);
-                          //     })
-                          //     :SizedBox(height:0.h),
-                          //     } else {
-                          //       return Container();
-                          //     }
-                          //   },
-                          // )
                         ],
                       ),
                     ),
@@ -671,38 +656,25 @@ class _ChatDetailsState extends State<ChatDetails> {
           child: Row(
             children: [
               Container(
-                  width:44.w,
-                  height:44.h,
-                  child: ClipOval(
-                    child: (pic != null)
-                    // ? Image.network(
-                    //     pic,
-                    //     loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                    //       if (loadingProgress == null) return child;
-                    //       return Center(
-                    //         child: CircularProgressIndicator(
-                    //           value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
-                    //         ),
-                    //       );
-                    //     },
-                    //     errorBuilder: (context, error, stackTrace) =>
-                    //         Image.asset((widget.state == 0) ? "assets/noProfile.jpg" : "assets/noGroupProfile.jpg", fit: BoxFit.cover),
-                    //   )
-                        ? CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      fadeInDuration: const Duration(milliseconds: 400),
-                      progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                        child: Container(
-                          width: 20.0,
-                          height: 20.0,
-                          child: CircularProgressIndicator(value: downloadProgress.progress,strokeWidth:1.w,),
+                child: (pic != null)
+                        ?   CachedNetworkImage(
+                      imageUrl: chatDetailSnapshot.data!.data()!["pic"],
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: 44.0.w,
+                        height: 44.0.h,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.cover),
                         ),
                       ),
-                      imageUrl: pic,
-                      errorWidget: (context, url, error) => Image.asset("assets/noGroupProfile.jpg", fit: BoxFit.cover),
-                    )
-                        : Image.asset((widget.state == 0) ? "assets/noProfile.jpg" : "assets/noGroupProfile.jpg", fit: BoxFit.cover),
-                  )),
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                    ):
+                    SvgPicture.asset((widget.state == 0) ? "assets/invite_friends/profilepicture.svg" : "assets/invite_friends/profilepicture.svg", fit: BoxFit.cover,
+                      height:44.h,
+                      width: 44.w,
+                    ),
+                  ),
               SizedBox(width:26.w),
               Flexible(
                 child: Column(

@@ -31,21 +31,10 @@ class _CustomDialogState extends State<CustomDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       insetPadding: EdgeInsets.only(left: 12, right: 12),
       titlePadding: EdgeInsets.all(0),
-      // title: Text(
-      //   'Mute notifications for...',
-      //   style: GoogleFonts.inter(
-      //       textStyle: TextStyle(
-      //           fontSize: 16.sp,
-      //           fontWeight: FontWeight.w700,
-      //           color: Color.fromRGBO(0, 0, 0, 1))),
-      // ),
       title: Container(
-//color: Colors.blue,
         height: 270.h,
         width: 380.w,
         padding: EdgeInsets.only(left: 12, top: 20, bottom: 0),
-        // width: MediaQuery.of(context).size.width,
-        // height: MediaQuery.of(context).size.height,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gatello/views/login_screen.dart';
+import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -106,7 +108,7 @@ class _ContactListState extends State<ContactList> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.data!.isNotEmpty) {
-                        return Container(padding:EdgeInsets.only(left:12.w,right:12.w,top:20.h),
+                        return Container(padding:EdgeInsets.only(left:12.w,right:12.w,top:20.h,bottom:35.h),
                           child: Column(children: [
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -243,11 +245,21 @@ class _ContactListState extends State<ContactList> {
                                               : null,
                                         ),
                                         Divider(color:Color.fromRGBO(0, 0, 0, 0.14),thickness:0.8.h,indent:12.w,)
-                                      ],
+                                      ]
                                       );
                                     }
                                   }),
                             ),
+                            ElevatedButton(style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
+                            fixedSize:Size(234.w,53.h),shape:RoundedRectangleBorder(borderRadius: 
+                                BorderRadius.circular(26))),
+                                onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                              return LoginScreen();
+                              },));
+                            }, child:Text('Get started',style:GoogleFonts.inter(textStyle:TextStyle(
+                                  fontWeight:FontWeight.w600,fontSize:14.sp,color:Colors.black
+                                )),))
                           ],
                           ),
                         );

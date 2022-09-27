@@ -35,7 +35,6 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../Assets/GatelloIcon.dart';
 import '../../../../Database/StorageManager.dart';
-import '../../../../Firebase.dart';
 import '../../../../Firebase/FirebaseNotifications.dart';
 import '../../../../Firebase/Writes.dart';
 import '../../../../Helpers/DateTimeHelper.dart';
@@ -110,6 +109,7 @@ var msgTime;
   bool attachmentShowing = false;
   bool emojiShowing = false;
   bool isChatting = false;
+  bool typing = false;
   Map inverseDataType = dataTypeMap.inverse;
   final focusNode = FocusNode();
   final ScrollController listScrollController = ScrollController();
@@ -222,36 +222,6 @@ showConfirmationDialog3(BuildContext context) {
         allowedExtensions: ['mp3'],
       );
 
-  // Future lifecycleHandler() async {
-  //   String? uid = "s8b6XInslPffQEgz8sVTINsPhcx2";
-  //   await instance.collection("user-detail").doc(uid).update({
-  //     // "status": DateTime.now().millisecondsSinceEpoch.toString(),
-  //     "chattingWith": widget.puid,
-  //   });
-  //   if (uid != null && WidgetsBinding.instance != null) {
-  //     lifecycleEventHandler = LifecycleEventHandler(detachedCallBack: () async {
-  //       try {
-  //         await instance.collection("user-detail").doc(uid).update({
-  //           // "status": DateTime.now().millisecondsSinceEpoch.toString(),
-  //           "chattingWith": null,
-  //         });
-  //       } catch (e) {
-  //         log(e.toString());
-  //       }
-  //     }, resumeCallBack: () async {
-  //       try {
-  //         await instance.collection("user-detail").doc(uid).update({
-  //           // "status": DateTime.now().millisecondsSinceEpoch.toString(),
-  //           "chattingWith": widget.puid,
-  //         });
-  //       } catch (e) {
-  //         log(e.toString());
-  //       }
-  //     });
-  //     WidgetsBinding.instance.addObserver(lifecycleEventHandler);
-  //   }
-  // }
-
   //*<- user chat stuff starts here ->*//
   userChatRoomDocExists() {
     String roomid = roomId(uid: widget.uid, puid: widget.puid);
@@ -292,14 +262,7 @@ showConfirmationDialog3(BuildContext context) {
       "chattingWith": widget.puid,
     });
     await readUserMessages();
-    // await readUserMessages().whenComplete(() {
-    //   // listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-    //   return getUserLastMessage();
-    // });
-    String timestamp = DateTime
-        .now()
-        .millisecondsSinceEpoch
-        .toString();
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
     if (personalChatRoomDocExists) {
       if (userDetailsDoc.data()!["readRecieptStatus"] == true &&
           peerDetailsDoc.data()!["readRecieptStatus"] == true) {
@@ -336,11 +299,6 @@ showConfirmationDialog3(BuildContext context) {
   //!better to find a way to paginate in stream. this optimized the last read of messages and can update a particular message feature
 
   Future readUserMessages() async {
-    // if (tempPuid != widget.puid) {
-    //   if (_streamController != null && _streamController.hasListener) {
-    //     _streamController.close();
-    //   }
-    // }
     String roomid = roomId(uid: widget.uid, puid: widget.puid);
     if (!_isRequesting && !_isFinish) {
       QuerySnapshot<Map<String, dynamic>>? querySnapshot;
@@ -452,13 +410,6 @@ showConfirmationDialog3(BuildContext context) {
                 }
                 writeBatch.commit();
               }
-
-              // if (getDateTimeSinceEpoch(datetime: lastReadTimestamp!).difference(getDateTimeSinceEpoch(datetime: event.docs.first.data()!["timestamp"])).inMicroseconds >= 0 &&
-              //     event.docs.first.data()!["from"] == widget.uid) {
-              //   await _audioCache.play('sendTone.mp3');
-              // } else {
-              //   await _audioCache.play('recieveTone.mp3');
-              // }
             }
           }
         });
@@ -554,45 +505,7 @@ print('111111111111111111');
                   "unreadCount": 0,
                 },
               }
-              // "${widget.uid}-peeruid": "${widget.puid}",
-              // "${widget.uid}-peername": peerName,
-              // "${widget.uid}-name": value.data()!["name"],
-              // "${widget.uid}-pic": (value.data()!["pic"] != null) ? value.data()!["pic"].last : null,
-              // "${widget.uid}-lastRead": null,
-              // "${widget.uid}-blocked": false,
-              // "${widget.uid}-unreadCount": 0,
-              // "${widget.puid}-peeruid": "${widget.uid}",
-              // "${widget.puid}-peername": value.data()!["name"],
-              // "${widget.puid}-name": peerName,
-              // "${widget.puid}-pic": peerPic,
-              // "${widget.puid}-lastRead": null,
-              // "${widget.puid}-blocked": false,
-              // "${widget.puid}-unreadCount": 1
             });
-            // writeBatch.set(
-            //     instance.collection("user-detail").doc(widget.uid),
-            //     {
-            //       "userList": FieldValue.arrayUnion([widget.puid])
-            //     },
-            //     SetOptions(merge: true));
-            // writeBatch.set(
-            //     instance.collection("user-detail").doc(widget.puid),
-            //     {
-            //       "userList": FieldValue.arrayUnion([widget.uid])
-            //     },
-            //     SetOptions(merge: true));
-            // writeBatch.set(
-            //     instance.collection("personal-user-list").doc(widget.uid),
-            //     {
-            //       "userList": FieldValue.arrayUnion([widget.puid])
-            //     },
-            //     SetOptions(merge: true));
-            // writeBatch.set(
-            //     instance.collection("personal-user-list").doc(widget.puid),
-            //     {
-            //       "userList": FieldValue.arrayUnion([widget.uid])
-            //     },
-            //     SetOptions(merge: true));
             writeBatch.set(instance.collection("personal-chat").doc(roomid).collection("messages").doc(timestamp.toString()), {
               "from": widget.uid,
               "to": widget.puid,
@@ -645,11 +558,6 @@ print('111111111111111111');
         snapshot) {
       if (snapshot.exists && _chatRoomStreamController.isClosed == false) {
         _chatRoomStreamController.add(snapshot);
-        // if (groupMemberIds.length != snapshot.data()!["members"].length) {
-        //   snapshot.data()!["members"].forEach((String key, value) {
-        //     groupMemberIds.add(key);
-        //   });
-        // }
         if (snapshot.exists && lastUnreadCount == 0 &&
             lastReadTimestamp == null) {
           lastUnreadCount =
@@ -674,10 +582,6 @@ print('111111111111111111');
       "chattingWith": widget.puid,
     });
     await readGroupMessages();
-    // await readGroupMessages().whenComplete(() {
-    //   // listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-    //   return getGroupLastMessage();
-    // });
     String timeStamp = DateTime
         .now()
         .millisecondsSinceEpoch
@@ -887,14 +791,6 @@ print('111111111111111111');
   }
 
   //*<- group chat stuff ends here ->*//
-
-  // userChatInit() {
-  //   initUpdateFuture = initUserMessageUpdate();
-  // }
-
-  // groupChatInit() {
-  //   initUpdateFuture = initGroupMessageUpdate();
-  // }
   initialiser() async {
    uid= _getUID().toString();
     log("initState");
@@ -1026,10 +922,6 @@ print('111111111111111111');
                       chatRoomSnapshot.connectionState ==
                           ConnectionState.active) {
                     if (widget.state == 0) {
-                      // StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                      //     stream: instance.collection("user-detail").doc(widget.puid).snapshots(),
-                      //     builder: (context, userDetailSnapshot) {
-                      //       if (userDetailSnapshot.hasData) {
                       return StreamBuilder<
                           List<DocumentSnapshot<Map<String, dynamic>>>>(
                           stream: _streamController.stream,
@@ -1037,15 +929,8 @@ print('111111111111111111');
 
                             return ResponsiveBuilder(
                                 builder: (context, sizingInformation) {
-
-                                  // if (sizingInformation.screenSize == DeviceScreenType.desktop) {
-                                  //   Navigator.maybePop(context);
-                                  // }
                                   return Scaffold(
-
-
                                     // this appbar is for personal
-
                                     appBar: AppBar(
                                       actionsIconTheme: IconThemeData(
                                           color: Color.fromRGBO(0, 0, 0, 1)
@@ -1056,9 +941,6 @@ print('111111111111111111');
                                       elevation: 0,
                                       leading: (sizingInformation.deviceScreenType != DeviceScreenType.desktop)
                                           ? GestureDetector(
-                                        // splashColor: Colors.transparent,
-                                        // highlightColor: Colors.transparent,
-                                        // hoverColor: Colors.transparent,
                                           onTap: (messages.isNotEmpty)
                                               ? () {
                                             if (!mounted) return;
@@ -1072,8 +954,7 @@ print('111111111111111111');
                                             if (!mounted) return;
                                             setState(() {
                                               isSearching = false;
-                                              searchTextEditingController
-                                                  .clear();
+                                              searchTextEditingController.clear();
                                             });
                                           }
                                               : () {
@@ -1116,7 +997,7 @@ print('111111111111111111');
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.all(1.0),
+                                          padding: EdgeInsets.all(1.0),
                                           child: GestureDetector(
                                             child: SvgPicture.asset(
                                                 'assets/per_chat_icons/video icon.svg'),
@@ -1568,6 +1449,69 @@ print('111111111111111111');
                                               // });
                                             },
                                             icon: Icon(Entypo.forward)),
+                                        PopupMenuButton(itemBuilder:(context)=>[
+                                          PopupMenuItem(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>Messageinfo(msgData: copied,deliverTime: deliverTime,readTime: readTime,msgTime: msgTime)),
+                                                  );
+                                                },
+                                                child: Text(
+                                                  "Info",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                ),
+                                              )
+                                          ),
+                                          PopupMenuItem(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Future.delayed(Duration(seconds: 0),
+                                                          () =>
+                                                          showConfirmationDialog1(context)
+                                                  );
+                                                },
+                                                child: Text(
+                                                  "Report",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(0,0,0,1))),
+                                                ),
+                                              )
+                                          ),
+                                          PopupMenuItem(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  FlutterClipboard.copy(copied).then(( value ){
+                                                    final snackBar = snackbar(
+                                                        content: "Message copied");
+                                                    ScaffoldMessenger.of(context)
+                                                        .showSnackBar(snackBar);
+                                                  }
+                                                  );
+
+                                                },
+                                                child: Text(
+                                                  "Copy",
+                                                  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight: FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 1))),
+                                                ),
+                                              )
+                                          ),
+                                        ])
                                       ],
                                       title: (isSearching)
                                           ? searchTextBox()
@@ -1600,27 +1544,10 @@ print('111111111111111111');
                                             ? Row(
                                           children: [
                                             Container(
-                                                width: 35,
-                                                height: 35,
+                                                width:35.w,
+                                                height:35.h,
                                                 child: ClipOval(
-                                                  // peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
-                                                  // peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
                                                   child: (chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"] != null)
-                                                  // ? Image.network(
-                                                  //     chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
-                                                  //     fit: BoxFit.cover,
-                                                  //     loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                                  //       if (loadingProgress == null) return child;
-                                                  //       return Center(
-                                                  //         child: CircularProgressIndicator(
-                                                  //           value: loadingProgress.expectedTotalBytes != null
-                                                  //               ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                                  //               : null,
-                                                  //         ),
-                                                  //       );
-                                                  //     },
-                                                  //     errorBuilder: (context, error, stackTrace) => Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
-                                                  //   )
                                                       ? CachedNetworkImage(
                                                     fit: BoxFit.cover,
                                                     fadeInDuration: const Duration(milliseconds: 400),
@@ -1683,50 +1610,6 @@ print('111111111111111111');
                                                 ],
                                               ),
                                             )
-                                            // Flexible(
-                                            //   child: Column(
-                                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                                            //     children: [
-                                            //       Text((widget.state == 0) ? emptyChatRoomDetails.data!.data()!["name"]
-                                            //           : emptyChatRoomDetails.data!.data()!["title"],
-                                            //           style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16,
-                                            //               color: Color.fromRGBO(0, 0, 0, 1), fontWeight: FontWeight.w500))),
-                                            //       StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                                            //           stream: instance.collection("user-detail").doc(widget.puid).snapshots(),
-                                            //           builder: (context, peerSnapshot) {
-                                            //             return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                                            //               stream: instance.collection("user-detail").doc(widget.uid).snapshots(),
-                                            //               builder: (context, userSnapshot) {
-                                            //                 if (userSnapshot.connectionState == ConnectionState.active &&
-                                            //                     peerSnapshot.connectionState == ConnectionState.active) {
-                                            //
-                                            //                   return Text(
-                                            //
-                                            //                     (userSnapshot.data!.data()!["onlineStatus"] == true &&
-                                            //                         peerSnapshot.data!.data()!["onlineStatus"] == true)
-                                            //                         ? (peerSnapshot.data!.data()!["status"] == "online")
-                                            //                         ? "Online"
-                                            //                         : (userSnapshot.data!.data()!["lastseenStatus"] == true &&
-                                            //                         peerSnapshot.data!.data()!["lastseenStatus"] == true)
-                                            //                         ? "Last seen ${getDateTimeInChat(datetime:
-                                            //                     getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
-                                            //                         " at ${formatTime(getDateTimeSinceEpoch(
-                                            //                         datetime: peerSnapshot.data!.data()!["status"]))}"
-                                            //                         : "Tap here for user info"
-                                            //                         : "Tap here for user info",
-                                            //                     style: GoogleFonts.inter(
-                                            //                         textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500,
-                                            //                             color: Color.fromRGBO(0, 0, 0, 1))),
-                                            //                   );
-                                            //                 } else {
-                                            //                   return Container();
-                                            //                 }
-                                            //               },
-                                            //             );
-                                            //           })
-                                            //     ],
-                                            //   ),
-                                            // )
                                           ],
                                         )
                                             : Text(messages.length.toString() + " Selected"),
@@ -1776,27 +1659,12 @@ print('111111111111111111');
                                                   return true;
                                                 },
                                                 child:
-                                                //  StreamBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
-                                                //     stream: _streamController.stream,
-                                                //     builder: (context, snapshot) {
                                                 (!snapshot.hasData)
                                                     ? Center(
                                                   child: Text("No messages"),
                                                 )
                                                     :
-
-                                                // return Container(
-                                                //   width: MediaQuery.of(context).size.width,
-                                                //   child: ListView.builder(
-                                                //     reverse: true,
-                                                //     padding: EdgeInsets.all(10.0),
-                                                //     itemBuilder: (context, index) => buildItem(index: index, document: snapshot.data![index], chatRoomSnapshot: chatRoomSnapshot.data!),
-                                                //     itemCount: snapshot.data!.length,
-                                                //     controller: listScrollController,
-                                                //   ),
-                                                // );
                                                 Container(
-
                                                   child: GroupedListView(
                                                       sort: false,
                                                       elements: snapshot.data!,
@@ -1893,19 +1761,16 @@ print('111111111111111111');
                                                                 print("selected white msg...................");
                                                                 print("uid is ${widget.uid}");
                                                                 if (messages.isEmpty == true) {
-                                                                  // if (!mounted) return;
-                                                                  // setState(() {
-                                                                  // messages.add(element);
                                                                   messages[index] = element;
-                                                                  // });
+                                                                  copied = element.data()!["data"]["text"];
+                                                                  deliverTime = element.data()!["timestamp"];
+                                                                  readTime = formatTime(getDateTimeSinceEpoch(datetime: element["read"]["timestamp"]));
+                                                                  msgTime =  formatTime(getDateTimeSinceEpoch(datetime: element["timestamp"]));
+                                                                  print('dheeee${msgTime}');
+                                                                  print('dheeee${msgTime}');
                                                                   if (element.data()!["from"] != widget.uid) {
                                                                     notUserMessages += 1;
                                                                   }
-
-                                                                  // if (!mounted) return;
-                                                                  // setState(() {
-                                                                  //   appbarVisible = false;
-                                                                  // });
                                                                 }
                                                                 if (!mounted) return;
                                                                 setState(() {
@@ -1928,23 +1793,13 @@ print('111111111111111111');
                                                                       notUserMessages += 1;
                                                                     }
                                                                   } else {
-                                                                    // if (!mounted) return;
-                                                                    // setState(() {
-                                                                    // messages.add(element);
                                                                     if (element.data()!["delete"]["everyone"] == false) {
                                                                       messages[index] = element;
                                                                     }
-                                                                    // });
                                                                     if (element.data()!["from"] != widget.uid) {
                                                                       notUserMessages += 1;
                                                                     }
                                                                   }
-                                                                  // if (messages.isEmpty) {
-                                                                  //   if (!mounted) return;
-                                                                  //   setState(() {
-                                                                  //     appbarVisible = true;
-                                                                  //   });
-                                                                  // }
                                                                 }
                                                                 if (!mounted) return;
                                                                 setState(() {
@@ -1954,23 +1809,17 @@ print('111111111111111111');
                                                                 log(messages.length.toString());
                                                               },
                                                               child: Container(
-
                                                                 color: (index <=
                                                                     lastUnreadCount &&
                                                                     lastUnreadCount !=
                                                                         0)
                                                                     ? unreadMessageAnimation
                                                                     .value
-                                                                    : (messages
-                                                                    .values
-                                                                    .contains(
-                                                                    element))
+                                                                    : (messages.values.contains(element))
                                                                     ? Color(
                                                                     accent)
-                                                                    .withOpacity(
-                                                                    0.2)
-                                                                    : Color(
-                                                                    transparent),
+                                                                    .withOpacity(0.2)
+                                                                    : Color(transparent),
                                                                 child:
                                                                 (element.data()!["delete"]["personal"] == true)?
                                                                 (element.data()!["from"] == widget.uid)?
@@ -2056,12 +1905,10 @@ print('111111111111111111');
                                                                 children: [
                                                                   Container(
 
-                                                                    color: Color(
-                                                                        yellow),
+                                                                    color: Color(yellow),
                                                                     width: 4,
                                                                   ),
-                                                                  const SizedBox(
-                                                                      width: 8),
+                                                                  const SizedBox(width:8),
                                                                   Flexible(
                                                                     child: Column(
                                                                       crossAxisAlignment: CrossAxisAlignment
@@ -2230,22 +2077,6 @@ print('111111111111111111');
                                                                       },
                                                                       icon: Icon(Icons.emoji_emotions_outlined,
                                                                           color: Color.fromRGBO(12, 16, 29, 1))),
-
-
-                                                                  // IconButton(
-                                                                  //     splashColor: Colors.transparent,
-                                                                  //     highlightColor: Colors.transparent,
-                                                                  //     hoverColor: Colors.transparent,
-                                                                  //     onPressed: () {
-                                                                  //       if (!mounted) return;
-                                                                  //       setState(() {
-                                                                  //         if (emojiShowing) {
-                                                                  //           emojiShowing = false;
-                                                                  //         }
-                                                                  //         attachmentShowing = !attachmentShowing;
-                                                                  //       });
-                                                                  //     },
-                                                                  //     icon: Icon(Icons.attach_file)),
                                                                   textStyle: GoogleFonts.inter(
                                                                       textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white))),
                                                                   textEditingController: textEditingController,
@@ -2284,89 +2115,407 @@ print('111111111111111111');
                                                                       : null,
                                                                   maxLines: 5,
                                                                   fillColor: (themedata.value.index == 0) ? Color(white) : Color(lightBlack),
-                                                                  suffixIcon: Container(
-                                                                    width: 80,
+                                                                  suffixIcon: Flexible(
+                                                                    child: Container(
+                                                                      width: 80.w,
 
-                                                                    child: Row(
-                                                                      children: [
-                                                                        InkWell(
-                                                                          child: Image(
-                                                                            image: AssetImage(
-                                                                                'assets/per_chat_icons/attach_file_icon.png'
+                                                                      child: Row(
+                                                                        children: [
+                                                                          GestureDetector(
+                                                                            child: SvgPicture.asset(
+                                                                                "assets/group_info/chat_attachments.svg",
+                                                                                height:18.h,width: 18.w
                                                                             ),
-                                                                            height: 30.h,
-                                                                          ),
-                                                                          onTap: () {
-                                                                            showModalBottomSheet(
-                                                                                backgroundColor: Colors
-                                                                                    .transparent,
-                                                                                context: context,
-                                                                                builder: (
-                                                                                    BuildContext context) {
-                                                                                  return Container(
-                                                                                    height: 250,
-                                                                                    width: MediaQuery
-                                                                                        .of(context)
-                                                                                        .size
-                                                                                        .width -
-                                                                                        20,
-                                                                                    child: Card(
-                                                                                      shape: RoundedRectangleBorder(
-                                                                                          borderRadius:
-                                                                                          BorderRadius
-                                                                                              .circular(
-                                                                                              15),
-                                                                                          side: BorderSide(
-                                                                                              color: Color
-                                                                                                  .fromRGBO(
-                                                                                                  246,
-                                                                                                  207,
-                                                                                                  70,
-                                                                                                  1))),
-                                                                                      color: Color
-                                                                                          .fromRGBO(
-                                                                                          255, 255,
-                                                                                          255, 1),
-                                                                                      margin: EdgeInsets
-                                                                                          .all(30),
-                                                                                      child: Column(
-                                                                                          mainAxisAlignment:
-                                                                                          MainAxisAlignment
-                                                                                              .spaceEvenly,
-                                                                                          children: [
-                                                                                            Row(
-                                                                                              mainAxisAlignment:
-                                                                                              MainAxisAlignment
-                                                                                                  .spaceEvenly,
-                                                                                              children: [
+                                                                            onTap: () {
+                                                                              showModalBottomSheet(
+                                                                                  backgroundColor: Colors
+                                                                                      .transparent,
+                                                                                  context: context,
+                                                                                  builder: (
+                                                                                      BuildContext context) {
+                                                                                    return Container(
+                                                                                      height: 250,
+                                                                                      width: MediaQuery
+                                                                                          .of(context)
+                                                                                          .size
+                                                                                          .width -
+                                                                                          20,
+                                                                                      child: Card(
+                                                                                        shape: RoundedRectangleBorder(
+                                                                                            borderRadius:
+                                                                                            BorderRadius
+                                                                                                .circular(
+                                                                                                15),
+                                                                                            side: BorderSide(
+                                                                                                color: Color
+                                                                                                    .fromRGBO(
+                                                                                                    246,
+                                                                                                    207,
+                                                                                                    70,
+                                                                                                    1))),
+                                                                                        color: Color
+                                                                                            .fromRGBO(
+                                                                                            255, 255,
+                                                                                            255, 1),
+                                                                                        margin: EdgeInsets
+                                                                                            .all(30),
+                                                                                        child: Column(
+                                                                                            mainAxisAlignment:
+                                                                                            MainAxisAlignment
+                                                                                                .spaceEvenly,
+                                                                                            children: [
+                                                                                              Row(
+                                                                                                mainAxisAlignment:
+                                                                                                MainAxisAlignment
+                                                                                                    .spaceEvenly,
+                                                                                                children: [
 
-                                                                                                GestureDetector(
-                                                                                                  onTap: () async {
-                                                                                                    if (!mounted) return;
-                                                                                                    setState(() {
-                                                                                                      attachmentShowing = false;
-                                                                                                    });
-                                                                                                    // Navigator.pop(context);
-                                                                                                    return await files().then((value) async {
-                                                                                                      if (value!.files.isNotEmpty) {
-                                                                                                        for (var file in value.files) {
-                                                                                                          if (file.size < 52428800 && file.bytes != null) {
+                                                                                                  GestureDetector(
+                                                                                                    onTap: () async {
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        attachmentShowing = false;
+                                                                                                      });
+                                                                                                      // Navigator.pop(context);
+                                                                                                      return await files().then((value) async {
+
+                                                                                                        if (value!.files.isNotEmpty) {
+                                                                                                          for (var file in value.files) {
+                                                                                                            if (file.size < 52428800 && file.bytes != null) {
+                                                                                                              if (widget.state == 0) {
+
+                                                                                                                await writeUserMessage(
+                                                                                                                  type: 4,
+                                                                                                                  // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                                  peerName:
+                                                                                                                  chatRoomSnapshot.data!.data()!["members"]
+                                                                                                                  ["${widget.puid}"]["name"],
+                                                                                                                  peerPic:
+                                                                                                                  chatRoomSnapshot.data!.data()!["members"]
+                                                                                                                  ["${widget.puid}"]["pic"],
+                                                                                                                  replyMap: replyMessageMap,
+                                                                                                                  file: file.bytes,
+                                                                                                                  contentType: lookupMimeType(file.path!)!,
+                                                                                                                );
+
+                                                                                                                if (replyMessageMap != null &&
+                                                                                                                    replyUserName != null) {
+                                                                                                                  if (!mounted) return;
+                                                                                                                  setState(() {
+                                                                                                                    replyMessageMap = null;
+                                                                                                                    replyUserName = null;
+                                                                                                                  });
+                                                                                                                }
+                                                                                                              } else {
+                                                                                                                await writeGroupMessage(
+                                                                                                                  type: 4,
+                                                                                                                  members:
+                                                                                                                  chatRoomSnapshot.data!.data()!["members"],
+                                                                                                                  file: file.bytes,
+                                                                                                                  contentType: lookupMimeType(file.path!),
+                                                                                                                  groupName:
+                                                                                                                  chatRoomSnapshot.data!.data()!["title"],
+                                                                                                                  groupPic: chatRoomSnapshot.data!.data()!["pic"],
+                                                                                                                  replyMap: replyMessageMap,
+                                                                                                                );
+                                                                                                                if (replyMessageMap != null &&
+                                                                                                                    replyUserName != null) {
+                                                                                                                  if (!mounted) return;
+                                                                                                                  setState(() {
+                                                                                                                    replyMessageMap = null;
+                                                                                                                    replyUserName = null;
+                                                                                                                  });
+                                                                                                                }
+                                                                                                              }
+                                                                                                            } else {
+
+                                                                                                              final snackBar = snackbar(
+                                                                                                                  content: "File size is greater than 50MB");
+                                                                                                              ScaffoldMessenger.of(context)
+                                                                                                                  .showSnackBar(snackBar);
+                                                                                                            }
+                                                                                                          }
+                                                                                                        }
+                                                                                                      });
+                                                                                                    },
+
+                                                                                                    child: iconCreation(
+                                                                                                        "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/doc_image.svg", "Document"),
+                                                                                                  ),
+                                                                                                  GestureDetector(
+                                                                                                    onTap: () async {
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        attachmentShowing = false;
+                                                                                                      });
+                                                                                                      final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+
+                                                                                                      // Navigator.pop(context);
+                                                                                                      // return await image().then((value) async {
+                                                                                                      if (photo != null) {
+                                                                                                        int size = await photo.length();
+                                                                                                        Uint8List bytes = await photo.readAsBytes();
+                                                                                                        // for (var file in value.files) {
+                                                                                                        if (size < 52428800 && bytes != null) {
+                                                                                                          if (widget.state == 0) {
+                                                                                                            await writeUserMessage(
+                                                                                                              type: 1,
+                                                                                                              // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                              peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
+                                                                                                              peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
+                                                                                                              replyMap: replyMessageMap,
+                                                                                                              file: bytes,
+                                                                                                              contentType: "image/" + photo.path.split(".").last,
+                                                                                                            );
+                                                                                                            if (replyMessageMap != null && replyUserName != null) {
+                                                                                                              if (!mounted) return;
+                                                                                                              setState(() {
+                                                                                                                replyMessageMap = null;
+                                                                                                                replyUserName = null;
+                                                                                                              });
+                                                                                                            }
+                                                                                                          } else {
+                                                                                                            await writeGroupMessage(
+                                                                                                                type: 1,
+                                                                                                                members: chatRoomSnapshot.data!.data()!["members"],
+                                                                                                                file: bytes,
+                                                                                                                replyMap: replyMessageMap,
+                                                                                                                contentType: "image/" + photo.path.split(".").last,
+                                                                                                                groupName: chatRoomSnapshot.data!.data()!["title"],
+                                                                                                                groupPic: chatRoomSnapshot.data!.data()!["pic"]);
+                                                                                                            if (replyMessageMap != null && replyUserName != null) {
+                                                                                                              if (!mounted) return;
+                                                                                                              setState(() {
+                                                                                                                replyMessageMap = null;
+                                                                                                                replyUserName = null;
+                                                                                                              });
+                                                                                                            }
+                                                                                                          }
+                                                                                                        } else {
+                                                                                                          final snackBar = snackbar(content: "File size is greater than 50MB");
+                                                                                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                                        }
+                                                                                                        // }
+                                                                                                      }
+                                                                                                      // });
+                                                                                                    },
+
+                                                                                                    child: iconCreation(
+                                                                                                        "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_image.svg",
+                                                                                                        "Camera"
+
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  GestureDetector(
+                                                                                                    onTap: () async {
+                                                                                                      Navigator.pop(context);
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        attachmentShowing = false;
+                                                                                                      });
+                                                                                                      // Navigator.pop(context);
+
+                                                                                                      return await video().then((value) async {
+                                                                                                        if (value!.files.isNotEmpty) {
+                                                                                                          Navigator.push(
+                                                                                                              context,
+                                                                                                              MaterialPageRoute(
+                                                                                                                  builder: (context) => AssetPageView(
+                                                                                                                    fileList: value.files,
+                                                                                                                    onPressed: () async {
+                                                                                                                      Navigator.pop(context);
+                                                                                                                      for (var file in value.files) {
+                                                                                                                        if (file.size < 52428800 &&
+                                                                                                                            file.bytes != null) {
+                                                                                                                          if (widget.state == 0) {
+                                                                                                                            await writeUserMessage(
+                                                                                                                              type: 2,
+                                                                                                                              // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                                              peerName: chatRoomSnapshot
+                                                                                                                                  .data!
+                                                                                                                                  .data()![
+                                                                                                                              "members"][
+                                                                                                                              "${widget.puid}"]
+                                                                                                                              ["name"],
+                                                                                                                              peerPic: chatRoomSnapshot
+                                                                                                                                  .data!
+                                                                                                                                  .data()![
+                                                                                                                              "members"][
+                                                                                                                              "${widget.puid}"]
+                                                                                                                              ["pic"],
+                                                                                                                              replyMap:
+                                                                                                                              replyMessageMap,
+                                                                                                                              file: file.bytes,
+                                                                                                                              contentType: "video/" +
+                                                                                                                                  file.extension!,
+                                                                                                                            );
+                                                                                                                            if (replyMessageMap !=
+                                                                                                                                null &&
+                                                                                                                                replyUserName !=
+                                                                                                                                    null) {
+                                                                                                                              if (!mounted) return;
+                                                                                                                              setState(() {
+                                                                                                                                replyMessageMap =
+                                                                                                                                null;
+                                                                                                                                replyUserName = null;
+                                                                                                                              });
+                                                                                                                            }
+                                                                                                                          } else {
+                                                                                                                            await writeGroupMessage(
+                                                                                                                                type: 2,
+                                                                                                                                members:
+                                                                                                                                chatRoomSnapshot
+                                                                                                                                    .data!
+                                                                                                                                    .data()![
+                                                                                                                                "members"],
+                                                                                                                                file: file.bytes,
+                                                                                                                                replyMap:
+                                                                                                                                replyMessageMap,
+                                                                                                                                contentType: "video/" +
+                                                                                                                                    file.extension!,
+                                                                                                                                groupName:
+                                                                                                                                chatRoomSnapshot
+                                                                                                                                    .data!
+                                                                                                                                    .data()![
+                                                                                                                                "title"],
+                                                                                                                                groupPic:
+                                                                                                                                chatRoomSnapshot
+                                                                                                                                    .data!
+                                                                                                                                    .data()![
+                                                                                                                                "pic"]);
+                                                                                                                            if (replyMessageMap !=
+                                                                                                                                null &&
+                                                                                                                                replyUserName !=
+                                                                                                                                    null) {
+                                                                                                                              if (!mounted) return;
+                                                                                                                              setState(() {
+                                                                                                                                replyMessageMap =
+                                                                                                                                null;
+                                                                                                                                replyUserName = null;
+                                                                                                                              });
+                                                                                                                            }
+                                                                                                                          }
+                                                                                                                        } else {
+                                                                                                                          final snackBar = snackbar(
+                                                                                                                              content:
+                                                                                                                              "File size is greater than 50MB");
+                                                                                                                          ScaffoldMessenger.of(
+                                                                                                                              context)
+                                                                                                                              .showSnackBar(snackBar);
+                                                                                                                        }
+                                                                                                                      }
+                                                                                                                    },
+                                                                                                                  )));
+                                                                                                        }
+                                                                                                      });
+                                                                                                    },
+
+                                                                                                    child: iconCreation(
+                                                                                                        "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/gallery_image.svg",
+                                                                                                        "Gallery"),
+                                                                                                  )
+                                                                                                ],
+                                                                                              ),
+                                                                                              Row(
+                                                                                                mainAxisAlignment:
+                                                                                                MainAxisAlignment
+                                                                                                    .spaceEvenly,
+                                                                                                children: [
+                                                                                                  GestureDetector(
+                                                                                                    onTap: () async {
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        attachmentShowing = false;
+                                                                                                      });
+                                                                                                      // Navigator.pop(context);
+                                                                                                      return await audio().then((value) async {
+                                                                                                        if (value!.files.isNotEmpty) {
+                                                                                                          for (var file in value.files) {
+                                                                                                            if (file.size < 52428800 && file.bytes != null) {
+                                                                                                              if (widget.state == 0) {
+
+                                                                                                                await writeUserMessage(
+                                                                                                                  type: 3,
+                                                                                                                  // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                                  peerName:
+                                                                                                                  chatRoomSnapshot.data!.data()!["members"]
+                                                                                                                  ["${widget.puid}"]["name"],
+                                                                                                                  peerPic:
+                                                                                                                  chatRoomSnapshot.data!.data()!["members"]
+                                                                                                                  ["${widget.puid}"]["pic"],
+                                                                                                                  replyMap: replyMessageMap,
+                                                                                                                  file: file.bytes,
+                                                                                                                  contentType: "audio" + file.extension.toString(),
+                                                                                                                );
+                                                                                                                print('Success');
+                                                                                                                if (replyMessageMap != null &&
+                                                                                                                    replyUserName != null) {
+                                                                                                                  if (!mounted) return;
+                                                                                                                  setState(() {
+                                                                                                                    replyMessageMap = null;
+                                                                                                                    replyUserName = null;
+                                                                                                                  });
+                                                                                                                }
+                                                                                                              } else {
+                                                                                                                await writeGroupMessage(
+                                                                                                                    type: 3,
+                                                                                                                    members:
+                                                                                                                    chatRoomSnapshot.data!.data()!["members"],
+                                                                                                                    file: file.bytes,
+                                                                                                                    replyMap: replyMessageMap,
+                                                                                                                    contentType: "audio/" + file.extension!,
+                                                                                                                    groupName:
+                                                                                                                    chatRoomSnapshot.data!.data()!["title"],
+                                                                                                                    groupPic:
+                                                                                                                    chatRoomSnapshot.data!.data()!["pic"]);
+                                                                                                                if (replyMessageMap != null &&
+                                                                                                                    replyUserName != null) {
+                                                                                                                  if (!mounted) return;
+                                                                                                                  setState(() {
+                                                                                                                    replyMessageMap = null;
+                                                                                                                    replyUserName = null;
+                                                                                                                  });
+                                                                                                                }
+                                                                                                              }
+                                                                                                            } else {
+                                                                                                              final snackBar = snackbar(
+                                                                                                                  content: "File size is greater than 50MB");
+                                                                                                              ScaffoldMessenger.of(context)
+                                                                                                                  .showSnackBar(snackBar);
+                                                                                                            }
+                                                                                                          }
+                                                                                                        }
+                                                                                                      });
+                                                                                                    },
+
+                                                                                                    child: iconCreation(
+                                                                                                        "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_image.svg",
+                                                                                                        "Audio"),
+                                                                                                  ),
+                                                                                                  GestureDetector(
+                                                                                                    onTap: () async {
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        attachmentShowing = false;
+                                                                                                      });
+
+                                                                                                      // // Navigator.pop(context);
+                                                                                                      return await getUserLocation().then((value) async {
+                                                                                                        if (value.item1 != null) {
+                                                                                                          return await hereReverseGeocode(value.item1).then((response) async {
+                                                                                                            Map<String, dynamic> body = jsonDecode(response.body);
                                                                                                             if (widget.state == 0) {
                                                                                                               await writeUserMessage(
-                                                                                                                type: 4,
+                                                                                                                type: 7,
                                                                                                                 // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
-                                                                                                                peerName:
-                                                                                                                chatRoomSnapshot.data!.data()!["members"]
-                                                                                                                ["${widget.puid}"]["name"],
-                                                                                                                peerPic:
-                                                                                                                chatRoomSnapshot.data!.data()!["members"]
-                                                                                                                ["${widget.puid}"]["pic"],
+                                                                                                                peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
+                                                                                                                peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
                                                                                                                 replyMap: replyMessageMap,
-                                                                                                                file: file.bytes,
-                                                                                                                contentType: lookupMimeType(file.path!)!,
+                                                                                                                message: "https://www.google.com/maps/search/?api=1&query=${value.item1.latitude},${value.item1.longitude}" +
+                                                                                                                    "\n" +
+                                                                                                                    body["Response"]['View'][0]["Result"][0]['Location']['Address']['Label'],
                                                                                                               );
-                                                                                                              if (replyMessageMap != null &&
-                                                                                                                  replyUserName != null) {
+                                                                                                              if (replyMessageMap != null && replyUserName != null) {
                                                                                                                 if (!mounted) return;
                                                                                                                 setState(() {
                                                                                                                   replyMessageMap = null;
@@ -2375,11 +2524,84 @@ print('111111111111111111');
                                                                                                               }
                                                                                                             } else {
                                                                                                               await writeGroupMessage(
-                                                                                                                type: 4,
+                                                                                                                type: 7,
+                                                                                                                members: chatRoomSnapshot.data!.data()!["members"],
+                                                                                                                message: "https://www.google.com/maps/search/?api=1&query=${value.item1.latitude},${value.item1.longitude}" +
+                                                                                                                    "\n" +
+                                                                                                                    body["Response"]['View'][0]["Result"][0]['Location']['Address']['Label'],
+                                                                                                                groupName: chatRoomSnapshot.data!.data()!["title"],
+                                                                                                                groupPic: chatRoomSnapshot.data!.data()!["pic"],
+                                                                                                                replyMap: replyMessageMap,
+                                                                                                              );
+                                                                                                              if (replyMessageMap != null && replyUserName != null) {
+                                                                                                                if (!mounted) return;
+                                                                                                                setState(() {
+                                                                                                                  replyMessageMap = null;
+                                                                                                                  replyUserName = null;
+                                                                                                                });
+                                                                                                              }
+                                                                                                            }
+                                                                                                          });
+                                                                                                        } else {
+                                                                                                          final snackBar = snackbar(content: "Please enable location services");
+                                                                                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                                        }
+                                                                                                      });
+                                                                                                    },
+
+                                                                                                    child: iconCreation(
+                                                                                                        "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_img.svg",
+                                                                                                        "Location"),
+                                                                                                  ),
+                                                                                                  GestureDetector(
+                                                                                                    onTap: () async {
+
+                                                                                                      // if (!mounted) return;
+                                                                                                      // setState(() {
+                                                                                                      //   attachmentShowing = false;
+                                                                                                      // });
+
+                                                                                                      // // Navigator.pop(context);
+                                                                                                      Navigator.push(
+                                                                                                          context,
+                                                                                                          MaterialPageRoute(
+                                                                                                              builder: (context) => ContactList(state: 1)))
+                                                                                                          .then((value) async {
+
+                                                                                                        if (value != null) {
+
+                                                                                                          for (var i in value) {
+
+                                                                                                            if (widget.state == 0) {
+
+                                                                                                              await writeUserMessage(
+                                                                                                                type: 8,
+                                                                                                                // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                                peerName: chatRoomSnapshot.data!
+                                                                                                                    .data()!["members"]["${widget.puid}"]["name"],
+                                                                                                                peerPic: chatRoomSnapshot.data!.data()!["members"]
+                                                                                                                ["${widget.puid}"]["pic"],
+                                                                                                                replyMap: replyMessageMap,
+                                                                                                                message: i.displayName + "\n" + i.phones[0],
+                                                                                                              );
+
+                                                                                                              if (replyMessageMap != null &&
+                                                                                                                  replyUserName != null) {
+
+                                                                                                                if (!mounted) return;
+                                                                                                                setState(() {
+
+                                                                                                                  replyMessageMap = null;
+                                                                                                                  replyUserName = null;
+                                                                                                                });
+                                                                                                              }
+                                                                                                            } else {
+
+                                                                                                              await writeGroupMessage(
+                                                                                                                type: 8,
                                                                                                                 members:
                                                                                                                 chatRoomSnapshot.data!.data()!["members"],
-                                                                                                                file: file.bytes,
-                                                                                                                contentType: lookupMimeType(file.path!),
+                                                                                                                message: i.displayName + "\n" + i.phones[0],
                                                                                                                 groupName:
                                                                                                                 chatRoomSnapshot.data!.data()!["title"],
                                                                                                                 groupPic: chatRoomSnapshot.data!.data()!["pic"],
@@ -2394,430 +2616,86 @@ print('111111111111111111');
                                                                                                                 });
                                                                                                               }
                                                                                                             }
-                                                                                                          } else {
-                                                                                                            final snackBar = snackbar(
-                                                                                                                content: "File size is greater than 50MB");
-                                                                                                            ScaffoldMessenger.of(context)
-                                                                                                                .showSnackBar(snackBar);
                                                                                                           }
                                                                                                         }
-                                                                                                      }
-                                                                                                    });
-                                                                                                  },
+                                                                                                      });
+                                                                                                    },
 
-                                                                                                  child: iconCreation(
-                                                                                                      "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/document_icon_container.png",
-                                                                                                      "Document"),
-                                                                                                ),
-                                                                                                GestureDetector(
-                                                                                                  onTap: () async {
-                                                                                                    if (!mounted) return;
-                                                                                                    setState(() {
-                                                                                                      attachmentShowing = false;
-                                                                                                    });
-                                                                                                    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-
-                                                                                                    // Navigator.pop(context);
-                                                                                                    // return await image().then((value) async {
-                                                                                                    if (photo != null) {
-                                                                                                      int size = await photo.length();
-                                                                                                      Uint8List bytes = await photo.readAsBytes();
-                                                                                                      // for (var file in value.files) {
-                                                                                                      if (size < 52428800 && bytes != null) {
-                                                                                                        if (widget.state == 0) {
-                                                                                                          await writeUserMessage(
-                                                                                                            type: 1,
-                                                                                                            // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
-                                                                                                            peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
-                                                                                                            peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
-                                                                                                            replyMap: replyMessageMap,
-                                                                                                            file: bytes,
-                                                                                                            contentType: "image/" + photo.path.split(".").last,
-                                                                                                          );
-                                                                                                          if (replyMessageMap != null && replyUserName != null) {
-                                                                                                            if (!mounted) return;
-                                                                                                            setState(() {
-                                                                                                              replyMessageMap = null;
-                                                                                                              replyUserName = null;
-                                                                                                            });
-                                                                                                          }
-                                                                                                        } else {
-                                                                                                          await writeGroupMessage(
-                                                                                                              type: 1,
-                                                                                                              members: chatRoomSnapshot.data!.data()!["members"],
-                                                                                                              file: bytes,
-                                                                                                              replyMap: replyMessageMap,
-                                                                                                              contentType: "image/" + photo.path.split(".").last,
-                                                                                                              groupName: chatRoomSnapshot.data!.data()!["title"],
-                                                                                                              groupPic: chatRoomSnapshot.data!.data()!["pic"]);
-                                                                                                          if (replyMessageMap != null && replyUserName != null) {
-                                                                                                            if (!mounted) return;
-                                                                                                            setState(() {
-                                                                                                              replyMessageMap = null;
-                                                                                                              replyUserName = null;
-                                                                                                            });
-                                                                                                          }
-                                                                                                        }
-                                                                                                      } else {
-                                                                                                        final snackBar = snackbar(content: "File size is greater than 50MB");
-                                                                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                                                      }
-                                                                                                      // }
-                                                                                                    }
-                                                                                                    // });
-                                                                                                  },
-
-                                                                                                  child: iconCreation(
-                                                                                                      "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png",
-                                                                                                      "Camera"
-
-                                                                                                  ),
-                                                                                                ),
-                                                                                                GestureDetector(
-                                                                                                  onTap: () async {
-                                                                                                    Navigator.pop(context);
-                                                                                                    if (!mounted) return;
-                                                                                                    setState(() {
-                                                                                                      attachmentShowing = false;
-                                                                                                    });
-                                                                                                    // Navigator.pop(context);
-                                                                                                    return await video().then((value) async {
-                                                                                                      if (value!.files.isNotEmpty) {
-                                                                                                        Navigator.push(
-                                                                                                            context,
-                                                                                                            MaterialPageRoute(
-                                                                                                                builder: (context) => AssetPageView(
-                                                                                                                  fileList: value.files,
-                                                                                                                  onPressed: () async {
-                                                                                                                    Navigator.pop(context);
-                                                                                                                    for (var file in value.files) {
-                                                                                                                      if (file.size < 52428800 &&
-                                                                                                                          file.bytes != null) {
-                                                                                                                        if (widget.state == 0) {
-                                                                                                                          await writeUserMessage(
-                                                                                                                            type: 2,
-                                                                                                                            // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
-                                                                                                                            peerName: chatRoomSnapshot
-                                                                                                                                .data!
-                                                                                                                                .data()![
-                                                                                                                            "members"][
-                                                                                                                            "${widget.puid}"]
-                                                                                                                            ["name"],
-                                                                                                                            peerPic: chatRoomSnapshot
-                                                                                                                                .data!
-                                                                                                                                .data()![
-                                                                                                                            "members"][
-                                                                                                                            "${widget.puid}"]
-                                                                                                                            ["pic"],
-                                                                                                                            replyMap:
-                                                                                                                            replyMessageMap,
-                                                                                                                            file: file.bytes,
-                                                                                                                            contentType: "video/" +
-                                                                                                                                file.extension!,
-                                                                                                                          );
-                                                                                                                          if (replyMessageMap !=
-                                                                                                                              null &&
-                                                                                                                              replyUserName !=
-                                                                                                                                  null) {
-                                                                                                                            if (!mounted) return;
-                                                                                                                            setState(() {
-                                                                                                                              replyMessageMap =
-                                                                                                                              null;
-                                                                                                                              replyUserName = null;
-                                                                                                                            });
-                                                                                                                          }
-                                                                                                                        } else {
-                                                                                                                          await writeGroupMessage(
-                                                                                                                              type: 2,
-                                                                                                                              members:
-                                                                                                                              chatRoomSnapshot
-                                                                                                                                  .data!
-                                                                                                                                  .data()![
-                                                                                                                              "members"],
-                                                                                                                              file: file.bytes,
-                                                                                                                              replyMap:
-                                                                                                                              replyMessageMap,
-                                                                                                                              contentType: "video/" +
-                                                                                                                                  file.extension!,
-                                                                                                                              groupName:
-                                                                                                                              chatRoomSnapshot
-                                                                                                                                  .data!
-                                                                                                                                  .data()![
-                                                                                                                              "title"],
-                                                                                                                              groupPic:
-                                                                                                                              chatRoomSnapshot
-                                                                                                                                  .data!
-                                                                                                                                  .data()![
-                                                                                                                              "pic"]);
-                                                                                                                          if (replyMessageMap !=
-                                                                                                                              null &&
-                                                                                                                              replyUserName !=
-                                                                                                                                  null) {
-                                                                                                                            if (!mounted) return;
-                                                                                                                            setState(() {
-                                                                                                                              replyMessageMap =
-                                                                                                                              null;
-                                                                                                                              replyUserName = null;
-                                                                                                                            });
-                                                                                                                          }
-                                                                                                                        }
-                                                                                                                      } else {
-                                                                                                                        final snackBar = snackbar(
-                                                                                                                            content:
-                                                                                                                            "File size is greater than 50MB");
-                                                                                                                        ScaffoldMessenger.of(
-                                                                                                                            context)
-                                                                                                                            .showSnackBar(snackBar);
-                                                                                                                      }
-                                                                                                                    }
-                                                                                                                  },
-                                                                                                                )));
-                                                                                                      }
-                                                                                                    });
-                                                                                                  },
-
-                                                                                                  child: iconCreation(
-                                                                                                      "assets/tabbar_icons/tab_view_m"
-                                                                                                          "ain/chats_image/attachment_icon"
-                                                                                                          "_container/gallery_icon_container.png",
-                                                                                                      "Gallery"),
-                                                                                                )
-                                                                                              ],
-                                                                                            ),
-                                                                                            Row(
-                                                                                              mainAxisAlignment:
-                                                                                              MainAxisAlignment
-                                                                                                  .spaceEvenly,
-                                                                                              children: [
-                                                                                                GestureDetector(
-                                                                                                  onTap: () async {
-                                                                                                    if (!mounted) return;
-                                                                                                    setState(() {
-                                                                                                      attachmentShowing = false;
-                                                                                                    });
-                                                                                                    // Navigator.pop(context);
-                                                                                                    return await audio().then((value) async {
-                                                                                                      if (value!.files.isNotEmpty) {
-                                                                                                        for (var file in value.files) {
-                                                                                                          if (file.size < 52428800 && file.bytes != null) {
-                                                                                                            if (widget.state == 0) {
-                                                                                                              await writeUserMessage(
-                                                                                                                type: 3,
-                                                                                                                // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
-                                                                                                                peerName:
-                                                                                                                chatRoomSnapshot.data!.data()!["members"]
-                                                                                                                ["${widget.puid}"]["name"],
-                                                                                                                peerPic:
-                                                                                                                chatRoomSnapshot.data!.data()!["members"]
-                                                                                                                ["${widget.puid}"]["pic"],
-                                                                                                                replyMap: replyMessageMap,
-                                                                                                                file: file.bytes,
-                                                                                                                contentType: "audio/" + file.extension!,
-                                                                                                              );
-                                                                                                              if (replyMessageMap != null &&
-                                                                                                                  replyUserName != null) {
-                                                                                                                if (!mounted) return;
-                                                                                                                setState(() {
-                                                                                                                  replyMessageMap = null;
-                                                                                                                  replyUserName = null;
-                                                                                                                });
-                                                                                                              }
-                                                                                                            } else {
-                                                                                                              await writeGroupMessage(
-                                                                                                                  type: 3,
-                                                                                                                  members:
-                                                                                                                  chatRoomSnapshot.data!.data()!["members"],
-                                                                                                                  file: file.bytes,
-                                                                                                                  replyMap: replyMessageMap,
-                                                                                                                  contentType: "audio/" + file.extension!,
-                                                                                                                  groupName:
-                                                                                                                  chatRoomSnapshot.data!.data()!["title"],
-                                                                                                                  groupPic:
-                                                                                                                  chatRoomSnapshot.data!.data()!["pic"]);
-                                                                                                              if (replyMessageMap != null &&
-                                                                                                                  replyUserName != null) {
-                                                                                                                if (!mounted) return;
-                                                                                                                setState(() {
-                                                                                                                  replyMessageMap = null;
-                                                                                                                  replyUserName = null;
-                                                                                                                });
-                                                                                                              }
-                                                                                                            }
-                                                                                                          } else {
-                                                                                                            final snackBar = snackbar(
-                                                                                                                content: "File size is greater than 50MB");
-                                                                                                            ScaffoldMessenger.of(context)
-                                                                                                                .showSnackBar(snackBar);
-                                                                                                          }
-                                                                                                        }
-                                                                                                      }
-                                                                                                    });
-                                                                                                  },
-
-                                                                                                  child: iconCreation(
-                                                                                                      "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/camera_icon_container.png",
-                                                                                                      "Audio"),
-                                                                                                ),
-                                                                                                GestureDetector(
-                                                                                                  onTap: () async {
-                                                                                                    if (!mounted) return;
-                                                                                                    setState(() {
-                                                                                                      attachmentShowing = false;
-                                                                                                    });
-
-                                                                                                    // // Navigator.pop(context);
-                                                                                                    return await getUserLocation().then((value) async {
-                                                                                                      if (value.item1 != null) {
-                                                                                                        return await hereReverseGeocode(value.item1)
-                                                                                                            .then((response) async {
-                                                                                                          Map<String, dynamic> body = jsonDecode(response.body);
-                                                                                                          if (widget.state == 0) {
-                                                                                                            print('Yuvan1');
-                                                                                                            await writeUserMessage(
-                                                                                                              type: 7,
-                                                                                                              // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
-                                                                                                              peerName: chatRoomSnapshot.data!
-                                                                                                                  .data()!["members"]["${widget.puid}"]["name"],
-                                                                                                              peerPic: chatRoomSnapshot.data!.data()!["members"]
-                                                                                                              ["${widget.puid}"]["pic"],
-                                                                                                              replyMap: replyMessageMap,
-                                                                                                              message:
-                                                                                                              "https://www.google.com/maps/search/?api=1&query=${value.item1.latitude},${value.item1.longitude}" +
-                                                                                                                  "\n" +
-                                                                                                                  body["Response"]['View'][0]["Result"][0]
-                                                                                                                  ['Location']['Address']['Label'],
-                                                                                                            );
-                                                                                                            print('Yuvan2');
-                                                                                                            if (replyMessageMap != null &&
-                                                                                                                replyUserName != null) {
-                                                                                                              if (!mounted) return;
-                                                                                                              setState(() {
-                                                                                                                replyMessageMap = null;
-                                                                                                                replyUserName = null;
-                                                                                                              });
-                                                                                                            }
-                                                                                                          } else {
-                                                                                                            await writeGroupMessage(
-                                                                                                              type: 7,
-                                                                                                              members:
-                                                                                                              chatRoomSnapshot.data!.data()!["members"],
-                                                                                                              message:
-                                                                                                              "https://www.google.com/maps/search/?api=1&query=${value.item1.latitude},${value.item1.longitude}" +
-                                                                                                                  "\n" +
-                                                                                                                  body["Response"]['View'][0]["Result"][0]
-                                                                                                                  ['Location']['Address']['Label'],
-                                                                                                              groupName:
-                                                                                                              chatRoomSnapshot.data!.data()!["title"],
-                                                                                                              groupPic: chatRoomSnapshot.data!.data()!["pic"],
-                                                                                                              replyMap: replyMessageMap,
-                                                                                                            );
-                                                                                                            if (replyMessageMap != null &&
-                                                                                                                replyUserName != null) {
-                                                                                                              if (!mounted) return;
-                                                                                                              setState(() {
-                                                                                                                replyMessageMap = null;
-                                                                                                                replyUserName = null;
-                                                                                                              });
-                                                                                                            }
-                                                                                                          }
-                                                                                                        });
-                                                                                                      } else {
-                                                                                                        final snackBar = snackbar(
-                                                                                                            content: "Please enable location services");
-                                                                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                                                      }
-                                                                                                    });
-                                                                                                  },
-
-                                                                                                  child: iconCreation(
-                                                                                                      "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/location_icon_container.png",
-                                                                                                      "Location"),
-                                                                                                ),
-                                                                                                GestureDetector(
-                                                                                                  onTap: () async {
-                                                                                                    if (!mounted) return;
-                                                                                                    setState(() {
-                                                                                                      attachmentShowing = false;
-                                                                                                    });
-
-                                                                                                    // // Navigator.pop(context);
-                                                                                                    Navigator.push(
-                                                                                                        context,
-                                                                                                        MaterialPageRoute(
-                                                                                                            builder: (context) => ContactList(state: 1)))
-                                                                                                        .then((value) async {
-                                                                                                      if (value != null) {
-                                                                                                        for (var i in value) {
-                                                                                                          if (widget.state == 0) {
-                                                                                                            await writeUserMessage(
-                                                                                                              type: 8,
-                                                                                                              // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
-                                                                                                              peerName: chatRoomSnapshot.data!
-                                                                                                                  .data()!["members"]["${widget.puid}"]["name"],
-                                                                                                              peerPic: chatRoomSnapshot.data!.data()!["members"]
-                                                                                                              ["${widget.puid}"]["pic"],
-                                                                                                              replyMap: replyMessageMap,
-                                                                                                              message: i.displayName + "\n" + i.phones[0],
-                                                                                                            );
-                                                                                                            if (replyMessageMap != null &&
-                                                                                                                replyUserName != null) {
-                                                                                                              if (!mounted) return;
-                                                                                                              setState(() {
-                                                                                                                replyMessageMap = null;
-                                                                                                                replyUserName = null;
-                                                                                                              });
-                                                                                                            }
-                                                                                                          } else {
-                                                                                                            await writeGroupMessage(
-                                                                                                              type: 8,
-                                                                                                              members:
-                                                                                                              chatRoomSnapshot.data!.data()!["members"],
-                                                                                                              message: i.displayName + "\n" + i.phones[0],
-                                                                                                              groupName:
-                                                                                                              chatRoomSnapshot.data!.data()!["title"],
-                                                                                                              groupPic: chatRoomSnapshot.data!.data()!["pic"],
-                                                                                                              replyMap: replyMessageMap,
-                                                                                                            );
-                                                                                                            if (replyMessageMap != null &&
-                                                                                                                replyUserName != null) {
-                                                                                                              if (!mounted) return;
-                                                                                                              setState(() {
-                                                                                                                replyMessageMap = null;
-                                                                                                                replyUserName = null;
-                                                                                                              });
-                                                                                                            }
-                                                                                                          }
-                                                                                                        }
-                                                                                                      }
-                                                                                                    });
-                                                                                                  },
-
-                                                                                                  child: iconCreation(
-                                                                                                      "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_icon_container.png",
-                                                                                                      "Contact"),
-                                                                                                )
-                                                                                              ],
-                                                                                            )
-                                                                                          ]),
-                                                                                    ),
-                                                                                  );
-                                                                                });
-                                                                          },
-                                                                        ),
-                                                                        InkWell(
-                                                                          child: Image(
-                                                                            image: AssetImage(
-
-                                                                                'assets/per_chat_icons/camera.png'
-                                                                            ),
-                                                                            height: 30.h,
+                                                                                                    child: iconCreation(
+                                                                                                        "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/contact_img.svg",
+                                                                                                        "Contact"),
+                                                                                                  )
+                                                                                                ],
+                                                                                              )
+                                                                                            ]),
+                                                                                      ),
+                                                                                    );
+                                                                                  });
+                                                                            },
                                                                           ),
-                                                                          onTap: () {
+                                                                          SizedBox(width:20.w),
+                                                                          GestureDetector( onTap: () async {
+                                                                            if (!mounted) return;
+                                                                            setState(() {
+                                                                              attachmentShowing = false;
+                                                                            });
+                                                                            final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
 
+                                                                            // Navigator.pop(context);
+                                                                            // return await image().then((value) async {
+                                                                            if (photo != null) {
+                                                                              int size = await photo.length();
+                                                                              Uint8List bytes = await photo.readAsBytes();
+                                                                              // for (var file in value.files) {
+                                                                              if (size < 52428800 && bytes != null) {
+                                                                                if (widget.state == 0) {
+                                                                                  await writeUserMessage(
+                                                                                    type: 1,
+                                                                                    // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                    peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
+                                                                                    peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
+                                                                                    replyMap: replyMessageMap,
+                                                                                    file: bytes,
+                                                                                    contentType: "image/" + photo.path.split(".").last,
+                                                                                  );
+                                                                                  if (replyMessageMap != null && replyUserName != null) {
+                                                                                    if (!mounted) return;
+                                                                                    setState(() {
+                                                                                      replyMessageMap = null;
+                                                                                      replyUserName = null;
+                                                                                    });
+                                                                                  }
+                                                                                } else {
+                                                                                  await writeGroupMessage(
+                                                                                      type: 1,
+                                                                                      members: chatRoomSnapshot.data!.data()!["members"],
+                                                                                      file: bytes,
+                                                                                      replyMap: replyMessageMap,
+                                                                                      contentType: "image/" + photo.path.split(".").last,
+                                                                                      groupName: chatRoomSnapshot.data!.data()!["title"],
+                                                                                      groupPic: chatRoomSnapshot.data!.data()!["pic"]);
+                                                                                  if (replyMessageMap != null && replyUserName != null) {
+                                                                                    if (!mounted) return;
+                                                                                    setState(() {
+                                                                                      replyMessageMap = null;
+                                                                                      replyUserName = null;
+                                                                                    });
+                                                                                  }
+                                                                                }
+                                                                              } else {
+                                                                                final snackBar = snackbar(content: "File size is greater than 50MB");
+                                                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                              }
+                                                                              // }
+                                                                            }
+                                                                            // });
                                                                           },
-                                                                        ),
-
-                                                                      ],
+                                                                            child:SvgPicture.asset('assets/group_info/cameraicon_chat.svg',
+                                                                                height:22.h,width: 22.w),
+                                                                          ),
+                                                                          SizedBox(width:10.w),
+                                                                        ],
+                                                                      ),
                                                                     ),
                                                                   )
                                                               ),
@@ -3029,6 +2907,9 @@ print('111111111111111111');
                     //   }
 
                     // })
+
+ //-------------------------------------------------------------------------------------------------
+
                     else if (widget.state == 1) {
                       if (chatRoomSnapshot.data!.data()!["members"]["${widget
                           .uid}"]["claim"] != "removed") {
@@ -3060,9 +2941,6 @@ print('111111111111111111');
                                         .deviceScreenType !=
                                         DeviceScreenType.desktop)
                                         ? GestureDetector(
-                                      // splashColor: Colors.transparent,
-                                      // highlightColor: Colors.transparent,
-                                      // hoverColor: Colors.transparent,
                                         onTap: (messages.isNotEmpty)
                                             ? () {
                                           if (!mounted) return;
@@ -3105,10 +2983,7 @@ print('111111111111111111');
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             right: 20.0),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
+                                        child: GestureDetector(
                                           onTap: ()  {
 
                                           },
@@ -3119,7 +2994,7 @@ print('111111111111111111');
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(1.0),
+                                        padding: EdgeInsets.all(1.0),
                                         child: GestureDetector(
                                           child: SvgPicture.asset(
                                               'assets/per_chat_icons/video icon.svg'),
@@ -3136,9 +3011,7 @@ print('111111111111111111');
 
                                         ),
                                       ),
-
-
-                                      PopupMenuButton(
+                                      PopupMenuButton(shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(5)) ,
                                           onSelected: (value) async {
                                             switch (value) {
                                               case 1:
@@ -3237,19 +3110,23 @@ print('111111111111111111');
                                           itemBuilder: (context) =>
                                           [
                                             PopupMenuItem(
-                                              child: Text("Group Info"),
+                                              child: Text("Group Info",style:GoogleFonts.inter(fontWeight:FontWeight.w400,fontSize:16.sp,
+                                              ),),
                                               value: 1,
                                             ),
                                             PopupMenuItem(
-                                              child: Text("Search"),
+                                              child: Text("Search",style:GoogleFonts.inter(fontWeight:FontWeight.w400,fontSize:16.sp,
+                                              )),
                                               value: 2,
                                             ),
                                             PopupMenuItem(
-                                              child: Text("Wallpaper"),
+                                              child: Text("Wallpaper",style:GoogleFonts.inter(fontWeight:FontWeight.w400,fontSize:16.sp,
+                                              )),
                                               value: 3,
                                             ),
                                             PopupMenuItem(
-                                              child: Text("Exit Group"),
+                                              child: Text("Exit Group",style:GoogleFonts.inter(fontWeight:FontWeight.w400,fontSize:16.sp,
+                                              )),
                                               value: 4,
                                             ),
                                           ])
@@ -3381,13 +3258,11 @@ print('111111111111111111');
                                                                         dynamic>> message =
                                                                 chatList[chatList
                                                                     .indexWhere((
-                                                                    element) =>
-                                                                element.id ==
+                                                                    element) => element.id ==
                                                                     value.id)];
                                                                 chatList[chatList
                                                                     .indexWhere((
-                                                                    element) =>
-                                                                element.id ==
+                                                                    element) => element.id ==
                                                                     value.id)] =
                                                                     message
                                                                         .data()!["delete"]
@@ -3396,8 +3271,7 @@ print('111111111111111111');
                                                                         value) => true);
                                                                 chatList[chatList
                                                                     .indexWhere((
-                                                                    element) =>
-                                                                element.id ==
+                                                                    element) => element.id ==
                                                                     value.id)] =
                                                                     updatedMessage;
                                                                 _streamController
@@ -3468,13 +3342,71 @@ print('111111111111111111');
                                                 });
                                               });
                                             }
-                                            // if (!mounted) return;
-                                            // setState(() {
-                                            //   messages.clear();
-                                            //   notUserMessages = 0;
-                                            // });
                                           },
                                           icon: Icon(Entypo.forward)),
+                                      PopupMenuButton(itemBuilder:(context)=>[
+                                        PopupMenuItem(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>Messageinfo(msgData: copied,deliverTime: deliverTime,readTime: readTime,msgTime: msgTime)),
+                                                );
+                                              },
+                                              child: Text(
+                                                "Info",
+                                                style: GoogleFonts.inter(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 16.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1))),
+                                              ),
+                                            )
+                                        ),
+                                        PopupMenuItem(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Future.delayed(Duration(seconds: 0),
+                                                        () =>
+                                                        showConfirmationDialog1(context)
+                                                );
+                                              },
+                                              child: Text(
+                                                "Report",
+                                                style: GoogleFonts.inter(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 16.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Color.fromRGBO(0,0,0,1))),
+                                              ),
+                                            )
+                                        ),
+                                        PopupMenuItem(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                FlutterClipboard.copy(copied).then(( value ){
+                                                  final snackBar = snackbar(
+                                                      content: "Message copied");
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(snackBar);
+                                                }
+                                                );
+
+                                              },
+                                              child: Text(
+                                                "Copy",
+                                                style: GoogleFonts.inter(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 16.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1))),
+                                              ),
+                                            )
+                                        ),
+                                      ])
                                     ],
                                     title: (isSearching)
                                         ? searchTextBox()
@@ -3510,53 +3442,46 @@ print('111111111111111111');
                                           ? Row(
                                         children: [
                                           Container(
-                                              width: 35,
-                                              height: 35,
-                                              child: ClipOval(
-                                                child: (chatRoomSnapshot.data!
-                                                    .data()!["pic"] != null)
-                                                // ? Image.network(
-                                                //     chatRoomSnapshot.data!.data()!["pic"],
-                                                //     fit: BoxFit.cover,
-                                                //     loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                                //       if (loadingProgress == null) return child;
-                                                //       return Center(
-                                                //         child: CircularProgressIndicator(
-                                                //           value: loadingProgress.expectedTotalBytes != null
-                                                //               ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                                //               : null,
-                                                //         ),
-                                                //       );
-                                                //     },
-                                                //     errorBuilder: (context, error, stackTrace) => Image.asset("assets/noGroupProfile.jpg", fit: BoxFit.cover),
-                                                //   )
-                                                    ? CachedNetworkImage(
-                                                  fit: BoxFit.cover,
-                                                  fadeInDuration: const Duration(
-                                                      milliseconds: 400),
-                                                  progressIndicatorBuilder: (
-                                                      context, url,
-                                                      downloadProgress) =>
-                                                      Center(
-                                                        child: Container(
-                                                          width: 20.0,
-                                                          height: 20.0,
-                                                          child: CircularProgressIndicator(
-                                                              value: downloadProgress
-                                                                  .progress),
-                                                        ),
+
+                                              child: (chatRoomSnapshot.data!
+                                                  .data()!["pic"] != null)
+
+                                                  ? CachedNetworkImage(
+                                                imageUrl: chatRoomSnapshot.data!.data()!["pic"],
+                                                imageBuilder: (context, imageProvider) => Container(
+                                                  width: 44.0.w,
+                                                  height: 44.0.h,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                        image: imageProvider, fit: BoxFit.cover),
+                                                  ),
+                                                ),
+                                                fit: BoxFit.cover,
+                                                fadeInDuration: const Duration(
+                                                    milliseconds: 400),
+                                                progressIndicatorBuilder: (
+                                                    context, url,
+                                                    downloadProgress) =>
+                                                    Center(
+                                                      child: Container(
+                                                        width: 20.0,
+                                                        height: 20.0,
+                                                        child: CircularProgressIndicator(
+                                                            value: downloadProgress
+                                                                .progress),
                                                       ),
-                                                  imageUrl: chatRoomSnapshot
-                                                      .data!.data()!["pic"],
-                                                  errorWidget: (context, url,
-                                                      error) => Image.asset(
-                                                      "assets/noProfile.jpg",
-                                                      fit: BoxFit.cover),
-                                                )
-                                                    : Image.asset(
+                                                    ),
+
+                                                errorWidget: (context, url,
+                                                    error) => Image.asset(
                                                     "assets/noProfile.jpg",
                                                     fit: BoxFit.cover),
                                               )
+                                                  :   SvgPicture.asset((widget.state == 0) ? "assets/invite_friends/profilepicture.svg" : "assets/invite_friends/profilepicture.svg", fit: BoxFit.cover,
+                                                height:44.h,
+                                                width: 44.w,
+                                              ),
 
                                           ),
                                           SizedBox(width: 10),
@@ -3571,7 +3496,7 @@ print('111111111111111111');
                                                         .data()!["title"],
                                                         style: GoogleFonts.inter(
                                                             textStyle: textStyle(
-                                                                fontSize: 14.sp,
+                                                                fontSize: 15.sp,
                                                                 fontWeight: FontWeight
                                                                     .w500,
                                                                 color: Colors
@@ -3585,10 +3510,9 @@ print('111111111111111111');
                                                         primary: false,
                                                         itemBuilder: (context,index){
                                                       print('Lotus7:${chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["name"]},');
-
                                                       return Text((chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["isRemoved"]==false)?'${chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["name"]}, ':'',overflow: TextOverflow.fade,     style: GoogleFonts.inter(
                                                           textStyle: textStyle(
-                                                              fontSize: 14.sp,
+                                                              fontSize: 11.sp,
                                                               fontWeight: FontWeight
                                                                   .w400,
                                                               color: Color.fromRGBO(0, 0, 0, 0.5))));
@@ -3597,80 +3521,6 @@ print('111111111111111111');
                                               ],
                                             ),
                                           ),
-                                          //
-                                          // Flexible(
-                                          //   child: Column(
-                                          //     crossAxisAlignment: CrossAxisAlignment
-                                          //         .start,
-                                          //     children: [
-                                          //       new Text(chatRoomSnapshot.data!
-                                          //           .data()!["title"],
-                                          //           style: GoogleFonts.inter(
-                                          //               textStyle: textStyle(
-                                          //                   fontSize: 14.sp,
-                                          //                   fontWeight: FontWeight
-                                          //                       .w500,
-                                          //                   color: Colors
-                                          //                       .black))),
-                                          //       // Container(
-                                          //       //   width: 50,
-                                          //       //     color: Colors.red,
-                                          //       //   child: ListView.builder(scrollDirection: Axis.horizontal,itemBuilder: (context,index){
-                                          //       //     return Container(child: Text('${chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["name"]}'));
-                                          //       //   }),
-                                          //       // ),
-                                          //       Container(
-                                          //           child: RichText(overflow: TextOverflow.ellipsis,text: TextSpan(   children: <InlineSpan>[
-                                          //             TextSpan(
-                                          //                 text:  '${ chatRoomSnapshot.data!.data()!["members"].values.elementAt(0)["name"]},',
-                                          //
-                                          //                 style: GoogleFonts.inter(
-                                          //                     textStyle: textStyle(
-                                          //                         fontSize: 12,
-                                          //                         fontWeight: FontWeight
-                                          //                             .w500,
-                                          //                         color: Color(
-                                          //                             grey)))
-                                          //             ),
-                                          //             TextSpan(
-                                          //                 text:  '${ chatRoomSnapshot.data!.data()!["members"].values.elementAt(1)["name"]},',
-                                          //
-                                          //                 style: GoogleFonts.inter(
-                                          //                     textStyle: textStyle(
-                                          //                         fontSize: 12,
-                                          //                         fontWeight: FontWeight
-                                          //                             .w500,
-                                          //                         color: Color(
-                                          //                             grey)))
-                                          //             ),
-                                          //             TextSpan(
-                                          //                 text:  '${ chatRoomSnapshot.data!.data()!["members"].values.elementAt(2)["name"]},',
-                                          //                 style: GoogleFonts.inter(
-                                          //                     textStyle: textStyle(
-                                          //                         fontSize: 12,
-                                          //                         fontWeight: FontWeight
-                                          //                             .w500,
-                                          //                         color: Color(
-                                          //                             grey)))
-                                          //             ),
-                                          //             TextSpan(
-                                          //                 text:  '${ chatRoomSnapshot.data!.data()!["members"].values.elementAt(3)["name"]},',
-                                          //                 style: GoogleFonts.inter(
-                                          //                     textStyle: textStyle(
-                                          //                         fontSize: 12,
-                                          //                         fontWeight: FontWeight
-                                          //                             .w500,
-                                          //                         color: Color(
-                                          //                             grey)))
-                                          //             ),
-                                          //
-                                          //           ])),
-                                          //
-                                          //
-                                          //       )
-                                          //     ],
-                                          //   ),
-                                          // )
                                         ],
                                       )
                                           : Text(messages.length.toString() +
@@ -3724,17 +3574,6 @@ print('111111111111111111');
                                                 child: Text("No messages"),
                                               )
                                                   :
-                                              // } else {
-                                              // return Container(
-                                              //   width: MediaQuery.of(context).size.width,
-                                              //   child: ListView.builder(
-                                              //     reverse: true,
-                                              //     padding: EdgeInsets.all(10.0),
-                                              //     itemBuilder: (context, index) => buildItem(index, snapshot.data![index]),
-                                              //     itemCount: snapshot.data!.length,
-                                              //     controller: listScrollController,
-                                              //   ),
-                                              // );
                                               Container(
                                                 child: GroupedListView(
                                                   elements: snapshot.data!,
@@ -3833,11 +3672,11 @@ print('111111111111111111');
                                                           if (messages
                                                               .isEmpty ==
                                                               true) {
-                                                            // if (!mounted) return;
-                                                            // setState(() {
-                                                            // messages.add(element);
-                                                            messages[index] =
-                                                                element;
+                                                            messages[index] = element;
+                                                            copied = element.data()!["data"]["text"];
+                                                            deliverTime = element.data()!["timestamp"];
+                                                            readTime = formatTime(getDateTimeSinceEpoch(datetime: element["read"]["timestamp"]));
+                                                            msgTime =  formatTime(getDateTimeSinceEpoch(datetime: element["timestamp"]));
                                                             // });
                                                             if (element
                                                                 .data()!["from"] !=
@@ -3856,8 +3695,7 @@ print('111111111111111111');
                                                             if (isSearching) {
                                                               isSearching =
                                                               false;
-                                                              searchTextEditingController
-                                                                  .clear();
+                                                              searchTextEditingController.clear();
                                                             }
                                                           });
                                                           log(notUserMessages
@@ -3882,9 +3720,6 @@ print('111111111111111111');
                                                                 1;
                                                               }
                                                             } else {
-                                                              // if (!mounted) return;
-                                                              // setState(() {
-                                                              // messages.add(element);
                                                               if (element
                                                                   .data()!["delete"]["everyone"] ==
                                                                   false) {
@@ -3899,12 +3734,6 @@ print('111111111111111111');
                                                                 1;
                                                               }
                                                             }
-                                                            // if (messages.isEmpty) {
-                                                            //   if (!mounted) return;
-                                                            //   setState(() {
-                                                            //     appbarVisible = true;
-                                                            //   });
-                                                            // }
                                                           }
                                                           if (!mounted) return;
                                                           setState(() {});
@@ -3921,7 +3750,7 @@ print('111111111111111111');
                                                               : (messages.values
                                                               .contains(
                                                               element))
-                                                              ? Color(accent)
+                                                              ? Color(black)
                                                               .withOpacity(0.2)
                                                               : Color(
                                                               transparent),
@@ -4071,8 +3900,6 @@ print('111111111111111111');
                                                     top: 10),
                                                 child: Row(
                                                   children: [
-
-
                                                     Flexible(
                                                       child: textField(
                                                         prefix:IconButton(
@@ -4113,27 +3940,17 @@ print('111111111111111111');
                                                                     1))),
                                                         suffixIcon: Container(
 
-                                                          width: 80,
+                                                          width: 80.w,
 
                                                           child: Row(
                                                             children: [
 
-                                                              InkWell(
-                                                                child: Image(
-                                                                  image: AssetImage(
-                                                                      'assets/per_chat_icons/attach_file_icon.png'
-                                                                  ),
-                                                                  height: 30
-                                                                      .h,
+                                                              GestureDetector(
+                                                                child: SvgPicture.asset(
+                                                                    "assets/group_info/chat_attachments.svg",
+                                                                    height:18.h,width: 18.w
                                                                 ),
                                                                 onTap: () {
-                                                                  // if (!mounted) return;
-                                                                  // setState(() {
-                                                                  //   if (emojiShowing) {
-                                                                  //     emojiShowing = false;
-                                                                  //   }
-                                                                  //   attachmentShowing = !attachmentShowing;
-                                                                  // });
                                                                   showModalBottomSheet(
                                                                       backgroundColor: Colors
                                                                           .transparent,
@@ -4640,19 +4457,65 @@ print('111111111111111111');
                                                                       });
                                                                 },
                                                               ),
+                                                      SizedBox(width:20.w),
+                                                              GestureDetector( onTap: () async {
+                                                                if (!mounted) return;
+                                                                setState(() {
+                                                                  attachmentShowing = false;
+                                                                });
+                                                                final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
 
-                                                              InkWell(
-                                                                child: Image(
-                                                                  image: AssetImage(
-
-                                                                      'assets/per_chat_icons/camera.png'
-                                                                  ),
-                                                                  height: 30
-                                                                      .h,
-                                                                ),
-                                                                onTap: () {
-
-                                                                },
+                                                                // Navigator.pop(context);
+                                                                // return await image().then((value) async {
+                                                                if (photo != null) {
+                                                                  int size = await photo.length();
+                                                                  Uint8List bytes = await photo.readAsBytes();
+                                                                  // for (var file in value.files) {
+                                                                  if (size < 52428800 && bytes != null) {
+                                                                    if (widget.state == 0) {
+                                                                      await writeUserMessage(
+                                                                        type: 1,
+                                                                        // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                        peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
+                                                                        peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
+                                                                        replyMap: replyMessageMap,
+                                                                        file: bytes,
+                                                                        contentType: "image/" + photo.path.split(".").last,
+                                                                      );
+                                                                      if (replyMessageMap != null && replyUserName != null) {
+                                                                        if (!mounted) return;
+                                                                        setState(() {
+                                                                          replyMessageMap = null;
+                                                                          replyUserName = null;
+                                                                        });
+                                                                      }
+                                                                    } else {
+                                                                      await writeGroupMessage(
+                                                                          type: 1,
+                                                                          members: chatRoomSnapshot.data!.data()!["members"],
+                                                                          file: bytes,
+                                                                          replyMap: replyMessageMap,
+                                                                          contentType: "image/" + photo.path.split(".").last,
+                                                                          groupName: chatRoomSnapshot.data!.data()!["title"],
+                                                                          groupPic: chatRoomSnapshot.data!.data()!["pic"]);
+                                                                      if (replyMessageMap != null && replyUserName != null) {
+                                                                        if (!mounted) return;
+                                                                        setState(() {
+                                                                          replyMessageMap = null;
+                                                                          replyUserName = null;
+                                                                        });
+                                                                      }
+                                                                    }
+                                                                  } else {
+                                                                    final snackBar = snackbar(content: "File size is greater than 50MB");
+                                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                  }
+                                                                  // }
+                                                                }
+                                                                // });
+                                                              },
+                                                                child:SvgPicture.asset('assets/group_info/cameraicon_chat.svg',
+                                                                    height:22.h,width: 22.w),
                                                               ),
 
                                                             ],
@@ -4963,815 +4826,9 @@ print('111111111111111111');
                   else {
                     return ResponsiveBuilder(
                         builder: (context, sizingInformation) {
-                          // if (sizingInformation.screenSize == DeviceScreenType.desktop) {
-                          //   Navigator.maybePop(context);
-                          // }
                           return Scaffold(
-                            appBar: AppBar(
-                              centerTitle: false,
-                              automaticallyImplyLeading: false,
-                              backgroundColor: (themedata.value.index == 0)
-                                  ? Color(lightGrey)
-                                  : Color(materialBlack),
-                              elevation: 0,
-                              leading: (sizingInformation.deviceScreenType !=
-                                  DeviceScreenType.desktop)
-                                  ? IconButton(
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                onPressed: () {
-                                  Navigator.pop(context, true);
-                                },
-                                icon: Icon(Icons.arrow_back),
-                              )
-                                  : null,
-                              actions: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: IconButton(
-                                      splashColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      onPressed: () async {
-                                        DocumentSnapshot<Map<String,
-                                            dynamic>> peerUserDetailSnapshot = await instance
-                                            .collection("user-detail").doc(
-                                            widget.puid).get();
-                                        DocumentSnapshot<Map<String,
-                                            dynamic>> userDetailSnapshot = await instance
-                                            .collection("user-detail")
-                                            .doc(uid)
-                                            .get();
-                                        if (peerUserDetailSnapshot
-                                            .data()!["callStatus"] == false) {
-                                          if (peerUserDetailSnapshot
-                                              .data()!["token"] != null) {
-                                            String timestamp = DateTime
-                                                .now()
-                                                .millisecondsSinceEpoch
-                                                .toString();
-                                            await sendNotificationForCall(
-                                                userTokens: [
-                                                  peerUserDetailSnapshot
-                                                      .data()!["token"]
-                                                ],
-                                                id: userDetailSnapshot
-                                                    .data()!["uid"],
-                                                video: true,
-                                                timestamp: timestamp,
-                                                state: 0,
-                                                pic: userDetailSnapshot
-                                                    .data()!["pic"],
-                                                phoneNumber: userDetailSnapshot
-                                                    .data()!["phone"],
-                                                name: userDetailSnapshot
-                                                    .data()!["name"]);
-                                            WriteLog(
-                                                uid: widget.uid,
-                                                timestamp: timestamp,
-                                                chatType: 0,
-                                                callerId: userDetailSnapshot
-                                                    .data()!["phone"],
-                                                callType: 2,
-                                                channelId: userDetailSnapshot
-                                                    .data()!["uid"],
-                                                document: peerUserDetailSnapshot);
-                                            // Navigator.push(
-                                            //     context,
-                                            //     MaterialPageRoute(
-                                            //         builder: (context) => OutgoingPage(
-                                            //           profilePics: [peerUserDetailSnapshot.data()!["pic"]],
-                                            //           name: peerUserDetailSnapshot.data()!["name"],
-                                            //           phone: peerUserDetailSnapshot.data()!["phone"],
-                                            //           timestamp: timestamp,
-                                            //         )));
-                                            //---------------------------------------------------------------------
-                                          } else {
-                                            toast("User has logged out!");
-                                          }
-                                        } else {
-                                          toast("user is busy right now");
-                                        }
-                                      },
-                                      icon: Icon(
-                                        DeejosIcon.video_camera,
-                                        size: 17,
-                                      )),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: IconButton(
-                                      splashColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      onPressed: () async {
-                                        DocumentSnapshot<Map<String,
-                                            dynamic>> peerUserDetailSnapshot = await instance
-                                            .collection("user-detail").doc(
-                                            widget.puid).get();
-                                        DocumentSnapshot<Map<String,
-                                            dynamic>> userDetailSnapshot = await instance
-                                            .collection("user-detail")
-                                            .doc(uid)
-                                            .get();
-                                        if (peerUserDetailSnapshot
-                                            .data()!["callStatus"] == false) {
-                                          if (peerUserDetailSnapshot
-                                              .data()!["token"] != null) {
-                                            String timestamp = DateTime
-                                                .now()
-                                                .millisecondsSinceEpoch
-                                                .toString();
-                                            await sendNotificationForCall(
-                                                userTokens: [
-                                                  peerUserDetailSnapshot
-                                                      .data()!["token"]
-                                                ],
-                                                id: userDetailSnapshot
-                                                    .data()!["uid"],
-                                                video: false,
-                                                state: 0,
-                                                pic: userDetailSnapshot
-                                                    .data()!["pic"],
-                                                timestamp: timestamp,
-                                                phoneNumber: userDetailSnapshot
-                                                    .data()!["phone"],
-                                                name: userDetailSnapshot
-                                                    .data()!["name"]);
-                                            WriteLog(
-                                              uid: widget.uid,
-
-                                                timestamp: timestamp,
-                                                chatType: 0,
-                                                callerId: userDetailSnapshot
-                                                    .data()!["phone"],
-                                                callType: 3,
-                                                channelId: userDetailSnapshot
-                                                    .data()!["uid"],
-                                                document: peerUserDetailSnapshot);
-
-                                            // Navigator.push(
-                                            //     context,
-                                            //     MaterialPageRoute(
-                                            //         builder: (context) => OutgoingPage(
-                                            //           profilePics: [peerUserDetailSnapshot.data()!["pic"]],
-                                            //           name: peerUserDetailSnapshot.data()!["name"],
-                                            //           phone: peerUserDetailSnapshot.data()!["phone"],
-                                            //           timestamp: timestamp,
-                                            //         )));
-                                            //------------------------------------------------------------
-                                            // Navigator.push(
-                                            //     context,
-                                            //     MaterialPageRoute(
-                                            //         builder: (context) => CallPage(
-                                            //             channelName: userDetailSnapshot.data()!["uid"],
-                                            //             startTimestamp: timestamp,
-                                            //             video: false,
-                                            //             title: userDetailSnapshot.data()!["name"])));
-                                          } else {
-                                            toast("User has logged out!");
-                                          }
-                                        } else {
-                                          toast("user is busy right now");
-                                        }
-                                      },
-                                      icon: Icon(
-                                        DeejosIcon.call,
-                                        size: 20,
-                                      )),
-                                ),
-                                PopupMenuButton(
-                                    onSelected: (value) async {
-                                      switch (value) {
-                                        case 1:
-                                          {
-                                            if (sizingInformation
-                                                .deviceScreenType ==
-                                                DeviceScreenType.desktop) {
-                                              return await scaffoldAlertDialogBox(
-                                                  context: context,
-                                                  page: ChatDetails(
-                                                    sizingInformation: sizingInformation,
-                                                    uid: widget.uid,
-                                                    puid: widget.puid,
-                                                    state: 0,
-                                                  ));
-                                            } else {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ChatDetails(
-                                                          sizingInformation: sizingInformation,
-                                                          uid: widget.uid,
-                                                          puid: widget.puid,
-                                                          state: 0,
-                                                        )),
-                                              );
-                                            }
-                                          }
-                                          break;
-
-                                        default:
-                                      }
-                                    },
-                                    itemBuilder: (context) =>
-                                    [
-                                      PopupMenuItem(
-                                        child: Text("View Contact"),
-                                        value: 1,
-                                      ),
-                                    ])
-                              ],
-                              title: GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () async {
-                                  if (sizingInformation.deviceScreenType ==
-                                      DeviceScreenType.desktop) {
-                                    return await scaffoldAlertDialogBox(
-                                        context: context,
-                                        page: ChatDetails(
-                                          sizingInformation: sizingInformation,
-                                          uid: widget.uid,
-                                          puid: widget.puid,
-                                          state: 0,
-                                        ));
-                                  } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ChatDetails(
-                                                sizingInformation: sizingInformation,
-                                                uid: widget.uid,
-                                                puid: widget.puid,
-                                                state: 0,
-                                              )),
-                                    );
-                                  }
-                                },
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        width: 35,
-                                        height: 35,
-                                        child: ClipOval(
-                                          // peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
-                                          // peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
-                                          child: (emptyChatRoomDetails.data!
-                                              .data()!["pic"] != null)
-                                          // ? Image.network(
-                                          //     emptyChatRoomDetails.data!.data()!["pic"],
-                                          //     fit: BoxFit.cover,
-                                          //     loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                          //       if (loadingProgress == null) return child;
-                                          //       return Center(
-                                          //         child: CircularProgressIndicator(
-                                          //           value: loadingProgress.expectedTotalBytes != null
-                                          //               ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                          //               : null,
-                                          //         ),
-                                          //       );
-                                          //     },
-                                          //     errorBuilder: (context, error, stackTrace) => Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
-                                          //   )
-                                              ? CachedNetworkImage(
-                                            fit: BoxFit.cover,
-                                            fadeInDuration: const Duration(
-                                                milliseconds: 400),
-                                            progressIndicatorBuilder: (context,
-                                                url, downloadProgress) =>
-                                                Center(
-                                                  child: Container(
-                                                    width: 20.0,
-                                                    height: 20.0,
-                                                    child: CircularProgressIndicator(
-                                                        value: downloadProgress
-                                                            .progress),
-                                                  ),
-                                                ),
-                                            imageUrl: emptyChatRoomDetails.data!
-                                                .data()!["pic"],
-                                            errorWidget: (context, url,
-                                                error) => Image.asset(
-                                                "assets/noProfile.jpg",
-                                                fit: BoxFit.cover),
-                                          )
-                                              : Image.asset(
-                                              "assets/noProfile.jpg",
-                                              fit: BoxFit.cover),
-                                        )),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .start,
-                                        children: [
-                                          new Text((widget.state == 0)
-                                              ? emptyChatRoomDetails.data!
-                                              .data()!["name"]
-                                              : emptyChatRoomDetails.data!
-                                              .data()!["title"],
-                                              style: GoogleFonts.inter(
-                                                  textStyle: textStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight
-                                                          .w500))),
-                                          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                                              stream: instance.collection("user-detail").doc(widget.puid).snapshots(),
-                                              builder: (context, peerSnapshot) {
-                                                return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                                                  stream: instance.collection("user-detail").doc(widget.uid).snapshots(),
-                                                  builder: (context, userSnapshot) {
-
-                                                    if (userSnapshot.connectionState == ConnectionState.active && peerSnapshot.connectionState == ConnectionState.active) {
-
-                                                      return MarqueeWidget(
-                                                        direction: Axis.horizontal,
-                                                        child: Text(
-                                                          (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true)
-                                                              ? (peerSnapshot.data!.data()!["status"] == "online")
-                                                              ? "Online"
-                                                              : (userSnapshot.data!.data()!["lastseenStatus"] == true && peerSnapshot.data!.data()!["lastseenStatus"] == true)
-                                                              ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
-                                                              : "Tap here for user info"
-                                                              : "Tap here for user info",
-                                                          style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(grey))),
-                                                        ),
-                                                      );
-                                                    } else {
-
-                                                      return Container();
-                                                    }
-                                                  },
-                                                );
-                                              })
-                                        ],
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .start,
-                                        children: [
-                                          new Text((widget.state == 0)
-                                              ? emptyChatRoomDetails.data!
-                                              .data()!["name"]
-                                              : emptyChatRoomDetails.data!
-                                              .data()!["title"],
-                                              style: GoogleFonts.inter(
-                                                  textStyle: textStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight
-                                                          .w500))),
-                                          StreamBuilder<DocumentSnapshot<
-                                              Map<String, dynamic>>>(
-                                              stream: instance.collection(
-                                                  "user-detail").doc(
-                                                  widget.puid).snapshots(),
-                                              builder: (context, peerSnapshot) {
-                                                return StreamBuilder<
-                                                    DocumentSnapshot<
-                                                        Map<String, dynamic>>>(
-                                                  stream: instance.collection(
-                                                      "user-detail").doc(
-                                                      widget.uid).snapshots(),
-                                                  builder: (context,
-                                                      userSnapshot) {
-                                                    if (userSnapshot
-                                                        .connectionState ==
-                                                        ConnectionState
-                                                            .active &&
-                                                        peerSnapshot
-                                                            .connectionState ==
-                                                            ConnectionState
-                                                                .active) {
-                                                      return MarqueeWidget(
-                                                        direction: Axis
-                                                            .horizontal,
-                                                        child: Text(
-                                                          (userSnapshot.data!
-                                                              .data()!["onlineStatus"] ==
-                                                              true &&
-                                                              peerSnapshot.data!
-                                                                  .data()!["onlineStatus"] ==
-                                                                  true)
-                                                              ? (peerSnapshot
-                                                              .data!
-                                                              .data()!["status"] ==
-                                                              "online")
-                                                              ? "Online"
-                                                              : (userSnapshot
-                                                              .data!
-                                                              .data()!["lastseenStatus"] ==
-                                                              true &&
-                                                              peerSnapshot.data!
-                                                                  .data()!["lastseenStatus"] ==
-                                                                  true)
-                                                              ? "Last seen ${getDateTimeInChat(
-                                                              datetime: getDateTimeSinceEpoch(
-                                                                  datetime: peerSnapshot
-                                                                      .data!
-                                                                      .data()!["status"]))} at ${formatTime(
-                                                              getDateTimeSinceEpoch(
-                                                                  datetime: peerSnapshot
-                                                                      .data!
-                                                                      .data()!["status"]))}"
-                                                              : "Tap here for user info"
-                                                              : "Tap here for user info",
-                                                          style: GoogleFonts
-                                                              .inter(
-                                                              textStyle: textStyle(
-                                                                  fontSize: 12,
-                                                                  fontWeight: FontWeight
-                                                                      .w500,
-                                                                  color: Color(
-                                                                      grey))),
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      return Container();
-                                                    }
-                                                  },
-                                                );
-                                              })
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            body: Container(
-                              decoration: BoxDecoration(
-                                // color: Color(black),
-                                image: DecorationImage(
-                                  image:
-                                  // (chatRoomSnapshot.data!.data()!['members']["${widget.uid}"].contains("wallpaper") == true)
-                                  //     ? (chatRoomSnapshot.data!.data()!['members']["${widget.uid}"]["wallpaper"] != null)
-                                  //         ? AssetImage(chatRoomSnapshot.data!.data()!['members']["${widget.uid}"]["wallpaper"])
-                                  //         : AssetImage((themedata.value.index == 0) ? "assets/chatLightBg.jpg" : "assets/chatDarkBg.jpg")
-                                  //     :
-                                  AssetImage((themedata.value.index == 0)
-                                      ? "assets/chatLightBg.jpg"
-                                      : "assets/chatDarkBg.jpg"),
-                                  fit: BoxFit.cover,
-                                  // colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: NotificationListener<
-                                        ScrollNotification>(
-                                        onNotification: (
-                                            ScrollNotification scrollInfo) {
-                                          // if (scrollInfo.metrics.maxScrollExtent == scrollInfo.metrics.pixels) {
-                                          //   // readUserMessages();
-                                          // }
-                                          return true;
-                                        },
-                                        child: Center(
-                                          child: Text("No messages"),
-                                        )),
-                                  ),
-                                  Container(
-                                    // height: 66,
-                                    color: (themedata.value.index == 0) ? Color(
-                                        lightGrey) : Color(materialBlack),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(bottom: 10,
-                                              left: 10,
-                                              right: 10,
-                                              top: 10),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Flexible(
-                                                    child: textField(
-                                                      prefix: IconButton(
-                                                          splashColor: Colors
-                                                              .transparent,
-                                                          highlightColor: Colors
-                                                              .transparent,
-                                                          hoverColor: Colors
-                                                              .transparent,
-                                                          onPressed: () async {
-                                                            recentEmojiList =
-                                                            await getRecentEmoji();
-                                                            if (!mounted)
-                                                              return;
-                                                            setState(() {
-                                                              if (attachmentShowing) {
-                                                                attachmentShowing =
-                                                                false;
-                                                              }
-                                                              emojiShowing =
-                                                              !emojiShowing;
-                                                              if (!emojiShowing) {
-                                                                focusNode
-                                                                    .requestFocus();
-                                                              } else {
-                                                                focusNode
-                                                                    .unfocus();
-                                                              }
-                                                            });
-                                                          },
-                                                          icon: Icon(
-                                                              Icons.book)),
-                                                      focusNode: focusNode,
-                                                      textStyle: GoogleFonts
-                                                          .inter(
-                                                          textStyle: textStyle(
-                                                              fontSize: 14,
-                                                              color: (themedata
-                                                                  .value
-                                                                  .index == 0)
-                                                                  ? Color(
-                                                                  materialBlack)
-                                                                  : Color(
-                                                                  white))),
-                                                      textEditingController: textEditingController,
-                                                      hintText: "Type a Message",
-                                                      hintStyle:
-                                                      GoogleFonts.inter(
-                                                          textStyle: textStyle(
-                                                              fontSize: 14,
-                                                              color: (themedata
-                                                                  .value
-                                                                  .index == 0)
-                                                                  ? Color(grey)
-                                                                  : Color(
-                                                                  lightGrey))),
-                                                      border: false,
-                                                      onSubmitted: (canSend)
-                                                          ? (value) async {
-                                                        if (textEditingController
-                                                            .text.trim() !=
-                                                            "") {
-                                                          await writeUserMessage(
-                                                              type: 0,
-                                                              peerPic: (emptyChatRoomDetails
-                                                                  .data!
-                                                                  .data()!["pic"] !=
-                                                                  null)
-                                                                  ? emptyChatRoomDetails
-                                                                  .data!
-                                                                  .data()!["pic"]
-                                                                  : null,
-                                                              peerName:
-                                                              (widget.state ==
-                                                                  0)
-                                                                  ? emptyChatRoomDetails
-                                                                  .data!
-                                                                  .data()!["name"]
-                                                                  : emptyChatRoomDetails
-                                                                  .data!
-                                                                  .data()!["title"],
-                                                              // peerChattingWith: userDetailSnapshot.data!.data()!["chattingWith"],
-                                                              replyMap: replyMessageMap,
-                                                              message: textEditingController
-                                                                  .text);
-                                                          if (replyMessageMap !=
-                                                              null &&
-                                                              replyUserName !=
-                                                                  null) {
-                                                            if (!mounted)
-                                                              return;
-                                                            setState(() {
-                                                              replyMessageMap =
-                                                              null;
-                                                              replyUserName =
-                                                              null;
-                                                            });
-                                                          }
-                                                          if (emojiShowing) {
-                                                            if (!mounted)
-                                                              return;
-                                                            setState(() {
-                                                              emojiShowing =
-                                                              false;
-                                                            });
-                                                          }
-                                                          textEditingController
-                                                              .clear();
-                                                        }
-                                                      }
-                                                          : null,
-                                                      maxLines: 5,
-                                                      fillColor: (themedata
-                                                          .value.index == 0)
-                                                          ? Color(white)
-                                                          : Color(lightBlack),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .only(
-                                                        left: 8.0, right: 8.0),
-                                                    child: (canSend)
-                                                        ? GestureDetector(
-                                                      // elevation: 0,
-                                                      // child: Icon(
-                                                      //   DeejosIcon.send_outline,
-                                                      //   color: (themedata.value.index == 0) ? Color((canSend) ? white : grey) : Color(grey),
-                                                      // ),
-                                                      // padding: EdgeInsets.all(20),
-                                                      // shape: CircleBorder(),
-                                                      // color: Color(accent),
-                                                        child: Container(
-                                                          height: 65,
-                                                          width: 65,
-                                                          clipBehavior: Clip
-                                                              .hardEdge,
-                                                          decoration: BoxDecoration(
-                                                            shape: BoxShape
-                                                                .circle,
-                                                            color: Color(
-                                                                accent),
-                                                          ),
-                                                          child: Icon(
-                                                            DeejosIcon
-                                                                .send_outline,
-                                                            color: (themedata
-                                                                .value.index ==
-                                                                0)
-                                                                ? Color(
-                                                                (canSend)
-                                                                    ? white
-                                                                    : grey)
-                                                                : Color(grey),
-                                                          ),
-                                                        ),
-                                                        onTap: canSend
-                                                            ? () async {
-                                                          if (textEditingController
-                                                              .text.trim() !=
-                                                              "") {
-                                                            await writeUserMessage(
-                                                                type: 0,
-                                                                peerPic:
-                                                                (emptyChatRoomDetails
-                                                                    .data!
-                                                                    .data()!["pic"] !=
-                                                                    null)
-                                                                    ? emptyChatRoomDetails
-                                                                    .data!
-                                                                    .data()!["pic"]
-                                                                    : null,
-                                                                peerName: (widget
-                                                                    .state == 0)
-                                                                    ? emptyChatRoomDetails
-                                                                    .data!
-                                                                    .data()!["name"]
-                                                                    : emptyChatRoomDetails
-                                                                    .data!
-                                                                    .data()!["title"],
-                                                                // peerChattingWith: userDetailSnapshot.data!.data()!["chattingWith"],
-                                                                replyMap: replyMessageMap,
-                                                                message: textEditingController
-                                                                    .text);
-                                                            if (replyMessageMap !=
-                                                                null &&
-                                                                replyUserName !=
-                                                                    null) {
-                                                              if (!mounted)
-                                                                return;
-                                                              setState(() {
-                                                                replyMessageMap =
-                                                                null;
-                                                                replyUserName =
-                                                                null;
-                                                              });
-                                                            }
-                                                            if (emojiShowing) {
-                                                              if (!mounted)
-                                                                return;
-                                                              setState(() {
-                                                                emojiShowing =
-                                                                false;
-                                                              });
-                                                            }
-                                                            textEditingController
-                                                                .clear();
-                                                          }
-                                                        }
-                                                            : null)
-                                                        : RecordButton(
-                                                        controller: voiceRecordAnimationController,
-                                                        valueNotifier: recordAudioValueNotifier,
-                                                        function: () async {
-                                                          File file = File(
-                                                              recordAudioValueNotifier
-                                                                  .value);
-                                                          if (file
-                                                              .existsSync()) {
-                                                            int length = await file
-                                                                .length();
-                                                            Uint8List bytes = await file
-                                                                .readAsBytes();
-
-                                                            if (length <
-                                                                52428800) {
-                                                              if (widget
-                                                                  .state == 0) {
-                                                                await writeUserMessage(
-                                                                  type: 9,
-                                                                  // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
-                                                                  peerName: chatRoomSnapshot
-                                                                      .data!
-                                                                      .data()!["members"]["${widget
-                                                                      .puid}"]["name"],
-                                                                  peerPic: chatRoomSnapshot
-                                                                      .data!
-                                                                      .data()!["members"]["${widget
-                                                                      .puid}"]["pic"],
-                                                                  replyMap: replyMessageMap,
-                                                                  file: bytes,
-                                                                  contentType: "audio/" +
-                                                                      file.path
-                                                                          .split(
-                                                                          ".")
-                                                                          .last,
-                                                                );
-                                                                if (replyMessageMap !=
-                                                                    null &&
-                                                                    replyUserName !=
-                                                                        null) {
-                                                                  if (!mounted)
-                                                                    return;
-                                                                  setState(() {
-                                                                    replyMessageMap =
-                                                                    null;
-                                                                    replyUserName =
-                                                                    null;
-                                                                  });
-                                                                }
-                                                              } else {
-                                                                await writeGroupMessage(
-                                                                    type: 9,
-                                                                    members: chatRoomSnapshot
-                                                                        .data!
-                                                                        .data()!["members"],
-                                                                    file: bytes,
-                                                                    replyMap: replyMessageMap,
-                                                                    contentType: "audio/" +
-                                                                        file
-                                                                            .path
-                                                                            .split(
-                                                                            ".")
-                                                                            .last,
-                                                                    groupName: chatRoomSnapshot
-                                                                        .data!
-                                                                        .data()!["title"],
-                                                                    groupPic: chatRoomSnapshot
-                                                                        .data!
-                                                                        .data()!["pic"]);
-                                                                if (replyMessageMap !=
-                                                                    null &&
-                                                                    replyUserName !=
-                                                                        null) {
-                                                                  if (!mounted)
-                                                                    return;
-                                                                  setState(() {
-                                                                    replyMessageMap =
-                                                                    null;
-                                                                    replyUserName =
-                                                                    null;
-                                                                  });
-                                                                }
-                                                              }
-                                                            } else {
-                                                              final snackBar = snackbar(
-                                                                  content: "File size is greater than 50MB");
-                                                              ScaffoldMessenger
-                                                                  .of(context)
-                                                                  .showSnackBar(
-                                                                  snackBar);
-                                                            }
-                                                          }
-                                                        }),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Offstage(offstage: !emojiShowing,
-                                      child: emojiOffstage()),
-                                   Offstage(offstage: !attachmentShowing, child: attachmentOffstage(chatRoomSnapshot: chatRoomSnapshot)),
-                                ],
-                              ),
+                            appBar:AppBar(
+                              leading:Icon(Icons.add,color:Colors.transparent),
                             ),
                           );
                         });
@@ -5845,9 +4902,8 @@ print('111111111111111111');
         child: (document["from"] == widget.uid)
         //*if it is sent by me
 
-
             ? Padding(
-          padding: const EdgeInsets.only(
+          padding: EdgeInsets.only(
               left: 50, right: 20, top: 8, bottom: 8),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -5879,7 +4935,7 @@ print('111111111111111111');
                         padding: EdgeInsets.only(left: 11.w,right: 11.w,top:10.h,bottom:7.h),
                         alignment: Alignment.centerRight,
                         clipper: ChatBubbleClipper5(type: BubbleType.sendBubble,radius: 18,secondRadius: 0),
-                        backGroundColor: Color.fromRGBO(248, 206, 97, 1),
+                        backGroundColor:Color.fromRGBO(255, 202, 40, 1),
                         elevation: 0,
 
                         child: Column(
@@ -5942,7 +4998,7 @@ print('111111111111111111');
                                               maxLines: 1,
                                               softWrap: true,
                                             ),
-                                            const SizedBox(height: 8),
+                                            SizedBox(height: 8),
                                             Text(
                                               (inverseDataType[document.data()!["reply"]["type"]] == 0)
                                                   ? document.data()!["reply"]["data"]["text"]
@@ -6041,9 +5097,10 @@ print('111111111111111111');
             ],
           ),
         )
+            // sender
 
             : Padding(
-          padding: const EdgeInsets.only(
+          padding: EdgeInsets.only(
               left: 10, right: 50, top: 8, bottom: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -6079,8 +5136,7 @@ print('111111111111111111');
                           onTap: (){print('Lotus:${chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"]}');},
                           child: Card(
                             elevation: 0,
-                            color: Color.fromRGBO(252, 252, 252, 1),
-
+                            color:Color.fromRGBO(252, 252, 252, 1),
                             shape: OutlineInputBorder(borderSide: BorderSide(
                                 width: 1.w, color: Color.fromRGBO(0, 0, 0, 0.2)),
                                 borderRadius: BorderRadius.only(
@@ -6258,31 +5314,22 @@ print('111111111111111111');
             ],
           ),
         ));
+               //reciever
   }
-
-
-  Widget messageBuilder({required DocumentSnapshot<Map<String,
+  Widget messageBuilder({
+    required DocumentSnapshot<Map<String,
       dynamic>> document, required DocumentSnapshot<Map<String, dynamic>> chatRoomSnapshot}) {
     switch (inverseDataType[document.data()!["type"]]) {
       case 0:
         return (document.data()!["delete"]["everyone"] == true)
             ? Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted")
-        // : Text(
-        //     document.data()!["data"]["text"],
-        //     softWrap: true,
-        //     style: GoogleFonts.poppins(
-        //         fontSize: 14,
-        //         textStyle: textStyle(
-        //           color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white),
-        //         )),
-        //   );
             : SubstringHighlight(
           text: document.data()!["data"]["text"],
           term: searchTextEditingController.text,
           textStyle: GoogleFonts.poppins(
               fontSize: 14,
               textStyle: textStyle(
-                color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white),
+                color:(themedata.value.index == 0) ? Color(materialBlack) : Color(white),
               )),
           textStyleHighlight: TextStyle(
             // highlight style
@@ -6305,19 +5352,6 @@ print('111111111111111111');
                             showIndex: false,
                           )));
                 },
-                // child: Image.network(
-                //   document.data()!["data"]["image"],
-                //   fit: BoxFit.cover,
-                //   loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                //     if (loadingProgress == null) return child;
-                //     return Center(
-                //       child: CircularProgressIndicator(
-                //         value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
-                //       ),
-                //     );
-                //   },
-                //   errorBuilder: (context, error, stackTrace) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
-                // ),
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
                   fadeInDuration: const Duration(milliseconds: 400),
@@ -6419,37 +5453,36 @@ print('111111111111111111');
                 ),
               )
                   : Container(),
-              // GestureDetector(
-              //   onTap: () async {
-              //     DocumentSnapshot<Map<String, dynamic>> userDoc = await instance.collection("user-detail").doc(document.data()!["from"]).get();
-              //     await DynamicLinkHandler().shareLink(
-              //         userDoc.data()!["name"],
-              //         document.data()!["data"]["text"],
-              //         Uri.decodeFull(document.data()!["data"]["story"]).toString().split("&link=").last,
-              //         (document.data()!["data"]["image"] != null)
-              //             ? document.data()!["data"]["image"]
-              //             : ((document.data()!["data"]["video"] != null))
-              //                 ? document.data()!["data"]["video"]
-              //                 : "");
-              //   },
-              //   onLongPress: () {
-              //     Clipboard.setData(ClipboardData(text: Uri.decodeFull(document.data()!["data"]["story"]).toString()));
-              //     final snackBar = snackbar(content: "Copied to clipboard");
-              //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              //   },
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(8.0),
-              //     child: Text(
-              //       Uri.decodeFull(document.data()!["data"]["story"]).toString(),
-              //       softWrap: true,
-              //       style: GoogleFonts.poppins(
-              //           fontSize: 14,
-              //           textStyle: textStyle(
-              //             color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white),
-              //           )),
-              //     ),
-              //   ),
-              // ),
+              GestureDetector(
+                onTap: () async {
+                  DocumentSnapshot<Map<String, dynamic>> userDoc = await instance.collection("user-detail").doc(document.data()!["from"]).get();
+                  await DynamicLinkHandler().shareLink(
+                      userDoc.data()!["name"],
+                      document.data()!["data"]["text"],
+                      Uri.decodeFull(document.data()!["data"]["story"]).toString().split("&link=").last,
+                      (document.data()!["data"]["image"] != null)
+                          ? document.data()!["data"]["image"]
+                          : ((document.data()!["data"]["video"] != null))
+                              ? document.data()!["data"]["video"]
+                              : "");
+                },
+                onLongPress: () {
+                  Clipboard.setData(ClipboardData(text: Uri.decodeFull(document.data()!["data"]["story"]).toString()));
+                  final snackBar = snackbar(content: "Copied to clipboard");
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),                  child: Text(
+                    Uri.decodeFull(document.data()!["data"]["story"]).toString(),
+                    softWrap: true,
+                    style: GoogleFonts.inter(
+                        fontSize: 14,
+                        textStyle: textStyle(
+                          color: (themedata.value.index == 0) ? Color(materialBlack) : Color(white),
+                        )),
+                  ),
+                ),
+              ),
             ],
           ),
         );
@@ -6469,19 +5502,6 @@ print('111111111111111111');
                             showIndex: false,
                           )));
                 },
-                // child: Image.network(
-                //   document.data()!["data"]["image"],
-                //   fit: BoxFit.cover,
-                //   loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                //     if (loadingProgress == null) return child;
-                //     return Center(
-                //       child: CircularProgressIndicator(
-                //         value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
-                //       ),
-                //     );
-                //   },
-                //   errorBuilder: (context, error, stackTrace) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
-                // ),
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
                   fadeInDuration: const Duration(milliseconds: 400),
@@ -6623,6 +5643,11 @@ print('111111111111111111');
     return Padding(
         padding: EdgeInsets.only(top: 5, bottom: 5),
         child: textField(
+          onChanged: (value) {
+            setState(() {
+              typing=true;
+            });
+          },
             fillColor: (themedata.value.index == 0) ? Color(white) : Color(
                 lightBlack),
             border: false,
@@ -6643,8 +5668,6 @@ print('111111111111111111');
     required DocumentSnapshot<Map<String, dynamic>> document,
     required DocumentSnapshot<Map<String, dynamic>> chatRoomSnapshot,
 
-    // DocumentSnapshot<Map<String, dynamic>>? userDetailSnapshot,
-    // QuerySnapshot<Map<String, dynamic>>? userDetailsSnapshot,
   }) async {
     // Check if right mouse button clicked
     if (event.kind == PointerDeviceKind.mouse &&
@@ -7445,86 +6468,4 @@ print('111111111111111111');
     );
   }
 }
-class Messageinfo extends StatefulWidget {
-  final msgData;
-  final deliverTime;
-  final readTime;
-  final msgTime;
-  Messageinfo({
-    required this.msgData,
-    required this.readTime,
-    required this.deliverTime,
-    required this.msgTime
 
-  });
-
-
-  @override
-  State<Messageinfo> createState() => _MessageinfoState();
-}
-
-class _MessageinfoState extends State<Messageinfo> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading:GestureDetector(
-            onTap:(){
-              Navigator.pop(context);
-            },
-            child: Column(mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment:CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset('assets/pops_asset/back_button.svg',height:35.h,
-                  width:35.w,),
-              ],
-            )),
-        title:Text('Ping Info',style:GoogleFonts.inter(fontWeight:FontWeight.w700,fontSize:16.sp,
-            color:Colors.black),),
-      ),
-      body:Column(crossAxisAlignment:CrossAxisAlignment.start,
-        children: [Align(alignment:Alignment.topRight,
-          child: ConstrainedBox(constraints:BoxConstraints(
-              minWidth:100.w,maxWidth:300.w,
-              minHeight:45.h,maxHeight: MediaQuery.of(context).size.height
-          ),
-            child: Card(margin:EdgeInsets.only(right: 12.w,top: 18.h,bottom: 18.h),
-              color:Color.fromRGBO(248, 206, 97, 1),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
-                  bottomLeft: Radius.circular(15))),
-              child: Padding(
-                padding: EdgeInsets.all(12),
-                child: Text("${widget.msgData}",style:GoogleFonts.inter(textStyle:TextStyle(
-                    fontWeight:FontWeight.w400,fontSize:12.sp,color:Colors.black
-                )),),
-              ),
-            ),
-          ),
-        ),
-          Container(
-            child: Padding(
-              padding:EdgeInsets.fromLTRB(20.w, 10.h,0.w, 0.h),
-              child: Column(crossAxisAlignment:CrossAxisAlignment.start,
-                  children: [Row(children: [
-                    Icon(Icons.done_all_rounded),SizedBox(width:10.w),
-                    Text('Read',style:GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:16.sp))]),
-                    SizedBox(height:5.h),
-                    Text('${widget.readTime}',style:GoogleFonts.inter(fontWeight:FontWeight.w400,fontSize:12.sp,
-                        color:Color.fromRGBO(130, 130, 130, 1))),
-                    SizedBox(height:18.h),
-                    Row(children: [
-                      Icon(Icons.done_all_rounded,color:Colors.grey,),SizedBox(width:10.w),
-                      Text('Delivered',style:GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:16.sp,))]),
-                    SizedBox(height:5.h),
-                    Text('${widget.msgTime}',style:GoogleFonts.inter(fontWeight:FontWeight.w400,fontSize:12.sp,
-                        color:Color.fromRGBO(130, 130, 130, 1))),
-                  ]),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

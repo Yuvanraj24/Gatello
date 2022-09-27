@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../Database/StorageManager.dart';
@@ -59,21 +61,21 @@ class _ChatDetailsUpdateState extends State<ChatDetailsUpdate> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: false,
-          automaticallyImplyLeading: false,
-          leading: IconButton(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
+          leading: GestureDetector(
+              onTap:(){
+                Navigator.pop(context);
+              },
+              child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment:CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset('assets/pops_asset/back_button.svg',height:35.h,
+                    width:35.w,),
+                ],
+              )),
+
           elevation: 0,
-          title: Text((widget.state == 0) ? "Enter new title" : "Enter new description",
-              style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
+          title: Text((widget.state == 0) ? "Enter New Title" : "Enter New Description",
+              style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w500, color:Colors.black)),
         ),
         bottomNavigationBar: BottomAppBar(
           child: Container(
@@ -88,12 +90,13 @@ class _ChatDetailsUpdateState extends State<ChatDetailsUpdate> {
                         Navigator.pop(context);
                       },
                       child:
-                      Text("Cancel", style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
+                      Text("Cancel", style: GoogleFonts.inter(fontSize:16.sp,fontWeight: FontWeight.w500,
+                          color:Colors.black)),
                     ),
                   ),
                   VerticalDivider(
                     width: 1,
-                    color: (themedata.value.index == 0) ? Color(black) : Color(white),
+                    color:Colors.black,
                   ),
                   Expanded(
                     child: TextButton(
@@ -106,7 +109,8 @@ class _ChatDetailsUpdateState extends State<ChatDetailsUpdate> {
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       },
-                      child: Text("OK", style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
+                      child: Text("OK", style: GoogleFonts.inter(fontSize:16.sp,
+                          fontWeight: FontWeight.w500, color:Colors.black)),
                     ),
                   ),
                 ],
@@ -117,56 +121,53 @@ class _ChatDetailsUpdateState extends State<ChatDetailsUpdate> {
         body: Column(
           children: [
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      child: Row(
-                        children: [
-                          Flexible(
-                            child: Form(
-                              key: _formKey,
-                              child: textFormField(
-                                  textStyle: GoogleFonts.poppins(textStyle: textStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                                  textEditingController: textEditingController,
-                                  border: false,
-                                  autofocus: true,
-                                  focusNode: focusNode,
-                                  hintText: (widget.state == 0) ? "Enter new title" : "Enter new description",
-                                  hintStyle: GoogleFonts.poppins(textStyle: textStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(grey))),
-                                  validator: (value) => defaultValidator(
-                                    value: value,
-                                    type: (widget.state == 0) ? "Enter new title" : "Enter new description",
-                                  )),
-                            ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Form(
+                            key: _formKey,
+                            child: textFormField(
+                              fillColor:Colors.transparent,filled:true,
+                                textStyle: GoogleFonts.inter(textStyle: textStyle(fontSize:14.sp,textDecoration:
+                                    TextDecoration.none,fontWeight: FontWeight.w500)),
+                                textEditingController: textEditingController,
+                                border: false,
+                                autofocus: true,
+                                focusNode: focusNode,
+                                hintText: (widget.state == 0) ? "Enter new title" : "Enter new description",
+                                hintStyle: GoogleFonts.inter(textStyle: textStyle(fontSize: 14.sp, fontWeight:
+                                FontWeight.w500,color: Color(grey))),
+                                validator: (value) => defaultValidator(
+                                  value: value,
+                                  type: (widget.state == 0) ? "Enter new title" : "Enter new description",
+                                )),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: IconButton(
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                onPressed: () async {
-                                  recentEmojiList = await getRecentEmoji();
-                                  if (!mounted) return;
-                                  setState(() {
-                                    emojiShowing = !emojiShowing;
-                                    if (!emojiShowing) {
-                                      focusNode.requestFocus();
-                                    } else {
-                                      focusNode.unfocus();
-                                    }
-                                  });
-                                },
-                                icon: Icon(Icons.emoji_emotions_outlined)),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                        ),
+                        IconButton(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            onPressed: () async {
+                              recentEmojiList = await getRecentEmoji();
+                              if (!mounted) return;
+                              setState(() {
+                                emojiShowing = !emojiShowing;
+                                if (!emojiShowing) {
+                                  focusNode.requestFocus();
+                                } else {
+                                  focusNode.unfocus();
+                                }
+                              });
+                            },
+                            icon: Icon(Icons.emoji_emotions_outlined)),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
             Offstage(

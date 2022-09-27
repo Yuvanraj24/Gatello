@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:developer';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,13 +9,15 @@ import 'dart:developer';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:fast_contacts/fast_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gatello/views/ContactList.dart';
 import 'package:gatello/views/tabbar/test_code/UserDetails.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,11 +38,10 @@ import '../../../../components/ScaffoldDialog.dart';
 import '../../../../components/SnackBar.dart';
 import '../../../../components/TextField.dart';
 import '../../../../main.dart';
-import '../../../ContactList.dart';
+
 import '../../../profile/user_proflle.dart';
 import '../../chats/group_personal_screen/test_code2/CreateGroup.dart';
 import '../../chats/personal_chat_screen/ChatPage.dart';
-
 class SearchPage extends StatefulWidget {
   //state ==1 is not possible..
   ///* 0->personal chat,1->group chat,
@@ -57,21 +59,50 @@ class SearchPage extends StatefulWidget {
   final String? channelName;
   const SearchPage({Key? key, required this.state,required  this.sizingInformation,
     this.gid, this.participants, this.video = false, this.channelName}) : super(key: key);
-
   @override
   _SearchPageState createState() => _SearchPageState();
 }
-
 class _SearchPageState extends State<SearchPage> {
+  List mergeUserContact = [];
   bool _isRequesting = false;
   bool _isFinish = false;
   FirebaseFirestore instance = FirebaseFirestore.instance;
   ScrollController scrollController = ScrollController();
   TextEditingController searchTextEditingController = TextEditingController();
+  TextEditingController searchController= TextEditingController();
   Timer? _debounce;
   List<QueryDocumentSnapshot<Map<String, dynamic>>> body = [];
+  List fBPhone=[];
+  List contactsAll=[];
+  List<Contact> contacts = [];
+  List contacts1 = [];
+  List contacts2 = [];
+
+  List con2 = [];
+
+  //Map merge = ();
+  List test1=[1,2];
+  List test2=[3,4];
+
+  Map <String,String> conMap=Map();
+
+  List conNames=[];
+  List conId=[];
+
+
+  // var test3=List.from(test1)..addAll(test2);
+  // final List<int> c = List.from(body)..addAll(test2);
+  // newList = [...test1, ...test2].toSet().toList();
+  // var totalList=body+contacts!;
   bool isLoading = false;
   List<Map<String, dynamic>> groupMemberList = [];
+
+  List<String> selectedContactsId = [];
+  List selectedContacts = [];
+  late Future<List<Contact>> _contacts;
+
+  List <Contact> filteredContacts=[];
+  var listData;
 
   // List<String> groupMemberList = [];
   String? uid;
@@ -83,16 +114,49 @@ class _SearchPageState extends State<SearchPage> {
     uid = sharedPrefs.getString("userid").toString();
     print("ShardPref ${uid}");
   }
+  filterContacts(){
+    List<Contact> _contact=[];
+    _contact.addAll(contacts);
+    if ( searchController.text.isNotEmpty){
+      _contact.retainWhere( (contact){
+        String searchTerm = searchController.text.toLowerCase();
+        String contactName = contact.displayName!.toLowerCase();
+        return contactName.contains(searchTerm);
+      });
+      setState(() {
 
+        filteredContacts=_contact;
+        for(var i=0; i<filteredContacts.length; i++){
+          print(filteredContacts[i].displayName);
+          listData = filteredContacts[i].displayName;
+        }
+      });
+    }
+  }
   @override
   void initState() {
     _getUID();
     // if (widget.state == 0 || widget.state == 4 || widget.state == 6) {
     userChatList(searchQuery: searchTextEditingController.text);
+    _contacts = getContacts();
+
+    searchController.addListener(() {
+      filterContacts();
+    });
     // } else if (widget.state == 5) {
     //   newParticipantSearch(searchQuery: searchTextEditingController.text);
     // }
     super.initState();
+  }
+  Future<List<Contact>> getContacts() async {
+    PermissionStatus contactpermission = await Permission.contacts.request();
+    if (contactpermission.isGranted || contactpermission.isLimited) {
+      contacts = await FastContacts.allContacts;
+
+    } else {
+
+    }
+    return contacts;// return contactList;
   }
 
   @override
@@ -104,7 +168,6 @@ class _SearchPageState extends State<SearchPage> {
     scrollController.dispose();
     super.dispose();
   }
-
   // Future newParticipantSearch({required String searchQuery, int limit = 50}) async {
   //   if (!_isRequesting && !_isFinish) {
   //     QuerySnapshot<Map<String, dynamic>> querySnapshot;
@@ -141,7 +204,6 @@ class _SearchPageState extends State<SearchPage> {
   //     _isRequesting = false;
   //   }
   // }
-
   // //FIXME.. only user can search accepted group
   // Future groupChatList({required String searchQuery, int limit = 50}) async {
   //   if (!_isRequesting && !_isFinish) {
@@ -178,12 +240,12 @@ class _SearchPageState extends State<SearchPage> {
   //     _isRequesting = false;
   //   }
   // }
-
   Future userChatList({required String searchQuery, int limit = 50}) async {
     if (!_isRequesting && !_isFinish) {
       QuerySnapshot<Map<String, dynamic>> querySnapshot;
       _isRequesting = true;
       if (body.isEmpty) {
+
         querySnapshot = await instance
             .collection("user-detail")
             .where("name",
@@ -208,25 +270,73 @@ class _SearchPageState extends State<SearchPage> {
             .get();
       }
       if (querySnapshot != null) {
+
         if (!mounted) return;
         setState(() {
-          body.addAll(querySnapshot.docs);
+          // print("QS Len: ${querySnapshot.docs.length}");
+          // // body.addAll(querySnapshot.docs);
+
+          String phone,name,id;
+          Stream<QuerySnapshot> chatRef = instance.collection("user-detail").snapshots();
+          chatRef.forEach((field) {
+            field.docs.asMap().forEach((index, data) {
+              // print("Con:${field.docs[index]["phone"]}");
+              phone=field.docs[index]["phone"];
+              name=field.docs[index]["name"];
+              id=field.docs[index]["uid"];
+
+              phone=phone.replaceAll(" ", "");
+              print("Con:${phone}(${phone.length})");
+              print("ConName:${name}(${name.length})");
+
+              if(phone.length>10 && phone.length<=13)
+              {
+                print("ifdrop");
+                phone=phone.substring(3,13);
+                print(phone);
+                fBPhone.add(phone);
+                conMap[phone]=name;
+                conNames.add(name);
+                conId.add(id);
+
+              }
+              else
+              {
+                fBPhone.add(phone);
+
+              }
+
+              // print(fBPhone);
+              print("ConMap:${conMap}");
+
+
+
+            });
+          });
+
         });
         if (querySnapshot.docs.length < limit) {
+          print('Lotus777${querySnapshot.docs}');
           _isFinish = true;
         }
       }
       _isRequesting = false;
     }
   }
-
   @override
   Widget build(BuildContext context) {
+
+    bool isSearching = searchController.text.isNotEmpty;
+    // Contact contact = isSearching==true? filteredContacts.elementAt():contacts.elementAt(1);
+    //  print('Lotus77${filteredContacts.elementAt(1)}');
     return SafeArea(
       child: FutureBuilder(
           future: _getUID(),
           builder: (context, _) {
             return ResponsiveBuilder(builder: (context, sizingInformation) {
+              //    print('Lotus6${filteredContacts.elementAt(0).phones}');
+
+
               return Scaffold(
                 resizeToAvoidBottomInset: false,
                 floatingActionButton: (widget.state == 4 || widget.state == 5)
@@ -268,7 +378,11 @@ class _SearchPageState extends State<SearchPage> {
                   },
                   child: Icon(Icons.done),
                 )
-                    : null,
+                    : FloatingActionButton(
+                    child: Text("press"),
+                    onPressed: (){
+                      getDataList();
+                    }),
                 appBar: AppBar(
                   centerTitle: false,
                   automaticallyImplyLeading: false,
@@ -290,11 +404,11 @@ class _SearchPageState extends State<SearchPage> {
                   //     ? null :
                   [
                     SvgPicture.asset(
-                        'assets/tabbar_icons/Tabbar_search.svg',height:21.h,width:21.w,
+                      'assets/tabbar_icons/Tabbar_search.svg',height:21.h,width:21.w,
                     ),
                     SizedBox(width:22.w),
                     PopupMenuButton(
-                      icon:Icon(Icons.more_vert_rounded,color:Colors.black),
+                        icon:Icon(Icons.more_vert_rounded,color:Colors.black),
                         iconSize:30,
                         onSelected: (value) {
                           switch (value) {
@@ -302,7 +416,9 @@ class _SearchPageState extends State<SearchPage> {
                               {
                                 Navigator.push(context, MaterialPageRoute(
                                     builder: (context) =>
-                                        ContactList(state: 0)));
+                                        ContactList(state: 0)
+
+                                ));
                               }
                               break;
                             default:
@@ -343,7 +459,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       SizedBox(height:2.h),
                       Text('260 contacts',style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
-                      fontSize:12.sp,color:Colors.black)),)
+                          fontSize:12.sp,color:Colors.black)),)
                     ],
                   ),
                 ),
@@ -484,75 +600,177 @@ class _SearchPageState extends State<SearchPage> {
                             isLoading = false;
                           });
                         }
+                        print("constat:${con2.isNotEmpty}");
                         return true;
                       },
                       child: Padding(
                         padding: EdgeInsets.only(left: 20, right: 20),
-                        child: (body.isNotEmpty)
+                        child: (con2.isNotEmpty)
                             ? Column(
+
                           children: [
+                            SizedBox(height: 15),
 
                             Expanded(
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) {
-                                  // if (widget.state == 0 || widget.state == 4 || widget.state == 5 || widget.state == 6) {
-                                  if (uid != body[index].data()["uid"]) {
-                                    return Divider(
-                                      thickness: 1,
-                                      // height: 1,
-                                      color: (themedata.value.index == 0)
-                                          ? Color(lightGrey)
-                                          : Color(lightBlack),
-                                    );
-                                  } else {
-                                    return Container();
-                                  }
-                                  // } else {
-                                  //   return Divider(
-                                  //     // thickness: 1,
-                                  //     height: 1,
-                                  //     color: (themedata.value.index == 0) ? Color(lightGrey) : Color(lightBlack),
-                                  //   );
-                                  // }
-                                },
-                                itemCount: body.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  if (widget.state == 0 || widget.state == 6) {
-                                    return buildItem(
-                                        pic: (body[index].data()["pic"] != null)
-                                            ? body[index].data()["pic"]
-                                            : null,
-                                        name: body[index].data()["name"],
-                                        id: body[index].data()["uid"]);
-                                  }
-                                  // else if (widget.state == 1) {
-                                  //   return buildItem(
-                                  //       pic: (body[index].data()["pic"] != null) ? body[index].data()["pic"] : null,
-                                  //       name: body[index].data()["title"],
-                                  //       id: body[index].data()["gid"]);
-                                  // }
-                                  else
-                                  if (widget.state == 4 || widget.state == 5 ||
-                                      widget.state == 7) {
-                                    return buildItem(
-                                        pic: (body[index].data()["pic"] != null)
-                                            ? body[index].data()["pic"]
-                                            : null,
-                                        name: body[index].data()["name"],
-                                        id: body[index].data()["uid"],
-                                        document: body[index].data());
-                                  } else {
-                                    return Container();
-                                  }
-                                },
-                              ),
+//                               child: ListView.separated(
+//                                 separatorBuilder: (context, index) {
+//
+//                                   // Contact contact = isSearching==true? filteredContacts[index]:contacts[index];
+//                                   // if (widget.state == 0 || widget.state == 4 || widget.state == 5 || widget.state == 6) {
+//                                   if (uid != body[index].data()["uid"]) {
+//                                     return Divider(
+//                                       thickness: 1,
+//                                       // height: 1,
+//                                       color: (themedata.value.index == 0)
+//                                           ? Color(lightGrey)
+//                                           : Color(lightBlack),
+//                                     );
+//                                   } else {
+//                                     return Container();
+//                                   }
+//                                   // } else {
+//                                   //   return Divider(
+//                                   //     // thickness: 1,
+//                                   //     height: 1,
+//                                   //     color: (themedata.value.index == 0) ? Color(lightGrey) : Color(lightBlack),
+//                                   //   );
+//                                   // }
+//                                 },
+//                                 itemCount:  con2.length,
+//                                 shrinkWrap: true,
+//                                 itemBuilder: (context, index) {
+//                                   List list=[];
+//                                  // Contact contact = isSearching==true? filteredContacts[index]:contacts[index] ;
+//                                   //  print('LOtus67${body[index].data()}');
+//                                   print('Lotus2${contacts.length}');
+//                                   //    body[index].data().entries.map((e) => list.add(e.value)).toList();
+// //print('Lotus77:${list[7]}');
+//                                   if (widget.state == 0 || widget.state == 4) {
+//                                   //
+//                                   // print("Contact Size:${contacts.length}");
+//                                   // print("FBPhone Size:${fBPhone.length}");
+//                                   //
+//                                   // int x=0;
+//                                   //
+//                                   // for(x=0;x<contacts.length;x++)
+//                                   // {
+//                                   //   try {
+//                                   //     String mob = contacts[x].phones[0];
+//                                   //     mob=mob.replaceAll(" ", "");
+//                                   //     mob=mob.replaceAll("-", "");
+//                                   //     print("Mob:${mob}(${x}) Size:(${mob.length})");
+//                                   //
+//                                   //     if(mob.length>10 && mob.length==12)
+//                                   //     {
+//                                   //       print("ifdrop");
+//                                   //       mob=mob.substring(2,12);
+//                                   //       print(mob);
+//                                   //       contacts1.add(mob);
+//                                   //     }
+//                                   //     else if(mob.length>10 && mob.length==13)
+//                                   //     {
+//                                   //       print("ifdrop");
+//                                   //       mob=mob.substring(3,13);
+//                                   //       print(mob);
+//                                   //       contacts1.add(mob);
+//                                   //     }
+//                                   //     else
+//                                   //     {
+//                                   //       contacts1.add(mob);
+//                                   //     }
+//                                   //
+//                                   //   }
+//                                   //   catch(e)
+//                                   //   {
+//                                   //     print("Exception${e}");
+//                                   //   }
+//                                   //
+//                                   // }
+//                                   //
+//                                   // print("Con1${contacts1}");
+//                                   // int i=0,j=0;
+//                                   //
+//                                   // for(i=0;i<contacts1.length;i++)
+//                                   // {
+//                                   //   for(j=0;j<fBPhone.length;j++)
+//                                   //   {
+//                                   //     if(contacts1[i]==fBPhone[j])
+//                                   //     {
+//                                   //
+//                                   //       contacts2.add(contacts1[i]);
+//                                   //
+//                                   //     }
+//                                   //   }
+//                                   // }
+//                                   //
+//                                   // print("Con2:${contacts2}");
+//                                   // con2 = LinkedHashSet<String>.from(contacts2).toList();
+//                                   // print("this is con2 ${con2}");
+//                                   // print("this is con2 len ${con2.length}");
+//                                   //
+//
+//
+//
+//                                     // for(var i=0;Contact contact = isSearching==true? filteredContacts[index]:contacts[index];i<=body[index].data()["phone"].length;i++){
+//                                     //   for(var j=0;j<=contacts.phones;j++){
+//                                     //
+//                                     //   }
+//                                     // }
+//                                     // print('Lotus77${body[index].data()["phone"]}');
+//                                     //print('Lotus77${body[index].data()["phone"]}');
+//                                     return buildItem(
+//                                         pic: (con2[index].data()["pic"] != null)
+//                                             ? con2[index].data()["pic"]
+//                                             : null,
+//                                         name: con2[index].data()["name"],
+//                                         id: con2[index].data()["uid"]);
+//
+//                                   }
+//                                   // else if (widget.state == 1) {
+//                                   //   return buildItem(
+//                                   //       pic: (body[index].data()["pic"] != null) ? body[index].data()["pic"] : null,
+//                                   //       name: body[index].data()["title"],
+//                                   //       id: body[index].data()["gid"]);
+//                                   // }
+//                                   else
+//                                   if (widget.state == 4 || widget.state == 5 ||
+//                                       widget.state == 7) {
+//                                     return buildItem(
+//                                         pic: (con2[index].data()["pic"] != null)
+//                                             ? con2[index].data()["pic"]
+//                                             : null,
+//                                         name: con2[index].data()["name"],
+//                                         id: con2[index].data()["uid"],
+//
+//                                         document: body[index].data());
+//                                   } else {
+//                                     return Container();
+//                                   }
+//                                 },
+//                               ),
+                              child: ListView.builder(
+                                  itemCount: conNames.length,
+                                  itemBuilder: (context, index) =>
+
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 10),
+                                        child: ListTile(
+                                          contentPadding: EdgeInsets.only(left: 0),
+                                          leading: CircleAvatar(
+
+                                            backgroundImage: AssetImage("assets/noProfile.jpg"),
+                                            radius: 25.w,
+                                          ),
+                                          title: Text("${conNames[index]}"),
+                                        ),
+                                      ) ),
                             ),
+
                             Container(
                               height: (isLoading == true) ? 20.0 : 0,
                               color: Colors.transparent,
                               child: Center(
-                                child: new LinearProgressIndicator(
+                                child: LinearProgressIndicator(
                                   color: Color(accent),
                                 ),
                               ),
@@ -586,9 +804,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget buildItem(
-      {required String? pic, required String name, required String id, Map<
+      {required String? pic, required String name,required String id, Map<
           String,
           dynamic>? document}) {
+
     if (uid == id) {
       return Container(
 
@@ -617,22 +836,22 @@ class _SearchPageState extends State<SearchPage> {
                 }
                 break;
 
-            case 1:
-              {
-                if (widget.sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-                  Navigator.pop(context, id);
-                } else {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ChatPage(
-                                state: 1,
-                                uid: uid.toString(),
-                                puid: id,
-                              )));
+              case 1:
+                {
+                  if (widget.sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                    Navigator.pop(context, id);
+                  } else {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChatPage(
+                              state: 1,
+                              uid: uid.toString(),
+                              puid: id,
+                            )));
+                  }
                 }
-              }
-              break;
+                break;
 
               case 4:
                 {
@@ -795,6 +1014,7 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       ),
                     ),
+                    // Text(name1)
                   ],
                 ),
               ),
@@ -806,5 +1026,88 @@ class _SearchPageState extends State<SearchPage> {
           )
       );
     }
+  }
+  getDataList(){
+
+
+
+    print("Contact Size:${contacts.length}");
+    print("FBPhone Size:${fBPhone.length}");
+
+    int x=0;
+
+    for(x=0;x<contacts.length;x++)
+    {
+      try {
+        String mob = contacts[x].phones[0];
+        mob=mob.replaceAll(" ", "");
+        mob=mob.replaceAll("-", "");
+        print("Mob:${mob}(${x}) Size:(${mob.length})");
+
+        if(mob.length>10 && mob.length==12)
+        {
+          print("ifdrop");
+          mob=mob.substring(2,12);
+          print(mob);
+          contacts1.add(mob);
+        }
+        else if(mob.length>10 && mob.length==13)
+        {
+          print("ifdrop");
+          mob=mob.substring(3,13);
+          print(mob);
+          contacts1.add(mob);
+        }
+        else
+        {
+          contacts1.add(mob);
+        }
+
+      }
+      catch(e)
+      {
+        print("Exception${e}");
+      }
+
+    }
+
+    print("Con1${contacts1}");
+    int i=0,j=0;
+
+    for(i=0;i<contacts1.length;i++)
+    {
+      for(j=0;j<fBPhone.length;j++)
+      {
+        if(contacts1[i]==fBPhone[j])
+        {
+
+          contacts2.add(contacts1[i]);
+
+        }
+      }
+    }
+
+    print("Con2:${contacts2}");
+    con2 = LinkedHashSet<String>.from(contacts2).toList();
+    print(con2);
+
+
+
+    // for(int i=0; i<contacts.length; i++){
+    //   print("contact:${contacts[i].phones}");
+    //   for(int j=0; j<body.length; j++){
+    //     print("body ${j} ${body[j]}");
+    //     print("body length ${body.length}");
+    //     print("body data ${body[j].data()["phone"]}");
+    //     if(contacts[i].phones ==  body[j].data()["phone"].toString()){
+    //       print("equal succes");
+    //       mergeUserContact.add(body[j].data()["phone"].toString());
+    //     }
+    //     else{
+    //       print('NOt working');
+    //     }
+    //   }
+    //   print("${i} - ${mergeUserContact}");
+    // }
   }
 }

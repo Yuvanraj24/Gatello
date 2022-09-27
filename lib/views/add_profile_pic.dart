@@ -3,6 +3,7 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gatello/views/ContactList.dart';
 import 'package:gatello/views/invite_friends.dart';
 import 'package:gatello/views/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -135,7 +136,8 @@ class _AddProfilePicState extends State<AddProfilePic> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ContactList(state: 0)));
+                            builder: (context) => ContactList(state: 0)
+                        ));
 
 
                   },

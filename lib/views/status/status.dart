@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
+import 'package:http/http.dart' as http;
 
 class Status extends StatefulWidget {
   const Status({Key? key}) : super(key: key);
@@ -44,6 +45,7 @@ class _StatusState extends State<Status> with TickerProviderStateMixin{
     // TODO: implement dispose
     super.dispose();
   }
+  final check="https://photosfile.com/wp-content/uploads/2022/03/Exam-Time-DP-18.jpg";
 
   List statusprofile=["https://photosfile.com/wp-content/uploads/2022/03/Exam-Time-DP-18.jpg",
     "https://dl.memuplay.com/new_market/img/com.vicman.newprofilepic.icon.2022-06-07-21-33-07.png",
@@ -63,6 +65,22 @@ class _StatusState extends State<Status> with TickerProviderStateMixin{
             padding:EdgeInsets.fromLTRB(12.w,15.h,12.w,0.h),
             child:Column(crossAxisAlignment:CrossAxisAlignment.start,
               children:[
+
+                Container(height:250.h,width:250.w,
+                    child: Image.network(check)),
+                ElevatedButton(onPressed:()
+                async{
+
+                  final uri = Uri.parse(check);
+                  final res = await http.get(uri);
+                  final bytes = res.bodyBytes;
+                  final temp = await getTemporaryDirectory();
+                  final path = "${temp.path}/image.svg";
+                  File(path).writeAsBytesSync(bytes);
+
+
+                }, child:Icon(Icons.share)),
+
                 Padding(padding:EdgeInsets.fromLTRB(21.w,0.h,21.w,0.h),
                   child: Row(children:[
                     GestureDetector(

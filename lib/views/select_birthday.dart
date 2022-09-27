@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/create_username.dart';
@@ -43,9 +44,6 @@ class _SelectBirthdayState extends State<SelectBirthday> {
                         color: Colors.black)),
               ),
             )),
-        actions: [
-          Text("Gatello"),
-        ],
       ),
       body: Container(
         padding: EdgeInsets.only(top: 150.h, left: 15.w, right: 15.w, bottom: 35.h),

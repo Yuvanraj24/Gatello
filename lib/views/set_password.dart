@@ -39,9 +39,6 @@ class  _SetPasswordState extends State<SetPassword> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
          appBar: AppBar(
-   
- 
-          
       leading: Center(
             child: 
            TextButton(onPressed: (){
@@ -68,7 +65,6 @@ class  _SetPasswordState extends State<SetPassword> {
                     crossAxisAlignment: CrossAxisAlignment.center, children: [
                 Text(
                   "Set a password",
-               
                        style: GoogleFonts.fredoka(
                           textStyle: TextStyle(
                               fontSize: 28.sp,

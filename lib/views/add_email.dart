@@ -68,13 +68,17 @@ class _AddEmailState extends State<AddEmail> {
 
 
             },
-            child: Text(
-              'Back',
-              style: GoogleFonts.roboto(
-                  textStyle: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black)),
+            child: GestureDetector(onTap:() {
+              Navigator.pop(context);
+            },
+              child: Text(
+                'Back',
+                style: GoogleFonts.roboto(
+                    textStyle: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black)),
+              ),
             ),
           )),
         ),

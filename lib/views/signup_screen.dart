@@ -599,7 +599,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(27)),
                     fixedSize: Size(234.w, 50.h)),
                   onPressed: () {
-
                     if (widget.first!.isNotEmpty && widget.last!.isNotEmpty) {
                       String name = widget.first.toString() +
                           " " +
@@ -627,15 +626,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     'Sign Up',style:GoogleFonts.inter(fontWeight:FontWeight.w600,fontSize:14.sp,
                   color:Colors.black)),
                   ),
-                  // style: ElevatedButton.styleFrom(
-                  //     elevation: 5,
-                  //     onPrimary: Colors.black,
-                  //     //   padding: EdgeInsets.all(10),
-                  //     minimumSize: Size(234.w, 48.h),
-                  //     primary: HexColor('#F8CE61'),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(35),
-                  //     )),
+
               ],
             ),
           ),

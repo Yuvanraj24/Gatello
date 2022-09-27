@@ -283,6 +283,12 @@ flutter:
     - assets/invite_friends/profilepicture.svg
     - assets/invite_friends/add_icon.svg
     - assets/icons_assets/invite_link.svg
+    - assets/group_info/chat_attachments.svg
+    - assets/group_info/cameraicon_chat.svg
+    - assets/group_info/add_participants.svg
+    - assets/group_info/calls icon.svg
+    - assets/group_info/video image.svg
+    - assets/group_info/calls icon.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

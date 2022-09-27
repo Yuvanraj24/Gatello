@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,8 +6,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gatello/Authentication/Authentication.dart';
 import 'package:gatello/core/models/pings_chat_model/pings_chats_list_model.dart';
 import 'package:gatello/views/tabbar/chats/personal_chat_screen/ChatPage.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
@@ -16,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 import '../../../Firebase/FirebaseNotifications.dart';
 import '../../../Firebase/Writes.dart';
 import '../../../Helpers/DateTimeHelper.dart';
@@ -27,12 +25,10 @@ import '../../../Style/Colors.dart';
 import '../../../Style/Text.dart';
 import '../../../components/ScaffoldDialog.dart';
 import '../../../components/flatButton.dart';
-import '../../../firebase_options.dart';
 import 'dart:developer' as dev;
-
 import '../../../main.dart';
 import '../../../utils/DynamicLinkParser.dart';
-import '../chats/personal_chat_screen/pesrsonal_chat.dart';
+
 
 
 class PingsChatView extends StatefulWidget {
@@ -45,6 +41,7 @@ class PingsChatView extends StatefulWidget {
   final int? state;
   final String uid;
   final int? storyContentType;
+  Function? callBack;
   PingsChatView({
     Key? key,
     this.postTitle,
@@ -55,38 +52,62 @@ class PingsChatView extends StatefulWidget {
     this.state,
     this.messages,
     required this.uid,
+    this.callBack
 
   });
-
   @override
   State<PingsChatView> createState() =>
-      _PingsChatViewState();
-}
+      _PingsChatViewState();}
 
 class _PingsChatViewState extends State<PingsChatView> with SingleTickerProviderStateMixin {
   bool isSent=false;
   int index = 0;
+  String nameSearch='';
   late TabController tabController;
   bool sel = false;
+  bool typing = false;
   final instance =FirebaseFirestore.instance;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  // String? uid;
   String? puid;
   bool isChatting = false;
   List<PingsChatListModel> tileData = [];
   final _isSelected = Map();
   bool selects = false;
-
+  TextEditingController searchChat= TextEditingController();
   bool change = false;
   bool longPressedFlag=false;
   late List? selectedItems=[];
   bool isFirstTime=true;
   bool isChatListLoaded=false;
-//  List <bool> onChange = [true];
   bool onChange=true;
   List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = [];
   List selectedDocs=[];
+  List filteredChats =[];
+  var listData;
+
+  int totalUnreadCount=0;
+  List unreadTabCount = [];
+
+
+
   @override
+  // filterChats(){
+  //   List docs=[];
+  //   if (searchChat.text.isNotEmpty){
+  //     docs.retainWhere((docs) {
+  //       String searchTerm = searchChat.text.toLowerCase();
+  //       String personName = docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["name"];
+  //       return personName.contains(searchTerm);
+  //     } );
+  //     setState(() {
+  //       filteredChats=docs;
+  //       for(var i=0; i<filteredChats.length; i++){
+  //         print(filteredChats[i].displayName);
+  //         listData = filteredChats[i].displayName;
+  //       }
+  //     });
+  //   }
+  // }
   void dispose() {
     tabController.dispose();
     super.dispose();
@@ -95,26 +116,9 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
   @override
   void initState(){
     tabController = TabController(vsync: this, length: 2);
-
     super.initState();
-    // uid=_getUID() as String?;
-
     tileData = pingsChatListData();
-
   }
-
-  // void initSP()
-  // async {
-  //   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  //   final SharedPreferences prefs = await _prefs;
-  //   uid=prefs.getString("userid");
-  //
-  //
-  //
-  //   Fluttertoast.showToast(msg: prefs.getString("userid").toString(), toastLength: Toast.LENGTH_LONG,
-  //       timeInSecForIosWeb: 1);
-  // }
-
 
   @override
   Widget build(BuildContext context) {
@@ -147,8 +151,8 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
     {
       return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>
         (
-
-          stream: instance.collection("personal-chat-room-detail").where("members.${widget.uid}.delete",isEqualTo: false).snapshots(),
+          stream: instance.collection("personal-chat-room-detail")
+              .where("members.${widget.uid}.delete",isEqualTo: false).snapshots(),
           builder: (context,chatRoomdetailsnap) {
             if (chatRoomdetailsnap.connectionState == ConnectionState.active &&
                 chatRoomdetailsnap.hasData &&
@@ -161,242 +165,375 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                       getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
               // print(docs.toString());
               // print("LENGTH:${docs.length}");
+
+              // totalUnreadCount=int.parse(docs[index].data()["members"]["${widget.uid}"]["unreadCount"]);
+
+              print("TOTAL UNREAD:${totalUnreadCount}");
+              print("TOTAL UNREAD1:${docs[index].data()["members"]["${widget.uid}"]["unreadCount"]+totalUnreadCount}");
+              print('dheee  :  ${unreadTabCount.indexOf(
+                  docs[index].data()["members"]["${widget.uid}"]["unreadCount"]+totalUnreadCount
+              )}');
+
               return ListView.builder(
                 itemCount: docs.length,
                 itemBuilder: (context, index) {
-                  if (!_isSelected.containsKey(index)) // important
+                  if (!_isSelected.containsKey(index)) { // important
                     _isSelected[index] = false;
-
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 2),
-                    child: ListTile(
-                      selected: _isSelected[index],
-                      tileColor: Colors.white,
-                      selectedTileColor: Color.fromRGBO(248, 206, 97, 0.31),
-
-                      // onLongPress: () {
-                      //   setState((){
-                      //     _isSelected[index] = !_isSelected[index];
-                      //     print("OP: ${_isSelected[index]}=!${_isSelected} ");
-                      //     selects = true;
-                      //     print("Long Press");
-                      //   });
-                      //
-                      // }
-
-                      onLongPress: () {
-                        setState((){
-                          _isSelected[index] = !_isSelected[index];
-
-
-                          //_isSelected.isNotEmpty ? this.widget.appbarChange = true: this.widget.appbarChange = false;
-
-                          if(isFirstTime) {
-                            if (selectedItems!.isEmpty) {
-
-
-
-                              selectedItems!.add(index);
-
-
-
-                              isFirstTime=false;
-                              longPressedFlag=true;
-
-                            }
-                          }
-                          else {
-                            if (selectedItems!.contains(index)) {
-                              print("EXISTS So removing...");
-                              selectedItems!.remove(index);
-                              print("Selected$index");
-                              print("Selected items$selectedItems");
-                            }
-                            else{
-                              selectedItems!.add(index);
-                              print("Selected$index");
-                              print("Selected items$selectedItems");
-                              print("Long Press Triggers");
-                              longPressedFlag=true;
-                            }
-
-                            if(selectedItems!.isEmpty && isFirstTime==false)
-                            {
-                              print("Deselect all");
-                              isFirstTime=true;
-                              longPressedFlag=false;
-
-                            }
-
-                          }
-
-                        });
-                      }
-                      ,
-
-                      onTap: ()
-                      {
-                        print("Long Press Flag:${longPressedFlag}");
-                        if(longPressedFlag)
-                        {
+                  }
+                  var name=docs[index].data()["members"]["${docs[index]
+                      .data()["members"]["${widget.uid}"]["peeruid"]}"]["name"];
+                  if(nameSearch.isEmpty){
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 2),
+                      child: ListTile(
+                        selected: _isSelected[index],
+                        tileColor: Colors.white,
+                        selectedTileColor: Color.fromRGBO(248, 206, 97, 0.31),
+                        onLongPress: () {
                           setState(() {
                             _isSelected[index] = !_isSelected[index];
-                            if(selectedItems!.isEmpty)
-                            {
-                              longPressedFlag=false;
+                            if (isFirstTime) {
+                              if (selectedItems!.isEmpty) {
+                                widget.callBack!();
+                                selectedItems!.add(index);
+                                isFirstTime = false;
+                                longPressedFlag = true;
+                              }
                             }
-                            else{
-                              print("Tapping...x");
-
+                            else {
                               if (selectedItems!.contains(index)) {
                                 print("EXISTS So removing...");
                                 selectedItems!.remove(index);
                                 print("Selected$index");
                                 print("Selected items$selectedItems");
                               }
-                              else
-                              {
+                              else {
                                 selectedItems!.add(index);
                                 print("Selected$index");
                                 print("Selected items$selectedItems");
-                                print("Tap Triggers");
-                                longPressedFlag=true;
+                                print("Long Press Triggers");
+                                longPressedFlag = true;
+                              }
+
+                              if (selectedItems!.isEmpty &&
+                                  isFirstTime == false) {
+                                print("Deselect all");
+                                isFirstTime = true;
+                                longPressedFlag = false;
                               }
                             }
                           });
+                        }
+                        ,
 
-                          if(selectedItems!.isEmpty && isFirstTime==false)
-                          {
-                            print("Deselect all");
-                            isFirstTime=true;
-                            longPressedFlag=false;
+                        onTap: () {
+                          print("Long Press Flag:${longPressedFlag}");
+                          if (longPressedFlag) {
+                            setState(() {
+                              _isSelected[index] = !_isSelected[index];
+                              if (selectedItems!.isEmpty) {
+                                longPressedFlag = false;
+                              }
+                              else {
+                                print("Tapping...x");
+
+                                if (selectedItems!.contains(index)) {
+                                  print("EXISTS So removing...");
+                                  selectedItems!.remove(index);
+                                  print("Selected$index");
+                                  print("Selected items$selectedItems");
+                                }
+                                else {
+                                  selectedItems!.add(index);
+                                  print("Selected$index");
+                                  print("Selected items$selectedItems");
+                                  print("Tap Triggers");
+                                  longPressedFlag = true;
+                                }
+                              }
+                            });
+
+                            if (selectedItems!.isEmpty &&
+                                isFirstTime == false) {
+                              print("Deselect all");
+                              isFirstTime = true;
+                              longPressedFlag = false;
+                            }
                           }
-                        }
-                        else
-                        {
-                          print("Page Open");
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
+                          else {
+                            print("Page Open");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
 
-                                  builder: (context) =>
-                                      ChatPage(state: 0,
-                                          uid: widget.uid,
-                                          puid: docs[index]
-                                              .data()["members"]["${widget.uid}"]["peeruid"])
-                              ));
-                        }
+                                    builder: (context) =>
+                                        ChatPage(state: 0,
+                                            uid: widget.uid,
+                                            puid: docs[index]
+                                                .data()["members"]["${widget
+                                                .uid}"]["peeruid"])
+                                ));
+                          }
+                        },
+                        contentPadding: EdgeInsets.only(
+                            left: 10, right: 10, top: 4, bottom: 4),
+                        //  contentPadding: EdgeInsets.all(10),
+                        leading: Container(
+                          child:(docs[index].data()["members"]["${docs[index]
+                              .data()["members"]["${widget.uid}"]["peeruid"]}"]["pic"] != null)
+                              ?  CachedNetworkImage(
+                            imageUrl: docs[index].data()["members"]["${docs[index]
+                                .data()["members"]["${widget.uid}"]["peeruid"]}"]["pic"],
+                            imageBuilder: (context, imageProvider) => Container(
+                              width: 50.w,
+                              height: 50.h,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
+                              ),
+                            ),
+                            placeholder: (context, url) => CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
+                          ):
+                          SvgPicture.asset((widget.state == 0) ? "assets/invite_friends/profilepicture.svg" : "assets/invite_friends/profilepicture.svg", fit: BoxFit.cover,
+                            height:50.h,
+                            width: 50.w,
+                          ),
+                        ),
 
-                        // Navigator.push(
-                        //               context,
-                        //               MaterialPageRoute(
-                        //
-                        //                   builder: (context) =>
-                        //                       PersonalChat(state: 0,
-                        //                           uid: uid!,
-                        //                           puid: docs[index]
-                        //                               .data()["members"]["$uid"]["peeruid"])));
-                      },
+                        title: SubstringHighlight(
+                          caseSensitive: false,
+                          text:name,
+                          textStyle: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: Color.fromRGBO(0, 0, 0, 1),
+                                  fontWeight: FontWeight.w700)),
+                          term: searchChat.text,
+                        ),
+                        subtitle: SubstringHighlight(
+                          text: docs[index].data()["lastMessage"],
+                          textStyle: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Color.fromRGBO(12, 16, 29, 0.6),
+                                  fontWeight: FontWeight.w400)),
+                          term: searchChat.text,
+                        ),
+                        trailing: Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: Column(
+                            children: [
+                              Text(readTimestamp(
+                                  int.parse(docs[index].data()["timestamp"])),
+                                  style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 10.sp,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                        fontWeight: FontWeight.w400),
+                                  )),
+                              SizedBox(height: 3.h),
+                              // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
+                              (docs[index].data()["members"]["${widget
+                                  .uid}"]["unreadCount"] == 0) ?
+                              SizedBox() :
+                               Container(
 
-                      // onTap: () {
-                      //
-                      //   print("Array LENGTH: ${_isSelected.length}");
-                      //   if(_isSelected.length==0)
-                      //     {
-                      //       selects=false;
-                      //     }
-                      //   else {
-                      //     if (selects == true) {
-                      //       setState(() {
-                      //         _isSelected[index] = !_isSelected[index];
-                      //         print("Tile Selected1");
-                      //
-                      //         //_isSelected.removeWhere((key, value) => true);
-                      //       });
-                      //     }
-                      //     else {
-                      //       Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //
-                      //               builder: (context) =>
-                      //                   PersonalChat(state: 0,
-                      //                       uid: uid!,
-                      //                       puid: docs[index]
-                      //                           .data()["members"]["$uid"]["peeruid"])));
-                      //     }
-                      //   }
-                      //   },
-
-                      contentPadding: EdgeInsets.only(
-                          left: 10, right: 10, top: 4, bottom: 4),
-                      //  contentPadding: EdgeInsets.all(10),
-                      leading: CircleAvatar(
-                        radius: 25.5.h,
-                        backgroundImage: NetworkImage(tileData[index].dp),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color:
+                                        Color.fromRGBO(255, 202, 40, 1),
+                                      ),
+                                      shape: BoxShape.circle,
+                                      color: Color.fromRGBO(255, 202, 40, 1)),
+                                  width: 22.w,
+                                  height: 22.h,
+                                  child: Center(
+                                    child:
+                                    Text(
+                                        "${docs[index].data()["members"]["${widget.uid}"]["unreadCount"]}",
+                                        style: GoogleFonts.inter(
+                                          textStyle: TextStyle(fontSize: 11.sp, color:Color.fromRGBO(0, 0, 0, 1),
+                                              fontWeight: FontWeight.w400),
+                                        )),
+                                  )),
+                            ]
+                          ),
+                        ),
                       ),
+                    );
+                  }
+                  if(name.toString().toLowerCase().startsWith(nameSearch.toLowerCase())){
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 2),
+                      child: ListTile(
 
+                        selected: _isSelected[index],
+                        tileColor: Colors.white,
+                        selectedTileColor: Color.fromRGBO(248, 206, 97, 0.31),
+                        onLongPress: () {
+                          setState(() {
+                            _isSelected[index] = !_isSelected[index];
+                            if (isFirstTime) {
+                              if (selectedItems!.isEmpty) {
+                                selectedItems!.add(index);
+                                isFirstTime = false;
+                                longPressedFlag = true;
+                              }
+                            }
+                            else {
+                              if (selectedItems!.contains(index)) {
+                                print("EXISTS So removing...");
+                                selectedItems!.remove(index);
+                                print("Selected$index");
+                                print("Selected items$selectedItems");
+                              }
+                              else {
+                                selectedItems!.add(index);
+                                print("Selected$index");
+                                print("Selected items$selectedItems");
+                                print("Long Press Triggers");
+                                longPressedFlag = true;
+                              }
 
-                      title: Text(
-                        docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["name"],
-                        style: GoogleFonts.inter(
-                            textStyle: TextStyle(
-                                fontSize: 16.sp,
-                                color: Color.fromRGBO(0, 0, 0, 1),
-                                fontWeight: FontWeight.w700)),
-                      ),
-                      subtitle: Text(docs[index].data()["lastMessage"],
-                          style: GoogleFonts.inter(
+                              if (selectedItems!.isEmpty &&
+                                  isFirstTime == false) {
+                                print("Deselect all");
+                                isFirstTime = true;
+                                longPressedFlag = false;
+                              }
+                            }
+                          });
+                        }
+                        ,
+
+                        onTap: () {
+                          print("Long Press Flag:${longPressedFlag}");
+                          if (longPressedFlag) {
+                            setState(() {
+                              _isSelected[index] = !_isSelected[index];
+                              if (selectedItems!.isEmpty) {
+                                longPressedFlag = false;
+                              }
+                              else {
+                                print("Tapping...x");
+
+                                if (selectedItems!.contains(index)) {
+                                  print("EXISTS So removing...");
+                                  selectedItems!.remove(index);
+                                  print("Selected$index");
+                                  print("Selected items$selectedItems");
+                                }
+                                else {
+                                  selectedItems!.add(index);
+                                  print("Selected$index");
+                                  print("Selected items$selectedItems");
+                                  print("Tap Triggers");
+                                  longPressedFlag = true;
+                                }
+                              }
+                            });
+
+                            if (selectedItems!.isEmpty &&
+                                isFirstTime == false) {
+                              print("Deselect all");
+                              isFirstTime = true;
+                              longPressedFlag = false;
+                            }
+                          }
+                          else {
+                            print("Page Open");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+
+                                    builder: (context) =>
+                                        ChatPage(state: 0,
+                                            uid: widget.uid,
+                                            puid: docs[index]
+                                                .data()["members"]["${widget
+                                                .uid}"]["peeruid"])
+                                ));
+                          }
+                        },
+                        contentPadding: EdgeInsets.only(
+                            left: 10, right: 10, top: 4, bottom: 4),
+                        //  contentPadding: EdgeInsets.all(10),
+                        leading: CircleAvatar(
+                          radius: 25.5.h,
+                          backgroundImage: NetworkImage(tileData[index].dp),
+                        ),
+
+                        title: SubstringHighlight(
+                          caseSensitive: false,
+                          text:name,
+                          textStyle: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: Color.fromRGBO(0, 0, 0, 1),
+                                  fontWeight: FontWeight.w700)),
+                          term: searchChat.text,
+                        ),
+                        subtitle: SubstringHighlight(
+                          text: docs[index].data()["lastMessage"],
+                          textStyle: GoogleFonts.inter(
                               textStyle: TextStyle(
                                   fontSize: 14.sp,
                                   color: Color.fromRGBO(12, 16, 29, 0.6),
-                                  fontWeight: FontWeight.w400))),
-                      trailing: Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: Column(
-                          children: [
-                            Text(readTimestamp(int.parse(docs[index].data()["timestamp"])),
-                                style: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 10.sp,
-                                      color: Color.fromRGBO(0, 0, 0, 1),
-                                      fontWeight: FontWeight.w400),
-                                )),
-                            SizedBox(height: 3.h),
+                                  fontWeight: FontWeight.w400)),
+                          term: searchChat.text,
+                        ),
+                        trailing: Padding(
+                          padding: EdgeInsets.only(top:8),
+                          child: Column(
+                            children: [
+                              Text(readTimestamp(
+                                  int.parse(docs[index].data()["timestamp"])),
+                                  style: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 10.sp,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                        fontWeight: FontWeight.w400),
+                                  )),
+                              SizedBox(height: 3.h),
 
-                            // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
-                            (docs[index].data()["members"]["${widget.uid}"]["unreadCount"]==0)?
-                            SizedBox():
-                            Container(
-                                decoration: BoxDecoration(
-                                  //borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                      color:
-                                      Color.fromRGBO(255, 202, 40, 1),
-                                    ),
-                                    shape: BoxShape.circle,
-                                    color: Color.fromRGBO(255, 202, 40, 1)),
-                                width: 22.w,
-                                height: 22.h,
-                                child: Center(
-                                  child:
-                                  Text(
-                                      "${docs[index].data()["members"]["${widget.uid}"]
-                                      ["unreadCount"]}",
-                                      style: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                            fontSize: 11.sp,
-                                            color:
-                                            Color.fromRGBO(0, 0, 0, 1),
-                                            fontWeight: FontWeight.w400),
-                                      )),
-                                )),
-                          ],
+                              // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
+                              (docs[index].data()["members"]["${widget
+                                  .uid}"]["unreadCount"] == 0) ?
+                              SizedBox() :
+
+                              Container(
+                                  decoration: BoxDecoration(
+                                    //borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color:
+                                        Color.fromRGBO(255, 202, 40, 1),
+                                      ),
+                                      shape: BoxShape.circle,
+                                      color: Color.fromRGBO(255, 202, 40, 1)),
+                                  width: 22.w,
+                                  height: 22.h,
+                                  child: Center(
+                                    child:
+                                    Text(
+                                        "${docs[index].data()["members"]["${widget.uid}"]["unreadCount"]}",
+                                        style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                              fontSize: 11.sp,
+                                              color:
+                                              Color.fromRGBO(0, 0, 0, 1),
+                                              fontWeight: FontWeight.w400),
+                                        )),
+                                  )),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  }
+                  return Container();
+                }
               );
             }
             else {
@@ -425,298 +562,9 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
             }
           }
       );
+
     }
 
-    // Widget  getChatList(select)
-    // {
-    //   return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>
-    //     (
-    //
-    //       stream: instance.collection("personal-chat-room-detail").where("members.${widget.uid}.delete",isEqualTo: false).snapshots(),
-    //       builder: (context,chatRoomdetailsnap) {
-    //         if (chatRoomdetailsnap.connectionState == ConnectionState.active &&
-    //             chatRoomdetailsnap.hasData &&
-    //             chatRoomdetailsnap.data != null &&
-    //             chatRoomdetailsnap.data!.docs.isNotEmpty) {
-    //           docs = chatRoomdetailsnap.data!.docs;
-    //           docs.sort((b, a) =>
-    //               getDateTimeSinceEpoch(datetime: a.data()["timestamp"])
-    //                   .compareTo(
-    //                   getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
-    //           // print(docs.toString());
-    //           // print("LENGTH:${docs.length}");
-    //           return ListView.builder(
-    //             itemCount: docs.length,
-    //             itemBuilder: (context, index) {
-    //               if (!_isSelected.containsKey(index)) // important
-    //                 _isSelected[index] = false;
-    //
-    //               return Padding(
-    //                 padding: const EdgeInsets.only(bottom: 2),
-    //                 child: ListTile(
-    //                   selected: _isSelected[index],
-    //                   tileColor: Colors.white,
-    //                   selectedTileColor: Color.fromRGBO(248, 206, 97, 0.31),
-    //
-    //                   // onLongPress: () {
-    //                   //   setState((){
-    //                   //     _isSelected[index] = !_isSelected[index];
-    //                   //     print("OP: ${_isSelected[index]}=!${_isSelected} ");
-    //                   //     selects = true;
-    //                   //     print("Long Press");
-    //                   //   });
-    //                   //
-    //                   // }
-    //
-    //                   // onLongPress: () {
-    //                   //   setState((){
-    //                   //     _isSelected[index] = !_isSelected[index];
-    //                   //     pingsChatTabbar = true;
-    //                   //
-    //                   //     //_isSelected.isNotEmpty ? this.widget.appbarChange = true: this.widget.appbarChange = false;
-    //                   //
-    //                   //     if(isFirstTime) {
-    //                   //       if (selectedItems!.isEmpty) {
-    //                   //
-    //                   //
-    //                   //         print("First Time Long Pressing...x");
-    //                   //         selectedItems!.add(index);
-    //                   //         print(selectedItems);
-    //                   //         print("Before ${widget.appbarChange}");
-    //                   //         setState(() {
-    //                   //           widget.appbarChange = true;
-    //                   //         });
-    //                   //         print("After ${widget.appbarChange}");
-    //                   //         isFirstTime=false;
-    //                   //         longPressedFlag=true;
-    //                   //         print("this is selected index ${selectedItems![0]}");
-    //                   //         print("this peerid ${docs[index].id}");
-    //                   //
-    //                   //       }
-    //                   //     }
-    //                   //     else {
-    //                   //       if (selectedItems!.contains(index)) {
-    //                   //         print("EXISTS So removing...");
-    //                   //         selectedItems!.remove(index);
-    //                   //         print("Selected$index");
-    //                   //         print("Selected items$selectedItems");
-    //                   //       }
-    //                   //       else{
-    //                   //         selectedItems!.add(index);
-    //                   //         print("Selected$index");
-    //                   //         print("Selected items$selectedItems");
-    //                   //         print("Long Press Triggers");
-    //                   //         longPressedFlag=true;
-    //                   //       }
-    //                   //
-    //                   //       if(selectedItems!.isEmpty && isFirstTime==false)
-    //                   //       {
-    //                   //         print("Deselect all");
-    //                   //         isFirstTime=true;
-    //                   //         longPressedFlag=false;
-    //                   //
-    //                   //       }
-    //                   //
-    //                   //     }
-    //                   //
-    //                   //   });
-    //                   // }
-    //                   // ,
-    //
-    //                   onTap: ()
-    //                   {
-    //                     print("Long Press Flag:${longPressedFlag}");
-    //                     if(longPressedFlag)
-    //                     {
-    //                       setState(() {
-    //                         _isSelected[index] = !_isSelected[index];
-    //                         if(selectedItems!.isEmpty)
-    //                         {
-    //                           longPressedFlag=false;
-    //                         }
-    //                         else{
-    //                           print("Tapping...x");
-    //
-    //                           if (selectedItems!.contains(index)) {
-    //                             print("EXISTS So removing...");
-    //                             selectedItems!.remove(index);
-    //                             print("Selected$index");
-    //                             print("Selected items$selectedItems");
-    //                           }
-    //                           else
-    //                           {
-    //                             selectedItems!.add(index);
-    //                             print("Selected$index");
-    //                             print("Selected items$selectedItems");
-    //                             print("Tap Triggers");
-    //                             longPressedFlag=true;
-    //                           }
-    //                         }
-    //                       });
-    //
-    //                       if(selectedItems!.isEmpty && isFirstTime==false)
-    //                       {
-    //                         print("Deselect all");
-    //                         isFirstTime=true;
-    //                         longPressedFlag=false;
-    //                       }
-    //                     }
-    //                     else
-    //                     {
-    //                       print("Page Open");
-    //                       Navigator.push(
-    //                           context,
-    //                           MaterialPageRoute(
-    //
-    //                               builder: (context) =>
-    //                                   ChatPage(state: 0,
-    //                                       uid: {widget.uid}.toString(),
-    //                                       puid: docs[index]
-    //                                           .data()["members"]["${widget.uid}"]["peeruid"])
-    //                           ));
-    //                     }
-    //
-    //                     // Navigator.push(
-    //                     //               context,
-    //                     //               MaterialPageRoute(
-    //                     //
-    //                     //                   builder: (context) =>
-    //                     //                       PersonalChat(state: 0,
-    //                     //                           uid: uid!,
-    //                     //                           puid: docs[index]
-    //                     //                               .data()["members"]["$uid"]["peeruid"])));
-    //                   },
-    //
-    //                   // onTap: () {
-    //                   //
-    //                   //   print("Array LENGTH: ${_isSelected.length}");
-    //                   //   if(_isSelected.length==0)
-    //                   //     {
-    //                   //       selects=false;
-    //                   //     }
-    //                   //   else {
-    //                   //     if (selects == true) {
-    //                   //       setState(() {
-    //                   //         _isSelected[index] = !_isSelected[index];
-    //                   //         print("Tile Selected1");
-    //                   //
-    //                   //         //_isSelected.removeWhere((key, value) => true);
-    //                   //       });
-    //                   //     }
-    //                   //     else {
-    //                   //       Navigator.push(
-    //                   //           context,
-    //                   //           MaterialPageRoute(
-    //                   //
-    //                   //               builder: (context) =>
-    //                   //                   PersonalChat(state: 0,
-    //                   //                       uid: uid!,
-    //                   //                       puid: docs[index]
-    //                   //                           .data()["members"]["$uid"]["peeruid"])));
-    //                   //     }
-    //                   //   }
-    //                   //   },
-    //
-    //                   contentPadding: EdgeInsets.only(
-    //                       left: 10, right: 10, top: 4, bottom: 4),
-    //                   //  contentPadding: EdgeInsets.all(10),
-    //                   leading: CircleAvatar(
-    //                     radius: 25.5.h,
-    //                     backgroundImage: NetworkImage(tileData[index].dp),
-    //                   ),
-    //
-    //
-    //                   title: Text(
-    //                     docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["name"],
-    //                     style: GoogleFonts.inter(
-    //                         textStyle: TextStyle(
-    //                             fontSize: 16.sp,
-    //                             color: Color.fromRGBO(0, 0, 0, 1),
-    //                             fontWeight: FontWeight.w700)),
-    //                   ),
-    //                   subtitle: Text(docs[index].data()["lastMessage"],
-    //                       style: GoogleFonts.inter(
-    //                           textStyle: TextStyle(
-    //
-    //                               overflow: TextOverflow.ellipsis,
-    //                               fontSize: 14.sp,
-    //                               color: Color.fromRGBO(12, 16, 29, 0.6),
-    //                               fontWeight: FontWeight.w400))),
-    //                   trailing: Padding(
-    //                     padding: EdgeInsets.only(top: 8),
-    //                     child: Column(
-    //                       children: [
-    //                         Text(readTimestamp(int.parse(docs[index].data()["timestamp"])),
-    //                             style: GoogleFonts.inter(
-    //                               textStyle: TextStyle(
-    //                                   fontSize: 10.sp,
-    //                                   color: Color.fromRGBO(0, 0, 0, 1),
-    //                                   fontWeight: FontWeight.w400),
-    //                             )),
-    //                         SizedBox(height: 3.h),
-    //
-    //                         // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
-    //                         (docs[index].data()["members"]["${widget.uid}"]["unreadCount"]==0)?
-    //                         SizedBox():
-    //                         Container(
-    //                             decoration: BoxDecoration(
-    //                               //borderRadius: BorderRadius.circular(15),
-    //                                 border: Border.all(
-    //                                   color:
-    //                                   Color.fromRGBO(255, 202, 40, 1),
-    //                                 ),
-    //                                 shape: BoxShape.circle,
-    //                                 color: Color.fromRGBO(255, 202, 40, 1)),
-    //                             width: 22.w,
-    //                             height: 22.h,
-    //                             child: Center(
-    //                               child:
-    //                               Text(
-    //                                   "${docs[index].data()["members"]["${widget.uid}"]
-    //                                   ["unreadCount"]}",
-    //                                   style: GoogleFonts.inter(
-    //                                     textStyle: TextStyle(
-    //                                         fontSize: 11.sp,
-    //                                         color:
-    //                                         Color.fromRGBO(0, 0, 0, 1),
-    //                                         fontWeight: FontWeight.w400),
-    //                                   )),
-    //                             )),
-    //                       ],
-    //                     ),
-    //                   ),
-    //                 ),
-    //               );
-    //             },
-    //           );
-    //         }
-    //         else {
-    //           return Container(
-    //               padding: EdgeInsets.only(top: 110),
-    //               child: Center(
-    //                 child: Column(
-    //                   children: [
-    //                     Image.asset(
-    //                         "assets/tabbar_icons/tab_view_main/chats_image/emptyChat.png"),
-    //                     Text("No Conversation",
-    //                         style: GoogleFonts.raleway(
-    //                             textStyle: TextStyle(
-    //                                 color: Color.fromRGBO(0, 0, 0, 1),
-    //                                 fontSize: 22,
-    //                                 fontWeight: FontWeight.w700))),
-    //                     Text(
-    //                       "You don't made any conversation yet",
-    //                       style: GoogleFonts.raleway(
-    //                           color: Color.fromRGBO(122, 122, 122, 1),
-    //                           fontSize: 14),
-    //                     ),
-    //                   ],
-    //                 ),
-    //               ));
-    //         }
-    //       }
-    //   );
-    // }
     Widget personalGroupList(SizingInformation sizingInformation) {
       return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: instance.collection("group-detail").where("members.${widget.uid}.claim", isNotEqualTo: "removed").snapshots(),
@@ -729,10 +577,11 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
               docs.sort((b, a) => getDateTimeSinceEpoch(datetime: a.data()["timestamp"]).compareTo(getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
 
               return ListView.separated(
+               
                   itemCount: docs.length,
                   shrinkWrap: true,
                   separatorBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    padding:  EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Divider(
                       thickness: 1,
                       height: 1,
@@ -740,52 +589,107 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                     ),
                   ),
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: (widget.state == null)
-                          ? () {
-                        isChatting = false;
+                    var groupName= docs[index].data()["title"];
+                   if(nameSearch.isEmpty){
+                     return GestureDetector(
+                       behavior: HitTestBehavior.opaque,
+                       onTap: (widget.state == null)
+                           ? () {
+                         isChatting = false;
 
-                        puid = docs[index].data()["gid"];
-                        isChatting = true;
-                        if (!mounted) return;
-                        setState(() {});
-                        if (sizingInformation.deviceScreenType != DeviceScreenType.desktop) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatPage(
-                                    state: 1,
-                                    uid: widget.uid,
-                                    puid: puid!,
-                                  ))).then((value) {
-                            if (value == true) {
-                              if (!mounted) return;
-                              setState(() {
-                                isChatting = false;
-                                puid = null;
-                              });
-                            }
-                          });
-                        }
-                      }
-                          : null,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                        child: buildItem(
-                          id: docs[index].data()["gid"],
-                          pic: docs[index].data()["pic"],
-                          name: docs[index].data()["title"],
-                          lastMessage: docs[index].data()["lastMessage"],
-                          timestamp: docs[index].data()["timestamp"],
-                          messageBy: docs[index].data()["messageBy"],
-                          members: docs[index].data()["members"],
-                          lastRead: docs[index].data()["members"][widget.uid]["lastRead"],
-                          unreadCount: docs[index].data()["members"][widget.uid]["unreadCount"],
-                          document: docs[index],
-                        ),
-                      ),
-                    );
+                         puid = docs[index].data()["gid"];
+                         isChatting = true;
+                         if (!mounted) return;
+                         setState(() {});
+                         if (sizingInformation.deviceScreenType != DeviceScreenType.desktop) {
+                           Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                                   builder: (context) => ChatPage(
+                                     state: 1,
+                                     uid: widget.uid,
+                                     puid: puid!,
+                                   ))).then((value) {
+                             if (value == true) {
+                               if (!mounted) return;
+                               setState(() {
+                                 isChatting = false;
+                                 puid = null;
+                               });
+                             }
+                           });
+                         }
+                       }
+                           : null,
+                       child:
+                       Padding(
+                         padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                         child: buildItem(
+                           id: docs[index].data()["gid"],
+                           pic: docs[index].data()["pic"],
+                           name: docs[index].data()["title"],
+                           lastMessage: docs[index].data()["lastMessage"],
+                           timestamp: docs[index].data()["timestamp"],
+                           messageBy: docs[index].data()["messageBy"],
+                           members: docs[index].data()["members"],
+                           lastRead: docs[index].data()["members"][widget.uid]["lastRead"],
+                           unreadCount: docs[index].data()["members"][widget.uid]["unreadCount"],
+                           document: docs[index],
+                         ),
+                       ),
+                     );
+                   }
+                   if(groupName.toString().toLowerCase().startsWith(nameSearch.toLowerCase())){
+                     return GestureDetector(
+                       behavior: HitTestBehavior.opaque,
+                       onTap: (widget.state == null)
+                           ? () {
+                         isChatting = false;
+
+                         puid = docs[index].data()["gid"];
+                         isChatting = true;
+                         if (!mounted) return;
+                         setState(() {});
+                         if (sizingInformation.deviceScreenType != DeviceScreenType.desktop) {
+                           Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                                   builder: (context) => ChatPage(
+                                     state: 1,
+                                     uid: widget.uid,
+                                     puid: puid!,
+                                   ))).then((value) {
+                             if (value == true) {
+                               if (!mounted) return;
+                               setState(() {
+                                 isChatting = false;
+                                 puid = null;
+                               });
+                             }
+                           });
+                         }
+                       }
+                           : null,
+                       child:
+                       Padding(
+                         padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                         child: buildItem(
+                           id: docs[index].data()["gid"],
+                           pic: docs[index].data()["pic"],
+                           name:groupName,
+                           lastMessage: docs[index].data()["lastMessage"],
+                           timestamp: docs[index].data()["timestamp"],
+                           messageBy: docs[index].data()["messageBy"],
+                           members: docs[index].data()["members"],
+                           lastRead: docs[index].data()["members"][widget.uid]["lastRead"],
+                           unreadCount: docs[index].data()["members"][widget.uid]["unreadCount"],
+                           document: docs[index],
+                         ),
+                       ),
+                     );
+                   }
+                    print('TEXTFIELD IS EMPTY');
+                    return SizedBox();
                   });
             } else {
               return Container(
@@ -836,12 +740,20 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                               automaticallyImplyLeading: false,
                               leading: (widget.state == null)
                                   ? null
-                                  : IconButton(
-                                icon: Icon(Icons.arrow_back),
-                                onPressed: () {
-                                  Navigator.pop(context);
+                                  :   Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      GestureDetector(
+        onTap: (){
+                                      Navigator.pop(context);
                                 },
+                                child: SvgPicture.asset(
+                                      'assets/pops_asset/back_button.svg',
+                                  height: 35,width: 35,
+                                      ),
                               ),
+                                    ],
+                                  ),
                               elevation: 0,
                               title: (widget.state == null)
                                   ? null
@@ -944,12 +856,6 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                                                 )));
                                       }
                                     },
-
-                                    // onPressed: () {
-                                    //
-                                    // Navigator.push(context,
-                                    // MaterialPageRoute(builder: (context) => SelectContact()));
-                                    // },
                                     backgroundColor: Color.fromRGBO(248, 206, 97, 1),
                                     child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
                               ],
@@ -992,50 +898,26 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
             centerTitle: false,
             automaticallyImplyLeading: false,
             elevation: 0,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
+            leading:  GestureDetector(
+              onTap: (){
                 Navigator.pop(context);
               },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/pops_asset/back_button.svg',
+                    height: 35,width: 35
+                   ),
+                ],
+              ),
             ),
             title: Text((widget.state == 0) ? "Share Post" : "Forward Messages",
                 style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
           ),
           floatingActionButton: (widget.state == null)
               ? (index == 0)
-              ? Column(
-            children: [
-              FloatingActionButton(
-                  child: Text("Select all"),
-                  onPressed: (){
-                    longPressedFlag = true;
-                    for(int i =0; i<docs.length; i++){
-
-                      selectedItems!.add(i);
-                      print("Document Data... ${i}");
-                      print("Document Data... ${selectedItems}");
-                    }
-                  }),
-              FloatingActionButton(
-                  child: Text("Delete"),
-                  onPressed: (){
-
-                    for (int i = 0; i < selectedItems!.length; i++) {
-                      var sell = instance.collection("personal-chat-room-detail")
-                          .doc(
-                          "${docs[selectedItems![i]].id}"
-
-                      );
-                      print("${docs[selectedItems![i]].id}");
-                      sell.update({"members.${widget.uid}.delete" : true});
-                      //selectedItems!.remove;
-                    }
-                    selectedItems = [];
-                    print(docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]);
-                    print("Uid is a $puid");
-                    //print("this is select index $sell");
-                  }),
-              FloatingActionButton(
+              ? FloatingActionButton(
                   onPressed: () async {
                     if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
                       return await scaffoldAlertDialogBox(
@@ -1059,50 +941,9 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                               builder: (context) => SearchPage(
                                 state: 0,
                                 sizingInformation: sizingInformation,
-                              )));
-                    }
-                  },
-
-                  // onPressed: () {
-                  //
-                  // Navigator.push(context,
-                  // MaterialPageRoute(builder: (context) => SelectContact()));
-                  // },
+                              )));}},
                   backgroundColor: Color.fromRGBO(248, 206, 97, 1),
-                  child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
-            ],
-          )
-          // FloatingActionButton(
-          //   backgroundColor: Color.fromRGBO(248, 206, 97, 1),
-          //   child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg"),
-          //   onPressed: () async {
-          //     if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-          //       return await scaffoldAlertDialogBox(
-          //           context: context,
-          //           page: SearchPage(
-          //             state: 0,
-          //             sizingInformation: sizingInformation,
-          //           )).then((value) {
-          //         if (value != null) {
-          //           if (!mounted) return;
-          //           setState(() {
-          //             isChatting = true;
-          //             puid = value;
-          //           });
-          //         }
-          //       });
-          //     } else {
-          //       Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //               builder: (context) => SearchPage(
-          //                 state: 0,
-          //                 sizingInformation: sizingInformation,
-          //               )));
-          //     }
-          //   },
-          // )
-              : FloatingActionButton(
+                  child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")) : FloatingActionButton(
               onPressed: () async {
                 if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
                   return await scaffoldAlertDialogBox(
@@ -1128,6 +969,13 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
             length: 2,
             child: Column(
               children: [
+                TextField(controller:searchChat,
+                onChanged: ( value) {
+                 setState(() {
+                   nameSearch=value;
+                 });
+                },
+                ),
                 Container(
                   constraints: BoxConstraints(maxHeight: 150.0),
                   child: Material(
@@ -1147,54 +995,6 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
         );
       }),
     );
-    //  return ResponsiveBuilder(builder: (context, sizingInformation) {
-    // return Scaffold(body: SingleChildScrollView(
-    //   child: Column(
-    //     children: [
-    //       getChatList(),
-    //       personalGroupList(sizingInformation),
-    //     ],
-    //   ),
-    // ),
-    //   floatingActionButton: FloatingActionButton(
-    //       onPressed: () async {
-    //         if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-    //           return await scaffoldAlertDialogBox(
-    //               context: context,
-    //               page: SearchPage(
-    //                 state: 0,
-    //                 sizingInformation: sizingInformation,
-    //               )).then((value) {
-    //             if (value != null) {
-    //               if (!mounted) return;
-    //               setState(() {
-    //                 isChatting = true;
-    //                 puid = value;
-    //               });
-    //             }
-    //           });
-    //         } else {
-    //           Navigator.push(
-    //               context,
-    //               MaterialPageRoute(
-    //                   builder: (context) => SearchPage(
-    //                     state: 0,
-    //                     sizingInformation: sizingInformation,
-    //                   )));
-    //         }
-    //       },
-    //
-    //       // onPressed: () {
-    //       //
-    //       // Navigator.push(context,
-    //       // MaterialPageRoute(builder: (context) => SelectContact()));
-    //       // },
-    //       backgroundColor: Color.fromRGBO(248, 206, 97, 1),
-    //       child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")),
-    // );
-    //  }
-    //  );
-
   }
 
 
@@ -1203,15 +1003,12 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
 
   Future readData()
   async{
-
     print("Reading");
     // await db.collection("personal-chat-room-detail").get().then((event) {
     await instance.collection("personal-chat-room-detail").where("members.${widget.uid}.isblocked").get().then((event) {
-
       for (var doc in event.docs) {
         print("${doc.id} => ${doc.data()}");
       }
-
     });
 
   }
@@ -1240,46 +1037,48 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
             child: Row(
               children: [
                 Container(
-                    width: 50,
-                    height: 50,
-                    child: ClipOval(
-                      child: (pic != null)
-                          ? CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        fadeInDuration: const Duration(milliseconds: 400),
-                        progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                          child: Container(
-                            width: 20.0,
-                            height: 20.0,
-                            child: CircularProgressIndicator(value: downloadProgress.progress),
+                  child: (pic != null)
+                          ?  CachedNetworkImage(
+                        imageUrl: pic,
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 50.w,
+                          height: 50.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
                           ),
                         ),
-                        imageUrl: pic,
-                        errorWidget: (context, url, error) => Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
-                      )
-                          : Image.asset((index == 0) ? "assets/noProfile.jpg" : "assets/noGroupProfile.jpg", fit: BoxFit.cover),
-                    )),
+                        placeholder: (context, url) => CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ):
+                      SvgPicture.asset((widget.state == 0) ? "assets/invite_friends/profilepicture.svg" : "assets/invite_friends/profilepicture.svg", fit: BoxFit.cover,
+                        height:50.h,
+                        width: 50.w,
+                      ),
+                    ),
                 Flexible(
                   child: Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          name,
-                          style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          softWrap: true,
-                        ),
+                        SubstringHighlight(
+                          term:searchChat.text,
+                          text:name,
+                            textStyle: GoogleFonts.inter(textStyle: textStyle(fontSize: 16.sp, fontWeight: FontWeight.w700,
+                            color:Colors.black)),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
                         Padding(
-                            padding: const EdgeInsets.only(top: 3),
+                            padding:  EdgeInsets.only(top:3),
                             child: (lastRead == null)
                                 ? Text(
                               (index == 0)
                                   ? "$name is trying to text you. Either respond back or block if the user spams around."
                                   : "You are added to $name group.Either respond back or block if it is a spam.",
-                              style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 12, color: Color(accent))),
+                              style: GoogleFonts.inter(textStyle: textStyle(fontSize: 14.sp, color: Color(accent))),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               softWrap: true,
@@ -1321,15 +1120,14 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                                         ? "∅ You have deleted this message"
                                         : "∅ This message have been deleted"
                                         : lastMessage,
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 12,
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12.sp,
                                         textStyle: textStyle(
                                           color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey),
                                         )),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    softWrap: true,
-                                  )
+                                    softWrap: true)
                                       : Text(
                                     (index == 0)
                                         ? "$name is trying to text you. Either respond back or block if the user spams around."
@@ -1358,18 +1156,22 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                 (timestamp != null)
                     ? Text(
                   getDateTimeChat(datetime: getDateTimeSinceEpoch(datetime: timestamp)),
-                  style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 10)),
+                  style: GoogleFonts.inter(textStyle: textStyle(fontSize:10.sp,fontWeight:FontWeight.
+                    w400,color:Colors.black)),
                 )
                     : Container(),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding:  EdgeInsets.all(8.0),
                   child: (unreadCount == 0)
                       ? Container()
-                      : Chip(
-                    backgroundColor: Color(accent),
-                    label: Text(
-                      unreadCount.toString(),
-                      style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 10, color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack))),
+                      : Container(height:20.h,width:20.w,
+                    decoration:BoxDecoration(color: Color.fromRGBO(255, 202, 40, 1),shape:BoxShape.circle
+                  ),
+                    child: Center(child: Text(
+                        unreadCount.toString(),
+                        style: GoogleFonts.inter(textStyle: textStyle(fontSize:10.sp, color: (themedata.value.index == 0) ?
+                        Color(black) : Color(materialBlack))),
+                      ),
                     ),
                   ),
                 ),
@@ -1378,19 +1180,18 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
           )
               : Padding(
             padding: EdgeInsets.only(left: 10),
-            child: flatButton(
-                size: Size(75, 30),
-                backgroundColor: Color(accent),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    onPrimary: Colors.black,
+                    minimumSize: Size(60.w, 30.h),
+                    primary: Color.fromRGBO(248, 206, 97, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    )),
                 onPressed:(widget.state ==0)
                     ? () async {
-
-
                  print('Lotus1');
-                  // if (id.length == 28) {
-                  //   await writeUserShareMessage(type: 5, peerName: name, peerPic: pic, uid: uid!, puid: id);
-                  // } else {
-                  //   await writeGroupShareMessage(type: 5, groupName: name, groupPic: pic, members: members!, uid: uid!, puid: id);
-                  // }
                   String storyUrl = postDetailsUrl + "?post_id=" + widget.postId!;
                   ShareableLink _shareableLink = ShareableLink(widget.postTitle!, widget.postDescription!, storyUrl,
                       (widget.postUrl!.contains("mp4") || widget.postUrl!.contains("mpeg4")) ? null : widget.postUrl);
@@ -1426,10 +1227,8 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                         storyDescription: widget.postDescription,
                         storyUrl: _link.toString());
                   }
-
                 }
                     : ()  {
-
                   widget.messages!.forEach((key, value) async {
                     print('Lotus5');
                     dev.log(key.toString());
@@ -1504,37 +1303,11 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                           storyUrl: (dataTypeMap.inverse[value
                               .data()!["type"]] == 5) ? value
                               .data()!["data"]["story"] : null,
-
                         );
                         setState(() {
                           onChange=!onChange;
                         });
                       }
-
-                      // setState(() {
-                      //   if(!selectedDocs.contains(id)){
-                      //     selectedDocs.add(id);
-                      //   }
-                      //   else{
-                      //     print("this already entered..................");
-                      //   }
-                      //   print('Lotus8:${selectedDocs}');
-                      //   });
-                      // setState(() {
-                      //   if(selectedDocs.contains(docs[index].toString())){
-                      //
-                      //
-                      //   }
-                      //   else{
-                      //     print('22222222222222');
-                      //     selectedDocs.add(docs[index].toString());
-                      //
-                      //   }
-                      // });
-                      // print('Lotus1:${selectedDocs.toString()}');
-
-
-
                       else if(!selectedDocs.contains(id)){
                         print('Lotus9');
                         await writeGroupMessage(
@@ -1571,35 +1344,15 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                               .data()!["data"]["story"] : null,
                         );
                       }
-
                     }
                     else{
                       print('ffffffffffffffffffff');
                     }
                   });
-
-                  // setState(() {
-                  //   onChange[];
-                  // });
-                  // print('L0tus66:${onChange}');
-                  //
-                  // setState(() {
-                  //   if(selectedDocs.contains(docs[index].toString())){
-                  //     print('11111111111${selectedDocs}');
-                  //
-                  //   }
-                  //   else{
-                  //     print('22222222222222');
-                  //     selectedDocs.add(docs[index].toString());
-                  //
-                  //   }
-                  // });
-                  // print('Lotus1:${selectedDocs.toString()}');
-
                 },
                 child: Text(
-                onChange?  'send':'sent',
-                  style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 10)),
+                  'Send',
+                  style: GoogleFonts.inter(textStyle: textStyle(fontSize: 12,color:Color.fromRGBO(0, 0, 0, 1),fontWeight: FontWeight.w600 )),
                 )
             )
 
@@ -1609,7 +1362,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
     );
   }
 
-  //-----------------------------------------
+  //----------------------------------------------------------------------------------------------
   Future writeUserMessage({
     required int type,
     String? message,
@@ -1702,7 +1455,8 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
               uid: uid,
               puid: puid);
         }
-      } else {
+      }
+      else {
         Future<DocumentSnapshot<Map<String, dynamic>>> userDetail =
         instance.collection("user-detail").doc(uid).get();
         await userDetail.then((value) async {
@@ -1779,7 +1533,8 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                   uid: uid,
                   puid: puid);
             }
-          } else {
+          }
+          else {
             throw FirebaseException(
                 plugin: "cloud-firestore",
                 code: "no-user-exists",
@@ -1891,10 +1646,6 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
   }
 
 
-
-
-
-
   Future readChat() async{
     final db=FirebaseFirestore.instance;
     print("CHAT DATA");
@@ -1907,7 +1658,6 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
       }
     });
   }
-
   DateTime getDateTimeSinceEpoch({required String datetime}) {
     print(DateTime.fromMillisecondsSinceEpoch(int.parse(datetime)));
     return DateTime.fromMillisecondsSinceEpoch(int.parse(datetime));
@@ -1936,5 +1686,3 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
     return time;
   }
 }
-
-

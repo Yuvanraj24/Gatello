@@ -38,12 +38,14 @@ class Tabbar extends StatefulWidget {
 }
 class _TabState extends State<Tabbar> {
   FirebaseFirestore instance = FirebaseFirestore.instance;
-
+  String nameSearch='';
+  bool isSelected=false;
   var lifecycleEventHandler;
-  int overallUnreadChatList = 1;
+  int overallUnreadChatList = 18;
   Future? _future;
   String? userId;
-  int isSelected = 0;
+  bool tabSearch=false;
+  TextEditingController searchChat =TextEditingController();
 //  String? puid;
   final ScrollController storyScrollController = ScrollController();
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0,
@@ -58,6 +60,7 @@ class _TabState extends State<Tabbar> {
       body: {"user_id": (userId != null) ? userId : userId, "followee_id": ""},
     );
   }
+
   Future lifecycleInit() async {
     String? uid = userId;
     FirebaseFirestore instance = FirebaseFirestore.instance;
@@ -97,7 +100,15 @@ class _TabState extends State<Tabbar> {
     final data3= await lifecycleInit();
     return [data1, data2,data3];
   }
-
+  bool callBack(){
+    print('working');
+    setState(() {
+      isSelected=!isSelected;
+      print('Lotus7${isSelected}');
+    });
+    return isSelected;
+    print('working1');
+  }
   @override
   void initState() {
     _future = sendData();
@@ -130,7 +141,7 @@ class _TabState extends State<Tabbar> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      isSelected == 0 ?
+                                      isSelected == false ?
                                       Expanded(
                                           child: Container(
                                             padding: EdgeInsets.only(
@@ -139,7 +150,7 @@ class _TabState extends State<Tabbar> {
                                                 right: 12,
                                                 top: 4),
                                             //color: Colors.blue,
-                                            child: Row(
+                                            child:tabSearch==false? Row(
                                               mainAxisAlignment: MainAxisAlignment
                                                   .start,
                                               children: [
@@ -187,10 +198,15 @@ class _TabState extends State<Tabbar> {
                                                 SizedBox(
                                                   width: 25.w,
                                                 ),
-                                                SvgPicture.asset(
-                                                    'assets/tabbar_icons/Tabbar_search.svg'
-                                                ),
-                                                Spacer(),
+                                                GestureDetector(onTap: () {
+                                                setState(() {
+                                                  tabSearch=true;
+                                                });
+                                                },
+                                                  child: SvgPicture.asset(
+                                                      'assets/tabbar_icons/Tabbar_search.svg'
+                                                  ),
+                                                ),Spacer(),
                                                 SizedBox(
                                                   width: 20,
                                                   child: PopupMenuButton(
@@ -297,7 +313,6 @@ class _TabState extends State<Tabbar> {
                                                               ),
                                                             )),
                                                         PopupMenuItem(
-
                                                             child: Container(
                                                               width: 150.w,
                                                               child: Row(
@@ -320,13 +335,12 @@ class _TabState extends State<Tabbar> {
                                                                           )))
                                                                 ],
                                                               ),
-
                                                             ))
                                                       ]),
                                                 ),
-                                              ],
-                                            ),
-                                          )) :
+                                          ]):  searchBar()
+
+                                          ) ):
                                       Expanded(child: Container(
                                         padding: EdgeInsets.only(
                                             left: 15, right: 15, bottom: 8, top: 5),
@@ -356,11 +370,7 @@ class _TabState extends State<Tabbar> {
                                             child: SvgPicture.asset(
                                                 'assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/delete.svg'),
                                             onTap: () {
-                                              // showDialog(
-                                              //     context: context,
-                                              //     builder: (BuildContext context) {
-                                              //       return Delete1Dialog();
-                                              //     });
+
                                             },
                                           ),
                                           SizedBox(width: 26.w),
@@ -439,10 +449,6 @@ class _TabState extends State<Tabbar> {
                                                       "assets/tabbar_icons/pops_getit.svg",
 
                                                     ),
-                                                    // SvgPicture.asset(
-                                                    //   "assets/tabbar_icons/pops_getit.svg",
-                                                    //
-                                                    // ),
                                                     Text(
                                                       "Get it",
                                                       style: GoogleFonts.fredoka(
@@ -463,7 +469,6 @@ class _TabState extends State<Tabbar> {
                                                   children: [
                                                     SvgPicture.asset(
                                                       "assets/tabbar_icons/pings_icon.svg",
-
                                                     ),
                                                     Row(
                                                       mainAxisAlignment:
@@ -481,27 +486,6 @@ class _TabState extends State<Tabbar> {
                                                                       .w400)),
                                                         ),
                                                         SizedBox(width: 5),
-                                                        Container(
-                                                          decoration: BoxDecoration(
-                                                            // borderRadius: BorderRadius.circular(15),
-                                                              shape: BoxShape.circle,
-                                                              color: Colors.white),
-                                                          width: 15,
-                                                          height: 15,
-                                                          child: Center(
-                                                              child: Text("${overallUnreadChatList}",
-                                                                  style: GoogleFonts
-                                                                      .fredoka(
-                                                                      textStyle: TextStyle(
-                                                                          fontSize: 12,
-                                                                          fontWeight:
-                                                                          FontWeight
-                                                                              .w400,
-                                                                          color: Color
-                                                                              .fromRGBO(
-                                                                              0, 0, 0,
-                                                                              1))))),
-                                                        ),
                                                       ],
                                                     )
                                                   ],
@@ -558,7 +542,6 @@ class _TabState extends State<Tabbar> {
                                                   children: [
                                                     SvgPicture.asset(
                                                       "assets/tabbar_icons/pops_call.svg",
-
                                                     ),
                                                     Text(
                                                       "Calls",
@@ -591,11 +574,9 @@ class _TabState extends State<Tabbar> {
                                         Center(
                                           child: Text("Get it...!"),
                                         ),
-                                        PingsChatView(uid:userId.toString(), ),
-                                        //  Pops_Page(),
+                                        PingsChatView(uid:userId.toString(),callBack:callBack ),
                                         Story(
                                             scrollController: storyScrollController),
-                                        //  Pops_Page(),
                                         Status(),
 
                                         Center(
@@ -630,19 +611,6 @@ class _TabState extends State<Tabbar> {
       ),
     );
   }
-  // void initSP() async {
-  //   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  //   final SharedPreferences prefs = await _prefs;
-  //   prefs.getString("email");
-  //   Fluttertoast.showToast(
-  //       msg: prefs.getString("email").toString(),
-  //       toastLength: Toast.LENGTH_LONG,
-  //       timeInSecForIosWeb: 1);
-  // }
-
-  //  Fluttertoast.showToast(msg: prefs.getString("userid").toString(),
-  //  toastLength: Toast.LENGTH_LONG,timeInSecForIosWeb: 1);
-
   showDeleteDialog2(BuildContext context) {
     showDialog(
       // barrierDismissible: false,
@@ -652,4 +620,39 @@ class _TabState extends State<Tabbar> {
       },
     );
   }
+  Widget searchBar(){
+    bool folded=false;
+    return Row(
+      children: [  GestureDetector(onTap: () {
+        setState(() {
+          tabSearch=false;
+        });
+      },
+        child: SvgPicture.asset(
+          'assets/pops_asset/back_button.svg',
+          height: 30.h,
+          width: 30.w,),
+      ),
+        AnimatedContainer(duration:Duration(milliseconds:100),
+          height:40.h,width:folded==true?10.w:300.w,
+          decoration:BoxDecoration(borderRadius:BorderRadius.circular(40),color:Colors.white),
+          child:   TextField(controller:searchChat,
+            decoration:InputDecoration(focusedBorder:OutlineInputBorder(
+                borderSide:BorderSide(color:Colors.transparent)
+            ),
+                enabledBorder:OutlineInputBorder(
+                    borderSide:BorderSide(color:Colors.transparent)
+                )),
+            onChanged: ( value) {
+              setState(() {
+                nameSearch=value;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
 }
+

@@ -128,9 +128,7 @@ class _MyAppState extends State<MyApp> {
             builder: (context, child) {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                    appBarTheme: AppBarTheme(
-                        shadowColor: Colors.transparent,
+                theme: ThemeData(appBarTheme: AppBarTheme(shadowColor: Colors.transparent,
                         backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
                 home: FutureBuilder(
                     future: getVisitedFlag(),
@@ -140,7 +138,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar():LoginScreen();
+                              return (snapshot.data == true) ? Tabbar():Tabbar();
 
                             } else {
                               return lottieAnimation(loadingLottie);
