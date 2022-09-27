@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/profile/tabbarprofile.dart';
 import 'package:gatello/views/status/showpage.dart';
-import 'package:gatello/views/storage/storage_S1.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
 import 'package:gatello/views/tabbar/calls/incomingcall.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/contact_card.dart';
