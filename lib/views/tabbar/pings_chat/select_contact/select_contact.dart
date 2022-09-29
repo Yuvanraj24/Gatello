@@ -414,11 +414,7 @@ class _SearchPageState extends State<SearchPage> {
                           switch (value) {
                             case 1:
                               {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) =>
-                                        ContactList(state: 0)
-
-                                ));
+                                
                               }
                               break;
                             default:

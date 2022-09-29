@@ -544,8 +544,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                       children: [
                         Image.asset(
                             "assets/tabbar_icons/tab_view_main/chats_image/emptyChat.png"),
-                        Text("No Conversation",
-                            style: GoogleFonts.raleway(
+                        Text("No Conversation", style: GoogleFonts.raleway(
                                 textStyle: TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 1),
                                     fontSize: 22,

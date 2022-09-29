@@ -35,7 +35,7 @@ class _ClearCustomDialogState extends State<ClearCustomDialog> {
 //color: Colors.blue,
         height: 160.h,
         width: 380.w,
-        padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
+        padding: EdgeInsets.only(left: 12, top: 30, bottom: 0,right: 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
