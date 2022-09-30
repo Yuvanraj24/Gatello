@@ -631,7 +631,7 @@ class _SearchPageState extends State<SearchPage> {
                             SizedBox(height: 15),
 
                             Expanded(
-//                               child: ListView.separated(
+                              //                               child: ListView.separated(
 //                                 separatorBuilder: (context, index) {
 //
 //                                   // Contact contact = isSearching==true? filteredContacts[index]:contacts[index];
@@ -773,10 +773,148 @@ class _SearchPageState extends State<SearchPage> {
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 10),
                                         child: ListTile(
-                                          onTap: (){
-                                            print("Chat to : ${conMap[con2[index]]}");
+                                          onTap: () async {
+                                            print("tap is worked ${con2[index]}");
+                                            print("body of ${body[index].data()}");
+                                            switch (widget.state) {
+                                              case 0:
+                                                {
+                                                  if (widget.sizingInformation.deviceScreenType ==
+                                                      DeviceScreenType.desktop) {
+                                                    Navigator.pop(context, conMap[con2[index]].toString());
+                                                  } else {
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ChatPage(
+                                                                  state: 0,
+                                                                  uid: uid.toString(),
+                                                                  puid: conMap[con2[index]].toString(),
+                                                                )));
+                                                  }
+                                                }
+                                                break;
 
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(state: 0,uid: uid.toString(),puid: conMap[con2[index]].toString())));
+                                              case 1:
+                                                {
+                                                  if (widget.sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                                                    Navigator.pop(context, conMap[con2[index]].toString());
+                                                  } else {
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => ChatPage(
+                                                              state: 1,
+                                                              uid: uid.toString(),
+                                                              puid: conMap[con2[index]].toString(),
+                                                            )));
+                                                  }
+                                                }
+                                                break;
+
+                                              case 4:
+                                                {
+                                                  if (memberList.contains(conMap[con2[index]].toString()) == false) {
+                                                    if (groupMemberList.length <= 49) {
+                                                      if (!mounted) return;
+                                                      setState(() {
+                                                        memberList.add(conMap[con2[index]].toString());
+                                                        groupMemberList.add(con2[index]!);
+                                                      });
+                                                    } else {
+                                                      final snackBar = snackbar(
+                                                          content: "Group can contain only 50 members");
+                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    }
+                                                  } else {
+                                                    if (!mounted) return;
+                                                    setState(() {
+                                                      memberList.remove(conMap[con2[index]].toString());
+                                                      groupMemberList.remove(con2[index]);
+                                                    });
+                                                  }
+                                                }
+                                                break;
+                                              case 5:
+                                                {
+                                                  if (!widget.participants!.contains(conMap[con2[index]].toString())) {
+                                                    if (memberList.contains(conMap[con2[index]].toString()) == false) {
+                                                      if ((groupMemberList.length +
+                                                          widget.participants!.length) <= 50) {
+                                                        if (!mounted) return;
+                                                        setState(() {
+                                                          memberList.add(conMap[con2[index]].toString());
+                                                          groupMemberList.add(con2[index]);
+                                                        });
+                                                      } else {
+                                                        final snackBar = snackbar(
+                                                            content: "Group can contain only 50 members");
+                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                      }
+                                                    } else {
+                                                      if (!mounted) return;
+                                                      setState(() {
+                                                        memberList.remove(conMap[con2[index]]);
+                                                        groupMemberList.remove(con2[index]);
+                                                      });
+                                                    }
+                                                  }
+                                                }
+                                                break;
+                                              case 6:
+                                                {
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => UserProfile(
+                                                            uid: uid.toString(),
+                                                          )));
+                                                }
+                                                break;
+                                              case 7:
+                                                {
+                                                  if (con2[index]["token"] != null) {
+                                                    if (con2[index]["callStatus"] == false) {
+                                                      FirebaseFirestore instance = FirebaseFirestore.instance;
+                                                      DocumentSnapshot<
+                                                          Map<String, dynamic>> userDoc = await instance
+                                                          .collection("call-logs").doc(widget.gid!).get();
+                                                      if (userDoc.exists) {
+                                                        await sendNotificationForCall(
+                                                            userTokens: [con2[index]["token"]],
+                                                            id: widget.channelName!,
+                                                            timestamp: widget.gid!,
+                                                            video: widget.video,
+                                                            phoneNumber: userDoc.data()!["callerId"],
+                                            pic: userDoc.data()!["members"]["${userDoc
+                                                .data()!["channelId"]}"]["pic"],
+                                            state: 0,
+                                            name: userDoc.data()!["members"]["${userDoc
+                                                .data()!["channelId"]}"]["name"]);
+                                            await UpdateWriteLog(documentId: widget.gid!,
+                                            uid: con2[index]["uid"],
+                                            userDetailDoc: con2[index]);
+                                            Navigator.pop(context);
+                                            }
+                                            } else {
+                                            toast("User is busy right now!");
+                                            }
+                                            // QuerySnapshot<Map<String, dynamic>> callDoc = await instance.collection("call-log").where("channelId", isEqualTo: widget.channelName).get();
+                                            } else {
+                                            toast("User has logged out!");
+                                            // final snackBar = snackbar(content: "User has no token");
+                                            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                            }
+                                            }
+                                            break;
+                                            default:
+                                            {
+                                            print("Invalid choice");
+                                            }
+                                            break;
+                                            }
+                                            print("Chat to : ${conMap[con2[index]]}");
 
                                           },
                                           contentPadding: EdgeInsets.only(left: 0),
@@ -824,6 +962,24 @@ class _SearchPageState extends State<SearchPage> {
             });
           }
       ),
+    );
+  }
+
+  Widget itemBuild(index){
+    return ListTile(
+      onTap: (){
+        print("Chat to : ${conMap[con2[index]]}");
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(state: 0,uid: uid.toString(),puid: conMap[con2[index]].toString())));
+
+      },
+      contentPadding: EdgeInsets.only(left: 0),
+      leading: CircleAvatar(
+
+        backgroundImage: AssetImage("assets/noProfile.jpg"),
+        radius: 25.w,
+      ),
+      title: Text("${conNames2[index]}"),
     );
   }
 

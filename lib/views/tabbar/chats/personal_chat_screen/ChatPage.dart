@@ -69,6 +69,7 @@ import '../../../../main.dart';
 import '../../../../utils/DynamicLinkParser.dart';
 import '../../../contact_list.dart';
 import '../../pings_chat/select_contact/select_contact.dart';
+import '../../tabbar_view.dart';
 import '../../test_code/pings_test.dart';
 import 'ChatDetails.dart';
 import 'block_dialog.dart';
@@ -3187,9 +3188,10 @@ print('111111111111111111');
                                                       "members.$uid.lastRead": null,
                                                     })
                                                         .whenComplete(() {
-                                                      Navigator.of(context)
-                                                          .popUntil((route) =>
-                                                      route.isFirst);
+                                                      Fluttertoast.showToast(
+                                                          msg: "You're Exited from the Group",
+                                                          timeInSecForIosWeb: 1);
+                                                      Navigator.of(context).push(MaterialPageRoute(builder:  (context) => Tabbar()));
                                                     });
                                                   } else {
                                                     final snackBar = snackbar(
@@ -4798,33 +4800,34 @@ print('111111111111111111');
                               });
                             });
                       } else {
-                        return Container(
-                            color: (themedata.value.index == 0) ? Color(
-                                lightGrey) : Color(materialBlack),
-                            child: Center(
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      lottieAnimation(notFoundLottie),
-                                      Text(
-                                          "You have been removed from the group",
-                                          style: GoogleFonts.inter(
-                                              textStyle:
-                                              textStyle(fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: (themedata.value
-                                                      .index != 0) ? Color(
-                                                      lightGrey) : Color(
-                                                      materialBlack)))),
-                                      flatButton(
-                                          backgroundColor: Color(accent),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("Go Back"))
-                                    ],
-                                  ),
-                                )));
+                        return Tabbar();
+                          // Container(
+                          //   color: (themedata.value.index == 0) ? Color(
+                          //       lightGrey) : Color(materialBlack),
+                          //   child: Center(
+                          //       child: SingleChildScrollView(
+                          //         child: Column(
+                          //           children: [
+                          //             lottieAnimation(notFoundLottie),
+                          //             Text(
+                          //                 "You have been removed from the group",
+                          //                 style: GoogleFonts.inter(
+                          //                     textStyle:
+                          //                     textStyle(fontSize: 16,
+                          //                         fontWeight: FontWeight.w500,
+                          //                         color: (themedata.value
+                          //                             .index != 0) ? Color(
+                          //                             lightGrey) : Color(
+                          //                             materialBlack)))),
+                          //             flatButton(
+                          //                 backgroundColor: Color(accent),
+                          //                 onPressed: () {
+                          //                   Navigator.pop(context);
+                          //                 },
+                          //                 child: Text("Go Back"))
+                          //           ],
+                          //         ),
+                          //       )));
                       }
                     } else {
                       return Container();
@@ -5161,20 +5164,16 @@ print('111111111111111111');
                                                             .connectionState ==
                                                             ConnectionState
                                                                 .active) {
-                                                      return MarqueeWidget(
-                                                        direction: Axis.horizontal,
+                                                      return MarqueeWidget(direction: Axis.horizontal,
                                                         child: Text(
                                                           (userSnapshot.data!.data()![
                                                           "onlineStatus"] ==
                                                               true &&
                                                               peerSnapshot.data!
                                                                   .data()![
-                                                              "onlineStatus"] ==
-                                                                  true)
+                                                              "onlineStatus"] == true)
                                                               ? (peerSnapshot.data!
-                                                              .data()![
-                                                          "status"] ==
-                                                              "online")
+                                                              .data()!["status"] == "online")
                                                               ? "Online"
                                                               : (userSnapshot.data!.data()![
                                                           "lastseenStatus"] ==
@@ -5184,8 +5183,8 @@ print('111111111111111111');
                                                                   .data()!["lastseenStatus"] ==
                                                                   true)
                                                               ? "Last seen ${getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch(datetime: peerSnapshot.data!.data()!["status"]))}"
-                                                              : "Tap here for user info"
-                                                              : "Tap here for user info",
+                                                              : "Tap here for user info 2"
+                                                              : "Tap here for user info 1",
                                                           style: GoogleFonts.poppins(
                                                               textStyle: textStyle(
                                                                   fontSize: 12,

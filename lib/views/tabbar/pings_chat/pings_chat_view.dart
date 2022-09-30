@@ -942,8 +942,10 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                                 sizingInformation: sizingInformation,
                               )));}},
                   backgroundColor: Color.fromRGBO(248, 206, 97, 1),
-                  child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")) : FloatingActionButton(
+                  child: SvgPicture.asset("assets/icons_assets/chat_icon_floating.svg")) :
+          FloatingActionButton(
               onPressed: () async {
+                print("index is ${index}");
                 if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
                   return await scaffoldAlertDialogBox(
                       context: context,

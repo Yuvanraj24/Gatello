@@ -1,5 +1,6 @@
 import 'dart:convert';
 //import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/handler/SharedPrefHandler.dart';
 import 'package:gatello/views/tabbar/tabbar_view.dart';
@@ -13,10 +14,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Authentication/Authentication.dart';
 import '../validator/validator.dart';
 import 'forgot_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+
   String? mob;
   String? pw;
 
@@ -30,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final _formkey = GlobalKey<FormState>();
   TextEditingController _mobileNumber = TextEditingController();
   TextEditingController _password = TextEditingController();
+  FirebaseFirestore instance = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -249,11 +253,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     var body = jsonEncode(<String, dynamic>{
                       "credential_1": "+91${widget.mob}",
                       "password": widget.pw,
+                      "notification_token": ""
                     });
                     if(signin(body)==null){
                       CircularProgressIndicator();
                     }
                     signin(body);
+
                   },
                   child: Text(
                     'Login',
@@ -348,6 +354,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
             SharedPrefHandler sharedPrefHandler=new SharedPrefHandler();
             sharedPrefHandler.writeUserInfo(map1['user_id'], map1['email'], map1['root_folder_id']);
+            await instance.collection("user-detail").doc(map1['user_id']).update({"token": await getFCMToken()});
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (BuildContext ctx) => Tabbar()));
 
