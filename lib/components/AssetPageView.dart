@@ -39,6 +39,7 @@ class _AssetPageViewState extends State<AssetPageView> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

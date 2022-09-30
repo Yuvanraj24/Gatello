@@ -32,7 +32,8 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
         ..initialize().then((_) {
           if (!mounted) return;
           setState(() {
-            _controller.setLooping(true);
+            print("loop 1");
+            _controller.setLooping(false);
             initialized = true;
           });
         });
@@ -49,7 +50,8 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
         ..initialize().then((_) {
           if (!mounted) return;
           setState(() {
-            _controller.setLooping(true);
+            print("loop 2");
+            _controller.setLooping(false);
             initialized = true;
           });
         });

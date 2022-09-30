@@ -45,16 +45,6 @@ class _ContactListState extends State<ContactList> {
     if (contactpermission.isGranted || contactpermission.isLimited) {
       contacts = await FastContacts.allContacts;
 
-      // for (Contact contact in contacts) {
-      //   var userDoc = await instance
-      //       .collection("user-detail")
-      //       .where("phone", isGreaterThanOrEqualTo: contact.phones.first)
-      //       .where("phone", isGreaterThanOrEqualTo: contact.phones.first + '\uf8ff')
-      //       .get();
-      //   if (userDoc.docs.isEmpty) {
-      //     contactList.add(contact);
-      //   }
-      // }
     } else {
       final snackBar = snackbar(content: "Please enable contact permission");
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

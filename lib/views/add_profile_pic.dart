@@ -3,7 +3,6 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gatello/views/ContactList.dart';
 import 'package:gatello/views/invite_friends.dart';
 import 'package:gatello/views/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +10,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 
-import 'ContactList.dart';
+import 'contact_list.dart';
+
 class AddProfilePic extends StatefulWidget {
   const AddProfilePic({Key? key}) : super(key: key);
   @override

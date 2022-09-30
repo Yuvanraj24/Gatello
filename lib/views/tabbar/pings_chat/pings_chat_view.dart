@@ -297,8 +297,8 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                             errorWidget: (context, url, error) => Icon(Icons.error),
                           ):
                           SvgPicture.asset((widget.state == 0) ? "assets/invite_friends/profilepicture.svg" : "assets/invite_friends/profilepicture.svg", fit: BoxFit.cover,
-                            height:50.h,
-                            width: 50.w,
+                            height:44.h,
+                            width: 44.w,
                           ),
                         ),
 
@@ -1202,6 +1202,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                         peerName: name,
                         peerPic: pic,
                         uid: widget.uid,
+
                         puid: id,
                         state: 0,
                         forwardCount: 0,

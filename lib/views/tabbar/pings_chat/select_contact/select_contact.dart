@@ -13,7 +13,6 @@ import 'package:fast_contacts/fast_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gatello/views/ContactList.dart';
 import 'package:gatello/views/tabbar/test_code/UserDetails.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -38,7 +37,8 @@ import '../../../../components/ScaffoldDialog.dart';
 import '../../../../components/SnackBar.dart';
 import '../../../../components/TextField.dart';
 import '../../../../main.dart';
-
+import '../../../invite_friends.dart';
+import '../../../invitefriends.dart';
 import '../../../profile/user_proflle.dart';
 import '../../chats/group_personal_screen/test_code2/CreateGroup.dart';
 import '../../chats/personal_chat_screen/ChatPage.dart';
@@ -77,8 +77,12 @@ class _SearchPageState extends State<SearchPage> {
   List<Contact> contacts = [];
   List contacts1 = [];
   List contacts2 = [];
+  List<String> contactNames = [];
+
+  int conLen=0;
 
   List con2 = [];
+  List conNames2 = [];
 
   //Map merge = ();
   List test1=[1,2];
@@ -152,6 +156,16 @@ class _SearchPageState extends State<SearchPage> {
     PermissionStatus contactpermission = await Permission.contacts.request();
     if (contactpermission.isGranted || contactpermission.isLimited) {
       contacts = await FastContacts.allContacts;
+      conLen=contacts.length;
+      for(int i=0;i<contacts.length;i++)
+      {
+        contactNames.add(contacts[i].displayName);
+      }
+      setState(() {
+        conLen=contacts.length;
+      });
+
+      getDataList();
 
     } else {
 
@@ -295,22 +309,29 @@ class _SearchPageState extends State<SearchPage> {
                 phone=phone.substring(3,13);
                 print(phone);
                 fBPhone.add(phone);
-                conMap[phone]=name;
-                conNames.add(name);
-                conId.add(id);
+                // conMap[phone]=name;
+                // conId.add(id);
+                conMap[phone]=id;
+
 
               }
               else
               {
                 fBPhone.add(phone);
+                conMap[phone]=id;
 
               }
 
               // print(fBPhone);
-              print("ConMap:${conMap}");
 
 
 
+
+            });
+            print("ConMap:${conMap}");
+            print("ConIds:${conId}");
+            setState(() {
+              getDataList();
             });
           });
 
@@ -414,7 +435,9 @@ class _SearchPageState extends State<SearchPage> {
                           switch (value) {
                             case 1:
                               {
-                                
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) =>
+                                        InviteFriends(state: 0)));
                               }
                               break;
                             default:
@@ -454,7 +477,7 @@ class _SearchPageState extends State<SearchPage> {
                             fontSize: 16.sp, fontWeight: FontWeight.w400,color:Colors.black)),
                       ),
                       SizedBox(height:2.h),
-                      Text('260 contacts',style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                      Text('${conLen} contacts',style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
                           fontSize:12.sp,color:Colors.black)),)
                     ],
                   ),
@@ -745,19 +768,24 @@ class _SearchPageState extends State<SearchPage> {
 //                                 },
 //                               ),
                               child: ListView.builder(
-                                  itemCount: conNames.length,
+                                  itemCount: con2.length,
                                   itemBuilder: (context, index) =>
-
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 10),
                                         child: ListTile(
+                                          onTap: (){
+                                            print("Chat to : ${conMap[con2[index]]}");
+
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(state: 0,uid: uid.toString(),puid: conMap[con2[index]].toString())));
+
+                                          },
                                           contentPadding: EdgeInsets.only(left: 0),
                                           leading: CircleAvatar(
 
                                             backgroundImage: AssetImage("assets/noProfile.jpg"),
                                             radius: 25.w,
                                           ),
-                                          title: Text("${conNames[index]}"),
+                                          title: Text("${conNames2[index]}"),
                                         ),
                                       ) ),
                             ),
@@ -1068,6 +1096,9 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     print("Con1${contacts1}");
+    setState(() {
+
+    });
     int i=0,j=0;
 
     for(i=0;i<contacts1.length;i++)
@@ -1077,15 +1108,23 @@ class _SearchPageState extends State<SearchPage> {
         if(contacts1[i]==fBPhone[j])
         {
 
-          contacts2.add(contacts1[i]);
+          var x=contacts2.contains(fBPhone[j]);
+          print("Contact Check : ${x}");
 
+          if(x==false) {
+            contacts2.add(contacts1[i]);
+            conNames.add(contactNames[i]);
+          }
         }
       }
     }
 
-    print("Con2:${contacts2}");
+    // print("Con2:${contacts2} ${conNames}");
     con2 = LinkedHashSet<String>.from(contacts2).toList();
+    conNames2 = LinkedHashSet<String>.from(conNames).toList();
     print(con2);
+    print(conNames2);
+    print(conMap);
 
 
 

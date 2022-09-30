@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/views/status/status.dart';
@@ -26,7 +28,8 @@ import '../../core/models/exception/pops_exception.dart';
 import '../../handler/LifeCycle.dart';
 import '../../handler/Network.dart';
 import '../../main.dart';
-import '../ContactList.dart';
+
+import '../contact_list.dart';
 import '../invite_friends.dart';
 import '../profile/profile_details.dart';
 import 'Delete1Dialog.dart';
@@ -98,7 +101,8 @@ class _TabState extends State<Tabbar> {
     final data1 = await _getUID();
     final data2 = await profileDetailsApiCall();
     final data3= await lifecycleInit();
-    return [data1, data2,data3];
+    final data4 = await fcmMain();
+    return [data1, data2,data3,data4];
   }
   bool callBack(){
     print('working');
@@ -112,8 +116,27 @@ class _TabState extends State<Tabbar> {
   @override
   void initState() {
     _future = sendData();
+
     super.initState();
   }
+
+
+  AndroidNotificationChannel channel = AndroidNotificationChannel('com.deejos.gatello', 'High Importance Notifications',
+      description: 'This channel is used for important notifications.', importance: Importance.high, playSound: true);
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  BigPictureStyleInformation? bigPictureStyleInformation;
+
+  Future fcmMain() async {
+    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
+
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {

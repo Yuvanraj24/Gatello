@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../Style/Colors.dart';
@@ -37,7 +38,7 @@ Future alertDialogBox(
                     backgroundColor: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
                     title: Text(
                       title,
-                      style: GoogleFonts.poppins(textStyle: textStyle(fontWeight: FontWeight.w600, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
+                      style: GoogleFonts.inter(textStyle: textStyle( fontSize: 15.sp, fontWeight: FontWeight.w600, color: (themedata.value.index == 0) ? Color(black) : Color(white))),
                     ),
                     content: SingleChildScrollView(
                       child: ListBody(

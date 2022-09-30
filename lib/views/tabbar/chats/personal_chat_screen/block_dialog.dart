@@ -51,7 +51,7 @@ class _BlockCustomDialogState extends State<BlockCustomDialog> {
               children: [
                 SizedBox(width: 10.w,),
                 Text(
-                  'Block Angelena?',
+                  'Block',
                   style: GoogleFonts.inter(
                       textStyle: TextStyle(
                           fontSize: 16.sp,
@@ -132,7 +132,9 @@ class _BlockCustomDialogState extends State<BlockCustomDialog> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+
+                  },
                   child: Text(
                     'Block',
                     style: GoogleFonts.inter(

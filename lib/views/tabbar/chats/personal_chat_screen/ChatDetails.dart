@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttericon/linecons_icons.dart';
+import 'package:gatello/views/tabbar/chats/personal_chat_screen/ChatPage.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +30,6 @@ import '../../../../components/SimpleDialogBox.dart';
 import '../../../../components/SnackBar.dart';
 import '../../../../components/flatButton.dart';
 import '../../../../main.dart';
-import '../../../ContactList.dart';
 import 'ChatDetailsUpdate.dart';
 
 
@@ -207,11 +207,14 @@ class _ChatDetailsState extends State<ChatDetails> {
                                   fontSize:13.sp,color:Color.fromRGBO(255, 0, 0, 1)))),
 
                               value: 1,
-                            ),PopupMenuItem(onTap:()async{
+                            ),
+                            PopupMenuItem(
+                                onTap:()async{
                             await changeClaim(type: 3, uid: widget.uid);
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
+                                value: 1,
                               child:Text("Exit group",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
                                   fontSize:13.sp,color:Color.fromRGBO(255, 0, 0, 1)))))
                           ])
@@ -600,6 +603,7 @@ class _ChatDetailsState extends State<ChatDetails> {
                   children: [
                     SizedBox(height:10.h),
                     GestureDetector(onTap:() {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(uid: widget.uid, puid: id, state: 0),));
 
                     },
                       child: Text(
@@ -612,6 +616,7 @@ class _ChatDetailsState extends State<ChatDetails> {
                     ),
                     SizedBox(height:22.h),
                     GestureDetector(onTap:() {
+
 
                     },
                       child: Text(
