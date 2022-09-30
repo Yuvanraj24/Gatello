@@ -283,7 +283,7 @@ class _TabState extends State<Tabbar> {
                                                                     MaterialPageRoute(
                                                                         builder: (
                                                                             context) =>
-                                                                            ContactList(state: 0)));
+                                                                            InviteFriends(state: 0)));
                                                               },
                                                               child: Container(
                                                                 width: 150.w,

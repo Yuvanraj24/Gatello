@@ -136,7 +136,7 @@ class _AddProfilePicState extends State<AddProfilePic> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ContactList(state: 0)
+                            builder: (context) =>InviteFriends(state: 0)
                         ));
 
 

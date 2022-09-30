@@ -134,7 +134,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar():Tabbar();
+                              return (snapshot.data == true) ? Tabbar():Splash4();
 
                             } else {
                               return lottieAnimation(loadingLottie);

@@ -406,20 +406,26 @@ class _ChatDetailsState extends State<ChatDetails> {
                                 ],
                               ),
                               SizedBox(width: 42.w),
-                              Column(
-                                children: [
-                                  SvgPicture.asset(
-                                      'assets/group_info/add_participants.svg'),
-                                  SizedBox(height: 11.h),
-                                  Text(
-                                    'Add',
-                                    style: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black)),
-                                  ),
-                                ],
+                              GestureDetector(onTap:() {
+                                Navigator.push(context, MaterialPageRoute(builder:(context) {
+                                  return SearchPage(state:5, sizingInformation: sizingInformation);
+                                }, ));
+                              },
+                                child: (widget.state==1)?Column(
+                                  children: [
+                                    SvgPicture.asset(
+                                        'assets/group_info/add_participants.svg'),
+                                    SizedBox(height: 11.h),
+                                    Text(
+                                      'Add',
+                                      style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.black)),
+                                    ),
+                                  ],
+                                ):SizedBox(),
                               )
                             ],
                           ),
