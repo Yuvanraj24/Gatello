@@ -29,11 +29,9 @@ import '../../../../components/ScaffoldDialog.dart';
 import '../../../../components/SimpleDialogBox.dart';
 import '../../../../components/SnackBar.dart';
 import '../../../../components/flatButton.dart';
+
 import '../../../../main.dart';
 import 'ChatDetailsUpdate.dart';
-
-
-
 class ChatDetails extends StatefulWidget {
   ///* peeruid for personal chat and gid for group chat
   final String puid;
@@ -575,7 +573,6 @@ class _ChatDetailsState extends State<ChatDetails> {
           }
         });
   }
-
   Widget buildItem(
       {required String? pic,
         required String name,

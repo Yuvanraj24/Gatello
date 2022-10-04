@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gatello/views/contact_list.dart';
 import 'package:gatello/views/status/status.dart';
 import 'package:gatello/views/tabbar/pings_chat/pings_chat_view.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
@@ -30,8 +31,10 @@ import '../../handler/Network.dart';
 import '../../main.dart';
 
 import '../contact_list.dart';
-import '../invite_friends.dart';
+
+import '../invitefriends.dart';
 import '../profile/profile_details.dart';
+import '../settings/settings_home_screen.dart';
 import 'Delete1Dialog.dart';
 import '/core/models/profile_detail.dart'as profileDetailsModel;
 class Tabbar extends StatefulWidget {
@@ -40,6 +43,7 @@ class Tabbar extends StatefulWidget {
   State<Tabbar> createState() => _TabState();
 }
 class _TabState extends State<Tabbar> {
+  TextEditingController searchChat= TextEditingController();
   FirebaseFirestore instance = FirebaseFirestore.instance;
   String nameSearch='';
   bool isSelected=false;
@@ -48,7 +52,7 @@ class _TabState extends State<Tabbar> {
   Future? _future;
   String? userId;
   bool tabSearch=false;
-  TextEditingController searchChat =TextEditingController();
+
 //  String? puid;
   final ScrollController storyScrollController = ScrollController();
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0,
@@ -63,7 +67,6 @@ class _TabState extends State<Tabbar> {
       body: {"user_id": (userId != null) ? userId : userId, "followee_id": ""},
     );
   }
-
   Future lifecycleInit() async {
     String? uid = userId;
     FirebaseFirestore instance = FirebaseFirestore.instance;
@@ -177,6 +180,11 @@ class _TabState extends State<Tabbar> {
                                               mainAxisAlignment: MainAxisAlignment
                                                   .start,
                                               children: [
+                                             //  Image.asset('assets/gatello_asset/briefLogo.png'),
+                                             //    Image.asset(
+                                             //      "assets/briefLogo.png",
+                                             //      height: 20,
+                                             //    ),
                                                 Text('Gatello',
                                                     style: GoogleFonts.inter(
                                                         textStyle: TextStyle(
@@ -336,27 +344,39 @@ class _TabState extends State<Tabbar> {
                                                               ),
                                                             )),
                                                         PopupMenuItem(
-                                                            child: Container(
-                                                              width: 150.w,
-                                                              child: Row(
-                                                                children: [
-                                                                  SvgPicture.asset(
-                                                                      'assets/tabbar_icons/tab_view_main/settings_icon.svg'),
-                                                                  SizedBox(
-                                                                    width: 12.w,
+
+                                                            child: GestureDetector(
+                                                              onTap: (){
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>Setting()
+
                                                                   ),
-                                                                  Text("Settings",
-                                                                      style: GoogleFonts
-                                                                          .inter(
-                                                                          textStyle: TextStyle(
-                                                                            fontSize: 14
-                                                                                .sp,
-                                                                            color: Color
-                                                                                .fromRGBO(
-                                                                                0, 0,
-                                                                                0, 1),
-                                                                          )))
-                                                                ],
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                width: 150.w,
+                                                                child: Row(
+                                                                  children: [
+                                                                    SvgPicture.asset(
+                                                                        'assets/tabbar_icons/tab_view_main/settings_icon.svg'),
+                                                                    SizedBox(
+                                                                      width: 12.w,
+                                                                    ),
+                                                                    Text("Settings",
+                                                                        style: GoogleFonts
+                                                                            .inter(
+                                                                            textStyle: TextStyle(
+                                                                              fontSize: 14
+                                                                                  .sp,
+                                                                              color: Color
+                                                                                  .fromRGBO(
+                                                                                  0, 0,
+                                                                                  0, 1),
+                                                                            )))
+                                                                  ],
+                                                                ),
                                                               ),
                                                             ))
                                                       ]),
@@ -598,8 +618,11 @@ class _TabState extends State<Tabbar> {
                                           child: Text("Get it...!"),
                                         ),
                                         PingsChatView(uid:userId.toString(),callBack:callBack ),
-                                        Story(
-                                            scrollController: storyScrollController),
+                                        Center(
+                                          child: Text("Pops...!"),
+                                        ),
+                                        // Story(
+                                        //     scrollController: storyScrollController),
                                         Status(),
 
                                         Center(
@@ -666,11 +689,7 @@ class _TabState extends State<Tabbar> {
                 enabledBorder:OutlineInputBorder(
                     borderSide:BorderSide(color:Colors.transparent)
                 )),
-            onChanged: ( value) {
-              setState(() {
-                nameSearch=value;
-              });
-            },
+
           ),
         ),
       ],

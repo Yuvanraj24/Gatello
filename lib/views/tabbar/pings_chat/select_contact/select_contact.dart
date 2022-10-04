@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 
 import '../../../../Firebase/FirebaseNotifications.dart';
 import '../../../../Firebase/Writes.dart';
@@ -37,7 +38,7 @@ import '../../../../components/ScaffoldDialog.dart';
 import '../../../../components/SnackBar.dart';
 import '../../../../components/TextField.dart';
 import '../../../../main.dart';
-import '../../../invite_friends.dart';
+
 import '../../../invitefriends.dart';
 import '../../../profile/user_proflle.dart';
 import '../../chats/group_personal_screen/test_code2/CreateGroup.dart';
@@ -60,6 +61,7 @@ class SearchPage extends StatefulWidget {
   const SearchPage({Key? key, required this.state,required  this.sizingInformation,
     this.gid, this.participants, this.video = false, this.channelName}) : super(key: key);
   @override
+
   _SearchPageState createState() => _SearchPageState();
 }
 class _SearchPageState extends State<SearchPage> {
@@ -70,17 +72,18 @@ class _SearchPageState extends State<SearchPage> {
   ScrollController scrollController = ScrollController();
   TextEditingController searchTextEditingController = TextEditingController();
   TextEditingController searchController= TextEditingController();
+  TextEditingController searchContactcontroller= TextEditingController();
   Timer? _debounce;
   List<QueryDocumentSnapshot<Map<String, dynamic>>> body = [];
   List fBPhone=[];
+  bool isLoading = false;
   List contactsAll=[];
   List<Contact> contacts = [];
   List contacts1 = [];
   List contacts2 = [];
   List<String> contactNames = [];
-
+  bool searching=false;
   int conLen=0;
-
   List con2 = [];
   List conNames2 = [];
 
@@ -92,13 +95,17 @@ class _SearchPageState extends State<SearchPage> {
 
   List conNames=[];
   List conId=[];
+  String nameSearch= '';
+  List searchConNames=[];
+  List searchConId=[];
+  List searchConPhones=[];
 
 
   // var test3=List.from(test1)..addAll(test2);
   // final List<int> c = List.from(body)..addAll(test2);
   // newList = [...test1, ...test2].toSet().toList();
   // var totalList=body+contacts!;
-  bool isLoading = false;
+
   List<Map<String, dynamic>> groupMemberList = [];
 
   List<String> selectedContactsId = [];
@@ -121,35 +128,32 @@ class _SearchPageState extends State<SearchPage> {
   filterContacts(){
     List<Contact> _contact=[];
     _contact.addAll(contacts);
-    if ( searchController.text.isNotEmpty){
+    if ( searchContactcontroller.text.isNotEmpty){
       _contact.retainWhere( (contact){
-        String searchTerm = searchController.text.toLowerCase();
-        String contactName = contact.displayName!.toLowerCase();
+        String searchTerm = searchContactcontroller.text.toLowerCase();
+        String contactName = searchContactcontroller.text.toLowerCase();
         return contactName.contains(searchTerm);
       });
       setState(() {
-
         filteredContacts=_contact;
         for(var i=0; i<filteredContacts.length; i++){
-          print(filteredContacts[i].displayName);
+          print("vanthuru :${filteredContacts[i].displayName}");
           listData = filteredContacts[i].displayName;
         }
       });
     }
+    print("SIZE: ${listData.length}");
+    print("SIZE: ${listData}");
   }
+
   @override
   void initState() {
     _getUID();
-    // if (widget.state == 0 || widget.state == 4 || widget.state == 6) {
     userChatList(searchQuery: searchTextEditingController.text);
     _contacts = getContacts();
-
-    searchController.addListener(() {
+    searchContactcontroller.addListener(() {
       filterContacts();
     });
-    // } else if (widget.state == 5) {
-    //   newParticipantSearch(searchQuery: searchTextEditingController.text);
-    // }
     super.initState();
   }
   Future<List<Contact>> getContacts() async {
@@ -179,7 +183,7 @@ class _SearchPageState extends State<SearchPage> {
       _debounce!.cancel();
     }
     searchTextEditingController.dispose();
-    scrollController.dispose();
+    searchContactcontroller.dispose();
     super.dispose();
   }
   // Future newParticipantSearch({required String searchQuery, int limit = 50}) async {
@@ -344,10 +348,11 @@ class _SearchPageState extends State<SearchPage> {
       _isRequesting = false;
     }
   }
+
   @override
   Widget build(BuildContext context) {
 
-    bool isSearching = searchController.text.isNotEmpty;
+    bool isSearching = searchContactcontroller.text.isNotEmpty;
     // Contact contact = isSearching==true? filteredContacts.elementAt():contacts.elementAt(1);
     //  print('Lotus77${filteredContacts.elementAt(1)}');
     return SafeArea(
@@ -404,193 +409,94 @@ class _SearchPageState extends State<SearchPage> {
                     onPressed: (){
                       getDataList();
                     }),
-                appBar: AppBar(
-                  centerTitle: false,
-                  automaticallyImplyLeading: false,
-                  elevation: 0,
-                  leading: GestureDetector(
-                      onTap:(){
-                        Navigator.pop(context);
-                      },
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment:CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset('assets/pops_asset/back_button.svg',height:35.h,
-                            width:35.w,),
-                        ],
-                      )),
-                  actions:
-                  // (sizingInformation.deviceScreenType ==
-                  //     DeviceScreenType.desktop)
-                  //     ? null :
-                  [
-                    SvgPicture.asset(
-                      'assets/tabbar_icons/Tabbar_search.svg',height:21.h,width:21.w,
-                    ),
-                    SizedBox(width:22.w),
-                    PopupMenuButton(
-                        icon:Icon(Icons.more_vert_rounded,color:Colors.black),
-                        iconSize:30,
-                        onSelected: (value) {
-                          switch (value) {
-                            case 1:
-                              {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) =>
-                                        InviteFriends(state: 0)));
-                              }
-                              break;
-                            default:
-                          }
-                        },
-                        itemBuilder: (context) =>
-                        [
-                          PopupMenuItem(
-                            child: Text("Refresh",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
-                                fontSize:12.sp,color:Colors.black))),
-
-                            value: 1,
-                          ),PopupMenuItem(child:Text("Help",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
-                            fontSize:12.sp,color:Colors.black))))
-                        ])
-                  ],
-                  title: Column(crossAxisAlignment:CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        (widget.state == 0)
-                            ? "Select contact"
-                        // : (widget.state == 1)
-                        //     ? "Search Group Name"
-                        //     : (widget.state == 4)
-                        //     ? (memberList.isEmpty)
-                        //     ? "Select contact"
-                        //     : "${memberList.length}/49 Selected"
-                        //     : (widget.state == 5)
-                        //     ? "${memberList.length +
-                        //     widget.participants!.length}/50 Selected"
-                        //     : (widget.state == 6)
-                        //     ? "Search Account"
-                        //     : (widget.state == 7)
-                        //     ? "Search Participant"
-                            : "",
-                        style: GoogleFonts.inter(textStyle:TextStyle(
-                            fontSize: 16.sp, fontWeight: FontWeight.w400,color:Colors.black)),
-                      ),
-                      SizedBox(height:2.h),
-                      Text('${conLen} contacts',style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
-                          fontSize:12.sp,color:Colors.black)),)
-                    ],
-                  ),
-                ),
+                // appBar:AppBar(
+                //   centerTitle: false,
+                //   automaticallyImplyLeading: false,
+                //   elevation: 0,
+                //   leading: GestureDetector(
+                //       onTap:(){
+                //         Navigator.pop(context);
+                //       },
+                //       child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                //         crossAxisAlignment:CrossAxisAlignment.center,
+                //         children: [
+                //           SvgPicture.asset('assets/pops_asset/back_button.svg',height:35.h,
+                //             width:35.w,),
+                //         ],
+                //       )),
+                //   actions:
+                //   [
+                //     GestureDetector(onTap: () {
+                //       setState(() {
+                //         searching=true;
+                //         print('yeah');
+                //       });
+                //     },
+                //       child: SvgPicture.asset(
+                //         'assets/tabbar_icons/Tabbar_search.svg',height:21.h,width:21.w,
+                //       ),
+                //     ),
+                //     SizedBox(width:22.w),
+                //     PopupMenuButton(
+                //         icon:Icon(Icons.more_vert_rounded,color:Colors.black),
+                //         iconSize:30,
+                //         onSelected: (value) {
+                //           switch (value) {
+                //             case 1:
+                //               {
+                //                 Navigator.push(context, MaterialPageRoute(
+                //                     builder: (context) =>
+                //                         InviteFriends(state: 0)));
+                //               }
+                //               break;
+                //             default:
+                //           }
+                //         },
+                //         itemBuilder: (context) =>
+                //         [
+                //           PopupMenuItem(
+                //             child: Text("Refresh",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                //                 fontSize:12.sp,color:Colors.black))),
+                //
+                //             value: 1,
+                //           ),PopupMenuItem(child:Text("Help",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                //             fontSize:12.sp,color:Colors.black))))
+                //         ])
+                //   ],
+                //   title: Column(crossAxisAlignment:CrossAxisAlignment.start,
+                //     children: [
+                //       Text(
+                //         (widget.state == 0)
+                //             ? "Select contact"
+                //         // : (widget.state == 1)
+                //         //     ? "Search Group Name"
+                //         //     : (widget.state == 4)
+                //         //     ? (memberList.isEmpty)
+                //         //     ? "Select contact"
+                //         //     : "${memberList.length}/49 Selected"
+                //         //     : (widget.state == 5)
+                //         //     ? "${memberList.length +
+                //         //     widget.participants!.length}/50 Selected"
+                //         //     : (widget.state == 6)
+                //         //     ? "Search Account"
+                //         //     : (widget.state == 7)
+                //         //     ? "Search Participant"
+                //             : "",
+                //         style: GoogleFonts.inter(textStyle:TextStyle(
+                //             fontSize: 16.sp, fontWeight: FontWeight.w400,color:Colors.black)),
+                //       ),
+                //       SizedBox(height:2.h),
+                //       Text('${conLen} contacts',style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                //           fontSize:12.sp,color:Colors.black)),)
+                //     ],
+                //   ),
+                // ),
                 body: NestedScrollView(
                   controller: scrollController,
                   floatHeaderSlivers: true,
                   headerSliverBuilder: (BuildContext context,
                       bool innerBoxIsScrolled) {
-                    return <Widget>[
-                      SliverOverlapAbsorber(
-                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                            context),
-                        sliver: SliverAppBar(
-                          centerTitle: false,
-                          floating: true,
-                          pinned: false,
-                          snap: true,
-                          forceElevated: innerBoxIsScrolled,
-                          automaticallyImplyLeading: false,
-                          bottom: PreferredSize(
-                            preferredSize: Size.fromHeight(30.0),
-                            child: Text(''),
-                          ),
-                          flexibleSpace: Center(
-                            child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 20, right: 20),
-                                child: textField(
-                                  textStyle: GoogleFonts.poppins(
-                                      textStyle: textStyle(fontSize: 14)),
-                                  border: false,
-                                  textEditingController: searchTextEditingController,
-                                  hintText: (widget.state == 0)
-                                      ? "Search Contact"
-                                  // : (widget.state == 1)
-                                  //     ? "Search Group"
-                                      : (widget.state == 4)
-                                      ? "Search Members"
-                                      : (widget.state == 5)
-                                      ? "Search Members"
-                                      : (widget.state == 6)
-                                      ? "Search Account"
-                                      : (widget.state == 7)
-                                      ? "Search Participant"
-                                      : "",
-                                  hintStyle: GoogleFonts.poppins(
-                                      textStyle: textStyle(color: Color(grey))),
-                                  onChanged: (value) async {
-                                    if (_debounce?.isActive ?? false) _debounce
-                                        ?.cancel();
-                                    _debounce = Timer(const Duration(
-                                        milliseconds: 100), () async {
-                                      body.clear();
-                                      _isRequesting = false;
-                                      _isFinish = false;
-                                      // if (widget.state == 0 || widget.state == 4 || widget.state == 6) {
-                                      return await userChatList(
-                                          searchQuery: value);
-                                      // }
-                                      // else if (widget.state == 1) {
-                                      //   return await groupChatList(searchQuery: value);
-                                      // }
-                                      // else if (widget.state == 5) {
-                                      //   return await newParticipantSearch(searchQuery: value);
-                                      // }
-                                    });
-                                  },
-                                  onSubmitted: (value) async {
-                                    body.clear();
-                                    _isRequesting = false;
-                                    _isFinish = false;
-                                    // if (widget.state == 0 || widget.state == 4 || widget.state == 6) {
-                                    return await userChatList(
-                                        searchQuery: value);
-                                    // }
-                                    // else if (widget.state == 1) {
-                                    //   return await groupChatList(searchQuery: value);
-                                    // }
-                                    // else if (widget.state == 5) {
-                                    // return await newParticipantSearch(searchQuery: value);
-                                    // }
-                                  },
-                                  suffixIcon: IconButton(
-                                    splashColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    onPressed: () async {
-                                      body.clear();
-                                      _isRequesting = false;
-                                      _isFinish = false;
-                                      // if (widget.state == 0 || widget.state == 4 || widget.state == 6) {
-                                      return await userChatList(
-                                          searchQuery: searchTextEditingController
-                                              .text);
-                                      // }
-                                      // else if (widget.state == 1) {
-                                      //   return await groupChatList(searchQuery: searchTextEditingController.text);
-                                      // }
-                                      // else if (widget.state == 5) {
-                                      //   return await newParticipantSearch(searchQuery: searchTextEditingController.text);
-                                      // }
-                                    },
-                                    icon: Icon(
-                                      Icons.search,
-                                    ),
-                                  ),
-                                )
-                            ),
-                          ),
-                        ),
-                      )
-                    ];
+                    return <Widget>[];
                   },
                   body: NotificationListener<ScrollNotification>(
                       onNotification: (notification) {
@@ -607,13 +513,6 @@ class _SearchPageState extends State<SearchPage> {
                           // if (widget.state == 0 || widget.state == 4 || widget.state == 6) {
                           this.userChatList(
                               searchQuery: searchTextEditingController.text);
-                          // }
-                          // else if (widget.state == 1) {
-                          //   this.groupChatList(searchQuery: searchTextEditingController.text);
-                          // }
-                          // else if (widget.state == 5) {
-                          //   this.newParticipantSearch(searchQuery: searchTextEditingController.text);
-                          // }
                           if (!mounted) return false;
                           setState(() {
                             isLoading = false;
@@ -622,341 +521,181 @@ class _SearchPageState extends State<SearchPage> {
                         print("constat:${con2.isNotEmpty}");
                         return true;
                       },
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20),
-                        child: (con2.isNotEmpty)
-                            ? Column(
-
-                          children: [
-                            SizedBox(height: 15),
-
-                            Expanded(
-                              //                               child: ListView.separated(
-//                                 separatorBuilder: (context, index) {
-//
-//                                   // Contact contact = isSearching==true? filteredContacts[index]:contacts[index];
-//                                   // if (widget.state == 0 || widget.state == 4 || widget.state == 5 || widget.state == 6) {
-//                                   if (uid != body[index].data()["uid"]) {
-//                                     return Divider(
-//                                       thickness: 1,
-//                                       // height: 1,
-//                                       color: (themedata.value.index == 0)
-//                                           ? Color(lightGrey)
-//                                           : Color(lightBlack),
-//                                     );
-//                                   } else {
-//                                     return Container();
-//                                   }
-//                                   // } else {
-//                                   //   return Divider(
-//                                   //     // thickness: 1,
-//                                   //     height: 1,
-//                                   //     color: (themedata.value.index == 0) ? Color(lightGrey) : Color(lightBlack),
-//                                   //   );
-//                                   // }
-//                                 },
-//                                 itemCount:  con2.length,
-//                                 shrinkWrap: true,
-//                                 itemBuilder: (context, index) {
-//                                   List list=[];
-//                                  // Contact contact = isSearching==true? filteredContacts[index]:contacts[index] ;
-//                                   //  print('LOtus67${body[index].data()}');
-//                                   print('Lotus2${contacts.length}');
-//                                   //    body[index].data().entries.map((e) => list.add(e.value)).toList();
-// //print('Lotus77:${list[7]}');
-//                                   if (widget.state == 0 || widget.state == 4) {
-//                                   //
-//                                   // print("Contact Size:${contacts.length}");
-//                                   // print("FBPhone Size:${fBPhone.length}");
-//                                   //
-//                                   // int x=0;
-//                                   //
-//                                   // for(x=0;x<contacts.length;x++)
-//                                   // {
-//                                   //   try {
-//                                   //     String mob = contacts[x].phones[0];
-//                                   //     mob=mob.replaceAll(" ", "");
-//                                   //     mob=mob.replaceAll("-", "");
-//                                   //     print("Mob:${mob}(${x}) Size:(${mob.length})");
-//                                   //
-//                                   //     if(mob.length>10 && mob.length==12)
-//                                   //     {
-//                                   //       print("ifdrop");
-//                                   //       mob=mob.substring(2,12);
-//                                   //       print(mob);
-//                                   //       contacts1.add(mob);
-//                                   //     }
-//                                   //     else if(mob.length>10 && mob.length==13)
-//                                   //     {
-//                                   //       print("ifdrop");
-//                                   //       mob=mob.substring(3,13);
-//                                   //       print(mob);
-//                                   //       contacts1.add(mob);
-//                                   //     }
-//                                   //     else
-//                                   //     {
-//                                   //       contacts1.add(mob);
-//                                   //     }
-//                                   //
-//                                   //   }
-//                                   //   catch(e)
-//                                   //   {
-//                                   //     print("Exception${e}");
-//                                   //   }
-//                                   //
-//                                   // }
-//                                   //
-//                                   // print("Con1${contacts1}");
-//                                   // int i=0,j=0;
-//                                   //
-//                                   // for(i=0;i<contacts1.length;i++)
-//                                   // {
-//                                   //   for(j=0;j<fBPhone.length;j++)
-//                                   //   {
-//                                   //     if(contacts1[i]==fBPhone[j])
-//                                   //     {
-//                                   //
-//                                   //       contacts2.add(contacts1[i]);
-//                                   //
-//                                   //     }
-//                                   //   }
-//                                   // }
-//                                   //
-//                                   // print("Con2:${contacts2}");
-//                                   // con2 = LinkedHashSet<String>.from(contacts2).toList();
-//                                   // print("this is con2 ${con2}");
-//                                   // print("this is con2 len ${con2.length}");
-//                                   //
-//
-//
-//
-//                                     // for(var i=0;Contact contact = isSearching==true? filteredContacts[index]:contacts[index];i<=body[index].data()["phone"].length;i++){
-//                                     //   for(var j=0;j<=contacts.phones;j++){
-//                                     //
-//                                     //   }
-//                                     // }
-//                                     // print('Lotus77${body[index].data()["phone"]}');
-//                                     //print('Lotus77${body[index].data()["phone"]}');
-//                                     return buildItem(
-//                                         pic: (con2[index].data()["pic"] != null)
-//                                             ? con2[index].data()["pic"]
-//                                             : null,
-//                                         name: con2[index].data()["name"],
-//                                         id: con2[index].data()["uid"]);
-//
-//                                   }
-//                                   // else if (widget.state == 1) {
-//                                   //   return buildItem(
-//                                   //       pic: (body[index].data()["pic"] != null) ? body[index].data()["pic"] : null,
-//                                   //       name: body[index].data()["title"],
-//                                   //       id: body[index].data()["gid"]);
-//                                   // }
-//                                   else
-//                                   if (widget.state == 4 || widget.state == 5 ||
-//                                       widget.state == 7) {
-//                                     return buildItem(
-//                                         pic: (con2[index].data()["pic"] != null)
-//                                             ? con2[index].data()["pic"]
-//                                             : null,
-//                                         name: con2[index].data()["name"],
-//                                         id: con2[index].data()["uid"],
-//
-//                                         document: body[index].data());
-//                                   } else {
-//                                     return Container();
-//                                   }
-//                                 },
-//                               ),
-                              child: ListView.builder(
-                                  itemCount: con2.length,
-                                  itemBuilder: (context, index) =>
-                                      Padding(
-                                        padding: EdgeInsets.only(bottom: 10),
-                                        child: ListTile(
-                                          onTap: () async {
-                                            print("tap is worked ${con2[index]}");
-                                            print("body of ${body[index].data()}");
-                                            switch (widget.state) {
-                                              case 0:
-                                                {
-                                                  if (widget.sizingInformation.deviceScreenType ==
-                                                      DeviceScreenType.desktop) {
-                                                    Navigator.pop(context, conMap[con2[index]].toString());
-                                                  } else {
-                                                    Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ChatPage(
-                                                                  state: 0,
-                                                                  uid: uid.toString(),
-                                                                  puid: conMap[con2[index]].toString(),
-                                                                )));
-                                                  }
-                                                }
-                                                break;
-
-                                              case 1:
-                                                {
-                                                  if (widget.sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-                                                    Navigator.pop(context, conMap[con2[index]].toString());
-                                                  } else {
-                                                    Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) => ChatPage(
-                                                              state: 1,
-                                                              uid: uid.toString(),
-                                                              puid: conMap[con2[index]].toString(),
-                                                            )));
-                                                  }
-                                                }
-                                                break;
-
-                                              case 4:
-                                                {
-                                                  if (memberList.contains(conMap[con2[index]].toString()) == false) {
-                                                    if (groupMemberList.length <= 49) {
-                                                      if (!mounted) return;
-                                                      setState(() {
-                                                        memberList.add(conMap[con2[index]].toString());
-                                                        groupMemberList.add(con2[index]!);
-                                                      });
-                                                    } else {
-                                                      final snackBar = snackbar(
-                                                          content: "Group can contain only 50 members");
-                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                    }
-                                                  } else {
-                                                    if (!mounted) return;
-                                                    setState(() {
-                                                      memberList.remove(conMap[con2[index]].toString());
-                                                      groupMemberList.remove(con2[index]);
-                                                    });
-                                                  }
-                                                }
-                                                break;
-                                              case 5:
-                                                {
-                                                  if (!widget.participants!.contains(conMap[con2[index]].toString())) {
-                                                    if (memberList.contains(conMap[con2[index]].toString()) == false) {
-                                                      if ((groupMemberList.length +
-                                                          widget.participants!.length) <= 50) {
-                                                        if (!mounted) return;
-                                                        setState(() {
-                                                          memberList.add(conMap[con2[index]].toString());
-                                                          groupMemberList.add(con2[index]);
-                                                        });
-                                                      } else {
-                                                        final snackBar = snackbar(
-                                                            content: "Group can contain only 50 members");
-                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                      }
-                                                    } else {
-                                                      if (!mounted) return;
-                                                      setState(() {
-                                                        memberList.remove(conMap[con2[index]]);
-                                                        groupMemberList.remove(con2[index]);
-                                                      });
-                                                    }
-                                                  }
-                                                }
-                                                break;
-                                              case 6:
-                                                {
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) => UserProfile(
-                                                            uid: uid.toString(),
-                                                          )));
-                                                }
-                                                break;
-                                              case 7:
-                                                {
-                                                  if (con2[index]["token"] != null) {
-                                                    if (con2[index]["callStatus"] == false) {
-                                                      FirebaseFirestore instance = FirebaseFirestore.instance;
-                                                      DocumentSnapshot<
-                                                          Map<String, dynamic>> userDoc = await instance
-                                                          .collection("call-logs").doc(widget.gid!).get();
-                                                      if (userDoc.exists) {
-                                                        await sendNotificationForCall(
-                                                            userTokens: [con2[index]["token"]],
-                                                            id: widget.channelName!,
-                                                            timestamp: widget.gid!,
-                                                            video: widget.video,
-                                                            phoneNumber: userDoc.data()!["callerId"],
-                                            pic: userDoc.data()!["members"]["${userDoc
-                                                .data()!["channelId"]}"]["pic"],
-                                            state: 0,
-                                            name: userDoc.data()!["members"]["${userDoc
-                                                .data()!["channelId"]}"]["name"]);
-                                            await UpdateWriteLog(documentId: widget.gid!,
-                                            uid: con2[index]["uid"],
-                                            userDetailDoc: con2[index]);
-                                            Navigator.pop(context);
-                                            }
-                                            } else {
-                                            toast("User is busy right now!");
-                                            }
-                                            // QuerySnapshot<Map<String, dynamic>> callDoc = await instance.collection("call-log").where("channelId", isEqualTo: widget.channelName).get();
-                                            } else {
-                                            toast("User has logged out!");
-                                            // final snackBar = snackbar(content: "User has no token");
-                                            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                            }
-                                            }
-                                            break;
-                                            default:
-                                            {
-                                            print("Invalid choice");
-                                            }
-                                            break;
-                                            }
-                                            print("Chat to : ${conMap[con2[index]]}");
-
-                                          },
-                                          contentPadding: EdgeInsets.only(left: 0),
-                                          leading: CircleAvatar(
-
-                                            backgroundImage: AssetImage("assets/noProfile.jpg"),
-                                            radius: 25.w,
-                                          ),
-                                          title: Text("${conNames2[index]}"),
-                                        ),
-                                      ) ),
-                            ),
-
-                            Container(
-                              height: (isLoading == true) ? 20.0 : 0,
-                              color: Colors.transparent,
-                              child: Center(
-                                child: LinearProgressIndicator(
-                                  color: Color(accent),
+                      child: (con2.isNotEmpty)
+                          ? Column(children: [
+                        Container(height:50.h,width:double.infinity.w,color:Color.fromRGBO(248, 206, 97, 1),
+                          child:searching==false? Row(
+                              children: [
+                                SizedBox(width:22.w),
+                                GestureDetector(
+                                    onTap:(){
+                                      Navigator.pop(context);
+                                    },
+                                    child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:CrossAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/pops_asset/back_button.svg',height:35.h,
+                                          width:35.w,),
+                                      ],
+                                    )),
+                                SizedBox(width:21.w),
+                                Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      (widget.state == 0)
+                                          ? "Select contact"
+                                      // : (widget.state == 1)
+                                      //     ? "Search Group Name"
+                                      //     : (widget.state == 4)
+                                      //     ? (memberList.isEmpty)
+                                      //     ? "Select contact"
+                                      //     : "${memberList.length}/49 Selected"
+                                      //     : (widget.state == 5)
+                                      //     ? "${memberList.length +
+                                      //     widget.participants!.length}/50 Selected"
+                                      //     : (widget.state == 6)
+                                      //     ? "Search Account"
+                                      //     : (widget.state == 7)
+                                      //     ? "Search Participant"
+                                          : "",
+                                      style: GoogleFonts.inter(textStyle:TextStyle(
+                                          fontSize: 16.sp, fontWeight: FontWeight.w400,color:Colors.black)),
+                                    ),
+                                    SizedBox(height:2.h),
+                                    Text('${conLen} contacts',style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                                        fontSize:12.sp,color:Colors.black)),)
+                                  ],
                                 ),
-                              ),
-                            ),
-                          ],
-                        )
-                            : Container(
-                            child: Center(
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      lottieAnimation(invalidLottie),
-                                      Text((widget.state == 0 ||
-                                          widget.state == 4 ||
-                                          widget.state == 5 ||
-                                          widget.state == 7)
-                                          ? "No Contacts"
-                                          : (widget.state == 6)
-                                          ? "No Account"
-                                          : "")
-                                    ],
+                                Spacer(),
+                                GestureDetector(onTap: () {
+                                  setState(() {
+                                    searching=true;
+                                    print('yeah');
+                                  });
+                                },
+                                  child: SvgPicture.asset(
+                                    'assets/tabbar_icons/Tabbar_search.svg',height:21.h,width:21.w,
                                   ),
-                                ))),
-                      )),
+                                ),
+                                SizedBox(width:22.w),
+                                PopupMenuButton(
+                                    icon:Icon(Icons.more_vert_rounded,color:Colors.black),
+                                    iconSize:30,
+                                    onSelected: (value) {
+                                      switch (value) {
+                                        case 1:
+                                          {
+                                            Navigator.push(context, MaterialPageRoute(
+                                                builder: (context) =>
+                                                    InviteFriends(state: 0)));
+                                          }
+                                          break;
+                                        default:
+                                      }
+                                    },
+                                    itemBuilder: (context) =>
+                                    [
+                                      PopupMenuItem(
+                                        child: Text("Refresh",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                                            fontSize:12.sp,color:Colors.black))),
+
+                                        value: 1,
+                                      ),PopupMenuItem(child:Text("Help",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                                        fontSize:12.sp,color:Colors.black))))
+                                    ]),
+                                SizedBox(width:6.w),
+                              ]):searchBar(),
+                        ),
+                        SizedBox(height: 15),
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount:isSearching?filteredContacts.length:con2.length,
+                              itemBuilder: (context, index){
+                                var name =conNames2[index];
+                                if(nameSearch.isEmpty){return Padding(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: ListTile(
+                                    onTap: (){
+                                      print("Chat to : ${conMap[con2[index]]}");
+
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(state: 0,uid: uid.toString(),puid: conMap[con2[index]].toString())));
+
+                                    },
+                                    contentPadding: EdgeInsets.only(left: 0),
+                                    leading: CircleAvatar(
+                                      backgroundImage: AssetImage("assets/noProfile.jpg"),
+                                      radius: 25.w,
+                                    ),
+                                    title: SubstringHighlight(text:name,
+                                      term:searchContactcontroller.text,),
+                                  ),
+                                );}
+                                if(name.toString().toLowerCase().contains(nameSearch.toLowerCase())){
+                                  return Padding(
+                                    padding: EdgeInsets.only(bottom: 10),
+                                    child: ListTile(
+                                      onTap: (){
+                                        print("Chat to : ${conMap[con2[index]]}");
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(state: 0,uid: uid.toString(),puid: conMap[con2[index]].toString())));
+                                      },
+                                      contentPadding: EdgeInsets.only(left: 0),
+                                      leading: CircleAvatar(
+                                        backgroundImage: AssetImage("assets/noProfile.jpg"),
+                                        radius: 25.w,
+                                      ),
+                                      title: SubstringHighlight(text: '${conNames2[index]}',
+                                        term:searchContactcontroller.text,),
+                                    ),
+                                  );
+                                }
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: ListTile(
+                                    onTap: (){
+                                      print("Chat to : ${conMap[con2[index]]}");
+
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(state: 0,uid: uid.toString(),puid: conMap[con2[index]].toString())));
+
+                                    },
+                                    contentPadding: EdgeInsets.only(left: 0),
+                                    leading: CircleAvatar(
+                                      backgroundImage: AssetImage("assets/noProfile.jpg"),
+                                      radius: 25.w,
+                                    ),
+                                    title: SubstringHighlight(text: '${conNames2[index]}',
+                                      term:searchContactcontroller.text,),
+                                  ),
+                                );} ),
+                        ),
+                        Container(
+                          height: (isLoading == true) ? 20.0 : 0,
+                          color: Colors.transparent,
+                          child: Center(
+                            child: LinearProgressIndicator(
+                              color: Color(accent),
+                            ),
+                          ),
+                        ),
+                      ],
+                      )
+                          : Container(
+                          child: Center(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    lottieAnimation(invalidLottie),
+                                    Text((widget.state == 0 ||
+                                        widget.state == 4 ||
+                                        widget.state == 5 ||
+                                        widget.state == 7)
+                                        ? "No Contacts"
+                                        : (widget.state == 6)
+                                        ? "No Account"
+                                        : "")
+                                  ],
+                                ),
+                              )))),
                 ),
               );
             });
@@ -1300,5 +1039,64 @@ class _SearchPageState extends State<SearchPage> {
     //   }
     //   print("${i} - ${mergeUserContact}");
     // }
+  }
+  Widget searchBar(){
+    bool folded=false;
+    return Row(
+      children: [  GestureDetector(onTap: () {
+        setState(() {
+          searching=false;
+        });
+      },
+        child: SvgPicture.asset(
+          'assets/pops_asset/back_button.svg',
+          height: 30.h,
+          width: 30.w,),
+      ),
+        AnimatedContainer(duration:Duration(milliseconds:100),
+          height:40.h,width:folded==true?10.w:300.w,
+          decoration:BoxDecoration(borderRadius:BorderRadius.circular(15),color:Colors.white),
+          child:   TextField(
+            onChanged: (value){
+              String nameX=searchContactcontroller.text.toLowerCase();
+              print(nameX);
+              for(int x=0;x<conNames2.length;x++) {
+                print("CNDN:${conNames2.contains(nameX)}");
+                if (conNames2.contains(nameX)) {
+                  print("FOUND:${conNames2[x]}");
+                  // searchConNames.add(conNames2);
+                }
+              }
+              setState(() {
+
+
+              });
+            },
+            autofocus:true,
+            cursorColor:Colors.black,cursorHeight:20.h,
+            controller:searchContactcontroller,
+            decoration:InputDecoration(hintText:'Search...',contentPadding:EdgeInsets.only(
+                top:10.h
+            ),
+                hintStyle:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w500,
+                    fontSize:14.sp,color:Colors.black)),
+                prefixIcon:Column(mainAxisAlignment:MainAxisAlignment.center,
+                  crossAxisAlignment:CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                        'assets/tabbar_icons/Tabbar_search.svg'
+                    ),
+                  ],
+                ),
+                focusedBorder:OutlineInputBorder(
+                    borderSide:BorderSide(color:Colors.transparent)
+                ),
+                enabledBorder:OutlineInputBorder(
+                    borderSide:BorderSide(color:Colors.transparent)
+                )),
+          ),
+        ),
+      ],
+    );
   }
 }
