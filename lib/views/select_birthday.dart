@@ -12,7 +12,11 @@ import 'birthday_on_gatello.dart';
 
 class SelectBirthday extends StatefulWidget {
 
+  String name;
 
+  SelectBirthday({
+    required this.name,
+});
 
 
 
@@ -89,7 +93,7 @@ class _SelectBirthdayState extends State<SelectBirthday> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CreateUsername(name: '', birthDay: '',),
+                        builder: (context) => CreateUsername(name: widget.name, birthDay: '',),
                       ));
 
                 },

@@ -17,6 +17,7 @@ import 'package:hexcolor/hexcolor.dart';
 
 import '../utils/fire_auth.dart';
 import '../validator/validator.dart';
+import 'login_screen.dart';
 
 class AddEmail extends StatefulWidget {
   String birthDay = "";
@@ -225,8 +226,8 @@ class _AddEmailState extends State<AddEmail> {
         "username": widget.userName,
         "password": widget.password,
       });
-
       if (user != null) {
+        print('nametest${widget.name}');
         String uid=user!.uid;
         register(body);
         String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
@@ -286,7 +287,7 @@ class _AddEmailState extends State<AddEmail> {
               // Navigator.push(context,
               //     MaterialPageRoute(builder: (context) => AddProfilePic()));
 
-               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> AddProfilePic()), (route) => false);
+               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> LoginScreen()), (route) => false);
             }
           else
             {

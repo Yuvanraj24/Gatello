@@ -145,11 +145,11 @@ class Messageinfo extends StatefulWidget {
   final deliverTime;
   final readTime;
   final msgTime;
-   Messageinfo({
+       Messageinfo({
     required this.msgData,
      required this.readTime,
     required this.deliverTime,
-    required this.msgTime
+    required this.msgTime,
 
 });
 

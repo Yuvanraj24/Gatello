@@ -10,8 +10,8 @@ import '../validator/validator.dart';
 import 'login_screen.dart';
 
 class CreateUsername extends StatefulWidget {
-  String birthDay = "";
-  String name = "";
+  String birthDay;
+  String name;
   String? userName;
   CreateUsername({
     required this.birthDay,

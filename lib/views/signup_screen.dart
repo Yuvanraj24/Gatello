@@ -600,17 +600,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     fixedSize: Size(234.w, 50.h)),
                   onPressed: () {
                     if (widget.first!.isNotEmpty && widget.last!.isNotEmpty) {
-                      String name = widget.first.toString() +
+                      String name = "${widget.first}" +
                           " " +
-                          widget.last.toString();
+                          "${widget.last}";
 
-                      print(widget.first.toString() +
+                      print("${widget.first}" +
                           " " +
-                          widget.last.toString());
+                          "${widget.last}");
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SelectBirthday()));
+                              builder: (context) => SelectBirthday(name: "${name}",)));
                     } else {
                       showDialog(
                           context: context,

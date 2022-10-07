@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -98,6 +98,7 @@ class _TabState extends State<Tabbar> {
     print('uidapi');
     SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     userId = sharedPrefs.getString("userid");
+
     print("ShardPref ${userId}");
   }
   Future<dynamic> sendData() async {
@@ -139,8 +140,6 @@ class _TabState extends State<Tabbar> {
       sound: true,
     );
   }
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -150,12 +149,13 @@ class _TabState extends State<Tabbar> {
           future:_future,
           builder: (context,snap) {
 
-            if(snap.hasData) {
+            if(snap.connectionState==ConnectionState.done) {
               return DefaultTabController(
                 initialIndex: 0,
                 length: 5,
                 child: ResponsiveBuilder(
                     builder: (context,sizingInformation) {
+                      var pic=  profileDetailsValueNotifier.value.item2.result.profileDetails.profileUrl;
                       return Scaffold(
                           body: Container(
                             child: Column(
@@ -195,36 +195,74 @@ class _TabState extends State<Tabbar> {
                                                               0, 0, 0, 1),
                                                         ))),
                                                 SizedBox(width: 120.w),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Profile()
-
-                                                        //  feedsValueNotifier.value.item2.result[index].userId
-
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    height: 35.h,
-                                                    width: 35.w,
+                                                // GestureDetector(
+                                                //   onTap: () {
+                                                //     Navigator.push(
+                                                //       context,
+                                                //       MaterialPageRoute(
+                                                //           builder: (context) =>
+                                                //               Profile()
+                                                //
+                                                //         //  feedsValueNotifier.value.item2.result[index].userId
+                                                //
+                                                //       ),
+                                                //     );
+                                                //   },
+                                                //   child: Container(
+                                                //     height: 35.h,
+                                                //     width: 35.w,
+                                                //     decoration: BoxDecoration(
+                                                //         color: Colors.pink,
+                                                //         shape: BoxShape.circle,
+                                                //         image: DecorationImage(
+                                                //             image:
+                                                //             NetworkImage(
+                                                //                 profileDetailsValueNotifier.value.item2.result.profileDetails.profileUrl),
+                                                //             fit: BoxFit.cover)
+                                                //     ),
+                                                //   ),
+                                                // ),
+                                                (pic!=null) ?  CachedNetworkImage(
+                                                  fit: BoxFit.cover,
+                                                  fadeInDuration:
+                                                  const Duration(
+                                                      milliseconds:
+                                                      400),
+                                                  imageBuilder: (context, imageProvider) => Container(
+                                                    width: 40.0,
+                                                    height: 40.0,
                                                     decoration: BoxDecoration(
-                                                        color: Colors.black,
-                                                        shape: BoxShape.circle,
-                                                        image: DecorationImage(
-                                                            image:
-                                                            NetworkImage(
-                                                                profileDetailsValueNotifier
-                                                                    .value.item2
-                                                                    .result
-                                                                    .profileDetails
-                                                                    .profileUrl),
-                                                            fit: BoxFit.cover)
+                                                      shape: BoxShape.circle,
+                                                       image: DecorationImage(
+                                                          image: imageProvider, fit: BoxFit.cover),
                                                     ),
                                                   ),
+                                                  progressIndicatorBuilder:
+                                                      (context, url,
+                                                      downloadProgress) =>
+                                                      Center(
+                                                        child: CircularProgressIndicator(
+                                                            value: downloadProgress.progress),
+                                                      ),
+                                                  imageUrl:pic,
+
+                                                  errorWidget: (context,
+                                                      url, error) =>
+                                                      Container(
+
+                                                        width: 40.0,
+                                                        height: 40.0,
+                                                        decoration: BoxDecoration(shape: BoxShape.circle,
+                                                            image:DecorationImage(image: AssetImage("assets/noProfile.jpg"))),
+
+                                                      ),
+                                                )
+                                                    : Container(
+                                                    width: 40.0,
+                                                    height: 40.0,
+                                                    decoration: BoxDecoration(shape: BoxShape.circle,
+                                                        image:DecorationImage(image: AssetImage("assets/noProfile.jpg"), fit: BoxFit.cover)),
+                                                //   child: Image.asset("assets/noProfile.jpg")
                                                 ),
                                                 SizedBox(
                                                   width: 25.w,
@@ -282,7 +320,17 @@ class _TabState extends State<Tabbar> {
                                                               ),
                                                             )),
                                                         PopupMenuItem(
+                                                            onTap: (){
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (context) =>Setting()
+
+                                                                ),
+                                                              );
+                                                            },
                                                             child: Container(
+                                                            //  color: Colors.pink,
                                                               width: 150.w,
                                                               child: Row(
                                                                 children: [

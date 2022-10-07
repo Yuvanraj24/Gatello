@@ -30,11 +30,18 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isHidden= true;
+  String? userId;
     final _formkey = GlobalKey<FormState>();
   TextEditingController _mobileNumber = TextEditingController();
   TextEditingController _password = TextEditingController();
   FirebaseFirestore instance = FirebaseFirestore.instance;
+  Future<void> _getUID() async {
+    print('uidapi');
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    userId = sharedPrefs.getString("userid");
 
+    print("ShardPref ${userId}");
+  }
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -327,6 +334,7 @@ class _LoginScreenState extends State<LoginScreen> {
       print(body.toString());
 
       try {
+        print('Login Working');
         var url = Uri.parse("http://3.108.219.188:5000/login");
         var response = await http.post(url, body: body);
 
@@ -354,7 +362,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
             SharedPrefHandler sharedPrefHandler=new SharedPrefHandler();
             sharedPrefHandler.writeUserInfo(map1['user_id'], map1['email'], map1['root_folder_id']);
-            await instance.collection("user-detail").doc(map1['user_id']).update({"token": await getFCMToken()});
+          //  await instance.collection("user-detail").doc(map1['user_id']).update({"token": await getFCMToken()});
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (BuildContext ctx) => Tabbar()));
 

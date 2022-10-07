@@ -3,8 +3,10 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gatello/views/login_screen.dart';
 
 import 'package:gatello/views/otp_screen.dart';
+import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
@@ -92,6 +94,15 @@ class _AddProfilePicState extends State<AddProfilePic> {
                 SizedBox(
                   height: 30.h,
                 ),
+                // CircleAvatar(
+                //   radius: 50,
+                //   backgroundColor: Colors.transparent,
+                //   backgroundImage: (userPicture != null)
+                //       ? Image.memory(userPicture!).image
+                //       : (widget.userPicture != null)
+                //       ? Image.network(widget.userPicture!).image
+                //       : AssetImage("assets/noProfile.jpg"),
+                // ),
                 Image.asset(
                   "assets/profile_page/profile_pic_logo.png",
                   width: 165.w,
@@ -134,13 +145,17 @@ class _AddProfilePicState extends State<AddProfilePic> {
 
                   ),
                   onTap: (){
-                    Navigator.push(
+                    /*Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>InviteFriends(state: 0)
+                        ));*/
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>LoginScreen()
                         ));
-
-
                   },
                 )
               ]),

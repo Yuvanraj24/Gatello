@@ -961,6 +961,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print('Lotus66${uid}');
     if (tempPuid != widget.puid) {
       flusher();
       initialiser();
@@ -968,6 +969,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         future: initUpdateFuture!,
         builder: (context, emptyChatRoomDetails) {
+          print('Lotus67${uid}');
           if (emptyChatRoomDetails.connectionState == ConnectionState.done) {
             return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                 stream: _chatRoomStreamController.stream,

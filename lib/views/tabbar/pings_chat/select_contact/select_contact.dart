@@ -582,18 +582,18 @@ class _SearchPageState extends State<SearchPage> {
                                 PopupMenuButton(
                                     icon:Icon(Icons.more_vert_rounded,color:Colors.black),
                                     iconSize:30,
-                                    onSelected: (value) {
-                                      switch (value) {
-                                        case 1:
-                                          {
-                                            Navigator.push(context, MaterialPageRoute(
-                                                builder: (context) =>
-                                                    InviteFriends(state: 0)));
-                                          }
-                                          break;
-                                        default:
-                                      }
-                                    },
+                                    // onSelected: (value) {
+                                    //   switch (value) {
+                                    //     case 1:
+                                    //       {
+                                    //         Navigator.push(context, MaterialPageRoute(
+                                    //             builder: (context) =>
+                                    //                 InviteFriends(state: 0)));
+                                    //       }
+                                    //       break;
+                                    //     default:
+                                    //   }
+                                    // },
                                     itemBuilder: (context) =>
                                     [
                                       PopupMenuItem(
