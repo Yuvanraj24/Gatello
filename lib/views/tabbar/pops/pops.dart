@@ -1220,7 +1220,8 @@ Spacer(),
                         onPressed: () async {
                           return await feedsApiCall(uid: uid.toString());
                         });
-                  } else {
+                  }
+                  else {
                     print('worked4');
                     return exceptionScaffold(
                         context: context,

@@ -405,10 +405,14 @@ class _SearchPageState extends State<SearchPage> {
                   child: Icon(Icons.done),
                 )
                     : FloatingActionButton(
-                    child: Text("press"),
-                    onPressed: (){
-                      getDataList();
-                    }),
+                  backgroundColor: Color.fromRGBO(248, 206, 97, 1) ,
+                  onPressed: () {
+
+                  },
+                  child: SvgPicture.asset(
+                    'assets/select_contact/right_arrow.svg',height:21.h,width:21.w,
+                  ),
+                    ),
                 // appBar:AppBar(
                 //   centerTitle: false,
                 //   automaticallyImplyLeading: false,
@@ -623,9 +627,12 @@ class _SearchPageState extends State<SearchPage> {
 
                                     },
                                     contentPadding: EdgeInsets.only(left: 0),
-                                    leading: CircleAvatar(
-                                      backgroundImage: AssetImage("assets/noProfile.jpg"),
-                                      radius: 25.w,
+                                    leading: Padding(
+                                      padding:  EdgeInsets.only(left: 14.w),
+                                      child: CircleAvatar(
+                                        backgroundImage: AssetImage("assets/noProfile.jpg"),
+                                        radius: 25.w,
+                                      ),
                                     ),
                                     title: SubstringHighlight(text:name,
                                       term:searchContactcontroller.text,),

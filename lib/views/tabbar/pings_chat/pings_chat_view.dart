@@ -28,11 +28,7 @@ import '../../../components/flatButton.dart';
 import 'dart:developer' as dev;
 import '../../../main.dart';
 import '../../../utils/DynamicLinkParser.dart';
-
-
-
 class PingsChatView extends StatefulWidget {
-
   final Map<int, DocumentSnapshot<Map<String, dynamic>>>? messages;
   final String? postDescription;
   final String? postId;
@@ -43,7 +39,7 @@ class PingsChatView extends StatefulWidget {
   final int? storyContentType;
   Function? callBack;
   PingsChatView({
-    Key? key,
+     Key? key,
     this.postTitle,
     this.postId,
     this.postDescription,
@@ -53,13 +49,12 @@ class PingsChatView extends StatefulWidget {
     this.messages,
     required this.uid,
     this.callBack
-
-  });
+  }): super(key: key);
   @override
-  State<PingsChatView> createState() =>
-      _PingsChatViewState();}
-
-class _PingsChatViewState extends State<PingsChatView> with SingleTickerProviderStateMixin {
+  _PingsChatViewState createState() =>
+      _PingsChatViewState();
+}
+class _PingsChatViewState extends State<PingsChatView>with SingleTickerProviderStateMixin {
   bool isSent=false;
   int index = 0;
   String nameSearch='';
@@ -88,7 +83,26 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
   int totalUnreadCount=0;
   List unreadTabCount = [];
 
+ deletefun(){
+  for (int i = 0; i < selectedItems!.length; i++) {
+    var sell = instance.collection("personal-chat-room-detail")
+        .doc(
+        "${docs[selectedItems![i]].id}"
 
+    );
+    print("${docs[selectedItems![i]].id}");
+    sell.update({"members.${widget.uid}.delete" : true});
+    //selectedItems!.remove;
+
+  }
+  selectedItems = [];
+
+
+  print(docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]);
+
+
+  print("Uid is a $puid");
+}
 
   @override
   // filterChats(){

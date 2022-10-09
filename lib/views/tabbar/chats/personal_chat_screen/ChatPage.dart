@@ -1208,13 +1208,13 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                   },
                                               child:  Text(
 
-                                                    ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["mute"] == false ||
+                                                    ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["mute"] == true ||
                                                         chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]
                                                         ["${widget.uid}"]["peeruid"]]
                                                         ["mute"] ==
-                                                            false))
-                                                        ? "Mute notifications"
-                                                        : "Unmute notifications "
+                                                            true))
+                                                        ? "Unmute notifications"
+                                                        : "Mute notifications "
                                                 )
 
                                               ),
@@ -1394,6 +1394,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                     );
                                                   },
                                                   child: Text(
+
                                                     ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["isBlocked"] == true ||
                                                         chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]
                                                         ["isBlocked"] ==
@@ -1829,66 +1830,68 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                               // });
                                             },
                                             icon: Icon(Entypo.forward)),
-                                        PopupMenuButton(itemBuilder:(context)=>[
-                                          PopupMenuItem(
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>Messageinfo(msgData: copied,deliverTime: deliverTime,readTime: readTime,msgTime: msgTime)),
-                                                  );
-                                                },
-                                                child: Text(
-                                                  "Info",
-                                                  style: GoogleFonts.inter(
-                                                      textStyle: TextStyle(
-                                                          fontSize: 16.sp,
-                                                          fontWeight: FontWeight.w400,
-                                                          color: Color.fromRGBO(
-                                                              0, 0, 0, 1))),
-                                                ),
-                                              )
-                                          ),
-                                          PopupMenuItem(
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  Future.delayed(Duration(seconds: 0),
-                                                          () =>
-                                                          showConfirmationDialog1(context)
-                                                  );
-                                                },
-                                                child: Text(
-                                                  "Report",
-                                                  style: GoogleFonts.inter(
-                                                      textStyle: TextStyle(
-                                                          fontSize: 16.sp,
-                                                          fontWeight: FontWeight.w400,
-                                                          color: Color.fromRGBO(0,0,0,1))),
-                                                ),
-                                              )
-                                          ),
-                                          PopupMenuItem(
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  FlutterClipboard.copy(copied).then(( value ){
-                                                    final snackBar = snackbar(
-                                                        content: "Message copied");
-                                                    ScaffoldMessenger.of(context)
-                                                        .showSnackBar(snackBar);
-                                                  }
-                                                  );
+                                        PopupMenuButton(onSelected: (value) async {
+                            switch (value) {
+                            case 1:
+                            {
 
-                                                },
-                                                child: Text(
-                                                  "Copy",
-                                                  style: GoogleFonts.inter(
-                                                      textStyle: TextStyle(
-                                                          fontSize: 16.sp,
-                                                          fontWeight: FontWeight.w400,
-                                                          color: Color.fromRGBO(
-                                                              0, 0, 0, 1))),
-                                                ),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>Messageinfo(msgData: copied,deliverTime: deliverTime,readTime: readTime,msgTime: msgTime)),
+                              );
+                            }
+                            break;
+                              case 2:{
+                                Future.delayed(Duration(seconds: 0),
+                                        () =>
+                                        showConfirmationDialog1(context)
+                                );
+                              }
+                              break;
+                              case 3:{
+                                FlutterClipboard.copy(copied).then(( value ){
+                                  final snackBar = snackbar(
+                                      content: "Message copied");
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+                                );
+                              }
+                            }},itemBuilder:(context)=>[
+                                          PopupMenuItem(
+                                            value:1,
+                                              child: Text(
+                                                "Info",
+                                                style: GoogleFonts.inter(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 16.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1))),
+                                              )
+                                          ),
+                                          PopupMenuItem(
+                                            value:2,
+                                              child: Text(
+                                                "Report",
+                                                style: GoogleFonts.inter(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 16.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Color.fromRGBO(0,0,0,1))),
+                                              )
+                                          ),
+                                          PopupMenuItem(
+                                              value:3,
+                                              child: Text(
+                                                "Copy",
+                                                style: GoogleFonts.inter(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 16.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1))),
                                               )
                                           ),
                                         ])
@@ -2212,7 +2215,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                   child:
                                                                   (element.data()!["delete"]["personal"] == true)?
                                                                   (element.data()!["from"] == widget.uid)?
-                                                                  SizedBox():
+                                                                  Container(
+
+                                                                  ):
                                                                   (element.data()!["delete"]["peerdelete"] == true)?
                                                                   (element.data()!["from"] == widget.uid
                                                                   )?

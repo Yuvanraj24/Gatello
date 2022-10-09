@@ -35,15 +35,17 @@ String? forgotPasswordValidator(String? value) {
 }
 
 String? passwordValidator({required String? value, String? message}) {
-  String passwordPattern =    
- 
-     r'^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+  String passwordPattern = r'^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
   if (value == null || regex(pattern: passwordPattern, input: value) == false) {
     if (message != null) {
+
+
       return null;
     } else {
+
       return 'Password should contain 8 and above characters, '
           'at least one uppercase letter, one lowercase letter, one number and one symbol';
+
     }
   }
   return null;

@@ -49,6 +49,7 @@ class _CreateUsernameState extends State<CreateUsername> {
           )),
         ),
         body: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _formKey,
           child: Container(
             padding: EdgeInsets.only(
@@ -110,21 +111,40 @@ class _CreateUsernameState extends State<CreateUsername> {
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black)),
                               labelText: "USERNAME",
-                              suffixIcon: IconButton(
-                                padding: EdgeInsets.only(bottom: 3,left: 30),
-                                alignment: Alignment.bottomCenter,
-                                iconSize: 20.w,
-                                icon: Icon(Icons.refresh, color: Colors.black),
-                                onPressed: () {},
+                              suffixIcon: Flexible(
+                                child: Container(
+                                  width:160.w,
+                                  child: Row(
+                                    children: [
+                                      Spacer(),
+
+                                  IconButton(
+                                      padding: EdgeInsets.only(bottom: 3,left: 30),
+                                      alignment: Alignment.bottomCenter,
+                                      iconSize: 20.w,
+                                      icon: Icon(Icons.refresh, color: Colors.black),
+                                      onPressed: () {},
+                                    ),
+                                       Padding(
+                                         padding: EdgeInsets.only(top: 20,left: 10),
+                                      child: SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),
+                                       ),
+                                    ],
+                                  ),
+                                ),
                               ),
+                              // suffixIcon: IconButton(
+                              //   padding: EdgeInsets.only(bottom: 3,left: 30),
+                              //   alignment: Alignment.bottomCenter,
+                              //   iconSize: 20.w,
+                              //   icon: Icon(Icons.refresh, color: Colors.black),
+                              //   onPressed: () {},
+                              // ),
                             ),
                             validator: (value) => usernameValidator(value),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 20,left: 10),
-                       child: SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,), 
-                        ),
+
                       ],
                     ),
                     Spacer(),

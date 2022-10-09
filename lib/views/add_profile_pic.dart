@@ -42,31 +42,31 @@ class _AddProfilePicState extends State<AddProfilePic> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-        
+
           leading: Center(
               child: TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Back',
-              style: GoogleFonts.roboto(
-                  textStyle: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black)),
-            ),
-          )),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Back',
+                  style: GoogleFonts.roboto(
+                      textStyle: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black)),
+                ),
+              )),
         ),
         body: Container(
           padding:
-              EdgeInsets.only(left: 12.w,
+          EdgeInsets.only(left: 12.w,
               right: 12.w,
               top: 150.h,
-           bottom: 51.h
-              ),
+              bottom: 51.h
+          ),
           child: Column(
-              //  crossAxisAlignment: CrossAxisAlignment.center,
+            //  crossAxisAlignment: CrossAxisAlignment.center,
               children: [
 
                 Text(
@@ -111,7 +111,7 @@ class _AddProfilePicState extends State<AddProfilePic> {
                 Spacer(),
                 ElevatedButton(
                   onPressed: () {
-                      pickimage();
+                    pickimage();
 
                   },
                   child: Text(

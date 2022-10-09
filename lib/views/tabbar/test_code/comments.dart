@@ -796,7 +796,8 @@ class _Comments_PageState extends State<Comments_Page> {
                             ),
                           )),
                     );
-                  } else if (userDetailsValueNotifier.value.item1 == 2) {
+                  }
+                  else if (userDetailsValueNotifier.value.item1 == 2) {
                     print('11111111');
                     return exceptionScaffold(
                         context: context,

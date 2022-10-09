@@ -43,7 +43,7 @@ class AddEmail extends StatefulWidget {
 
 class _AddEmailState extends State<AddEmail> {
 
-    final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   TextEditingController _emailController =TextEditingController();
   String? _email;
   String? token;
@@ -51,37 +51,37 @@ class _AddEmailState extends State<AddEmail> {
   async{
     token= await getFCMToken();
   }
-    FirebaseFirestore instance = FirebaseFirestore.instance;
+  FirebaseFirestore instance = FirebaseFirestore.instance;
   var url;
   @override
   Widget build(BuildContext context) {
 
     return SafeArea(
-      
+
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-    
+
           leading: Center(
               child: TextButton(
-            onPressed: () {
-              //Navigator.pop(context);
+                onPressed: () {
+                  //Navigator.pop(context);
 
 
-            },
-            child: GestureDetector(onTap:() {
-              Navigator.pop(context);
-            },
-              child: Text(
-                'Back',
-                style: GoogleFonts.roboto(
-                    textStyle: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black)),
-              ),
-            ),
-          )),
+                },
+                child: GestureDetector(onTap:() {
+                  Navigator.pop(context);
+                },
+                  child: Text(
+                    'Back',
+                    style: GoogleFonts.roboto(
+                        textStyle: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black)),
+                  ),
+                ),
+              )),
         ),
         body: DoubleBackToCloseApp(
 
@@ -90,7 +90,7 @@ class _AddEmailState extends State<AddEmail> {
 
           ),
           child: Form(
-           // autovalidateMode: AutovalidateMode.always,
+            // autovalidateMode: AutovalidateMode.always,
             key: _formKey,
             child: Container(
               padding: EdgeInsets.only(
@@ -138,7 +138,7 @@ class _AddEmailState extends State<AddEmail> {
                         width: 310.w,
                         child: TextFormField(
                           keyboardType: TextInputType.emailAddress,
-              validator: (value)=>emailValidator(value),
+                          validator: (value)=>emailValidator(value),
                           controller: _emailController,
 
                           onChanged: (val) {
@@ -173,9 +173,9 @@ class _AddEmailState extends State<AddEmail> {
                             registerFirebase(widget.name, widget.email, widget.password);
                             Navigator.push(context, MaterialPageRoute(builder: (context) => AddProfilePic(),));
 
-          } else {
-            return null;
-          }
+                          } else {
+                            return null;
+                          }
 
 //         Form(
 //   autovalidate: true,
@@ -210,97 +210,97 @@ class _AddEmailState extends State<AddEmail> {
       ),
     );
   }
-    User? user;
-    registerFirebase(name, email, password) async {
-      user = await FireAuth.registerUsingEmailPassword(
-        name: name,
-        email: email,
-        password: password,
-      );
-      var body = jsonEncode(<String, dynamic>{
-        "user_id": user?.uid,
-        "name": widget.name,
-        "phone": "+91${widget.mobileNo}",
-        "member": "Since ${DateTime.now().year}",
+  User? user;
+  registerFirebase(name, email, password) async {
+    user = await FireAuth.registerUsingEmailPassword(
+      name: name,
+      email: email,
+      password: password,
+    );
+    var body = jsonEncode(<String, dynamic>{
+      "user_id": user?.uid,
+      "name": widget.name,
+      "phone": "+91${widget.mobileNo}",
+      "member": "Since ${DateTime.now().year}",
+      "email": widget.email,
+      "username": widget.userName,
+      "password": widget.password,
+    });
+    if (user != null) {
+      print('nametest${widget.name}');
+      String uid=user!.uid;
+      register(body);
+      String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+
+      await instance.collection("user-detail").doc(uid).set({
+        "uid": uid,
+        "name": name,
         "email": widget.email,
-        "username": widget.userName,
-        "password": widget.password,
+        "pic": (url != null) ? url : null,
+        "description": null,
+        "createdAt": timestamp,
+        "updatedAt": null,
+        "phone": widget.mobileNo,
+        "designation": null,
+        "status": null,
+        "chattingWith": null,
+        "callStatus": false,
+        "token": token,
+        "lastseenStatus": true,
+        "onlineStatus": true,
+        "readRecieptStatus": true,
+
+        // "blocked": null,
+        // "userList": null
       });
-      if (user != null) {
-        print('nametest${widget.name}');
-        String uid=user!.uid;
-        register(body);
-        String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-
-        await instance.collection("user-detail").doc(uid).set({
-          "uid": uid,
-          "name": name,
-          "email": widget.email,
-          "pic": (url != null) ? url : null,
-          "description": null,
-          "createdAt": timestamp,
-          "updatedAt": null,
-          "phone": widget.mobileNo,
-          "designation": null,
-          "status": null,
-          "chattingWith": null,
-          "callStatus": false,
-          "token": token,
-          "lastseenStatus": true,
-          "onlineStatus": true,
-          "readRecieptStatus": true,
-
-          // "blocked": null,
-          // "userList": null
-        });
-        print("succeed");
-      }
-      // else if(){
-
-      // }
-      else {
-        print("error in passing mongoDB");
-      }
+      print("succeed");
     }
+    // else if(){
 
-    Future<void> register(var body) async {
-      print(body.toString());
+    // }
+    else {
+      print("error in passing mongoDB");
+    }
+  }
 
-      try {
-        var url = Uri.parse("http://3.108.219.188:5000/signup");
-        var response = await http.post(url, body: body);
+  Future<void> register(var body) async {
+    print(body.toString());
 
-        if (response.statusCode == 200) {
-          print(response.body.toString());
-          Map<String, dynamic> map = jsonDecode(response.body.toString());
-          String status = map['status'];
-          print("STATUS:"+status);
-          if(status=="OK")
-            {
-              print("MONGO SUCCESS");
-              Fluttertoast.showToast(
-                  msg: "Sign-Up Success",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.TOP,
-                  timeInSecForIosWeb: 1);
+    try {
+      var url = Uri.parse("http://3.108.219.188:5000/signup");
+      var response = await http.post(url, body: body);
 
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (context) => AddProfilePic()));
+      if (response.statusCode == 200) {
+        print(response.body.toString());
+        Map<String, dynamic> map = jsonDecode(response.body.toString());
+        String status = map['status'];
+        print("STATUS:"+status);
+        if(status=="OK")
+        {
+          print("MONGO SUCCESS");
+          Fluttertoast.showToast(
+              msg: "Sign-Up Success",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1);
 
-               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> LoginScreen()), (route) => false);
-            }
-          else
-            {
-              // FireAuth.deleteUser(user);
-            }
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => AddProfilePic()));
 
-
-        } else {
-          print(response.statusCode);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> LoginScreen()), (route) => false);
         }
-      } catch (e) {
-        print(e.toString());
+        else
+        {
+          // FireAuth.deleteUser(user);
+        }
+
+
+      } else {
+        print(response.statusCode);
       }
+    } catch (e) {
+      print(e.toString());
     }
+  }
 
 }

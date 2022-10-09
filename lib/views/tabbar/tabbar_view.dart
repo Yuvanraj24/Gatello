@@ -43,6 +43,7 @@ class Tabbar extends StatefulWidget {
   State<Tabbar> createState() => _TabState();
 }
 class _TabState extends State<Tabbar> {
+      late GlobalKey _pingsChatViewState;
   TextEditingController searchChat= TextEditingController();
   FirebaseFirestore instance = FirebaseFirestore.instance;
   String nameSearch='';
@@ -120,7 +121,8 @@ class _TabState extends State<Tabbar> {
   @override
   void initState() {
     _future = sendData();
-
+   // PingsChatViewKey = GlobalKey<_PingsChatViewState>();
+    _pingsChatViewState=GlobalKey();
     super.initState();
   }
 
@@ -156,6 +158,7 @@ class _TabState extends State<Tabbar> {
                 child: ResponsiveBuilder(
                     builder: (context,sizingInformation) {
                       var pic=  profileDetailsValueNotifier.value.item2.result.profileDetails.profileUrl;
+
                       return Scaffold(
                           body: Container(
                             child: Column(
@@ -195,6 +198,7 @@ class _TabState extends State<Tabbar> {
                                                               0, 0, 0, 1),
                                                         ))),
                                                 SizedBox(width: 120.w),
+
                                                 // GestureDetector(
                                                 //   onTap: () {
                                                 //     Navigator.push(
@@ -233,7 +237,7 @@ class _TabState extends State<Tabbar> {
                                                     height: 40.0,
                                                     decoration: BoxDecoration(
                                                       shape: BoxShape.circle,
-                                                       image: DecorationImage(
+                                                      image: DecorationImage(
                                                           image: imageProvider, fit: BoxFit.cover),
                                                     ),
                                                   ),
@@ -258,11 +262,11 @@ class _TabState extends State<Tabbar> {
                                                       ),
                                                 )
                                                     : Container(
-                                                    width: 40.0,
-                                                    height: 40.0,
-                                                    decoration: BoxDecoration(shape: BoxShape.circle,
-                                                        image:DecorationImage(image: AssetImage("assets/noProfile.jpg"), fit: BoxFit.cover)),
-                                                //   child: Image.asset("assets/noProfile.jpg")
+                                                  width: 40.0,
+                                                  height: 40.0,
+                                                  decoration: BoxDecoration(shape: BoxShape.circle,
+                                                      image:DecorationImage(image: AssetImage("assets/noProfile.jpg"), fit: BoxFit.cover)),
+                                                  //   child: Image.asset("assets/noProfile.jpg")
                                                 ),
                                                 SizedBox(
                                                   width: 25.w,
@@ -279,6 +283,42 @@ class _TabState extends State<Tabbar> {
                                                 SizedBox(
                                                   width: 20,
                                                   child: PopupMenuButton(
+                                                  onSelected: (value) async {
+                      switch (value) {
+                        case 1:{
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SearchPage(
+                                    sizingInformation: sizingInformation,
+                                    state: 4,
+                                  )));
+                        }
+                        break;
+                        case 2:{
+
+                        }
+                        break;
+                        case 3:{
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (
+                                      context) =>
+                                      InviteFriends(state: 0)));
+                        }
+                        break;
+                      case 4:
+                      {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>Setting()
+
+                          ),
+                        );
+
+                      }}},
                                                     //   icon: Icons.menu,
                                                       padding: EdgeInsets.only(
                                                           left: 0, right: 0),
@@ -287,60 +327,15 @@ class _TabState extends State<Tabbar> {
                                                           BuildContext context) =>
                                                       [
                                                         PopupMenuItem(
-
-                                                            child: GestureDetector(
-                                                              onTap:(){
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) => SearchPage(
-                                                                          sizingInformation: sizingInformation,
-                                                                          state: 4,
-                                                                        )));
-                                                              },
-                                                              child: Row(
-                                                                  children: [
-                                                                    SvgPicture.asset(
-                                                                        'assets/tabbar_icons/tab_view_main/new group tab.svg'),
-                                                                    SizedBox(
-                                                                      width: 12.w,
-                                                                    ),
-                                                                    Text("New Group",
-                                                                        style: GoogleFonts
-                                                                            .inter(
-                                                                            textStyle: TextStyle(
-                                                                              fontSize: 14
-                                                                                  .sp,
-                                                                              color: Color
-                                                                                  .fromRGBO(
-                                                                                  0, 0,
-                                                                                  0, 1),
-                                                                            )))
-                                                                  ]
-                                                              ),
-                                                            )),
-                                                        PopupMenuItem(
-                                                            onTap: (){
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) =>Setting()
-
-                                                                ),
-                                                              );
-                                                            },
-                                                            child: Container(
-                                                            //  color: Colors.pink,
-                                                              width: 150.w,
-                                                              child: Row(
+value: 1,
+                                                            child: Row(
                                                                 children: [
                                                                   SvgPicture.asset(
-                                                                      'assets/tabbar_icons/tab_view_main/linked devices tab.svg'),
+                                                                      'assets/tabbar_icons/tab_view_main/new group tab.svg'),
                                                                   SizedBox(
                                                                     width: 12.w,
                                                                   ),
-                                                                  Text(
-                                                                      "Linked devices",
+                                                                  Text("New Group",
                                                                       style: GoogleFonts
                                                                           .inter(
                                                                           textStyle: TextStyle(
@@ -351,81 +346,79 @@ class _TabState extends State<Tabbar> {
                                                                                 0, 0,
                                                                                 0, 1),
                                                                           )))
+                                                                ]
+                                                            )),
+                                                        PopupMenuItem(
+value: 2,
+                                                            child: Row(
+                                                              children: [
+                                                                SvgPicture.asset(
+                                                                    'assets/tabbar_icons/tab_view_main/linked devices tab.svg'),
+                                                                SizedBox(
+                                                                  width: 12.w,
+                                                                ),
+                                                                Text(
+                                                                    "Linked devices",
+                                                                    style: GoogleFonts
+                                                                        .inter(
+                                                                        textStyle: TextStyle(
+                                                                          fontSize: 14
+                                                                              .sp,
+                                                                          color: Color
+                                                                              .fromRGBO(
+                                                                              0, 0,
+                                                                              0, 1),
+                                                                        )))
+                                                              ],
+                                                            )),
+                                                        PopupMenuItem(
+value: 3,
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                      'assets/tabbar_icons/tab_view_main/invite frds tab.svg'),
+                                                                  SizedBox(
+                                                                    width: 12.w,
+                                                                  ),
+                                                                  Text(
+                                                                      "Invite friends",
+                                                                      style: GoogleFonts
+                                                                          .inter(
+                                                                          textStyle: TextStyle(
+                                                                            fontSize: 14
+                                                                                .sp,
+                                                                            color: Color
+                                                                                .fromRGBO(
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                1),
+                                                                          )))
                                                                 ],
                                                               ),
-                                                            )),
-                                                        PopupMenuItem(
-                                                            child: GestureDetector(
-                                                              onTap: () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (
-                                                                            context) =>
-                                                                            InviteFriends(state: 0)));
-                                                              },
-                                                              child: Container(
-                                                                width: 150.w,
-                                                                child: Row(
-                                                                  children: [
-                                                                    SvgPicture.asset(
-                                                                        'assets/tabbar_icons/tab_view_main/invite frds tab.svg'),
-                                                                    SizedBox(
-                                                                      width: 12.w,
-                                                                    ),
-                                                                    Text(
-                                                                        "Invite friends",
-                                                                        style: GoogleFonts
-                                                                            .inter(
-                                                                            textStyle: TextStyle(
-                                                                              fontSize: 14
-                                                                                  .sp,
-                                                                              color: Color
-                                                                                  .fromRGBO(
-                                                                                  0,
-                                                                                  0,
-                                                                                  0,
-                                                                                  1),
-                                                                            )))
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            )),
-                                                        PopupMenuItem(
 
-                                                            child: GestureDetector(
-                                                              onTap: (){
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) =>Setting()
-
-                                                                  ),
-                                                                );
-                                                              },
-                                                              child: Container(
-                                                                width: 150.w,
-                                                                child: Row(
-                                                                  children: [
-                                                                    SvgPicture.asset(
-                                                                        'assets/tabbar_icons/tab_view_main/settings_icon.svg'),
-                                                                    SizedBox(
-                                                                      width: 12.w,
-                                                                    ),
-                                                                    Text("Settings",
-                                                                        style: GoogleFonts
-                                                                            .inter(
-                                                                            textStyle: TextStyle(
-                                                                              fontSize: 14
-                                                                                  .sp,
-                                                                              color: Color
-                                                                                  .fromRGBO(
-                                                                                  0, 0,
-                                                                                  0, 1),
-                                                                            )))
-                                                                  ],
+                                                        ),
+                                                        PopupMenuItem(
+value: 4,
+                                                            child: Row(
+                                                              children: [
+                                                                SvgPicture.asset(
+                                                                    'assets/tabbar_icons/tab_view_main/settings_icon.svg'),
+                                                                SizedBox(
+                                                                  width: 12.w,
                                                                 ),
-                                                              ),
+                                                                Text("Settings",
+                                                                    style: GoogleFonts
+                                                                        .inter(
+                                                                        textStyle: TextStyle(
+                                                                          fontSize: 14
+                                                                              .sp,
+                                                                          color: Color
+                                                                              .fromRGBO(
+                                                                              0, 0,
+                                                                              0, 1),
+                                                                        )))
+                                                              ],
                                                             ))
                                                       ]),
                                                 ),
@@ -461,7 +454,7 @@ class _TabState extends State<Tabbar> {
                                             child: SvgPicture.asset(
                                                 'assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/delete.svg'),
                                             onTap: () {
-
+                                           //   PingsChatViewKey.currentState?.deletefun();
                                             },
                                           ),
                                           SizedBox(width: 26.w),
@@ -665,12 +658,12 @@ class _TabState extends State<Tabbar> {
                                         Center(
                                           child: Text("Get it...!"),
                                         ),
-                                        PingsChatView(uid:userId.toString(),callBack:callBack ),
-                                        Center(
-                                          child: Text("Pops...!"),
-                                        ),
-                                        // Story(
-                                        //     scrollController: storyScrollController),
+                                        PingsChatView(uid:userId.toString(),callBack:callBack,key: _pingsChatViewState,),
+                                        // Center(
+                                        //   child: Text("Pops...!"),
+                                        // ),
+                                        Story(
+                                            scrollController: storyScrollController),
                                         Status(),
 
                                         Center(
@@ -679,7 +672,8 @@ class _TabState extends State<Tabbar> {
                                       ],
                                     ),
                                   ),
-                                )
+                                ),
+
                               ],
                             ),
                           )
@@ -745,4 +739,6 @@ class _TabState extends State<Tabbar> {
   }
 
 }
+
+
 

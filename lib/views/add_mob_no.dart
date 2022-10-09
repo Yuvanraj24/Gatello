@@ -7,7 +7,13 @@ import 'package:gatello/views/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:tuple/tuple.dart';
 
+import '../Others/Routers.dart';
+import '../Others/exception_string.dart';
+import '../core/Models/Default.dart';
+import '../core/models/exception/pops_exception.dart';
+import '../handler/Network.dart';
 import '../validator/validator.dart';
 
 class AddMobileNumber extends StatefulWidget {
@@ -33,6 +39,8 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
    final _formKey = GlobalKey<FormState>();
   TextEditingController _mobileNumber =TextEditingController();
   String countryCode = '+91';
+
+   ValueNotifier<Tuple4> sendOtpValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -249,7 +257,7 @@ enabled: false,
                     Spacer(),
                     ElevatedButton(
                       onPressed: () {
-                        sendotp();
+                        sendOtp(widget.mobileNo!);
                         if (_formKey.currentState!.validate()) {
                           print(widget.name);
                           print(widget.birthDay);
@@ -265,6 +273,7 @@ enabled: false,
                                     userName: widget.userName,
                                     password: widget.password,
                                     mobileNo: widget.mobileNo.toString(),
+
                                   )));
                         } else {
                           return null;
@@ -294,6 +303,16 @@ enabled: false,
       ),
     );
   }
+
+   Future sendOtp(String phoneNumber) async {
+     return await ApiHandler().apiHandler(
+       valueNotifier: sendOtpValueNotifier,
+       jsonModel: defaultFromJson,
+       url: sendOTPUrl,
+       requestMethod: 1,
+       body: {"number": int.parse(phoneNumber)},
+     );
+   }
 
    Future<void> sendotp() async {
      //print(body.toString());

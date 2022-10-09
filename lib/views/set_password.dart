@@ -28,6 +28,8 @@ class SetPassword extends StatefulWidget {
 }
 
 class  _SetPasswordState extends State<SetPassword> {
+  bool isHidden= true;
+bool iscorrect=false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController _setPassword =TextEditingController();
   @override
@@ -55,9 +57,10 @@ class  _SetPasswordState extends State<SetPassword> {
           ),
         ),
         body: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _formKey,
           child: Container(
-            padding: EdgeInsets.only(left: 12.w, right: 12.w,
+            padding: EdgeInsets.only(left: 12.w, right: 1.w,
              top: 150.h, bottom: 35.h),
             child: Center(
               child:
@@ -95,12 +98,16 @@ class  _SetPasswordState extends State<SetPassword> {
                 Row(
                   children: [
                     Container(
-                 
+
                     width:310.w,
                       child: TextFormField(
                           controller: _setPassword,
-                          onChanged: (val) {
+                          obscureText: isHidden,
+                          onChanged: (value) {
                             widget.password = _setPassword.text.toString();
+                            setState(() {
+
+                            });
                           },
                         cursorColor:HexColor('#0B0B0B'),
                         decoration: InputDecoration(
@@ -110,44 +117,62 @@ class  _SetPasswordState extends State<SetPassword> {
                                    focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: HexColor('#0B0B0B'))),
-                                        
+
                           labelStyle:   GoogleFonts.inter(
                           textStyle: TextStyle(
                               fontSize: 12.h,
                               fontWeight: FontWeight.w500,
                               color: Colors.black)),
                           labelText: "PASSWORD",
-                          
-                          suffixIcon: IconButton(
-                            padding: EdgeInsets.only(bottom:3,left: 130),
-                                alignment: Alignment.bottomCenter,
-                            iconSize:20.w,
-                            icon: Icon(Icons.visibility ,color: Colors.black),
-                        
-                            onPressed: () {},
+
+                          suffixIcon: Flexible(
+                            child: Container(
+
+                              width:160.w,
+                              child: Row(
+                                children: [
+                                  Spacer(),
+
+                                  IconButton(
+                                    padding: EdgeInsets.only(bottom:3,left: 130),
+                                        alignment: Alignment.bottomCenter,
+                                    iconSize:20.w,
+                                  icon:     isHidden?Icon(Icons.visibility_off, size: 18.sp,color: Colors.black):
+                                  Icon(Icons.visibility, size: 18.sp,color: Colors.black),
+
+                                    onPressed: () {
+                                      setState(() {
+                                        isHidden=!isHidden;
+                                      });
+                                    },
+                                  ),
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 20,left: 10
+                                      ),
+                                      // child:
+                                      // Image.asset(
+                                      //   "assets/icons_assets/green_tick_icon.png",
+                                      //   width: 16.w,
+
+                                      // ),
+                                      child:(iscorrect==false) ?SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,):SvgPicture.asset('assets/error_icon.svg',width: 16.w,)
+
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          
+
                         ),
-                        
+
                       validator: (value) => passwordValidator(value: value),
                       ),
-                      
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                      top: 20,left: 10
-                         ),
-                      // child: 
-                      // Image.asset(
-                      //   "assets/icons_assets/green_tick_icon.png",
-                      //   width: 16.w,
-                                       
-                      // ),
-child: SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),                    
-                      
+
                     ),
 
-                
+
+
                   ],
                 ),
 
@@ -191,12 +216,19 @@ child: SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),
                             print(widget.birthDay);
                             print(widget.userName);
                             print(widget.password);
-
+                            setState(() {
+                              iscorrect=false;
+                            });
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => AddMobileNumber(name: widget.name,birthDay: widget.birthDay, userName: widget.userName,password: widget.password.toString(),)));
+                         
                           } else {
+                            setState(() {
+                              iscorrect=true;
+                            });
+
                             return null;
                           }
                         },

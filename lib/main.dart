@@ -48,7 +48,6 @@ import 'package:gatello/views/tabbar/test_code/pings_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:gatello/views/tabbar/test_code/home.dart';
-import 'package:gatello/views/tabbar/test_code/sing_in_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
@@ -133,7 +132,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar():LoginScreen();
+                              return (snapshot.data == true) ? Tabbar():AddMobileNumber(birthDay: "",userName: "",password: "",name: "");
 
                             } else {
                               return lottieAnimation(loadingLottie);
