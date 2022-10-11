@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 import '../Assets/GatelloIcon.dart';
@@ -42,8 +43,9 @@ class _DocumentDownloaderState extends State<DocumentDownloader> {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               hoverColor: Colors.transparent,
-              icon: Icon(DeejosIcon.download_outline),
+              icon: Icon(Icons.download),
               onPressed: () async {
+                print('ffffffffffff');
                 await downloadFile(widget.url, widget.url.split("?").first.split("%2F").last, Theme.of(context).platform);
               },
             ),

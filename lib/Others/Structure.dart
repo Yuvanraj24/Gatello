@@ -19,7 +19,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:collection/collection.dart';
 import 'package:tuple/tuple.dart';
 
-import '../Authentication/Authentication.dart';
 import '../Helpers/DateTimeHelper.dart';
 
 extension InvertMap<K, V> on Map<K, V> {
@@ -29,7 +28,7 @@ extension InvertMap<K, V> on Map<K, V> {
 const String nullPic = "https://firebasestorage.googleapis.com/v0/b/gatello-5d386.appspot.com/o/default%2FnoProfile.jpg?alt=media&token=a2283e6d-222d-492f-b7f5-7c53bf7f38e4";
 const String nullGroupPic =
     "https://firebasestorage.googleapis.com/v0/b/gatello-5d386.appspot.com/o/default%2FnoGroupProfile.jpg?alt=media&token=e622ff31-2c33-45a5-9680-0b6e8202764f";
- var httpClient = new HttpClient();
+
 // extension RemoteMessageExt on RemoteMessage {
 //   Map<String, dynamic> getContent() {
 //     return jsonDecode(this.data["content"]);
@@ -69,32 +68,6 @@ Map<int, String> dataTypeMap = {
   8: "👤 Contact", //just text
   9: "🎤 Voice"
 };
-
-Future<File> _downloadFile(String url, String filename) async {
-
-  Directory? directory;
-  try {
-    if (Platform.isIOS) {
-      directory = await getApplicationDocumentsDirectory();
-    } else {
-      directory = Directory('/storage/emulated/0/Download');
-      // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
-      // ignore: avoid_slow_async_io
-      if (!await directory.exists()) directory = await getExternalStorageDirectory();
-    }
-  } catch (err, stack) {
-    print("Cannot get download folder path");
-  }
-
-  var request = await httpClient.getUrl(Uri.parse(url));
-  var response = await request.close();
-  var bytes = await consolidateHttpClientResponseBytes(response);
-  String dir = (await getApplicationDocumentsDirectory()).path;
-  print("${directory}/${filename}");
-  File file = new File("${directory!.path}/${filename}");
-  await file.writeAsBytes(bytes);
-  return file;
-}
 
 String getMessage(int index, Map data) {
   switch (index) {
@@ -295,7 +268,7 @@ Map groupWriteMessageMembersMap({required Map members}) {
         "name": value["name"],
         "claim": value["claim"],
         "lastRead": value["lastRead"],
-        "unreadCount": (key == getUID()) ? 0 : value["unreadCount"] + 1
+        "unreadCount": (key == 's8b6XInslPffQEgz8sVTINsPhcx2') ? 0 : value["unreadCount"] + 1
       }
     });
   });
@@ -335,13 +308,12 @@ bool groupReadReceipt({required Map members, required String timestamp, required
 //   // log(url);
 //   return url;
 // }
-
 const kDuration = const Duration(milliseconds: 300);
 const kCurve = Curves.ease;
-
 ///**********************download */
 late String _localPath;
 Future downloadFile(String url, String fileName, TargetPlatform platform) async {
+  print('rrrrrrrr');
   final bool hasGranted = await _checkPermission(platform);
   if (hasGranted) {
     await _prepareSaveDir();
