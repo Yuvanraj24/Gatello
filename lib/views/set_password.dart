@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 
+import '../handler/regex.dart';
 import '../validator/validator.dart';
 import 'login_screen.dart';
 
@@ -166,7 +167,26 @@ bool iscorrect=false;
 
                         ),
 
-                      validator: (value) => passwordValidator(value: value),
+                      validator: (value) {
+
+                            String passwordPattern = r'^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+                            if (value == null || regex(pattern: passwordPattern, input: value) == false) {
+
+                                iscorrect=true;
+
+
+                                return 'Password should contain 8 and above characters, at least one uppercase letter,\none lowercase letter, one number and one symbol';
+
+
+                            }else {
+
+                                iscorrect=false;
+
+
+                              return null;
+                              // passwordValidator(value: value);
+                            }
+                            },
                       ),
 
                     ),
@@ -223,7 +243,7 @@ bool iscorrect=false;
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => AddMobileNumber(name: widget.name,birthDay: widget.birthDay, userName: widget.userName,password: widget.password.toString(),)));
-                         
+
                           } else {
                             setState(() {
                               iscorrect=true;

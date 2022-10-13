@@ -5,7 +5,6 @@ import 'dart:isolate';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:android_path_provider/android_path_provider.dart';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -101,6 +100,7 @@ Map replyMap({required String documentId, required int documentIndex, required S
   int index = inversedDataTypeMap[type];
   String? dataString;
   dataString = getMessage(index, data);
+
   return {
     "documentId": documentId,
     "documentIndex": documentIndex,
@@ -316,6 +316,7 @@ Future downloadFile(String url, String fileName, TargetPlatform platform) async 
   print('rrrrrrrr');
   final bool hasGranted = await _checkPermission(platform);
   if (hasGranted) {
+    print('yyyyyyyyyyyy');
     await _prepareSaveDir();
     final taskId = await FlutterDownloader.enqueue(
       url: url,

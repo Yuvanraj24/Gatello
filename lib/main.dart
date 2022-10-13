@@ -2,14 +2,12 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/profile/tabbarprofile.dart';
-import 'package:gatello/views/settings/privacy.dart';
-import 'package:gatello/views/settings/settings_home_screen.dart';
 import 'package:gatello/views/status/showpage.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
 import 'package:gatello/views/tabbar/calls/incomingcall.dart';
-import 'package:gatello/views/tabbar/chats/personal_chat_screen/test_chat/test_chat.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/contact_card.dart';
 import 'package:gatello/views/tabbar/pops/No%20request.dart';
 import 'package:gatello/views/tabbar/pops/Requests.dart';
@@ -52,6 +50,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'Database/StorageManager.dart';
+
 import 'Others/components/LottieComposition.dart';
 import 'Others/lottie_strings.dart';
 import 'Style/Colors.dart';
@@ -59,7 +58,9 @@ import 'Style/Text.dart';
 import 'firebase_options.dart';
 import 'views/tabbar/pings_chat/select_contact/select_contact.dart';
 import 'package:timezone/data/latest.dart' as tz;
+
 Future<void> main() async {
+  await FlutterDownloader.initialize();
   tz.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -79,6 +80,22 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 class _MyAppState extends State<MyApp> {
+  late SharedPreferences logindata;
+  late bool newuser;
+
+  void check_if_already_login() async {
+    logindata = await SharedPreferences.getInstance();
+    newuser = (logindata.getBool('login') ?? true);
+    print(newuser);
+
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    check_if_already_login();
+  }
   @override
   Widget build(BuildContext context) {
     return OverlaySupport.global(
@@ -123,7 +140,7 @@ class _MyAppState extends State<MyApp> {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(appBarTheme: AppBarTheme(shadowColor: Colors.transparent,
-                        backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
+                    backgroundColor: Color.fromRGBO(248, 206, 97, 1))),
                 home: FutureBuilder(
                     future: getVisitedFlag(),
                     builder: (context, snapshot) {
@@ -132,7 +149,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (snapshot.data == true) ? Tabbar():LoginScreen();
+                              return (newuser == false) ? Tabbar():LoginScreen();
 
                             } else {
                               return lottieAnimation(loadingLottie);
@@ -154,4 +171,3 @@ class _MyAppState extends State<MyApp> {
     });
   }
 }
-

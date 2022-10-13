@@ -12,18 +12,23 @@ Future<Tuple3> getUserLocation() async {
   LocationData? locationData;
 
   serviceStatus = await location.serviceEnabled();
+  print("Service Status ${serviceStatus}");
   if (!serviceStatus) {
     serviceStatus = await location.requestService();
   }
 
   permissionStatus = await location.hasPermission();
+  print("Perm Status ${permissionStatus}");
   if (permissionStatus == PermissionStatus.denied) {
     permissionStatus = await location.requestPermission();
+
   }
 
   if (serviceStatus == true && (permissionStatus == PermissionStatus.granted || permissionStatus == PermissionStatus.grantedLimited)) {
     locationData = await location.getLocation();
+    print(locationData);
   }
+  print("LOCC${locationData}");
   return Tuple3(locationData, serviceStatus, permissionStatus);
 }
 

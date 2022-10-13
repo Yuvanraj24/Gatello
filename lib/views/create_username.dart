@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,8 +11,8 @@ import '../validator/validator.dart';
 import 'login_screen.dart';
 
 class CreateUsername extends StatefulWidget {
-  String birthDay;
-  String name;
+  String birthDay = "";
+  String name = "";
   String? userName;
   CreateUsername({
     required this.birthDay,
@@ -23,6 +24,21 @@ class CreateUsername extends StatefulWidget {
 }
 
 class _CreateUsernameState extends State<CreateUsername> {
+
+  var userList;
+  String status="";
+
+  @override
+  void initState() {
+    fetchUsers();
+  }
+
+  fetchUsers()async
+  {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("user-detail").get();
+    userList = querySnapshot.docs;
+  }
+
   final _formKey = GlobalKey<FormState>();
   TextEditingController _userName = TextEditingController();
 
@@ -35,21 +51,22 @@ class _CreateUsernameState extends State<CreateUsername> {
         appBar: AppBar(
           leading: Center(
               child: TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Back',
-              style: GoogleFonts.roboto(
-                  textStyle: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black)),
-            ),
-          )),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Back',
+                  style: GoogleFonts.roboto(
+                      textStyle: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black)),
+                ),
+              )),
         ),
         body: Form(
           autovalidateMode: AutovalidateMode.onUserInteraction,
+
           key: _formKey,
           child: Container(
             padding: EdgeInsets.only(
@@ -89,59 +106,100 @@ class _CreateUsernameState extends State<CreateUsername> {
                       children: [
                         Container(
                           width: 310.w,
-                          child: TextFormField(
+                          child: Column(
+                            children: [
+                              TextFormField(
 
-                            controller: _userName,
-                            onChanged: (val){
-                              widget.userName = _userName.text.toString();
-                            },
-                            cursorColor: HexColor('#0B0B0B'),
-                            decoration: InputDecoration(
-                              // contentPadding: EdgeInsets.only(bottom: 2),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide:
+                                controller: _userName,
+                                onChanged: (text){
+
+                                  for(int i=0;i<userList.length;i++) {
+                                    print(text);
+
+                                    print("if(${text}==${userList[i]["username"]})");
+                                    if(text==userList[i]["username"])
+                                    {
+                                      print("username exists");
+                                      setState(() {
+                                        status="exists";
+                                      });
+                                      break;
+                                    }
+                                    else{
+                                      print("username available");
+                                      setState(() {
+                                        status="available";
+                                      });
+                                    }
+                                  }
+
+                                  widget.userName = _userName.text.toString();
+                                },
+                                cursorColor: HexColor('#0B0B0B'),
+                                decoration: InputDecoration(
+                                  // contentPadding: EdgeInsets.only(bottom: 2),
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide:
                                       BorderSide(color: HexColor('#0B0B0B'))),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide:
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide:
                                       BorderSide(color: HexColor('#0B0B0B'))),
 
-                              labelStyle: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 12.h,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black)),
-                              labelText: "USERNAME",
-                              suffixIcon: Flexible(
-                                child: Container(
-                                  width:160.w,
-                                  child: Row(
-                                    children: [
-                                      Spacer(),
+                                  labelStyle: GoogleFonts.inter(
+                                      textStyle: TextStyle(
+                                          fontSize: 12.h,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black)),
+                                  labelText: "USERNAME",
+                                  suffixIcon: Flexible(
+                                    child: Container(
+                                      width:160.w,
+                                      child: Row(
+                                        children: [
+                                          Spacer(),
 
-                                  IconButton(
-                                      padding: EdgeInsets.only(bottom: 3,left: 30),
-                                      alignment: Alignment.bottomCenter,
-                                      iconSize: 20.w,
-                                      icon: Icon(Icons.refresh, color: Colors.black),
-                                      onPressed: () {},
+                                          IconButton(
+                                            padding: EdgeInsets.only(bottom: 3,left: 30),
+                                            alignment: Alignment.bottomCenter,
+                                            iconSize: 20.w,
+                                            icon: Icon(Icons.refresh, color: Colors.black),
+                                            onPressed: () {},
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 20,left: 10),
+                                            child: (status == "exists")?
+                                            SvgPicture.asset('assets/icons_assets/wrong.svg',width: 16.w,):
+                                            SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                       Padding(
-                                         padding: EdgeInsets.only(top: 20,left: 10),
-                                      child: SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),
-                                       ),
-                                    ],
+                                  ),
+                                  // suffixIcon: IconButton(
+                                  //   padding: EdgeInsets.only(bottom: 3,left: 30),
+                                  //   alignment: Alignment.bottomCenter,
+                                  //   iconSize: 20.w,
+                                  //   icon: Icon(Icons.refresh, color: Colors.black),
+                                  //   onPressed: () {},
+                                  // ),
+                                ),
+                                //validator: (value) => usernameValidator(value),
+                              ),
+                              SizedBox(height: 5),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text((status == "exists")?"User-name exists":
+                                (_userName.text.isNotEmpty)?
+                                "User-name available":
+                                "",
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: (status == "exists")?Colors.red:Colors.green,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
-                              ),
-                              // suffixIcon: IconButton(
-                              //   padding: EdgeInsets.only(bottom: 3,left: 30),
-                              //   alignment: Alignment.bottomCenter,
-                              //   iconSize: 20.w,
-                              //   icon: Icon(Icons.refresh, color: Colors.black),
-                              //   onPressed: () {},
-                              // ),
-                            ),
-                            validator: (value) => usernameValidator(value),
+                              )
+                            ],
                           ),
                         ),
 

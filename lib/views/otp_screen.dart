@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/views/add_email.dart';
 import 'package:gatello/views/add_profile_pic.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +15,8 @@ import 'package:tuple/tuple.dart';
 import '../../handler/Network.dart';
 import '../Others/Routers.dart';
 import '../Others/exception_string.dart';
+import '../Style/Colors.dart';
+import '../Style/Text.dart';
 import '../core/Models/Default.dart';
 import '../core/models/exception/pops_exception.dart';
 
@@ -41,10 +45,42 @@ class _OtpState extends State<Otp> {
   String otpText = "";
   bool loading = false;
   ValueNotifier<Tuple4> verifyOtpValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
+  ValueNotifier<Tuple4> sendOtpValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
+  int _counter = 60;
+  Timer? _timer;
+  void _startTimer() {
+    _counter = 13;
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (!mounted) return;
+      setState(() {
+        if (_counter > 0) {
+          _counter--;
+        } else {
+          _timer!.cancel();
+        }
+      });
+    });
+  }
+  Future sendOtp(String phoneNumber) async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: sendOtpValueNotifier,
+      jsonModel: defaultFromJson,
+      url: sendOTPUrl,
+      requestMethod: 1,
+      body: {"number": int.parse(phoneNumber)},
+    );
+  }
+  void initState(){
 
+    _startTimer();
+
+  }
   @override
   Widget build(BuildContext context) {
-    // print('test7${verifyOtpValueNotifier.value.item1}');
+    print('test7${verifyOtpValueNotifier.value}');
     // double height = MediaQuery.of(context).size.height;
     double curWidth = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -172,6 +208,10 @@ class _OtpState extends State<Otp> {
                     ),
                   ),
                   Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: otpResend(),
+                  ),
                   ElevatedButton(
                     onPressed: () {
                       print(widget.name);
@@ -182,6 +222,43 @@ class _OtpState extends State<Otp> {
                       print(widget.otp);
 
                       verifyOtp1(widget.mobileNo,widget.otp!);
+                      if(verifyOtpValueNotifier.value.item1==1) {
+                        print('22222222222222');
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) =>
+                                AddEmail(
+                                  name: widget.name,
+                                  birthDay: widget.birthDay,
+                                  userName: widget.userName,
+                                  password: widget.password,
+                                  mobileNo: widget.mobileNo,
+                                  otp: widget.otp.toString(),
+
+                                )));
+
+                      }
+
+                      // else if(verifyOtpValueNotifier.value.item1==3){
+                      //   Fluttertoast.showToast(
+                      //       msg: "Otp invalid",
+                      //       // toastLength: Toast.LENGTH_SHORT,
+                      //       timeInSecForIosWeb: 1
+                      //   );
+                      // }
+                      // else{
+                      //   Navigator.push(context,
+                      //       MaterialPageRoute(builder: (context) =>
+                      //           AddEmail(
+                      //             name: widget.name,
+                      //             birthDay: widget.birthDay,
+                      //             userName: widget.userName,
+                      //             password: widget.password,
+                      //             mobileNo: widget.mobileNo,
+                      //             otp: widget.otp.toString(),
+                      //
+                      //           )));
+                      // }
+
                     },
                     child: Text(
                       'Continue',
@@ -206,16 +283,16 @@ class _OtpState extends State<Otp> {
       ),
     );
   }
-
   Future verifyOtp1(String phoneNumber, String otp) async {
+
     return await ApiHandler().apiHandler(
       valueNotifier: verifyOtpValueNotifier,
       jsonModel: defaultFromJson,
       url: verifyOTPUrl,
       requestMethod: 1,
       body: {"number": int.parse(phoneNumber), "otp": int.parse(otp)},
-    );
 
+    );
   }
 
 
@@ -230,22 +307,52 @@ class _OtpState extends State<Otp> {
     });
 
     try {
-
       var url = Uri.parse("http://3.108.219.188:5000/verifyotp");
       var response = await http.post(url, body: body);
 
-     if(verifyOtpValueNotifier.value.item1==1){
+      if(verifyOtpValueNotifier.value.item1==1){
+        if (response.statusCode == 200) {
+          print(response.body.toString());
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddEmail(
+                name: widget.name,birthDay: widget.birthDay, userName: widget.userName,password: widget.password, mobileNo: widget.mobileNo,otp: widget.otp.toString(),
 
-         Navigator.push(context,
-             MaterialPageRoute(builder: (context) => AddEmail(
-               name: widget.name,birthDay: widget.birthDay, userName: widget.userName,password: widget.password, mobileNo: widget.mobileNo,otp: widget.otp.toString(),
+              )));
+        }
 
-             )));
-
-
-     }
+      }
     } catch (e) {
       print(e.toString());
     }
+  }
+  Widget otpResend() {
+    return Column(
+      children: [
+        (_counter > 0)
+            ? Container()
+            : Text(
+          "Didn't receive OTP ?",
+          style: GoogleFonts.poppins(textStyle: textStyle(color: Color(grey), fontSize: 12)),
+        ),
+        TextButton(
+          onPressed: (_counter > 0)
+              ? null
+              : () async {
+            await sendOtp(widget.mobileNo);
+            _startTimer();
+            // return await PhoneAuthWeb().verifyPhoneWeb(phoneNumber: widget.countryCode + widget.phone);
+          },
+          child: (_counter > 0)
+              ? Text(
+            "Resend OTP in 00:${(_counter<=9?"0$_counter":_counter)} seconds",
+            style: GoogleFonts.poppins(textStyle: textStyle(color: Color(grey), fontSize: 12)),
+          )
+              : Text(
+            "Send again",
+            style: GoogleFonts.poppins(textStyle: textStyle(color: Color(accent), fontSize: 14)),
+          ),
+        )
+      ],
+    );
   }
 }

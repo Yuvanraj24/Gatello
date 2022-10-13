@@ -65,7 +65,6 @@ import '../../../../handler/Calls.dart';
 import '../../../../handler/LifeCycle.dart';
 import '../../../../handler/Location.dart';
 import '../../../../main.dart';
-
 import '../../../../utils/DynamicLinkParser.dart';
 import '../../../contact_list.dart';
 import '../../pings_chat/select_contact/select_contact.dart';
@@ -178,7 +177,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       );
     });
   }
-
   showConfirmationDialog(BuildContext context) {
     showDialog(
       // barrierDismissible: false,
@@ -1024,7 +1022,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                             });
                                           }
                                               : () {
-                                            Navigator.pop(context, true);
+                                            Navigator.pop(context);
                                           },
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment
@@ -2550,10 +2548,12 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
                                                                                                 GestureDetector(
                                                                                                   onTap: () async {
+                                                                                                    print('Test111');
                                                                                                     Navigator.of(context).pop();
                                                                                                     return await files().then((value) async {
-
+                                                                                                      print('Test222');
                                                                                                       if (value!.files.isNotEmpty) {
+                                                                                                        print('Test333');
                                                                                                         for (var file in value.files) {
                                                                                                           if (file.size < 52428800 && file.bytes != null) {
                                                                                                             if (widget.state == 0) {
@@ -2679,8 +2679,8 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                                 ),
                                                                                                 GestureDetector(
                                                                                                   onTap: () async {
-                                                                                                    //  Navigator.pop(context);
-
+                                                                                                     // Navigator.pop(context);
+                                                                                                   // Navigator.of(context).pop();
                                                                                                     return await imageNvideo().then((value) async {
                                                                                                       if (value!.files.isNotEmpty) {
                                                                                                         Navigator.push(
@@ -2737,7 +2737,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                                             ));
                                                                                                       }
                                                                                                     });
-
                                                                                                   },
 
                                                                                                   child: iconCreation(
@@ -2821,12 +2820,19 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                                 ),
                                                                                                 GestureDetector(
                                                                                                   onTap: () async {
+                                                                                                    print('check');
                                                                                                     Navigator.of(context).pop();
                                                                                                     return await getUserLocation().then((value) async {
+                                                                                                      print('check1');
+                                                                                                      print("LOC${value.item1}");
                                                                                                       if (value.item1 != null) {
+                                                                                                        print('check4');
                                                                                                         return await hereReverseGeocode(value.item1).then((response) async {
+                                                                                                          print('check2');
+                                                                                                          print("LOCDATA ${value.item1.latitude}");
                                                                                                           Map<String, dynamic> body = jsonDecode(response.body);
                                                                                                           if (widget.state == 0) {
+                                                                                                            print('check3');
                                                                                                             await writeUserMessage(
                                                                                                               type: 7,
                                                                                                               // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
@@ -3052,6 +3058,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                       .text
                                                                       .trim() !=
                                                                       "") {
+                                                                    scrolldown();
                                                                     await writeUserMessage(
                                                                         type: 0,
                                                                         peerPic: (chatRoomSnapshot
@@ -4970,6 +4977,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                             if (textEditingController
                                                                 .text.trim() !=
                                                                 "") {
+                                                              scrolldown();
                                                               await writeGroupMessage(
                                                                   type: 0,
                                                                   members: chatRoomSnapshot
@@ -5767,6 +5775,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                               .text
                                                               .trim() !=
                                                               "") {
+                                                            scrolldown();
                                                             await writeUserMessage(
                                                                 type: 0,
                                                                 peerPic: (emptyChatRoomDetails.data!.data()!["pic"] !=
@@ -6718,16 +6727,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
               throw 'Could not launch $uri';
             }
           },
-          child: Text(
-            "📍 Location \n\n" + document.data()!["data"]["location"].split("\n").last,
-            softWrap: true,
-            style: GoogleFonts.inter(
-                fontSize: 14,
-                textStyle: textStyle(color: (document.data()!["from"] == widget.uid)?
-                Color.fromRGBO(255, 255, 255, 1):
-                Colors.black,
-                )),
-          ),
+          child: Image.network("https://maps.googleapis.com/maps/api/staticmap?center=${(((document.data()!["data"]["location"].split("\n").first).toString().split("&").last).toString().split("=").last).toString().split(",").first}%2C+${(((document.data()!["data"]["location"].split("\n").first).toString().split("&").last).toString().split("=").last).toString().split(",").last}&zoom=13&scale=2&size=300x200&maptype=roadmap&format=png&key=AIzaSyCThBJEmFB_P8KRefBe2RHB0JLVLckZyeE&markers=size:mid%7Ccolor:0xffbb00%7Clabel:G%7C${(((document.data()!["data"]["location"].split("\n").first).toString().split("&").last).toString().split("=").last).toString().split(",").first}%2C%20${(((document.data()!["data"]["location"].split("\n").first).toString().split("&").last).toString().split("=").last).toString().split(",").last}"),
         );
       case 8:
         return (document.data()!["delete"]["everyone"] == true)
@@ -7624,6 +7624,10 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+  void scrolldown(){
+    final double move = 0;
+    listScrollController.jumpTo(move);
   }
 }
 
