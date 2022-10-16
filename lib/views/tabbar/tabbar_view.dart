@@ -1954,15 +1954,15 @@ class _PingsChatViewState extends State<PingsChatView>
                                     fontWeight: FontWeight.w700)),
                             term: searchChat.text,
                           ),
-                          subtitle: SubstringHighlight(
-                            text: docs[index].data()["lastMessage"],
-                            textStyle: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 14.sp,
-                                    color: Color.fromRGBO(12, 16, 29, 0.6),
-                                    fontWeight: FontWeight.w400)),
-                            term: searchChat.text,
-                          ),
+                          // subtitle: SubstringHighlight(
+                          //   text: docs[index].data()["lastMessage"],
+                          //   textStyle: GoogleFonts.inter(
+                          //       textStyle: TextStyle(
+                          //           fontSize: 14.sp,
+                          //           color: Color.fromRGBO(12, 16, 29, 0.6),
+                          //           fontWeight: FontWeight.w400)),
+                          //   term: searchChat.text,
+                          // ),
                           trailing: (widget.state == null)
                               ? Padding(
                                   padding: EdgeInsets.only(top: 8),

@@ -2139,8 +2139,8 @@ late int removeIndex;
                                                       indexedItemBuilder: (
                                                           context, DocumentSnapshot<Map<String, dynamic>> element1, index1)
                                                       {
-                                                        removeElement=element1;
-                                                        removeIndex=index1;
+                                                       var removeElement=element1;
+                                                       var removeIndex=index1;
                                                      if (sizingInformation
                                                           .deviceScreenType ==
                                                           DeviceScreenType
@@ -2204,10 +2204,7 @@ late int removeIndex;
                                                               behavior: HitTestBehavior
                                                                   .opaque,
                                                               onLongPress: (removeElement.data()!["delete"]["everyone"] == true)
-
                                                               ?null
-
-
                                                               :(){
                                                                 print("check count ${notUserMessages}");
                                                                 print("selected white msg...................");
@@ -2347,9 +2344,7 @@ print('33333333333333');
                                                           )
                                                       );
                                                           }
-
                                 }
-
                                                       ,
                                                       controller: listScrollController,
                                                       useStickyGroupSeparators: true,
