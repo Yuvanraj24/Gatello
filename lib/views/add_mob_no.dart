@@ -36,32 +36,32 @@ class AddMobileNumber extends StatefulWidget {
 
 
 class _AddMobileNumberState extends State<AddMobileNumber> {
-   final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   TextEditingController _mobileNumber =TextEditingController();
   String countryCode = '+91';
 
-   ValueNotifier<Tuple4> sendOtpValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
+  ValueNotifier<Tuple4> sendOtpValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-    
+
           leading: Center(
               child: TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Back',
-              style: GoogleFonts.roboto(
-                  textStyle: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black)),
-            ),
-          )),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Back',
+                  style: GoogleFonts.roboto(
+                      textStyle: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black)),
+                ),
+              )),
         ),
         body: Form(
           key: _formKey,
@@ -135,21 +135,21 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                             // color: Colors.pink.shade100,
                             height: 43.h,
                             child: TextFormField(
-enabled: false,
+                              enabled: false,
 
                               decoration: InputDecoration(
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: HexColor('#0B0B0B'),
+                                    BorderSide(color: HexColor('#0B0B0B'),
                                       //  width: 3.w
-                                        )),
+                                    )),
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: HexColor(
-                                          '#0B0B0B',
-                                        ),
+                                      color: HexColor(
+                                        '#0B0B0B',
+                                      ),
                                       //  width: 3.w
-                                        )),
+                                    )),
                                 prefixIcon: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -181,31 +181,31 @@ enabled: false,
                           Row(
                             children: [
                               Container(
-                                  //   color: Colors.blue,
-                                  // height: 80,
-                               
+                                //   color: Colors.blue,
+                                // height: 80,
+
                                   width: 51.w,
                                   child: TextFormField(
-                                       enabled:false,
+                                    enabled:false,
                                     decoration: InputDecoration(
                                         enabledBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: HexColor('#0B0B0B'),
-                                               width: 1.12.w
-                                                )
-                                                ),
+                                                width: 1.12.w
+                                            )
+                                        ),
                                         focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: HexColor('#0B0B0B'),
-                                              width: 1.12.w
-                                                )),
+                                                width: 1.12.w
+                                            )),
                                         prefixIcon: Center(
                                             child: Text("+${91}",
                                                 style: GoogleFonts.roboto(
                                                     textStyle: TextStyle(
                                                         fontSize: 14.h,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         color: Colors.black))))),
                                   )),
                               SizedBox(
@@ -215,7 +215,7 @@ enabled: false,
                                 // color: Colors.cyan,
                                 width: 265.w,
                                 child: TextFormField(
-                                  keyboardType: TextInputType.number,
+                                    keyboardType: TextInputType.number,
                                     controller: _mobileNumber,
                                     onChanged: (val) {
                                       widget.mobileNo =
@@ -238,7 +238,7 @@ enabled: false,
                                     ),
                                     validator: (value) => phoneValidator(
                                         countryCode + " " + value!)
-                                        ),
+                                ),
                               ),
                             ],
                           ),
@@ -304,33 +304,33 @@ enabled: false,
     );
   }
 
-   Future sendOtp(String phoneNumber) async {
-     return await ApiHandler().apiHandler(
-       valueNotifier: sendOtpValueNotifier,
-       jsonModel: defaultFromJson,
-       url: sendOTPUrl,
-       requestMethod: 1,
-       body: {"number": int.parse(phoneNumber)},
-     );
-   }
+  Future sendOtp(String phoneNumber) async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: sendOtpValueNotifier,
+      jsonModel: defaultFromJson,
+      url: sendOTPUrl,
+      requestMethod: 1,
+      body: {"number": int.parse(phoneNumber)},
+    );
+  }
 
-   Future<void> sendotp() async {
-     //print(body.toString());
-     var body = jsonEncode(<String, dynamic>{
-       "number": widget.mobileNo,
-     });
+  Future<void> sendotp() async {
+    //print(body.toString());
+    var body = jsonEncode(<String, dynamic>{
+      "number": widget.mobileNo,
+    });
 
-     try {
-       var url = Uri.parse("http://3.108.219.188:5000/sendotp");
-       var response = await http.post(url, body: body);
+    try {
+      var url = Uri.parse("http://3.108.219.188:5000/sendotp");
+      var response = await http.post(url, body: body);
 
-       if (response.statusCode == 200) {
-         print(response.body.toString());
-       } else {
-         print(response.statusCode);
-       }
-     } catch (e) {
-       print(e.toString());
-     }
-   }
+      if (response.statusCode == 200) {
+        print(response.body.toString());
+      } else {
+        print(response.statusCode);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

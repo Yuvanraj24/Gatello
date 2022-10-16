@@ -1,26 +1,55 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/views/login_screen.dart';
 import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fast_contacts/fast_contacts.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
+import '/Model/SignIn.dart' as signInModel;
 
+import '../Authentication/Authentication.dart';
+import '../Others/Routers.dart';
+import '../Others/exception_string.dart';
+import '../core/models/exception/pops_exception.dart';
+import '../handler/Network.dart';
+import '../handler/SharedPrefHandler.dart';
 class InviteFriends extends StatefulWidget {
   ///* 0-> invite ; 1-> share
   final int state;
+  var mobileNo;
+  var password;
+  var username;
 
-  const InviteFriends({Key? key, required this.state}) : super(key: key);
+  InviteFriends({
+    this.mobileNo,
+    this.password,
+    required this.state,
+    this.username
+
+  });
 
   @override
   State<InviteFriends> createState() => _ContactListState();
 }
 
 class _ContactListState extends State<InviteFriends> {
+
+  ValueNotifier<Tuple4> signInValueNotifier =
+  ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
+
+  late SharedPreferences logindata;
+  late bool newuser;
+
   FirebaseFirestore instance = FirebaseFirestore.instance;
   List<String> selectedContactsId = [];
   List selectedContacts = [];
@@ -133,11 +162,7 @@ class _ContactListState extends State<InviteFriends> {
                                       )),
                                   TextButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>Tabbar()),
-                                        );
+
                                       },
                                       style: TextButton.styleFrom(
                                           primary: Color.fromRGBO(0, 0, 0, 0.44)),
@@ -254,16 +279,26 @@ class _ContactListState extends State<InviteFriends> {
                                     }
                                   }),
                             ),
-                            // ElevatedButton(style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
-                            //     fixedSize:Size(234.w,53.h),shape:RoundedRectangleBorder(borderRadius:
-                            //     BorderRadius.circular(26))),
-                            //     onPressed: () {
-                            //       Navigator.push(context, MaterialPageRoute(builder: (context) {
-                            //         return LoginScreen();
-                            //       },));
-                            //     }, child:Text('Get started',style:GoogleFonts.inter(textStyle:TextStyle(
-                            //         fontWeight:FontWeight.w600,fontSize:14.sp,color:Colors.black
-                            //     )),))
+                            ElevatedButton(style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
+                                fixedSize:Size(234.w,53.h),shape:RoundedRectangleBorder(borderRadius:
+                                BorderRadius.circular(26))),
+                                onPressed: () {
+                                  print("mobile no ${widget.mobileNo}");
+                                  print("password ${widget.password}");
+                                  print("username ${widget.username}");
+                                  var body = jsonEncode(<String, dynamic>{
+                                    "credential_1": "+91${widget.mobileNo}",
+                                    "password": widget.password,
+                                  });
+                                  print("body check: ${body}");
+                                  if(signin(body)==null){
+                                    CircularProgressIndicator();
+                                  }
+                                  signin(body);
+
+                                }, child:Text('Get started',style:GoogleFonts.inter(textStyle:TextStyle(
+                                    fontWeight:FontWeight.w600,fontSize:14.sp,color:Colors.black
+                                )),))
                           ],
                           ),
                         );
@@ -278,6 +313,73 @@ class _ContactListState extends State<InviteFriends> {
                   }),
             )));
   }
+
+  Future signInApiCall(
+      {required String uid,
+        required String credential,
+        required String password}) async {
+    // return await getFCMToken().then((value) async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: signInValueNotifier,
+      jsonModel: signInModel.signInFromJson,
+      url: loginUrl,
+      requestMethod: 1,
+      // body: {"credential_1": credential, "password": password, "user_id": uid, "notification_token": value!},
+      body: {
+        "credential_1": credential,
+        "password": password,
+        "user_id": uid,
+      },
+    );
+    // });
+  }
+
+  Future<void> signin(var body) async {
+    print(body.toString());
+
+    try {
+      var url = Uri.parse("http://3.108.219.188:5000/login");
+      var response = await http.post(url, body: body);
+
+
+      final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+      if (response.statusCode == 200) {
+        print(response.body.toString());
+        Map<String, dynamic>  map = jsonDecode(response.body.toString());
+        String status = map['status'];
+        print("STATUS:"+status);
+        if(status=="OK")
+        {
+          Fluttertoast.showToast(
+              msg: "Login Success",
+              toastLength: Toast.LENGTH_SHORT,
+              timeInSecForIosWeb: 1);
+          final SharedPreferences prefs = await _prefs;
+          String resultJson=jsonEncode(map['result']);
+          print(jsonEncode(map['result']));
+          Map<String, dynamic> map1 = jsonDecode(resultJson);
+          print("LOGIN RESPONSE");
+          print("this is a uid : ${map1['user_id']}");
+          // String username = widget.mobileNo;
+          // logindata.setBool('login', false);
+          // logindata.setString('username', username);
+          // SharedPrefHandler sharedPrefHandler=new SharedPrefHandler();
+          // sharedPrefHandler.writeUserInfo(map1['user_id'], map1['email'], map1['root_folder_id']);
+          print("this is a uid 2nd check : ${map1['user_id']}");
+          await instance.collection("user-detail").doc(map1['user_id']).update({"token": await getFCMToken()});
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (BuildContext ctx) => Tabbar(uid: map1['user_id'],)));
+        }
+
+      } else {
+        print("hello ${response.statusCode}");
+      }
+
+    } catch (e) {
+      print("hello this is  ${e.toString()}");
+    }
+  }
+
 
 
 }

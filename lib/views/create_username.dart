@@ -11,8 +11,8 @@ import '../validator/validator.dart';
 import 'login_screen.dart';
 
 class CreateUsername extends StatefulWidget {
-  String birthDay = "";
-  String name = "";
+  String birthDay;
+  String name;
   String? userName;
   CreateUsername({
     required this.birthDay,
@@ -66,7 +66,6 @@ class _CreateUsernameState extends State<CreateUsername> {
         ),
         body: Form(
           autovalidateMode: AutovalidateMode.onUserInteraction,
-
           key: _formKey,
           child: Container(
             padding: EdgeInsets.only(
@@ -112,6 +111,8 @@ class _CreateUsernameState extends State<CreateUsername> {
 
                                 controller: _userName,
                                 onChanged: (text){
+                                  widget.userName = _userName.text.toString();
+                                  print("show user-name : ${ widget.userName}");
 
                                   for(int i=0;i<userList.length;i++) {
                                     print(text);
@@ -132,8 +133,6 @@ class _CreateUsernameState extends State<CreateUsername> {
                                       });
                                     }
                                   }
-
-                                  widget.userName = _userName.text.toString();
                                 },
                                 cursorColor: HexColor('#0B0B0B'),
                                 decoration: InputDecoration(
@@ -210,7 +209,7 @@ class _CreateUsernameState extends State<CreateUsername> {
                       onPressed: () {
                         print(widget.name);
                         print(widget.birthDay);
-                        print(widget.userName);
+                        print("this is username : ${widget.userName}");
 
                         if (_formKey.currentState!.validate()) {
                           Navigator.push(

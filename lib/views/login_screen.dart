@@ -1,6 +1,7 @@
 import 'dart:convert';
 //import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/handler/SharedPrefHandler.dart';
 import 'package:gatello/views/tabbar/tabbar_view.dart';
@@ -137,6 +138,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 23.h,
                 ),
                 TextFormField(
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(10),
+                  ],
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   keyboardType:TextInputType.number ,
                   validator: (value) => phoneValidator(value),
@@ -396,6 +400,7 @@ class _LoginScreenState extends State<LoginScreen> {
         print("STATUS:"+status);
         if(status=="OK")
         {
+          print('okkkkkkkkkkkkk');
           Fluttertoast.showToast(
               msg: "Login Success",
               toastLength: Toast.LENGTH_SHORT,
@@ -420,8 +425,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
         }
-
+else{
+          Fluttertoast.showToast(
+              msg: "Login Failed",
+              toastLength: Toast.LENGTH_SHORT,
+              timeInSecForIosWeb: 1);
+        }
       } else {
+
         print("hello ${response.statusCode}");
       }
     } catch (e) {

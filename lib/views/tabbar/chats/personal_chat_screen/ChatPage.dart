@@ -93,9 +93,11 @@ class ChatPage extends StatefulWidget {
 
 
 class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
-
   static var httpClient = new HttpClient();
-
+bool stopSelect=false;
+bool itsOk=false;
+var removeElement;
+late int removeIndex;
   var snak;
   var copied;
   var deliverTime;
@@ -105,6 +107,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   late AnimationController voiceRecordAnimationController;
   late AnimationController unreadMessageAnimationController;
   late Animation unreadMessageAnimation;
+ late DocumentSnapshot<Map<String, dynamic>> element1;
   late StreamSubscription<
       QuerySnapshot<Map<String, dynamic>>> getLastMessageSub;
   ValueNotifier<String> recordAudioValueNotifier = ValueNotifier<String>("");
@@ -1638,15 +1641,18 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                           timeInSecForIosWeb: 1);
                                                                       String roomid = roomId(uid: widget.uid, puid: widget.puid);
                                                                       messages.forEach((key, value) async {
+                                                                        print('check 1${chatRoomSnapshot.data!.data()!["timestamp"] }');
+                                                                        print('check 2${value.data()!["timestamp"]}');
                                                                         await instance
                                                                             .collection("personal-chat")
                                                                             .doc(roomid)
                                                                             .collection("messages")
                                                                             .doc(value.data()!["timestamp"])
                                                                             .update({
-                                                                          "delete.peerdelete": true,
+                                                                          "delete.personal": true,
                                                                         });
                                                                         if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
+                                                                          print('yyyy');
                                                                           await instance.collection("personal-chat-room-detail").doc(roomid).update({
                                                                             "delete": true,
                                                                           });
@@ -1858,13 +1864,54 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                               }
                               break;
                               case 3:{
+
+
+
                                 FlutterClipboard.copy(copied).then(( value ){
+
+
+
                                   final snackBar = snackbar(
                                       content: "Message copied");
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
+
+                                  //  messages.remove(messages.inverse[element]);
+
+
+
                                 }
+
                                 );
+                                if (messages.isNotEmpty) {
+                                  if (messages.values.contains(removeElement)) {
+                                    print('111111111111');
+                                    messages.remove(messages.inverse[removeElement]);
+                                    print('222222222222222');
+                                    // });
+                                    if (removeElement.data()!["from"] != widget.uid) {
+
+                                      print('33333333333333');
+                                      notUserMessages += 1;
+                                    }
+                                  }
+                                  else {
+
+                                    if (removeElement.data()!["delete"]["everyone"] == false) {
+                                      messages[removeIndex] = removeElement;
+                                    }
+                                    if (removeElement.data()!["from"] != widget.uid) {
+                                      notUserMessages += 1;
+                                    }
+                                  }
+                                }
+                                if (!mounted) return;
+                                setState(() {
+
+                                });
+                                print('Lotus66:${messages.length}');
+                                log(notUserMessages.toString());
+                                log(messages.length.toString());
                               }
                             }},itemBuilder:(context)=>[
                                           PopupMenuItem(
@@ -2090,38 +2137,39 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                           buildGroupHeaderItem(
                                                               element),
                                                       indexedItemBuilder: (
-                                                          context,
-                                                          DocumentSnapshot<Map<
-                                                              String,
-                                                              dynamic>> element,
-                                                          index) =>
-                                                      (sizingInformation
+                                                          context, DocumentSnapshot<Map<String, dynamic>> element1, index1)
+                                                      {
+                                                        removeElement=element1;
+                                                        removeIndex=index1;
+                                                     if (sizingInformation
                                                           .deviceScreenType ==
                                                           DeviceScreenType
                                                               .desktop)
-                                                          ? GestureDetector(
+                                                          { return GestureDetector(
                                                           behavior: HitTestBehavior
                                                               .opaque,
                                                           child: buildItem(
-                                                            document: element,
+                                                            document: removeElement,
                                                             chatRoomSnapshot: chatRoomSnapshot
                                                                 .data!,
                                                             sizingInformation: sizingInformation,
                                                             // userDetailSnapshot: userDetailSnapshot.data!,
-                                                            index: index,
+                                                            index: removeIndex,
                                                             replyIndex: (snapshot
                                                                 .data!.length +
-                                                                1) - index,
-                                                          ))
-                                                          : SwipeTo(
-                                                          onRightSwipe: (element
+                                                                1)- removeIndex,
+                                                          ));
+                                                          }
+                                                          else {
+                                                            return SwipeTo(
+                                                          onRightSwipe: (removeElement
                                                               .data()!["delete"]["everyone"] ==
                                                               true)
                                                               ? null
                                                               : () {
                                                             replyUserName =
                                                             (widget.uid !=
-                                                                element
+                                                                removeElement
                                                                     .data()!["from"])
                                                                 ? chatRoomSnapshot
                                                                 .data!
@@ -2133,18 +2181,18 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                             setState(() {
                                                               replyMessageMap =
                                                                   replyMap(
-                                                                      documentId: element
+                                                                      documentId: removeElement
                                                                           .id,
                                                                       documentIndex: (snapshot
                                                                           .data!
                                                                           .length +
                                                                           1) -
-                                                                          index,
-                                                                      fromUid: element
+                                                                          removeIndex,
+                                                                      fromUid: removeElement
                                                                           .data()!["from"],
-                                                                      type: element
+                                                                      type: removeElement
                                                                           .data()!["type"],
-                                                                      data: element
+                                                                      data: removeElement
                                                                           .data()!["data"]);
                                                             });
 
@@ -2155,21 +2203,25 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                           child: GestureDetector(
                                                               behavior: HitTestBehavior
                                                                   .opaque,
-                                                              onLongPress: (element.data()!["delete"]["everyone"] == true)
-                                                                  ? null
-                                                                  : () {
+                                                              onLongPress: (removeElement.data()!["delete"]["everyone"] == true)
+
+                                                              ?null
+
+
+                                                              :(){
                                                                 print("check count ${notUserMessages}");
                                                                 print("selected white msg...................");
                                                                 print("uid is ${widget.uid}");
                                                                 if (messages.isEmpty == true) {
-                                                                  messages[index] = element;
-                                                                  copied = element.data()!["data"]["text"];
-                                                                  deliverTime = element.data()!["timestamp"];
-                                                                  readTime = formatTime(getDateTimeSinceEpoch(datetime: element["read"]["timestamp"]));
-                                                                  msgTime =  formatTime(getDateTimeSinceEpoch(datetime: element["timestamp"]));
+                                                                  messages[removeIndex] = removeElement;
+
+                                                                  copied = removeElement.data()!["data"]["text"];
+                                                                  deliverTime = removeElement.data()!["timestamp"];
+                                                                  readTime = formatTime(getDateTimeSinceEpoch(datetime: removeElement["read"]["timestamp"]));
+                                                                  msgTime =  formatTime(getDateTimeSinceEpoch(datetime: removeElement["timestamp"]));
                                                                   print('dheeee${msgTime}');
                                                                   print('dheeee${msgTime}');
-                                                                  if (element.data()!["from"] != widget.uid) {
+                                                                  if (removeElement.data()!["from"] != widget.uid) {
                                                                     notUserMessages += 1;
                                                                   }
                                                                 }
@@ -2181,24 +2233,59 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
                                                                   }
                                                                 });
+                                                                print('Lotus66:${messages.length}');
                                                                 log(notUserMessages.toString());
                                                                 log(messages.length.toString());
                                                               },
+                                                              //     : () {
+                                                              //
+                                                              //   print("check count ${notUserMessages}");
+                                                              //   print("selected white msg...................");
+                                                              //   print("uid is ${widget.uid}");
+                                                              //   if (messages.isEmpty == true) {
+                                                              //     messages[index] = element;
+                                                              //     copied = element.data()!["data"]["text"];
+                                                              //     deliverTime = element.data()!["timestamp"];
+                                                              //     readTime = formatTime(getDateTimeSinceEpoch(datetime: element["read"]["timestamp"]));
+                                                              //     msgTime =  formatTime(getDateTimeSinceEpoch(datetime: element["timestamp"]));
+                                                              //     print('dheeee${msgTime}');
+                                                              //     print('dheeee${msgTime}');
+                                                              //     if (element.data()!["from"] != widget.uid) {
+                                                              //       notUserMessages += 1;
+                                                              //     }
+                                                              //   }
+                                                              //   if (!mounted) return;
+                                                              //   setState(() {
+                                                              //     if (isSearching) {
+                                                              //       isSearching = false;
+                                                              //       searchTextEditingController.clear();
+                                                              //
+                                                              //     }
+                                                              //   });
+                                                              //   print('Lotus66:${messages.length}');
+                                                              //   log(notUserMessages.toString());
+                                                              //   log(messages.length.toString());
+                                                              // },
                                                               onTap: () {
+
                                                                 if (messages.isNotEmpty) {
-                                                                  if (messages.values.contains(element)) {
-                                                                    // if (!mounted) return;
-                                                                    // setState(() {
-                                                                    messages.remove(messages.inverse[element]);
+                                                                  if (messages.values.contains(removeElement)) {
+print('111111111111');
+                                                                    messages.remove(messages.inverse[removeElement]);
+print('222222222222222');
                                                                     // });
-                                                                    if (element.data()!["from"] != widget.uid) {
+                                                                    if (removeElement.data()!["from"] != widget.uid) {
+
+print('33333333333333');
                                                                       notUserMessages += 1;
                                                                     }
-                                                                  } else {
-                                                                    if (element.data()!["delete"]["everyone"] == false) {
-                                                                      messages[index] = element;
+                                                                  }
+                                                                  else {
+
+                                                                    if (removeElement.data()!["delete"]["everyone"] == false) {
+                                                                      messages[removeIndex] = removeElement;
                                                                     }
-                                                                    if (element.data()!["from"] != widget.uid) {
+                                                                    if (removeElement.data()!["from"] != widget.uid) {
                                                                       notUserMessages += 1;
                                                                     }
                                                                   }
@@ -2207,57 +2294,63 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                 setState(() {
 
                                                                 });
+                                                                print('Lotus66:${messages.length}');
                                                                 log(notUserMessages.toString());
                                                                 log(messages.length.toString());
                                                               },
                                                               child: Container(
-                                                                  color: (index <=
+                                                                  color: (removeIndex <=
                                                                       lastUnreadCount &&
                                                                       lastUnreadCount !=
                                                                           0)
                                                                       ? unreadMessageAnimation
                                                                       .value
-                                                                      : (messages.values.contains(element))
+                                                                      : (messages.values.contains(removeElement))
                                                                       ? Color.fromRGBO(130, 120, 95, 0.3)
                                                                       : Color(transparent),
                                                                   child:
-                                                                  (element.data()!["delete"]["personal"] == true)?
-                                                                  (element.data()!["from"] == widget.uid)?
+                                                                  (removeElement.data()!["delete"]["personal"] == true)?
+                                                                  (removeElement.data()!["from"] == widget.uid)?
                                                                   Container(
 
                                                                   ):
-                                                                  (element.data()!["delete"]["peerdelete"] == true)?
-                                                                  (element.data()!["from"] == widget.uid
+                                                                  (removeElement.data()!["delete"]["peerdelete"] == true)?
+                                                                  (removeElement.data()!["from"] == widget.uid
                                                                   )?
                                                                   buildItem(
                                                                       sizingInformation: sizingInformation,
-                                                                      document: element,
+                                                                      document: removeElement,
                                                                       // sizingInformation: sizingInformation,
                                                                       chatRoomSnapshot: chatRoomSnapshot.data!,
                                                                       // userDetailSnapshot: userDetailSnapshot.data!,
-                                                                      index: index,
-                                                                      replyIndex: (snapshot.data!.length + 1) - index):
+                                                                      index: removeIndex,
+                                                                      replyIndex: (snapshot.data!.length + 1) - removeIndex):
                                                                   SizedBox():
                                                                   buildItem(
                                                                       sizingInformation: sizingInformation,
-                                                                      document: element,
+                                                                      document: removeElement,
                                                                       // sizingInformation: sizingInformation,
                                                                       chatRoomSnapshot: chatRoomSnapshot.data!,
                                                                       // userDetailSnapshot: userDetailSnapshot.data!,
-                                                                      index: index,
-                                                                      replyIndex: (snapshot.data!.length + 1) - index):
+                                                                      index: removeIndex,
+                                                                      replyIndex: (snapshot.data!.length + 1) - removeIndex):
                                                                   buildItem(
                                                                       sizingInformation: sizingInformation,
-                                                                      document: element,
+                                                                      document: removeElement,
                                                                       // sizingInformation: sizingInformation,
                                                                       chatRoomSnapshot: chatRoomSnapshot.data!,
                                                                       // userDetailSnapshot: userDetailSnapshot.data!,
-                                                                      index: index,
-                                                                      replyIndex: (snapshot.data!.length + 1) - index)
+                                                                      index: removeIndex,
+                                                                      replyIndex: (snapshot.data!.length + 1) - removeIndex)
 
                                                               )
                                                           )
-                                                      ),
+                                                      );
+                                                          }
+
+                                }
+
+                                                      ,
                                                       controller: listScrollController,
                                                       useStickyGroupSeparators: true,
                                                       floatingHeader: true,
@@ -3742,12 +3835,15 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                         PopupMenuItem(
                                             child: GestureDetector(
                                               onTap: () {
+
+
                                                 FlutterClipboard.copy(copied).then(( value ){
                                                   final snackBar = snackbar(
                                                       content: "Message copied");
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(snackBar);
                                                 }
+
                                                 );
 
                                               },
@@ -4024,9 +4120,11 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                             true)
                                                             ? null
                                                             : () {
+                                                          print('zzzzzzzzz');
                                                           if (messages
                                                               .isEmpty ==
                                                               true) {
+
                                                             messages[index] = element;
                                                             copied = element.data()!["data"]["text"];
                                                             deliverTime = element.data()!["timestamp"];
@@ -4057,6 +4155,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                               .toString());
                                                         },
                                                         onTap: () {
+
                                                           if (messages
                                                               .isNotEmpty) {
                                                             if (messages.values
@@ -6655,6 +6754,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                           : "");
                 },
                 onLongPress: () {
+                  print('hhhhhhhhhhhhhhhhh');
                   Clipboard.setData(ClipboardData(text: Uri.decodeFull(document.data()!["data"]["story"]).toString()));
                   final snackBar = snackbar(content: "Copied to clipboard");
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);

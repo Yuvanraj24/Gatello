@@ -1,12 +1,10 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gatello/views/login_screen.dart';
-
 import 'package:gatello/views/otp_screen.dart';
-import 'package:gatello/views/tabbar/tabbar_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,21 +14,37 @@ import 'contact_list.dart';
 import 'invitefriends.dart';
 
 class AddProfilePic extends StatefulWidget {
-  const AddProfilePic({Key? key}) : super(key: key);
+  var mobileNo;
+  var password;
+  var username;
+  AddProfilePic({
+    required this.mobileNo,
+    required this.username,
+    required this.password,
+  });
   @override
   State<AddProfilePic> createState() => _AddProfilePicState();
 }
 
 class _AddProfilePicState extends State<AddProfilePic> {
 
+  FirebaseFirestore instance = FirebaseFirestore.instance;
+
+  var uid = "WEXFLqYV86UIuRU3qnsGU84jMFD3";
+
+
   File? image;
+  String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
   Future pickimage() async {
+
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (image == null) return;
-      final temporaryImage = File(image.path);
+      final image1 = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (image1 == null) return;
+      final temporaryImage = File(image1.path);
       setState(() {
         this.image = temporaryImage;
+        print("this is a img : ${image1}");
+
       });
     } on PlatformException catch (e) {
       print('unable to pick image $e');
@@ -94,15 +108,8 @@ class _AddProfilePicState extends State<AddProfilePic> {
                 SizedBox(
                   height: 30.h,
                 ),
-                // CircleAvatar(
-                //   radius: 50,
-                //   backgroundColor: Colors.transparent,
-                //   backgroundImage: (userPicture != null)
-                //       ? Image.memory(userPicture!).image
-                //       : (widget.userPicture != null)
-                //       ? Image.network(widget.userPicture!).image
-                //       : AssetImage("assets/noProfile.jpg"),
-                // ),
+                (image != null)?
+                Image.file(image!):
                 Image.asset(
                   "assets/profile_page/profile_pic_logo.png",
                   width: 165.w,
@@ -112,6 +119,12 @@ class _AddProfilePicState extends State<AddProfilePic> {
                 ElevatedButton(
                   onPressed: () {
                     pickimage();
+                    instance.collection("user-detail").doc(uid).update({
+                      "name": "arun kumar",
+                      "description": "Hello",
+                      "pic": "https://c4.wallpaperflare.com/wallpaper/611/838/413/spiderman-hd-4k-superheroes-wallpaper-preview.jpg",
+                      "updatedAt": timestamp,
+                    });
 
                   },
                   child: Text(
@@ -145,17 +158,13 @@ class _AddProfilePicState extends State<AddProfilePic> {
 
                   ),
                   onTap: (){
-                    /*Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>InviteFriends(state: 0)
-                        ));*/
-
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>LoginScreen()
+                            builder: (context) => InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username ,)
                         ));
+
+
                   },
                 )
               ]),
@@ -163,6 +172,8 @@ class _AddProfilePicState extends State<AddProfilePic> {
       ),
     );
   }
+
+
 
 
 }

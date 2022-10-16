@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gatello/Authentication/Authentication.dart';
 import 'package:http/http.dart' as http;
@@ -14,18 +15,23 @@ import 'package:gatello/views/add_profile_pic.dart';
 import 'package:gatello/views/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:tuple/tuple.dart';
 
+import '../Others/Routers.dart';
+import '../Others/exception_string.dart';
+import '../core/Models/Default.dart';
+import '../core/models/exception/pops_exception.dart';
+import '../handler/Network.dart';
 import '../utils/fire_auth.dart';
 import '../validator/validator.dart';
-import 'login_screen.dart';
 
 class AddEmail extends StatefulWidget {
-  String birthDay = "";
-  String userName = "";
-  String name = "";
-  String password = "";
-  String mobileNo = "";
-  String otp = "";
+  String birthDay;
+  String userName;
+  String name;
+  String password;
+  String mobileNo;
+  String otp ;
   String? email;
   AddEmail({
     required this.name,
@@ -42,6 +48,12 @@ class AddEmail extends StatefulWidget {
 }
 
 class _AddEmailState extends State<AddEmail> {
+
+  ValueNotifier<Tuple4> profileDetailsUpdateValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
+
+  Uint8List? userPicture;
+  String? userPictureFileName;
+
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController _emailController =TextEditingController();
@@ -170,19 +182,14 @@ class _AddEmailState extends State<AddEmail> {
                           print("EMAIL : $_email");
 
                           if (_formKey.currentState!.validate()) {
-                            registerFirebase(widget.name, widget.email, widget.password);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddProfilePic(),));
+                            registerFirebase(widget.userName, widget.email, widget.password,);
+                            profileDetailUpdateApiCallFormData();
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password,),));
 
                           } else {
                             return null;
                           }
 
-//         Form(
-//   autovalidate: true,
-//   child: TextFormField(
-//     validator: (value) => EmailValidator.validate(value) ? null : "Please enter a valid email",
-//   ),
-// )
                         },
                         child: Text(
                           'Continue',
@@ -211,7 +218,7 @@ class _AddEmailState extends State<AddEmail> {
     );
   }
   User? user;
-  registerFirebase(name, email, password) async {
+  registerFirebase(name, email, password,) async {
     user = await FireAuth.registerUsingEmailPassword(
       name: name,
       email: email,
@@ -222,21 +229,25 @@ class _AddEmailState extends State<AddEmail> {
       "name": widget.name,
       "phone": "+91${widget.mobileNo}",
       "member": "Since ${DateTime.now().year}",
+      "dob" : "10/12/2000",
       "email": widget.email,
       "username": widget.userName,
       "password": widget.password,
+      "profile_url": "https://c4.wallpaperflare.com/wallpaper/297/288/1009/5bd320d590bcf-wallpaper-preview.jpg"
     });
+
     if (user != null) {
-      print('nametest${widget.name}');
       String uid=user!.uid;
       register(body);
+      print("this is a body : ${body}");
       String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
 
       await instance.collection("user-detail").doc(uid).set({
         "uid": uid,
         "name": name,
+        "username": widget.userName,
         "email": widget.email,
-        "pic": (url != null) ? url : null,
+        "pic": "https://c4.wallpaperflare.com/wallpaper/297/288/1009/5bd320d590bcf-wallpaper-preview.jpg",
         "description": null,
         "createdAt": timestamp,
         "updatedAt": null,
@@ -249,6 +260,16 @@ class _AddEmailState extends State<AddEmail> {
         "lastseenStatus": true,
         "onlineStatus": true,
         "readRecieptStatus": true,
+        "city": null,
+        "company": null,
+        "job": null,
+        "college": null,
+        "high_school": null,
+        "interest":null,
+        "relationship_status":null,
+        "about": null,
+        "dob":widget.birthDay
+
 
         // "blocked": null,
         // "userList": null
@@ -261,6 +282,41 @@ class _AddEmailState extends State<AddEmail> {
     else {
       print("error in passing mongoDB");
     }
+  }
+
+  Future<void> add_dob_pic(var bod)async {
+    print(bod.toString());
+
+
+  }
+
+  Future profileDetailUpdateApiCallFormData() async {
+    print("Update api is called...!");
+    var uid = user!.uid;
+    return await ApiHandler()
+        .apiHandler(valueNotifier: profileDetailsUpdateValueNotifier, jsonModel: defaultFromJson, url: editprofileUrl + "?profile_url=", requestMethod: 1, formData: [
+      Tuple4("profile_file", userPicture!, "Image", "Jpeg")
+    ],
+        formBody: {
+          "user_id": uid,
+          "username": widget.userName,
+          "name": widget.name,
+          // "phone": countryCode + " " + phoneTextEditingController.text,
+          "phone": "+91${widget.mobileNo}",
+          "dob": widget.birthDay,
+          "email": _emailController.text.toString(),
+          "designation": "",
+          "city": "",
+          "member": "Since ${DateTime.now().year}",
+          "company": "",
+          "job": "",
+          "college": "",
+          "high_school": "",
+          "interest": "",
+          // "relationship_status": relationshipStatusTextEditingController.text,
+          "relationship_status": "In Love...",
+          "about": "",
+        });
   }
 
   Future<void> register(var body) async {
@@ -287,7 +343,7 @@ class _AddEmailState extends State<AddEmail> {
           // Navigator.push(context,
           //     MaterialPageRoute(builder: (context) => AddProfilePic()));
 
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> LoginScreen()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password,)), (route) => false);
         }
         else
         {

@@ -1,22 +1,18 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/create_username.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 // import 'package:intl/intl.dart';
-
-
-
 import 'birthday_on_gatello.dart';
 
 class SelectBirthday extends StatefulWidget {
-
   String name;
-
   SelectBirthday({
     required this.name,
-});
+  });
+
+
 
 
 
@@ -55,7 +51,7 @@ class _SelectBirthdayState extends State<SelectBirthday> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'What\'s Your Name?',
+              'When\'s Your Birthday?',
               style: GoogleFonts.fredoka(
                   textStyle: TextStyle(
                       fontSize: 28.sp,
@@ -65,24 +61,24 @@ class _SelectBirthdayState extends State<SelectBirthday> {
             TextButton(
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context) =>
-                  BirthdayGatello()));
+                      BirthdayGatello()));
                 },
                 child: Text("Why do I need to provide my date of birth?",style:
-                  GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:11.sp))),
+                GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:11.sp))),
             TextFormField(
               cursorColor:Colors.white,
               onTap: () async {
                 _myDateTime = (await  showDatePicker(context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(1950),
-                lastDate: DateTime(2050)))!;
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1950),
+                    lastDate: DateTime(2050)))!;
                 setState(() {
-                time = DateFormat('dd-MM-yyyy').format(_myDateTime);
+                  time = DateFormat('dd-MM-yyyy').format(_myDateTime);
                 });
               },
               controller: TextEditingController(text: time.toString()),
               decoration: InputDecoration(labelText: "Birthday",
-              hintText:time),
+                  hintText:time),
             ),
             SizedBox(height: 30),
 
@@ -93,7 +89,7 @@ class _SelectBirthdayState extends State<SelectBirthday> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CreateUsername(name: widget.name, birthDay: '',),
+                        builder: (context) => CreateUsername(name: widget.name, birthDay: time,),
                       ));
 
                 },

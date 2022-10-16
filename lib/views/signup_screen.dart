@@ -407,18 +407,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
         appBar: AppBar(
           leading: Center(
               child: TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Back',
-              style: GoogleFonts.roboto(
-                  textStyle: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black)),
-            ),
-          )),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Back',
+                  style: GoogleFonts.roboto(
+                      textStyle: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black)),
+                ),
+              )),
         ),
         body: Form(
           key: _formkey,
@@ -471,7 +471,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     //         }
                     //      },
                     style:
-                        TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500),
+                    TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500),
                     cursorColor: Colors.black,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 8.h),
@@ -483,11 +483,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               color: Colors.black)),
                       focusedBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.black, width: 1.w),
+                          BorderSide(color: Colors.black, width: 1.w),
                           borderRadius: BorderRadius.circular(6)),
                       enabledBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.black, width: 1.w),
+                          BorderSide(color: Colors.black, width: 1.w),
                           borderRadius: BorderRadius.circular(6)),
                     ),
                   ),
@@ -516,7 +516,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     //   }
                     // },
                     style:
-                        TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500),
+                    TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500),
                     cursorColor: Colors.black,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 8.h),
@@ -528,11 +528,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               color: Colors.black)),
                       focusedBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.black, width: 1.w),
+                          BorderSide(color: Colors.black, width: 1.w),
                           borderRadius: BorderRadius.circular(6)),
                       enabledBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.black, width: 1.w),
+                          BorderSide(color: Colors.black, width: 1.w),
                           borderRadius: BorderRadius.circular(6)),
                     ),
                   ),
@@ -596,21 +596,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Spacer(),
                 ElevatedButton(
                   style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
-                  shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(27)),
-                    fixedSize: Size(234.w, 50.h)),
+                      shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(27)),
+                      fixedSize: Size(234.w, 50.h)),
                   onPressed: () {
                     if (widget.first!.isNotEmpty && widget.last!.isNotEmpty) {
-                      String name = "${widget.first}" +
+                      String name = widget.first.toString() +
                           " " +
-                          "${widget.last}";
+                          widget.last.toString();
 
-                      print("${widget.first}" +
+                      print(widget.first.toString() +
                           " " +
-                          "${widget.last}");
+                          widget.last.toString());
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SelectBirthday(name: "${name}",)));
+                              builder: (context) => SelectBirthday(name: name)));
                     } else {
                       showDialog(
                           context: context,
@@ -621,11 +621,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           });
                     }
 
-                   },
+                  },
                   child: Text(
-                    'Sign Up',style:GoogleFonts.inter(fontWeight:FontWeight.w600,fontSize:14.sp,
-                  color:Colors.black)),
-                  ),
+                      'Sign Up',style:GoogleFonts.inter(fontWeight:FontWeight.w600,fontSize:14.sp,
+                      color:Colors.black)),
+                ),
 
               ],
             ),
