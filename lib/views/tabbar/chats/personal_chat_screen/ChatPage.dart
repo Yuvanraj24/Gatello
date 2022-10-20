@@ -2693,7 +2693,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                                 ),
                                                                                                 GestureDetector(
                                                                                                   onTap: () async {
+
                                                                                                     return await imageNvideo().then((value) async {
+                                                                                                      Navigator.of(context).pop();
                                                                                                       if (value!.files.isNotEmpty) {
                                                                                                         print('check1');
                                                                                                         Navigator.push(
@@ -2702,7 +2704,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                                               builder: (context) => AssetPageView(
                                                                                                                 fileList: value.files,
                                                                                                                 onPressed: () async {
-                                                                                                                  Navigator.pop(context);
+                                                                                                                  Navigator.of(context).pop();
                                                                                                                   for (var file in value.files) {
                                                                                                                     print('check2');
                                                                                                                     if (file.size < 52428800 && file.bytes != null) {
@@ -2751,8 +2753,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                                               ),
                                                                                                             ));
                                                                                                       }
+
                                                                                                     });
-                                                                                                    Navigator.pop(context);
+
                                                                                                   },
 
                                                                                                   child: iconCreation(
