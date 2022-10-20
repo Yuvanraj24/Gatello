@@ -184,7 +184,7 @@ class _AddEmailState extends State<AddEmail> {
                           if (_formKey.currentState!.validate()) {
                             registerFirebase(widget.userName, widget.email, widget.password,);
                             profileDetailUpdateApiCallFormData();
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password,),));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid),));
 
                           } else {
                             return null;
@@ -244,10 +244,9 @@ class _AddEmailState extends State<AddEmail> {
 
       await instance.collection("user-detail").doc(uid).set({
         "uid": uid,
-        "name": name,
+        "name": widget.name,
         "username": widget.userName,
         "email": widget.email,
-        "pic": "https://c4.wallpaperflare.com/wallpaper/297/288/1009/5bd320d590bcf-wallpaper-preview.jpg",
         "description": null,
         "createdAt": timestamp,
         "updatedAt": null,
@@ -343,7 +342,9 @@ class _AddEmailState extends State<AddEmail> {
           // Navigator.push(context,
           //     MaterialPageRoute(builder: (context) => AddProfilePic()));
 
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password,)), (route) => false);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
+
+              AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid),), (route) => false);
         }
         else
         {

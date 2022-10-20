@@ -17,10 +17,10 @@ import '../handler/Network.dart';
 import '../validator/validator.dart';
 
 class AddMobileNumber extends StatefulWidget {
-  String birthDay = "";
-  String userName = "";
-  String name = "";
-  String password = "";
+  String birthDay;
+  String userName;
+  String name;
+  String password ;
   String? mobileNo;
 
   AddMobileNumber({

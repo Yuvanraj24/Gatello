@@ -1,26 +1,52 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gatello/views/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
+import 'package:tuple/tuple.dart';
 
+import '../Firebase/Writes.dart';
+import '../Others/Routers.dart';
+import '../Others/exception_string.dart';
+import '../components/AssetPageView.dart';
+import '../components/SnackBar.dart';
+import '../core/Models/Default.dart';
+import '../core/models/exception/pops_exception.dart';
+import '../handler/Network.dart';
 import 'contact_list.dart';
 import 'invitefriends.dart';
 
 class AddProfilePic extends StatefulWidget {
+  var uid;
   var mobileNo;
   var password;
   var username;
+  var name;
+  var birthDay;
+  var email;
+  String? userPicture;
+
   AddProfilePic({
+    required this.uid,
     required this.mobileNo,
     required this.username,
     required this.password,
+    required this.birthDay,
+    required this.name,
+     this.userPicture,
+    required this.email
+
+
   });
   @override
   State<AddProfilePic> createState() => _AddProfilePicState();
@@ -28,14 +54,83 @@ class AddProfilePic extends StatefulWidget {
 
 class _AddProfilePicState extends State<AddProfilePic> {
 
+  var profileByte;
+
   FirebaseFirestore instance = FirebaseFirestore.instance;
 
-  var uid = "WEXFLqYV86UIuRU3qnsGU84jMFD3";
+
+  ValueNotifier<Tuple4> profileDetailsUpdateValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
+  Uint8List? userPicture;
 
 
   File? image;
   String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+
+  Future<FilePickerResult?> gallery() async =>
+      await FilePicker.platform.pickFiles(
+
+          withData: true,
+          allowMultiple: true,
+          type: FileType.custom,
+          allowedExtensions: ['jpg', 'jpeg',]
+
+        // withData: true,
+        // allowedExtensions: ['jpg'],
+      );
+
+  Future<FilePickerResult?> camera() async => await FilePicker.platform.pickFiles(
+    withData: true,
+    type: FileType.custom,
+    allowedExtensions: ['jpg', 'jpeg'],
+  );
+
+  Future profileDetailUpdateApiCallBody() async {
+
+
+    Stream<QuerySnapshot>  userRef = instance.collection("user-detail").where("uid",isEqualTo: widget.uid).snapshots();
+
+    userRef.forEach((field) {
+      field.docs.asMap().forEach((index, data) {
+        print("Proff:${field.docs[index]["pic"]}");
+        userPicture=field.docs[index]["pic"];
+
+
+      });
+    });
+
+        ByteData bytes = await rootBundle.load('assets/noProfile.jpg');
+    return await ApiHandler().apiHandler(
+        valueNotifier: profileDetailsUpdateValueNotifier,
+        jsonModel: defaultFromJson,
+        url: editprofileUrl + "?profile_url=${userPicture ?? ""}",
+        requestMethod: 1,
+        formData: (userPicture == null) ? [Tuple4("profile_file", profileByte, "Image", "Jpeg")] : null,
+        formBody: {
+          "user_id": widget.uid,
+          "username": widget.username,
+          "name": widget.name,
+          // "phone": countryCode + " " + phoneTextEditingController.text,
+          "phone": "+91${widget.mobileNo}",
+          "dob": widget.birthDay,
+          "email": widget.email,
+          "designation": "",
+          "city": "",
+          "member": "",
+          "company": "",
+          "job": "",
+          "college": "",
+          "high_school": "",
+          "interest": "",
+          // "relationship_status": relationshipStatusTextEditingController.text,
+          "relationship_status": "",
+          "about": "",
+
+        });
+  }
+
+
   Future pickimage() async {
+
 
     try {
       final image1 = await ImagePicker().pickImage(source: ImageSource.camera);
@@ -56,7 +151,6 @@ class _AddProfilePicState extends State<AddProfilePic> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-
           leading: Center(
               child: TextButton(
                 onPressed: () {
@@ -108,8 +202,8 @@ class _AddProfilePicState extends State<AddProfilePic> {
                 SizedBox(
                   height: 30.h,
                 ),
-                (image != null)?
-                Image.file(image!):
+                // (image != null)?
+                // Image.file(image!):
                 Image.asset(
                   "assets/profile_page/profile_pic_logo.png",
                   width: 165.w,
@@ -117,14 +211,131 @@ class _AddProfilePicState extends State<AddProfilePic> {
 
                 Spacer(),
                 ElevatedButton(
-                  onPressed: () {
-                    pickimage();
-                    instance.collection("user-detail").doc(uid).update({
-                      "name": "arun kumar",
-                      "description": "Hello",
-                      "pic": "https://c4.wallpaperflare.com/wallpaper/611/838/413/spiderman-hd-4k-superheroes-wallpaper-preview.jpg",
-                      "updatedAt": timestamp,
-                    });
+                  onPressed: () async{
+
+                    showModalBottomSheet(context: context, builder: (context) {
+                      return Container(height:200.h,padding:EdgeInsets.only(top:25.h,left: 20.w),
+                        child:Column(crossAxisAlignment:CrossAxisAlignment.start,
+                          children: [
+                            Text("Profile Photo",  style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black)),),
+                            Padding(
+                              padding: EdgeInsets.only(left:65.w,top:30.h),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      return await gallery().then((value) async {
+                                        if (value != null && value.files.first.size<52428800) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => AssetPageView(
+                                                    fileList: value.files,
+                                                    onPressed: () async {
+                                                      Navigator.pop(context);
+                                                      TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(
+                                                          file: value.files.first.bytes!,
+                                                          fileName: timestamp,
+                                                          contentType: "image/" + value.files.first.extension!, guid: '');
+                                                      String url = await taskSnapshot.ref.getDownloadURL();
+                                                      profileByte = value.files.first.bytes!;
+                                                      instance.collection("user-detail").doc(widget.uid).update({
+                                                        "uid": widget.uid,
+                                                        "pic": url,
+
+                                                      });
+
+                                                      profileDetailUpdateApiCallBody();
+
+                                                    },
+                                                  ))).whenComplete(() =>
+                                              Navigator.push(context,
+
+                                              MaterialPageRoute(
+                                                  builder: (context) => InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username, Getstarted: 'Sign up' ,)
+                                              )));
+                                        } else {
+                                          final snackBar = snackbar(content: "File size is greater than 50MB");
+                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                        }
+                                      });
+
+                                    },
+                                    child: Column(children: [
+                                      SvgPicture.asset("assets/icons_assets/signup_gallery.svg",height:50.h,width:50.w,),
+                                      SizedBox(height:10.h,),
+                                      Text("Gallery",  style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black)),)
+                                    ],),
+                                  ),
+
+                                  SizedBox(width:80.w,),
+
+                                  GestureDetector(
+                                    onTap: ()async{
+                                      return await pickimage().then((value) async {
+                                        if (value != null && value.files.first.size<52428800) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => AssetPageView(
+                                                    fileList: value.files,
+                                                    onPressed: () async {
+                                                      Navigator.pop(context);
+                                                      TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(
+                                                          file: value.files.first.bytes!,
+                                                          fileName: timestamp,
+                                                          contentType: "image/" + value.files.first.extension!, guid: '');
+                                                      String url = await taskSnapshot.ref.getDownloadURL();
+                                                      profileByte = value.files.first.bytes!;
+                                                      instance.collection("user-detail").doc(widget.uid).update({
+                                                        "uid": widget.uid,
+                                                        "pic": url,
+
+                                                      });
+
+                                                      profileDetailUpdateApiCallBody();
+
+                                                    },
+                                                  ))).whenComplete(() =>
+                                              Navigator.push(context,
+
+                                              MaterialPageRoute(
+                                                  builder: (context) => InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username, Getstarted: 'Sign up' ,)
+                                              )));
+                                        } else {
+                                          final snackBar = snackbar(content: "File size is greater than 50MB");
+                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                        }
+                                      });
+                                    },
+                                    child: Column(children: [
+                                      SvgPicture.asset("assets/icons_assets/signup_camera.svg",height:50.h,width:50.w,),
+                                      SizedBox(height:10.h,),
+                                      Text("Camera",  style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black)),)
+                                    ],),
+                                  )
+                                ],),
+                            ),
+                          ],
+                        ),
+                      );
+                    },);
+
+
+
+
 
                   },
                   child: Text(
@@ -161,7 +372,7 @@ class _AddProfilePicState extends State<AddProfilePic> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username ,)
+                            builder: (context) => InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username, Getstarted: 'Sign up' ,)
                         ));
 
 

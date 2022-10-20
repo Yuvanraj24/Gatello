@@ -149,7 +149,7 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (newuser == false) ? Tabbar():LoginScreen();
+                              return (newuser == false) ? Tabbar():LoginScreen() ;
 
                             } else {
                               return lottieAnimation(loadingLottie);

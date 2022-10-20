@@ -139,7 +139,7 @@ final data1=await _getUID();
   void initState() {
 _future=sendData();
 if (widget.state == 0 && fileList != null) {
-  fileList = fileList!;
+  fileList = fileList;
   if (!mounted) return;
   setState(() {
     initLoading = false;

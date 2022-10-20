@@ -297,6 +297,8 @@ flutter:
     - assets/settngs/QR.svg
     - assets/settngs/account_icon.svg
     - assets/select_contact/right_arrow.svg
+    - assets/icons_assets/signup_camera.svg
+    - assets/icons_assets/signup_gallery.svg
     - assets/error_icon.svg
     - assets/audio/
   # An image asset can refer to one or more resolution-specific "variants", see

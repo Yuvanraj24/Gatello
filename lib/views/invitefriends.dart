@@ -29,8 +29,10 @@ class InviteFriends extends StatefulWidget {
   var mobileNo;
   var password;
   var username;
+  String Getstarted;
 
   InviteFriends({
+    required this.Getstarted,
     this.mobileNo,
     this.password,
     required this.state,
@@ -68,7 +70,7 @@ class _ContactListState extends State<InviteFriends> {
     if ( searchController.text.isNotEmpty){
       _contact.retainWhere( (contact){
         String searchTerm = searchController.text.toLowerCase();
-        String contactName = contact.displayName!.toLowerCase();
+        String contactName = contact.displayName.toLowerCase();
         return contactName.contains(searchTerm);
       });
       setState(() {
@@ -236,7 +238,7 @@ class _ContactListState extends State<InviteFriends> {
                                                     borderRadius:
                                                     new BorderRadius.circular(5),
                                                   ),
-                                                  fixedSize: Size(75.w, 26.h),
+                                                  fixedSize: Size(85.w, 26.h),
                                                   primary:
                                                   Color.fromRGBO(248, 206, 97, 1)),
                                               onPressed: (widget.state == 0)?() async{
@@ -262,23 +264,26 @@ class _ContactListState extends State<InviteFriends> {
                                                   });
                                                 }
                                               },
-                                              child:Column(crossAxisAlignment: CrossAxisAlignment.center,
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  SvgPicture.asset('assets/invite_friends/add_icon.svg',
-                                                    height:28.h,width: 28.w,),
-                                                ],
-                                              ))
+                                              child:Container(width:82.w,
+                                                child: SvgPicture.asset('assets/invite_friends/add_icon.svg',
+                                                  height:28.h,width: 28.w,),
+                                              )
+                                          )
                                               : (selectedContactsId.contains(snapshot.data![index].id))
                                               ? Icon(Icons.done)
                                               : null,
                                         ),
-                                        Divider(color:Color.fromRGBO(0, 0, 0, 0.14),thickness:0.8.h,indent:12.w,)
+                                        Divider(
+                                            color: Color.fromRGBO(0, 0, 0, 0.14),
+                                            thickness:0.8.h,
+                                            indent:12.w
+                                        )
                                       ]
                                       );
                                     }
                                   }),
                             ),
+                            widget.Getstarted.contains("Sign up")?
                             ElevatedButton(style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
                                 fixedSize:Size(234.w,53.h),shape:RoundedRectangleBorder(borderRadius:
                                 BorderRadius.circular(26))),
@@ -298,7 +303,8 @@ class _ContactListState extends State<InviteFriends> {
 
                                 }, child:Text('Get started',style:GoogleFonts.inter(textStyle:TextStyle(
                                     fontWeight:FontWeight.w600,fontSize:14.sp,color:Colors.black
-                                )),))
+                                )),)):
+                            SizedBox()
                           ],
                           ),
                         );
@@ -360,11 +366,12 @@ class _ContactListState extends State<InviteFriends> {
           Map<String, dynamic> map1 = jsonDecode(resultJson);
           print("LOGIN RESPONSE");
           print("this is a uid : ${map1['user_id']}");
-          // String username = widget.mobileNo;
-          // logindata.setBool('login', false);
-          // logindata.setString('username', username);
-          // SharedPrefHandler sharedPrefHandler=new SharedPrefHandler();
-          // sharedPrefHandler.writeUserInfo(map1['user_id'], map1['email'], map1['root_folder_id']);
+          String username = widget.mobileNo;
+          logindata = await SharedPreferences.getInstance();
+          logindata.setBool('login', false);
+          logindata.setString('username', username);
+          SharedPrefHandler sharedPrefHandler=new SharedPrefHandler();
+          sharedPrefHandler.writeUserInfo(map1['user_id'], map1['email'], map1['root_folder_id']);
           print("this is a uid 2nd check : ${map1['user_id']}");
           await instance.collection("user-detail").doc(map1['user_id']).update({"token": await getFCMToken()});
           Navigator.pushReplacement(context,

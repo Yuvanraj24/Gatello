@@ -257,7 +257,7 @@ class _ChatDetailsState extends State<ChatDetails> {
                                 height:80.h,
                                 width: 80.w,
                               ),
-                              Positioned(right:0.w,top:1.h,
+                              (widget.state == 0)?SizedBox():Positioned(right:0.w,top:1.h,
                                 child: Container(
                                   height: 28.h,
                                   width: 28.w,

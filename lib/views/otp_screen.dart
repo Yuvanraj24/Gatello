@@ -21,11 +21,11 @@ import '../core/Models/Default.dart';
 import '../core/models/exception/pops_exception.dart';
 
 class Otp extends StatefulWidget {
-  String birthDay = "";
-  String userName = "";
-  String name = "";
-  String password = "";
-  String mobileNo = "";
+  String birthDay;
+  String userName ;
+  String name;
+  String password;
+  String mobileNo;
   String? otp;
 
   Otp({
@@ -136,42 +136,7 @@ class _OtpState extends State<Otp> {
                             fontWeight: FontWeight.w700,
                             color: Colors.black)),
                   ),
-                  //  SizedBox(height: 13.h),
-                  //    Container(
-                  //   height: 81.h,
-                  //   child: OTPTextField(
-                  //     isDense: true,
 
-                  //     controller: _otpController,
-
-                  //     length: 6,
-
-                  //     fieldStyle: FieldStyle.underline,
-                  //     contentPadding: EdgeInsets.all(17.h),
-
-                  //     width: curWidth * 0.68,
-
-                  //     fieldWidth: 46.w,
-                  //     otpFieldStyle: OtpFieldStyle(
-                  //       backgroundColor: Colors.transparent,
-                  //       borderColor: Colors.pink,
-                  //       focusBorderColor: Colors.black,
-                  //       enabledBorderColor: Colors.black,
-                  //       errorBorderColor: Colors.red,
-                  //     ),
-                  //     // outlineBorderRadius: 5,
-                  //     style: GoogleFonts.inter(
-                  //         textStyle: TextStyle(
-                  //             fontSize: 32.sp,
-                  //             fontWeight: FontWeight.w600,
-                  //             color: Colors.black)),
-                  //     onChanged: (pin) {},
-                  //     onCompleted: (pin) {
-                  //   //    widget.otp = pin;
-                  //       //return pressEvent();
-                  //     },
-                  //   ),
-                  // ),
                   Container(
 
                     //   color: Colors.pink,
@@ -221,43 +186,9 @@ class _OtpState extends State<Otp> {
                       print(widget.mobileNo);
                       print(widget.otp);
 
-                      verifyOtp1(widget.mobileNo,widget.otp!);
-                      if(verifyOtpValueNotifier.value.item1==1) {
-                        print('22222222222222');
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) =>
-                                AddEmail(
-                                  name: widget.name,
-                                  birthDay: widget.birthDay,
-                                  userName: widget.userName,
-                                  password: widget.password,
-                                  mobileNo: widget.mobileNo,
-                                  otp: widget.otp.toString(),
+                      verifyOtp1(widget.mobileNo,widget.otp!).then((value) => navigateToNext());
 
-                                )));
 
-                      }
-
-                      // else if(verifyOtpValueNotifier.value.item1==3){
-                      //   Fluttertoast.showToast(
-                      //       msg: "Otp invalid",
-                      //       // toastLength: Toast.LENGTH_SHORT,
-                      //       timeInSecForIosWeb: 1
-                      //   );
-                      // }
-                      // else{
-                      //   Navigator.push(context,
-                      //       MaterialPageRoute(builder: (context) =>
-                      //           AddEmail(
-                      //             name: widget.name,
-                      //             birthDay: widget.birthDay,
-                      //             userName: widget.userName,
-                      //             password: widget.password,
-                      //             mobileNo: widget.mobileNo,
-                      //             otp: widget.otp.toString(),
-                      //
-                      //           )));
-                      // }
 
                     },
                     child: Text(
@@ -283,6 +214,24 @@ class _OtpState extends State<Otp> {
       ),
     );
   }
+  navigateToNext(){
+    if(verifyOtpValueNotifier.value.item1==1) {
+      print("Navigate is working...!");
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) =>
+              AddEmail(
+                name: widget.name,
+                birthDay: widget.birthDay,
+                userName: widget.userName,
+                password: widget.password,
+                mobileNo: widget.mobileNo,
+                otp: widget.otp.toString(),
+
+              )));
+
+    }
+  }
+
   Future verifyOtp1(String phoneNumber, String otp) async {
 
     return await ApiHandler().apiHandler(

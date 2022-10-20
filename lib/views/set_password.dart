@@ -14,9 +14,9 @@ import '../validator/validator.dart';
 import 'login_screen.dart';
 
 class SetPassword extends StatefulWidget {
-  String birthDay = "";
-  String userName = "";
-  String name = "";
+  String birthDay;
+  String userName;
+  String name;
   String? password;
   SetPassword({
     required this.name,
@@ -232,10 +232,10 @@ bool iscorrect=false;
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            print(widget.name);
-                            print(widget.birthDay);
-                            print(widget.userName);
-                            print(widget.password);
+                            print("Name : ${widget.name}");
+                            print("Birthday : ${widget.birthDay}");
+                            print("Username : ${widget.userName}");
+                            print("Password : ${widget.password}");
                             setState(() {
                               iscorrect=false;
                             });

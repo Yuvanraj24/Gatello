@@ -1,124 +1,34 @@
 {
   "project_info": {
-    "project_number": "391313841103",
-    "project_id": "gatello-5d386",
-    "storage_bucket": "gatello-5d386.appspot.com"
+    "project_number": "1073199558423",
+    "project_id": "gatello-274cd",
+    "storage_bucket": "gatello-274cd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:391313841103:android:0b534dd17b54eafd3a10ba",
-        "android_client_info": {
-          "package_name": "com.example.flutter_callkit_incoming_example"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "391313841103-m630ai2dg14i6sfd7rdmene8as86fpvt.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.flutter_callkit_incoming_example",
-            "certificate_hash": "6348f1aeca741427902766a8adf55afc9c5d2575"
-          }
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAomWdGgiatrauXZHk3PIrbF4hCBpWYHnk"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "391313841103-3r338285tv4q8fpqihp2aeun01kg393i.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "391313841103-64dsefjfri7qeg4mek5b65lrud9ohc3g.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.souvikbiswas.flutterAuthentication"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:391313841103:android:9f828433a1957df33a10ba",
-        "android_client_info": {
-          "package_name": "com.example.gatello"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAomWdGgiatrauXZHk3PIrbF4hCBpWYHnk"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "391313841103-3r338285tv4q8fpqihp2aeun01kg393i.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "391313841103-64dsefjfri7qeg4mek5b65lrud9ohc3g.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.souvikbiswas.flutterAuthentication"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:391313841103:android:8952842cd858b8323a10ba",
+        "mobilesdk_app_id": "1:1073199558423:android:e705a17bc502d90cf0d152",
         "android_client_info": {
           "package_name": "com.gatello.user"
         }
       },
       "oauth_client": [
         {
-          "client_id": "391313841103-rirt60lgtdt34n30m3atfeai1ujecgng.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.gatello.user",
-            "certificate_hash": "6348f1aeca741427902766a8adf55afc9c5d2575"
-          }
-        },
-        {
-          "client_id": "391313841103-sdj3vfoh7ehtmpa65t3bbkallmino8cv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.gatello.user",
-            "certificate_hash": "7329d7b19aa1163e0eca6d879a1ba74e151b911f"
-          }
+          "client_id": "1073199558423-oc1gehch1l6u4u09gsrjg0rsgvq8aint.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAomWdGgiatrauXZHk3PIrbF4hCBpWYHnk"
+          "current_key": "AIzaSyDsm8_yZL6GE4BOPUAMYrgorjxCh4-TF5E"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "391313841103-3r338285tv4q8fpqihp2aeun01kg393i.apps.googleusercontent.com",
+              "client_id": "1073199558423-oc1gehch1l6u4u09gsrjg0rsgvq8aint.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "391313841103-64dsefjfri7qeg4mek5b65lrud9ohc3g.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.souvikbiswas.flutterAuthentication"
-              }
             }
           ]
         }

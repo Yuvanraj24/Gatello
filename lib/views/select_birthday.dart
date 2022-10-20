@@ -66,6 +66,7 @@ class _SelectBirthdayState extends State<SelectBirthday> {
                 child: Text("Why do I need to provide my date of birth?",style:
                 GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:11.sp))),
             TextFormField(
+              autofocus: false,
               cursorColor:Colors.white,
               onTap: () async {
                 _myDateTime = (await  showDatePicker(context: context,

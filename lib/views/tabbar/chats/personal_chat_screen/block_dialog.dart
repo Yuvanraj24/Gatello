@@ -28,16 +28,7 @@ class _BlockCustomDialogState extends State<BlockCustomDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       insetPadding: EdgeInsets.only(left: 12, right: 12),
       titlePadding: EdgeInsets.all(0),
-      // title: Text(
-      //   'Mute notifications for...',
-      //   style: GoogleFonts.inter(
-      //       textStyle: TextStyle(
-      //           fontSize: 16.sp,
-      //           fontWeight: FontWeight.w700,
-      //           color: Color.fromRGBO(0, 0, 0, 1))),
-      // ),
       title: Container(
-//color: Colors.blue,
         height: 210.h,
         width: 380.w,
         padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
@@ -115,37 +106,37 @@ class _BlockCustomDialogState extends State<BlockCustomDialog> {
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Color.fromRGBO(0, 163, 255, 1))),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-
-                  },
-                  child: Text(
-                    'Block',
-                    style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Color.fromRGBO(255, 38, 38, 1))),
-                  ),
-                ),
-              ],
-            )
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            //     TextButton(
+            //       onPressed: () {
+            //         Navigator.pop(context);
+            //       },
+            //       child: Text(
+            //         'Cancel',
+            //         style: GoogleFonts.inter(
+            //             textStyle: TextStyle(
+            //                 fontSize: 16.sp,
+            //                 fontWeight: FontWeight.w700,
+            //                 color: Color.fromRGBO(0, 163, 255, 1))),
+            //       ),
+            //     ),
+            //     TextButton(
+            //       onPressed: () {
+            //
+            //       },
+            //       child: Text(
+            //         'Block',
+            //         style: GoogleFonts.inter(
+            //             textStyle: TextStyle(
+            //                 fontSize: 16.sp,
+            //                 fontWeight: FontWeight.w700,
+            //                 color: Color.fromRGBO(255, 38, 38, 1))),
+            //       ),
+            //     ),
+            //   ],
+            // )
           ],
         ),
       ),

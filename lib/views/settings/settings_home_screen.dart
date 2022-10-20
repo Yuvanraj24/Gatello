@@ -151,7 +151,9 @@ class _SettingState extends State<Setting> {
                             decoration: BoxDecoration(
                                 border: Border.all(width: 2,color: Color.fromRGBO(248, 206, 97,1 )),
                                 shape: BoxShape.circle,
-                                image: (profileDetailsValueNotifier.value.item2.result.profileDetails.profileUrl!=null)?DecorationImage(image: NetworkImage(profileDetailsValueNotifier.value.item2.result.profileDetails.profileUrl),fit: BoxFit.cover):DecorationImage(image: AssetImage('assets/profile_page/profile_pic_logo.png'),fit: BoxFit.cover)
+                                image: (profileDetailsValueNotifier.value.item2.result.profileDetails.profileUrl!=null)?
+                                DecorationImage(image: NetworkImage(profileDetailsValueNotifier.value.item2.result.profileDetails.profileUrl),fit: BoxFit.cover):
+                                DecorationImage(image: AssetImage('assets/profile_page/profile_pic_logo.png'),fit: BoxFit.cover)
                             ),
                           ),
                         ),
@@ -203,7 +205,7 @@ class _SettingState extends State<Setting> {
                                             String url = await taskSnapshot.ref.getDownloadURL();
 
                                             await instance
-                                                .collection("group-detail")
+                                                .collection("user-detail")
                                                 .doc()
                                                 .set({"pic": url, "updatedAt": DateTime.now().millisecondsSinceEpoch.toString()}, SetOptions(merge: true));
                                           },
