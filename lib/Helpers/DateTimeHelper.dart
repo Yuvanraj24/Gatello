@@ -48,7 +48,7 @@ String getDateTimeChat({required DateTime datetime}) {
   return datetime.isAfter(currentDatetime.subtract(Duration(days: 1)))
       ? formatTime(datetime)
       : datetime.isAfter(currentDatetime.subtract(Duration(days: 2)))
-      ? "Yesterday"
+      ? "yesterday"
       : formatDate(datetime);
   // Duration duration = currentDatetime.difference(datetime);
   // if (duration.inDays == 0) {
@@ -84,12 +84,12 @@ String getDateTimeInChat({required DateTime datetime}) {
   print("getDateTimeInChat");
 
   if ((currentTime.year == checkedTime.year) && (currentTime.month == checkedTime.month) && (currentTime.day == checkedTime.day)) {
-    return "TODAY";
+    return "today";
   } else if ((currentTime.year == checkedTime.year) && (currentTime.month == checkedTime.month)) {
     if ((currentTime.day - checkedTime.day) == 1) {
-      return "YESTERDAY";
+      return "yesterday";
     } else if ((currentTime.day - checkedTime.day) == -1) {
-      return "TOMORROW";
+      return "tomorrow";
     } else {
       return DateFormat.yMMMd().format(tz.TZDateTime.parse(tz.local, datetime.toString()));
     }

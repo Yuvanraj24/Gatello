@@ -185,6 +185,7 @@ flutter:
     - assets/tabbar_icons/tab_view_main/linked devices tab.svg
     - assets/tabbar_icons/tab_view_main/new group tab.svg
     - assets/tabbar_icons/tab_view_main/settings_icon.svg
+    - assets/icons_assets/wrong.svg
     - assets/per_chat_icons/sendIcon.svg
     - assets/tabbar_icons/tab_view_main/chats_image/video_search.svg
     - assets/tabbar_icons/tab_view_main/chats_image/doc_search.svg

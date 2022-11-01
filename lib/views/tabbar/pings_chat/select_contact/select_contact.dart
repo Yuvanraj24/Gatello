@@ -4,29 +4,15 @@ import 'dart:developer';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:async';
-import 'dart:developer';
-// import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fast_contacts/fast_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gatello/views/tabbar/test_code/UserDetails.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:overlay_support/overlay_support.dart';
-import 'package:responsive_builder/responsive_builder.dart';
-import 'package:substring_highlight/substring_highlight.dart';
-
 import '../../../../Firebase/FirebaseNotifications.dart';
 import '../../../../Firebase/Writes.dart';
 import '../../../../Others/Structure.dart';
@@ -37,8 +23,6 @@ import '../../../../Style/Text.dart';
 import '../../../../components/ScaffoldDialog.dart';
 import '../../../../components/SnackBar.dart';
 import '../../../../components/TextField.dart';
-import '../../../../main.dart';
-
 import '../../../invitefriends.dart';
 import '../../../profile/user_proflle.dart';
 import '../../chats/group_personal_screen/test_code2/CreateGroup.dart';
@@ -58,7 +42,6 @@ class SearchPage extends StatefulWidget {
   final List<String>? participants;
   final bool video;
   final String? channelName;
-
   const SearchPage({Key? key, required this.state,required  this.sizingInformation,
     this.gid, this.participants, this.video = false, this.channelName}) : super(key: key);
   @override
@@ -80,8 +63,7 @@ class _SearchPageState extends State<SearchPage> {
   List contacts1 = [];
   List contacts2 = [];
   List<String> contactNames = [];
-  bool searching =false;
-  String nameSearch = '';
+
   int conLen=0;
 
   List con2 = [];
@@ -140,9 +122,13 @@ class _SearchPageState extends State<SearchPage> {
       });
     }
   }
+  initData(){
+
+  }
   @override
   void initState() {
     _getUID();
+    getDataList();
     // if (widget.state == 0 || widget.state == 4 || widget.state == 6) {
     userChatList(searchQuery: searchTextEditingController.text);
     _contacts = getContacts();
@@ -355,21 +341,23 @@ class _SearchPageState extends State<SearchPage> {
     // Contact contact = isSearching==true? filteredContacts.elementAt():contacts.elementAt(1);
     //  print('Lotus77${filteredContacts.elementAt(1)}');
     return SafeArea(
-      child: FutureBuilder(
-          future: _getUID(),
+      child: StreamBuilder(
+          stream: Stream.value(getDataList()),
           builder: (context, _) {
             return ResponsiveBuilder(builder: (context, sizingInformation) {
               //    print('Lotus6${filteredContacts.elementAt(0).phones}');
-              
+
+
               return Scaffold(
                 resizeToAvoidBottomInset: false,
                 floatingActionButton: (widget.state == 4 || widget.state == 5)
                     ? FloatingActionButton(
                   onPressed: () async {
                     if (groupMemberList.isNotEmpty && memberList.isNotEmpty) {
+                      print("The GroupList : ${groupMemberList}");
+                      print("GroupList Count : ${groupMemberList.length}");
                       if (widget.state == 4) {
-                        if (sizingInformation.deviceScreenType ==
-                            DeviceScreenType.desktop) {
+                        if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
                           return await scaffoldAlertDialogBox(context: context,
                               page: CreateGroup(members: groupMemberList, uid: uid.toString(),));
                         } else {
@@ -402,17 +390,100 @@ class _SearchPageState extends State<SearchPage> {
                   },
                   child: Icon(Icons.done),
                 )
-                    : FloatingActionButton(
-                    child: Text("press"),
-                    onPressed: (){
-                      getDataList();
-                    }),
+                    : null,
+                // FloatingActionButton(
+                //     child: Text("press"),
+                //     onPressed: (){
+                //       getDataList();
+                //     }),
+                appBar: AppBar(
+                  centerTitle: false,
+                  automaticallyImplyLeading: false,
+                  elevation: 0,
+                  leading: GestureDetector(
+                      onTap:(){
+                        Navigator.pop(context);
+                      },
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment:CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/pops_asset/back_button.svg',height:35.h,
+                            width:35.w,),
+                        ],
+                      )),
+                  actions:
+                  // (sizingInformation.deviceScreenType ==
+                  //     DeviceScreenType.desktop)
+                  //     ? null :
+                  [
+                    SvgPicture.asset(
+                      'assets/tabbar_icons/Tabbar_search.svg',height:21.h,width:21.w,
+                    ),
+                    SizedBox(width:22.w),
+                    PopupMenuButton(
+                        icon:Icon(Icons.more_vert_rounded,color:Colors.black),
+                        iconSize:30,
+                        onSelected: (value) {
+                          switch (value) {
+                            case 1:
+                              {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) =>
+                                        InviteFriends(state: 0, Getstarted: '')));
+                              }
+                              break;
+                            default:
+                          }
+                        },
+                        itemBuilder: (context) =>
+                        [
+                          PopupMenuItem(
+                            child: Text("Refresh",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                                fontSize:12.sp,color:Colors.black))),
+
+                            value: 1,
+                          ),PopupMenuItem(child:Text("Help",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                            fontSize:12.sp,color:Colors.black))))
+                        ])
+                  ],
+                  title: Column(crossAxisAlignment:CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (widget.state == 0)
+                            ? "Select contact"
+                        // : (widget.state == 1)
+                        //     ? "Search Group Name"
+                        //     : (widget.state == 4)
+                        //     ? (memberList.isEmpty)
+                        //     ? "Select contact"
+                        //     : "${memberList.length}/49 Selected"
+                        //     : (widget.state == 5)
+                        //     ? "${memberList.length +
+                        //     widget.participants!.length}/50 Selected"
+                        //     : (widget.state == 6)
+                        //     ? "Search Account"
+                        //     : (widget.state == 7)
+                        //     ? "Search Participant"
+                            : "",
+                        style: GoogleFonts.inter(textStyle:TextStyle(
+                            fontSize: 16.sp, fontWeight: FontWeight.w400,color:Colors.black)),
+                      ),
+                      SizedBox(height:2.h),
+                      Text('${conLen} contacts',style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
+                          fontSize:12.sp,color:Colors.black)),)
+                    ],
+                  ),
+                ),
                 body: NestedScrollView(
                   controller: scrollController,
                   floatHeaderSlivers: true,
                   headerSliverBuilder: (BuildContext context,
                       bool innerBoxIsScrolled) {
                     return <Widget>[
+                      SliverOverlapAbsorber(
+                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                            context)
+                      )
                     ];
                   },
                   body: NotificationListener<ScrollNotification>(
@@ -445,454 +516,374 @@ class _SearchPageState extends State<SearchPage> {
                         print("constat:${con2.isNotEmpty}");
                         return true;
                       },
-                      child: (con2.isNotEmpty)
-                          ? Column(
-                        children: [
-                          Container(height:50.h,width:double.infinity.w,color:Color.fromRGBO(248, 206, 97, 1),
-                            child:searching==false? Row(
-                                children: [
-                                  SizedBox(width:22.w),
-                                  GestureDetector(
-                                      onTap:(){
-                                        Navigator.pop(context);
-                                      },
-                                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment:CrossAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset('assets/pops_asset/back_button.svg',height:35.h,
-                                            width:35.w,),
-                                        ],
-                                      )),
-                                  SizedBox(width:21.w),
-                                  Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        (widget.state == 0)
-                                            ? "Select contact"
-                                            : (widget.state == 1)
-                                            ? "Search Group Name"
-                                            : (widget.state == 4)
-                                            ? (memberList.isEmpty)
-                                            ? "Select contact"
-                                            : "${memberList.length}/49 Selected"
-                                            : (widget.state == 5)
-                                            ? "${memberList.length +
-                                            widget.participants!.length}/50 Selected"
-                                            : (widget.state == 6)
-                                            ? "Search Account"
-                                            : (widget.state == 7)
-                                            ? "Search Participant"
-                                            : "",
-                                        style: GoogleFonts.inter(textStyle:TextStyle(
-                                            fontSize: 16.sp, fontWeight: FontWeight.w400,color:Colors.black)),
-                                      ),
-                                      SizedBox(height:2.h),
-                                      Text('${conLen} contacts',style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
-                                          fontSize:12.sp,color:Colors.black)),)
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(onTap: () {
-                                    setState(() {
-                                      searching=true;
-                                      print('yeah');
-                                    });
-                                  },
-                                    child: SvgPicture.asset(
-                                      'assets/tabbar_icons/Tabbar_search.svg',height:21.h,width:21.w,
-                                    ),
-                                  ),
-                                  SizedBox(width:22.w),
-                                  PopupMenuButton(
-                                      icon:Icon(Icons.more_vert_rounded,color:Colors.black),
-                                      iconSize:30,
-                                      itemBuilder: (context) =>
-                                      [
-                                        PopupMenuItem(
-                                          child: Text("Refresh",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
-                                              fontSize:12.sp,color:Colors.black))),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: (con2.isNotEmpty)
+                            ? Column(
 
-                                          value: 1,
-                                        ),
-                                        PopupMenuItem(
-                                            child:Text("Help",style:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w400,
-                                                fontSize:12.sp,color:Colors.black))))
-                                      ]),
-                                  SizedBox(width:6.w),
-                                ]):searchBar(),
-                          ),
-                          SizedBox(height: 15),
+                          children: [
+                            SizedBox(height: 15),
 
-                          Expanded(
+                            Expanded(
+//                               child: ListView.separated(
+//                                 separatorBuilder: (context, index) {
 //
-                            child: ListView.builder(
-                                itemCount: con2.length,
-                                itemBuilder: (context, index)
-                              { var name =conNames2[index];
-                              if(nameSearch.isEmpty){
-                                return Padding(padding: EdgeInsets.only(bottom: 10),
-                                child: ListTile(
-                                  trailing: ((widget.state == 4 || widget.state == 5) && groupMemberList.contains(conMap[con2[index]])) ? Icon(Icons.done) : SizedBox(),
-                                  onTap: () async {
-                                    // print("this is body : ${body[index].data()}");
-                                    print("this text click");
-                                    print("this is body : ${con2[index]}");
-                                    switch (widget.state) {
-                                      case 0:
-                                        {
-                                          print('HELLO MAN');
-                                          if (widget.sizingInformation.deviceScreenType ==
-                                              DeviceScreenType.desktop) {
-                                            print("this is callled 1");
-                                            Navigator.pop(context, conMap[contacts1[index]]);
-                                          } else {
-                                            print("else is called");
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ChatPage(
-                                                          state: 0,
-                                                          uid: uid.toString(),
-                                                          puid: conMap[con2[index]].toString(),
-                                                        )));
-                                          }
-                                        }
-                                        break;
+//                                   // Contact contact = isSearching==true? filteredContacts[index]:contacts[index];
+//                                   // if (widget.state == 0 || widget.state == 4 || widget.state == 5 || widget.state == 6) {
+//                                   if (uid != body[index].data()["uid"]) {
+//                                     return Divider(
+//                                       thickness: 1,
+//                                       // height: 1,
+//                                       color: (themedata.value.index == 0)
+//                                           ? Color(lightGrey)
+//                                           : Color(lightBlack),
+//                                     );
+//                                   } else {
+//                                     return Container();
+//                                   }
+//                                   // } else {
+//                                   //   return Divider(
+//                                   //     // thickness: 1,
+//                                   //     height: 1,
+//                                   //     color: (themedata.value.index == 0) ? Color(lightGrey) : Color(lightBlack),
+//                                   //   );
+//                                   // }
+//                                 },
+//                                 itemCount:  con2.length,
+//                                 shrinkWrap: true,
+//                                 itemBuilder: (context, index) {
+//                                   List list=[];
+//                                  // Contact contact = isSearching==true? filteredContacts[index]:contacts[index] ;
+//                                   //  print('LOtus67${body[index].data()}');
+//                                   print('Lotus2${contacts.length}');
+//                                   //    body[index].data().entries.map((e) => list.add(e.value)).toList();
+// //print('Lotus77:${list[7]}');
+//                                   if (widget.state == 0 || widget.state == 4) {
+//                                   //
+//                                   // print("Contact Size:${contacts.length}");
+//                                   // print("FBPhone Size:${fBPhone.length}");
+//                                   //
+//                                   // int x=0;
+//                                   //
+//                                   // for(x=0;x<contacts.length;x++)
+//                                   // {
+//                                   //   try {
+//                                   //     String mob = contacts[x].phones[0];
+//                                   //     mob=mob.replaceAll(" ", "");
+//                                   //     mob=mob.replaceAll("-", "");
+//                                   //     print("Mob:${mob}(${x}) Size:(${mob.length})");
+//                                   //
+//                                   //     if(mob.length>10 && mob.length==12)
+//                                   //     {
+//                                   //       print("ifdrop");
+//                                   //       mob=mob.substring(2,12);
+//                                   //       print(mob);
+//                                   //       contacts1.add(mob);
+//                                   //     }
+//                                   //     else if(mob.length>10 && mob.length==13)
+//                                   //     {
+//                                   //       print("ifdrop");
+//                                   //       mob=mob.substring(3,13);
+//                                   //       print(mob);
+//                                   //       contacts1.add(mob);
+//                                   //     }
+//                                   //     else
+//                                   //     {
+//                                   //       contacts1.add(mob);
+//                                   //     }
+//                                   //
+//                                   //   }
+//                                   //   catch(e)
+//                                   //   {
+//                                   //     print("Exception${e}");
+//                                   //   }
+//                                   //
+//                                   // }
+//                                   //
+//                                   // print("Con1${contacts1}");
+//                                   // int i=0,j=0;
+//                                   //
+//                                   // for(i=0;i<contacts1.length;i++)
+//                                   // {
+//                                   //   for(j=0;j<fBPhone.length;j++)
+//                                   //   {
+//                                   //     if(contacts1[i]==fBPhone[j])
+//                                   //     {
+//                                   //
+//                                   //       contacts2.add(contacts1[i]);
+//                                   //
+//                                   //     }
+//                                   //   }
+//                                   // }
+//                                   //
+//                                   // print("Con2:${contacts2}");
+//                                   // con2 = LinkedHashSet<String>.from(contacts2).toList();
+//                                   // print("this is con2 ${con2}");
+//                                   // print("this is con2 len ${con2.length}");
+//                                   //
+//
+//
+//
+//                                     // for(var i=0;Contact contact = isSearching==true? filteredContacts[index]:contacts[index];i<=body[index].data()["phone"].length;i++){
+//                                     //   for(var j=0;j<=contacts.phones;j++){
+//                                     //
+//                                     //   }
+//                                     // }
+//                                     // print('Lotus77${body[index].data()["phone"]}');
+//                                     //print('Lotus77${body[index].data()["phone"]}');
+//                                     return buildItem(
+//                                         pic: (con2[index].data()["pic"] != null)
+//                                             ? con2[index].data()["pic"]
+//                                             : null,
+//                                         name: con2[index].data()["name"],
+//                                         id: con2[index].data()["uid"]);
+//
+//                                   }
+//                                   // else if (widget.state == 1) {
+//                                   //   return buildItem(
+//                                   //       pic: (body[index].data()["pic"] != null) ? body[index].data()["pic"] : null,
+//                                   //       name: body[index].data()["title"],
+//                                   //       id: body[index].data()["gid"]);
+//                                   // }
+//                                   else
+//                                   if (widget.state == 4 || widget.state == 5 ||
+//                                       widget.state == 7) {
+//                                     return buildItem(
+//                                         pic: (con2[index].data()["pic"] != null)
+//                                             ? con2[index].data()["pic"]
+//                                             : null,
+//                                         name: con2[index].data()["name"],
+//                                         id: con2[index].data()["uid"],
+//
+//                                         document: body[index].data());
+//                                   } else {
+//                                     return Container();
+//                                   }
+//                                 },
+//                               ),
+                              child: ListView.builder(
+                                  itemCount: con2.length,
+                                  itemBuilder: (context, index) =>
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 10),
+                                        child: ListTile(
+                                          trailing: ((widget.state == 4 || widget.state == 5) && memberList.contains(conMap[con2[index]])) ? Icon(Icons.done) : SizedBox(),
+                                          onTap: () async {
+                                            switch (widget.state) {
+                                              case 0:
+                                                {
+                                                  if (widget.sizingInformation.deviceScreenType ==
+                                                      DeviceScreenType.desktop) {
+                                                    Navigator.pop(context, conMap[con2[index]].toString());
+                                                  } else {
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ChatPage(
+                                                                  state: 0,
+                                                                  uid: uid.toString(),
+                                                                  puid: conMap[con2[index]].toString(),
+                                                                )));
+                                                  }
+                                                }
+                                                break;
 
-                                      case 1:
-                                        {
-                                          if (widget.sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-                                            Navigator.pop(context, conMap[contacts1[index]]);
-                                          } else {
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => ChatPage(
-                                                      state: 1,
-                                                      uid: uid.toString(),
-                                                      puid: conMap[contacts1[index]].toString(),
-                                                    )));
-                                          }
-                                        }
-                                        break;
+                                              case 1:
+                                                {
+                                                  if (widget.sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+                                                    Navigator.pop(context, conMap[con2[index]].toString());
+                                                  } else {
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => ChatPage(
+                                                              state: 1,
+                                                              uid: uid.toString(),
+                                                              puid: conMap[con2[index]].toString(),
+                                                            )));
+                                                  }
+                                                }
+                                                break;
 
-                                      case 4:
-                                        {
-                                          if (memberList.contains(conMap[contacts1[index]]) == false) {
-                                            if (groupMemberList.length <= 49) {
-                                              if (!mounted) return;
-                                              setState(() {
-                                                memberList.add(conMap[contacts1[index]].toString());
-                                                groupMemberList.add(body[index].data());
-                                              });
-                                            } else {
-                                              final snackBar = snackbar(
-                                                  content: "Group can contain only 50 members");
-                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                            }
-                                          } else {
-                                            if (!mounted) return;
-                                            setState(() {
-                                              memberList.remove(conMap[contacts1[index]]);
-                                              groupMemberList.remove(body[index].data());
-                                            });
-                                          }
-                                        }
-                                        break;
-                                      case 5:
-                                        {
-                                          if (!widget.participants!.contains(conMap[contacts1[index]])) {
-                                            if (memberList.contains(conMap[contacts1[index]]) == false) {
-                                              if ((groupMemberList.length +
-                                                  widget.participants!.length) <= 50) {
-                                                if (!mounted) return;
-                                                setState(() {
-                                                  memberList.add(conMap[contacts1[index]].toString());
-                                                  groupMemberList.add(body[index].data());
-                                                });
-                                              } else {
-                                                final snackBar = snackbar(
-                                                    content: "Group can contain only 50 members");
-                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                              }
-                                            } else {
-                                              if (!mounted) return;
-                                              setState(() {
-                                                memberList.remove(conMap[contacts1[index]]);
-                                                groupMemberList.remove(body[index].data());
-                                              });
-                                            }
-                                          }
-                                        }
-                                        break;
-                                      case 6:
-                                        {
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => UserProfile(
-                                                    uid: uid.toString(),
-                                                  )));
-                                        }
-                                        break;
-                                      case 7:
-                                        {
-                                          if (body[index].data()["token"] != null) {
-                                            if (body[index].data()["callStatus"] == false) {
-                                              FirebaseFirestore instance = FirebaseFirestore.instance;
-                                              DocumentSnapshot<
-                                                  Map<String, dynamic>> userDoc = await instance
-                                                  .collection("call-logs").doc(widget.gid!).get();
-                                              if (userDoc.exists) {
-                                                await sendNotificationForCall(
-                                                    userTokens: [body[index].data()["token"]],
-                                                    id: widget.channelName!,
-                                                    timestamp: widget.gid!,
-                                                    video: widget.video,
-                                                    phoneNumber: userDoc.data()!["callerId"],
-                                                    pic: userDoc.data()!["members"]["${userDoc
-                                                        .data()!["channelId"]}"]["pic"],
-                                                    state: 0,
-                                                    name: userDoc.data()!["members"]["${userDoc
-                                                        .data()!["channelId"]}"]["name"]);
-                                                await UpdateWriteLog(documentId: widget.gid!,
-                                                    uid: body[index].data()["uid"],
-                                                    userDetailDoc: body[index].data());
-                                                Navigator.pop(context);
-                                              }
-                                            } else {
-                                              toast("User is busy right now!");
-                                            }
-                                            // QuerySnapshot<Map<String, dynamic>> callDoc = await instance.collection("call-log").where("channelId", isEqualTo: widget.channelName).get();
-                                          } else {
-                                            toast("User has logged out!");
-                                            // final snackBar = snackbar(content: "User has no token");
-                                            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                          }
-                                        }
-                                        break;
-                                      default:
-                                        {
-                                          print("Invalid choice");
-                                        }
-                                        break;
-                                    }
-                                    print("Chat to : ${conMap[con2[index]]}");
+                                              case 4:
+                                                {
 
-                                    //Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(state: 0,uid: uid.toString(),puid: conMap[con2[index]].toString())));
+                                                  print(body[0].data());
 
-                                  },
-                                  contentPadding: EdgeInsets.only(left: 0),
-                                  leading: Padding(
-                                    padding:  EdgeInsets.only(left: 14.w),
-                                    child: CircleAvatar(
-                                      backgroundImage: AssetImage("assets/noProfile.jpg"),
-                                      radius: 25.w,
-                                    ),
-                                  ),
-                                  title: SubstringHighlight(  term:searchTextEditingController.text,text:name,textStyleHighlight: TextStyle(color:Colors.black),textStyle:
-                                  GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w500,
-                                      fontSize:14.sp,color:Colors.black),
-                                  ),
-                                ),
-                                )
-                              );
-                              }
-                              if(name.toString().toLowerCase().contains(nameSearch.toLowerCase())){
-                                return Padding(
-                                  padding: EdgeInsets.only(bottom: 10),
-                                  child: ListTile(
-                                    onTap: () async {
-                                      print("this is body : ${body[index].data()}");
-                                      switch (widget.state) {
-                                        case 0:
-                                          {
-                                            if (widget.sizingInformation.deviceScreenType ==
-                                                DeviceScreenType.desktop) {
-                                              Navigator.pop(context, conMap[contacts1[index]]);
-                                            } else {
-                                              Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ChatPage(
-                                                            state: 0,
+                                                  print("Body Data: ${body[index].data()["name"]}");
+                                                  print("con check ${conMap[con2[index]]}");
+                                                  print("member list before${memberList}");
+                                                  print("member list count before ${memberList.length}");
+                                                  print("groupmember list before${memberList}");
+                                                  print("groupmember list count before${groupMemberList.length}");
+
+
+                                                  print("CheckTest : ${memberList.contains(conMap[con2[index]].toString())}");
+                                                  print("CheckTest : ${memberList.contains(conMap[con2[index]].toString())==false}");
+
+
+                                                  if (!memberList.contains(conMap[con2[index]])) {
+                                                    if (groupMemberList.length <= 49) {
+                                                      if (!mounted) return;
+                                                      print("GP Member : ${memberList}");
+                                                      print("GP Member : ${groupMemberList}");
+                                                      setState(() {
+                                                        memberList.add(conMap[con2[index]].toString());
+
+                                                        for(int x=0;x<body.length;x++) {
+                                                          print(
+                                                              "${body[x]["uid"]} index $x");
+                                                          if (body[x]["uid"]
+                                                              .toString() ==
+                                                              conMap[con2[index]]
+                                                                  .toString()) {
+                                                            groupMemberList.add(body[x].data());
+                                                            print("SELTEST : ${conMap[con2[index]].toString()}==${body[x]["uid"]}");
+                                                          }
+                                                        }
+                                                        print("SELTEST : ${conMap[con2[index]].toString()}==${body[index]["uid"]}");
+
+
+
+                                                        print("GP Member : ${memberList}");
+                                                        print("GP Member : ${groupMemberList}");
+                                                      });
+                                                      print("member list ${memberList}");
+                                                      print("member list count ${memberList.length}");
+                                                    } else {
+                                                      final snackBar = snackbar(
+                                                          content: "Group can contain only 50 members");
+                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    }
+                                                  } else {
+                                                    if (!mounted) return;
+                                                    setState(() {
+                                                      memberList.remove(conMap[con2[index]].toString());
+                                                      groupMemberList.remove(conMap[con2[index]].toString());
+                                                    });
+                                                  }
+                                                }
+                                                break;
+                                              case 5:
+                                                {
+                                                  if (!widget.participants!.contains(conMap[con2[index]].toString())) {
+                                                    if (memberList.contains(conMap[con2[index]].toString()) == false) {
+                                                      if ((groupMemberList.length +
+                                                          widget.participants!.length) <= 50) {
+                                                        if (!mounted) return;
+                                                        setState(() {
+                                                          memberList.add(conMap[con2[index]].toString());
+                                                          groupMemberList.add(con2[index]);
+                                                        });
+                                                      } else {
+                                                        final snackBar = snackbar(
+                                                            content: "Group can contain only 50 members");
+                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                      }
+                                                    } else {
+                                                      if (!mounted) return;
+                                                      setState(() {
+                                                        memberList.remove(conMap[con2[index]]);
+                                                        groupMemberList.remove(conMap[con2[index]]);
+                                                      });
+                                                    }
+                                                  }
+                                                }
+                                                break;
+                                              case 6:
+                                                {
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => UserProfile(
                                                             uid: uid.toString(),
-                                                            puid: conMap[contacts1[index]].toString(),
                                                           )));
-                                            }
-                                          }
-                                          break;
-
-                                        case 1:
-                                          {
-                                            if (widget.sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
-                                              Navigator.pop(context, conMap[contacts1[index]]);
-                                            } else {
-                                              Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) => ChatPage(
-                                                        state: 1,
-                                                        uid: uid.toString(),
-                                                        puid: conMap[contacts1[index]].toString(),
-                                                      )));
-                                            }
-                                          }
-                                          break;
-
-                                        case 4:
-                                          {
-                                            if (memberList.contains(conMap[contacts1[index]]) == false) {
-                                              if (groupMemberList.length <= 49) {
-                                                if (!mounted) return;
-                                                setState(() {
-                                                  memberList.add(conMap[contacts1[index]].toString());
-                                                  groupMemberList.add(body[index].data());
-                                                });
-                                              } else {
-                                                final snackBar = snackbar(
-                                                    content: "Group can contain only 50 members");
-                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                              }
-                                            } else {
-                                              if (!mounted) return;
-                                              setState(() {
-                                                memberList.remove(conMap[contacts1[index]]);
-                                                groupMemberList.remove(body[index].data());
-                                              });
-                                            }
-                                          }
-                                          break;
-                                        case 5:
-                                          {
-                                            if (!widget.participants!.contains(conMap[contacts1[index]])) {
-                                              if (memberList.contains(conMap[contacts1[index]]) == false) {
-                                                if ((groupMemberList.length +
-                                                    widget.participants!.length) <= 50) {
-                                                  if (!mounted) return;
-                                                  setState(() {
-                                                    memberList.add(conMap[contacts1[index]].toString());
-                                                    groupMemberList.add(body[index].data());
-                                                  });
-                                                } else {
-                                                  final snackBar = snackbar(
-                                                      content: "Group can contain only 50 members");
-                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                                 }
-                                              } else {
-                                                if (!mounted) return;
-                                                setState(() {
-                                                  memberList.remove(conMap[contacts1[index]]);
-                                                  groupMemberList.remove(body[index].data());
-                                                });
-                                              }
-                                            }
-                                          }
-                                          break;
-                                        case 6:
-                                          {
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => UserProfile(
-                                                      uid: uid.toString(),
-                                                    )));
-                                          }
-                                          break;
-                                        case 7:
-                                          {
-                                            if (body[index].data()["token"] != null) {
-                                              if (body[index].data()["callStatus"] == false) {
-                                                FirebaseFirestore instance = FirebaseFirestore.instance;
-                                                DocumentSnapshot<
-                                                    Map<String, dynamic>> userDoc = await instance
-                                                    .collection("call-logs").doc(widget.gid!).get();
-                                                if (userDoc.exists) {
-                                                  await sendNotificationForCall(
-                                                      userTokens: [body[index].data()["token"]],
-                                                      id: widget.channelName!,
-                                                      timestamp: widget.gid!,
-                                                      video: widget.video,
-                                                      phoneNumber: userDoc.data()!["callerId"],
-                                                      pic: userDoc.data()!["members"]["${userDoc
-                                                          .data()!["channelId"]}"]["pic"],
-                                                      state: 0,
-                                                      name: userDoc.data()!["members"]["${userDoc
-                                                          .data()!["channelId"]}"]["name"]);
-                                                  await UpdateWriteLog(documentId: widget.gid!,
-                                                      uid: body[index].data()["uid"],
-                                                      userDetailDoc: body[index].data());
-                                                  Navigator.pop(context);
+                                                break;
+                                              case 7:
+                                                {
+                                                  if (con2[index]["token"] != null) {
+                                                    if (con2[index]["callStatus"] == false) {
+                                                      FirebaseFirestore instance = FirebaseFirestore.instance;
+                                                      DocumentSnapshot<
+                                                          Map<String, dynamic>> userDoc = await instance
+                                                          .collection("call-logs").doc(widget.gid!).get();
+                                                      if (userDoc.exists) {
+                                                        await sendNotificationForCall(
+                                                            userTokens: [con2[index]["token"]],
+                                                            id: widget.channelName!,
+                                                            timestamp: widget.gid!,
+                                                            video: widget.video,
+                                                            phoneNumber: userDoc.data()!["callerId"],
+                                                            pic: userDoc.data()!["members"]["${userDoc
+                                                                .data()!["channelId"]}"]["pic"],
+                                                            state: 0,
+                                                            name: userDoc.data()!["members"]["${userDoc
+                                                                .data()!["channelId"]}"]["name"]);
+                                                        await UpdateWriteLog(documentId: widget.gid!,
+                                                            uid: con2[index]["uid"],
+                                                            userDetailDoc: con2[index]);
+                                                        Navigator.pop(context);
+                                                      }
+                                                    } else {
+                                                      toast("User is busy right now!");
+                                                    }
+                                                    // QuerySnapshot<Map<String, dynamic>> callDoc = await instance.collection("call-log").where("channelId", isEqualTo: widget.channelName).get();
+                                                  } else {
+                                                    toast("User has logged out!");
+                                                    // final snackBar = snackbar(content: "User has no token");
+                                                    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
                                                 }
-                                              } else {
-                                                toast("User is busy right now!");
-                                              }
-                                              // QuerySnapshot<Map<String, dynamic>> callDoc = await instance.collection("call-log").where("channelId", isEqualTo: widget.channelName).get();
-                                            } else {
-                                              toast("User has logged out!");
-                                              // final snackBar = snackbar(content: "User has no token");
-                                              // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                break;
+                                              default:
+                                                {
+                                                  print("Invalid choice");
+                                                }
+                                                break;
                                             }
-                                          }
-                                          break;
-                                        default:
-                                          {
-                                            print("Invalid choice");
-                                          }
-                                          break;
-                                      }
-                                      print("Chat to : ${conMap[con2[index]]}");
-                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(state: 0,uid: uid.toString(),puid: conMap[con2[index]].toString())));
-                                    },
-                                    contentPadding: EdgeInsets.only(left: 0),
-                                    leading: CircleAvatar(
-                                      backgroundImage: AssetImage("assets/noProfile.jpg"),
-                                      radius: 25.w,
-                                    ),
-                                    title: SubstringHighlight(  term:searchTextEditingController.text,
-                                      text:name,textStyleHighlight: TextStyle(color:Colors.black),textStyle:
-                                    GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w500,
-                                        fontSize:14.sp,color:Colors.black),
-                                    ),
-                                    ),
-                                  ),
-                                );
-                              }
-                              return Container(); }
+                                          },
+                                          contentPadding: EdgeInsets.only(left: 0),
+                                          leading: CircleAvatar(
+
+                                            backgroundImage: AssetImage("assets/noProfile.jpg"),
+                                            radius: 25.w,
+                                          ),
+                                          title: Text("${conNames2[index]}"),
+                                        ),
+                                      ) ),
                             ),
-                          ),
 
-                          Container(
-                            height: (isLoading == true) ? 20.0 : 0,
-                            color: Colors.transparent,
-                            child: Center(
-                              child: LinearProgressIndicator(
-                                color: Color(accent),
+                            Container(
+                              height: (isLoading == true) ? 20.0 : 0,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: LinearProgressIndicator(
+                                  color: Color(accent),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      )
-                          : Container(
-                          child: Center(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    lottieAnimation(invalidLottie),
-                                    Text((widget.state == 0 ||
-                                        widget.state == 4 ||
-                                        widget.state == 5 ||
-                                        widget.state == 7)
-                                        ? "No Contacts"
-                                        : (widget.state == 6)
-                                        ? "No Account"
-                                        : "")
-                                  ],
-                                ),
-                              )))),
+                          ],
+                        )
+                            : Container(
+                            child: Center(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      lottieAnimation(invalidLottie),
+                                      Text((widget.state == 0 ||
+                                          widget.state == 4 ||
+                                          widget.state == 5 ||
+                                          widget.state == 7)
+                                          ? "No Contacts"
+                                          : (widget.state == 6)
+                                          ? "No Account"
+                                          : "")
+                                    ],
+                                  ),
+                                ))),
+                      )),
                 ),
               );
             });
@@ -1125,9 +1116,10 @@ class _SearchPageState extends State<SearchPage> {
       );
     }
   }
-
-
   getDataList(){
+
+
+
     print("Contact Size:${contacts.length}");
     print("FBPhone Size:${fBPhone.length}");
 
@@ -1180,7 +1172,6 @@ class _SearchPageState extends State<SearchPage> {
       {
         if(contacts1[i]==fBPhone[j])
         {
-
           var x=contacts2.contains(fBPhone[j]);
           print("Contact Check : ${x}");
 
@@ -1191,60 +1182,27 @@ class _SearchPageState extends State<SearchPage> {
         }
       }
     }
+    // print("Con2:${contacts2} ${conNames}");
     con2 = LinkedHashSet<String>.from(contacts2).toList();
     conNames2 = LinkedHashSet<String>.from(conNames).toList();
     print(con2);
     print(conNames2);
     print(conMap);
-
-  }
-  Widget searchBar(){
-    bool folded=false;
-    return Row(
-      children: [  GestureDetector(onTap: () {
-        setState(() {
-          searching=false;
-        });
-      },
-        child: SvgPicture.asset(
-          'assets/pops_asset/back_button.svg',
-          height: 30.h,
-          width: 30.w,),
-      ),
-        AnimatedContainer(duration:Duration(milliseconds:100),
-          height:40.h,width:folded==true?10.w:300.w,
-          decoration:BoxDecoration(borderRadius:BorderRadius.circular(15),color:Colors.white),
-          child:   TextField(
-            onChanged: (value){
-              setState(() {
-                nameSearch = value;
-              });
-            },
-            autofocus:true,
-            cursorColor:Colors.black,cursorHeight:20.h,
-            controller:searchTextEditingController,
-            decoration:InputDecoration(hintText:'Search...',contentPadding:EdgeInsets.only(
-                top:10.h
-            ),
-                hintStyle:GoogleFonts.inter(textStyle:TextStyle(fontWeight:FontWeight.w500,
-                    fontSize:14.sp,color:Colors.black)),
-                prefixIcon:Column(mainAxisAlignment:MainAxisAlignment.center,
-                  crossAxisAlignment:CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                        'assets/tabbar_icons/Tabbar_search.svg'
-                    ),
-                  ],
-                ),
-                focusedBorder:OutlineInputBorder(
-                    borderSide:BorderSide(color:Colors.transparent)
-                ),
-                enabledBorder:OutlineInputBorder(
-                    borderSide:BorderSide(color:Colors.transparent)
-                )),
-          ),
-        ),
-      ],
-    );
+    // for(int i=0; i<contacts.length; i++){
+    //   print("contact:${contacts[i].phones}");
+    //   for(int j=0; j<body.length; j++){
+    //     print("body ${j} ${body[j]}");
+    //     print("body length ${body.length}");
+    //     print("body data ${body[j].data()["phone"]}");
+    //     if(contacts[i].phones ==  body[j].data()["phone"].toString()){
+    //       print("equal succes");
+    //       mergeUserContact.add(body[j].data()["phone"].toString());
+    //     }
+    //     else{
+    //       print('NOt working');
+    //     }
+    //   }
+    //   print("${i} - ${mergeUserContact}");
+    // }
   }
 }

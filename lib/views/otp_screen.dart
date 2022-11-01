@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/views/add_email.dart';
-import 'package:gatello/views/add_profile_pic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:otp_text_field/otp_text_field.dart';
@@ -185,11 +183,7 @@ class _OtpState extends State<Otp> {
                       print(widget.password);
                       print(widget.mobileNo);
                       print(widget.otp);
-
                       verifyOtp1(widget.mobileNo,widget.otp!).then((value) => navigateToNext());
-
-
-
                     },
                     child: Text(
                       'Continue',
@@ -230,8 +224,13 @@ class _OtpState extends State<Otp> {
               )));
 
     }
-  }
+    else{
+      Fluttertoast.showToast(
+          msg: "Invalid Otp",
 
+          timeInSecForIosWeb: 1);
+    }
+  }
   Future verifyOtp1(String phoneNumber, String otp) async {
 
     return await ApiHandler().apiHandler(
@@ -243,10 +242,6 @@ class _OtpState extends State<Otp> {
 
     );
   }
-
-
-
-
   Future<void> verifyotp() async {
     print('test7${verifyOtpValueNotifier.value.item1}');
     //print(body.toString());
@@ -275,7 +270,7 @@ class _OtpState extends State<Otp> {
     }
   }
   Widget otpResend() {
-    return Column(
+    return Column (
       children: [
         (_counter > 0)
             ? Container()

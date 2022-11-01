@@ -78,8 +78,7 @@ class _ClearCustomDialogState extends State<ClearCustomDialog> {
                   width: 7.w,
                 ),
                 Text(
-                  'Also delete media recevied in this\nchat from the mobile gallery',
-
+                  'Delete all messages?',
                   style: GoogleFonts.inter(
                       textStyle: TextStyle(
                           fontSize: 15.sp,
@@ -112,7 +111,7 @@ class _ClearCustomDialogState extends State<ClearCustomDialog> {
                         textStyle: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w700,
-                            color: Color.fromRGBO(0, 0, 0, 1))),
+                            color:Colors.red)),
                   ),
                 ),
               ],

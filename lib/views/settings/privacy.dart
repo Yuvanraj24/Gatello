@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -82,9 +80,7 @@ class _ChatSettingsState extends State<ChatSettings> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.active) {
                           return Column(children: [
-                            Row(
-                              children: [
-                                Text(
+                            Row(children: [Text(
                                   'Ping privacy',
                                   style: GoogleFonts.inter(
                                       textStyle: TextStyle(
@@ -92,9 +88,7 @@ class _ChatSettingsState extends State<ChatSettings> {
                                           fontWeight: FontWeight.w700,
                                           color: Color.fromRGBO(0, 163, 255, 1)
                                       )),
-                                ),
-                              ],
-                            ),
+                                )]),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -104,7 +98,7 @@ class _ChatSettingsState extends State<ChatSettings> {
                                       textStyle: TextStyle(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w700,
-                                          color: Color.fromRGBO(0, 0,0,1)
+                                            color: Color.fromRGBO(0, 0,0,1)
                                       )),
                                 ),
                                 // Transform.scale(

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_holo_date_picker/date_picker_theme.dart';
+import 'package:flutter_holo_date_picker/widget/date_picker_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/views/create_username.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-// import 'package:intl/intl.dart';
 import 'birthday_on_gatello.dart';
 
 class SelectBirthday extends StatefulWidget {
@@ -21,9 +22,11 @@ class SelectBirthday extends StatefulWidget {
 }
 
 class _SelectBirthdayState extends State<SelectBirthday> {
-  DateTime? _selectedDate;
+  late DateTime _selectedDate;
   late DateTime _myDateTime;
-  String time='';
+  DateTime currentDate = DateTime.now();
+  TextEditingController Datepick =TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,35 +66,52 @@ class _SelectBirthdayState extends State<SelectBirthday> {
                   Navigator.push(context,MaterialPageRoute(builder: (context) =>
                       BirthdayGatello()));
                 },
-                child: Text("Why do I need to provide my date of birth?",style:
-                GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:11.sp))),
-            TextFormField(
-              autofocus: false,
-              cursorColor:Colors.white,
-              onTap: () async {
-                _myDateTime = (await  showDatePicker(context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(1950),
-                    lastDate: DateTime(2050)))!;
+                child: Text("Why do I need to provide my date of birth?",
+                    style: GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:11.sp))),
+            SizedBox(height:15.h,),
+            Text("BIRTHDAY",style: GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:11.sp)),
+            SizedBox(height:25.h,),
+            Divider(color:Colors.black,thickness:1.w,),
+            DatePickerWidget(
+              looping: false,
+              firstDate: DateTime(1800),
+              lastDate: DateTime.now(),
+              dateFormat:
+              // "MM-dd(E)",
+              "dd/MMMM/yyyy",
+              onChange: (DateTime newDate, a) {
                 setState(() {
-                  time = DateFormat('dd-MM-yyyy').format(_myDateTime);
+                  _selectedDate = newDate;
                 });
+                print("this is date :${_selectedDate}");
               },
-              controller: TextEditingController(text: time.toString()),
-              decoration: InputDecoration(labelText: "Birthday",
-                  hintText:time),
+              pickerTheme: DateTimePickerTheme(confirmTextStyle:TextStyle(color: Colors.yellow),
+                cancelTextStyle:TextStyle(color: Colors.yellow),
+                backgroundColor: Colors.transparent,
+                itemTextStyle: TextStyle(color: Colors.black, fontSize: 19),
+                dividerColor: Colors.black,
+              ),
             ),
             SizedBox(height: 30),
-
-
             Spacer(),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateUsername(name: widget.name, birthDay: time,),
-                      ));
+                  int yearDiff = currentDate.year - _selectedDate.year;
+                  int monthDiff = currentDate.month - _selectedDate.month;
+                  int dayDiff = currentDate.day - _selectedDate.day;
+                  print("Year diff : ${yearDiff}");
+                  print("month diff : ${monthDiff}");
+                  print("day diff : ${dayDiff}");
+                  if(yearDiff>18 || yearDiff == 18 && monthDiff >= 0 && dayDiff >=0){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateUsername(name: widget.name, birthDay: _selectedDate.toString(),),
+                        ));
+                  }else{
+                    Fluttertoast.showToast(msg: "You are not eligible");
+                  }
+
 
                 },
                 style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),

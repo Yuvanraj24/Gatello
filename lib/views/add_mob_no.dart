@@ -216,10 +216,11 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
                                 width: 265.w,
                                 child: TextFormField(
                                     keyboardType: TextInputType.number,
+                                    maxLength: 10,
+                                    maxLines: 1,
                                     controller: _mobileNumber,
                                     onChanged: (val) {
-                                      widget.mobileNo =
-                                          _mobileNumber.text.toString();
+                                      widget.mobileNo = _mobileNumber.text.toString();
                                     },
                                     cursorWidth: 2,
                                     cursorColor: HexColor('#0B0B0B'),

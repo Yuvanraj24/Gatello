@@ -2,21 +2,16 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gatello/Authentication/Authentication.dart';
+import 'package:gatello/views/tabbar/account_success.dart';
 import 'package:http/http.dart' as http;
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gatello/views/add_mob_no.dart';
-import 'package:gatello/views/add_profile_pic.dart';
-import 'package:gatello/views/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:tuple/tuple.dart';
-
 import '../Others/Routers.dart';
 import '../Others/exception_string.dart';
 import '../core/Models/Default.dart';
@@ -184,7 +179,9 @@ class _AddEmailState extends State<AddEmail> {
                           if (_formKey.currentState!.validate()) {
                             registerFirebase(widget.userName, widget.email, widget.password,);
                             profileDetailUpdateApiCallFormData();
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid),));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                            Acountsuccess(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid)));
+                                // AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid),));
 
                           } else {
                             return null;
@@ -344,7 +341,8 @@ class _AddEmailState extends State<AddEmail> {
 
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
 
-              AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid),), (route) => false);
+            //  AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid),), (route) => false);
+          Acountsuccess(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid),), (route) => false);
         }
         else
         {

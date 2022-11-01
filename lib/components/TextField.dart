@@ -53,6 +53,7 @@ Widget textField(
     enabled: enabled,
     autofocus: autofocus,
     keyboardType: keyboardType,
+
     textInputAction: textInputAction,
     onSubmitted: onSubmitted,
     cursorColor: cursorColor,
@@ -75,12 +76,12 @@ Widget textField(
         labelStyle: labelStyle,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
-          borderSide: (border) ? BorderSide(color: borderColor, width: borderWidth) : BorderSide.none,
+          borderSide: (border) ? BorderSide(color:Colors.black) : BorderSide(color:Colors.black),
         ),
        // floatingLabelBehavior: FloatingLabelBehavior.always,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
-          borderSide: (border) ? BorderSide(color: borderColor, width: borderWidth) : BorderSide.none,
+          borderSide: (border) ?  BorderSide(color:Colors.black) :BorderSide(color:Colors.black),
         ),
         filled: filled,
         // counter: (counter) ? null : SizedBox.shrink(),

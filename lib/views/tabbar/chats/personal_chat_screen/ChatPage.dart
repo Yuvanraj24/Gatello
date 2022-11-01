@@ -70,13 +70,12 @@ import 'mute_notification.dart';
 
 
 class ChatPage extends StatefulWidget {
-
   final String uid;
-
   ///* peeruid for personal chat and gid for group chat
   final String puid;
   ///*0->user,1->group
   final int state;
+
   const ChatPage({Key? key, required this.uid, required this.puid, required this.state}) : super(key: key);
 
   @override
@@ -1075,33 +1074,33 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                           ? [
 
                                         //this is a voice-call for appbar
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 20.0),
-                                          child: InkWell(
-                                            splashColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            onTap: ()  {
-
-                                            },
-
-                                            child: SvgPicture.asset(
-                                              'assets/per_chat_icons/call_icon.svg',
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(1.0),
-                                          child: GestureDetector(
-                                            child: SvgPicture.asset(
-                                                'assets/per_chat_icons/video icon.svg'),
-                                            onTap: () {
-
-                                            },
-
-                                          ),
-                                        ),
+                                        // Padding(
+                                        //   padding: const EdgeInsets.only(
+                                        //       right: 20.0),
+                                        //   child: InkWell(
+                                        //     splashColor: Colors.transparent,
+                                        //     highlightColor: Colors.transparent,
+                                        //     hoverColor: Colors.transparent,
+                                        //     onTap: ()  {
+                                        //
+                                        //     },
+                                        //
+                                        //     child: SvgPicture.asset(
+                                        //       'assets/per_chat_icons/call_icon.svg',
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        // Padding(
+                                        //   padding: EdgeInsets.all(1.0),
+                                        //   child: GestureDetector(
+                                        //     child: SvgPicture.asset(
+                                        //         'assets/per_chat_icons/video icon.svg'),
+                                        //     onTap: () {
+                                        //
+                                        //     },
+                                        //
+                                        //   ),
+                                        // ),
                                         PopupMenuButton(
                                             icon:Icon(Icons.more_vert,color:Colors.black),
                                             shape: RoundedRectangleBorder(
@@ -1149,20 +1148,11 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                   }
                                                   break;
                                                 case 4:
-                                                  {
-                                                    await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
-                                                      "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
-                                                          .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
-                                                          true)
-                                                          ? false
-                                                          : true
-                                                    });
-                                                  }
+                                                  {}
                                                   break;
-                                                case 5:{}
                                                 break;
 
-                                                case 6:{//for block
+                                                case 5:{//for block
                                                   await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
                                                     "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
                                                         .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
@@ -1261,22 +1251,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                   onTap: () {
                                                     Future.delayed(Duration(seconds: 0),
                                                             () =>
-                                                            showConfirmationDialog1(context)
-                                                    );
-                                                  },
-                                                  child: Text(
-                                                    "Report",
-                                                    style: GoogleFonts.inter(
-                                                        textStyle: TextStyle(
-                                                            fontSize: 16.sp,
-                                                            fontWeight: FontWeight.w400,
-                                                            color: Color.fromRGBO(
-                                                                0, 0, 0, 1))),
-                                                  )),
-                                              PopupMenuItem(
-                                                  onTap: () {
-                                                    Future.delayed(Duration(seconds: 0),
-                                                            () =>
                                                             showConfirmationDialog2(
                                                                 context));
                                                     clearChat();
@@ -1293,29 +1267,14 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                   )),
                                               PopupMenuItem(
                                                   onTap: () {
-
-                                                    // Future.delayed(Duration(seconds: 0),
-                                                    //         () =>
-                                                    //         showConfirmationDialog3(
-                                                    //             context));
-                                                    // Future<void>.delayed(
-                                                    //    Duration(),  // OR const Duration(milliseconds: 500),
-                                                    //       () => showDialog(
-                                                    //     context: context,
-                                                    //     barrierColor: Colors.black26,
-                                                    //     builder: (context) => AlertDialog(...),
-                                                    //   ),
-                                                    // );
                                                     Future<void>.delayed(
                                                         Duration(),
                                                             ()=> showDialog(context: context, barrierColor: Colors.black26,builder: (context)=>
-
                                                             AlertDialog(
                                                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                                               insetPadding: EdgeInsets.only(left: 12, right: 12),
                                                               titlePadding: EdgeInsets.all(0),
                                                               title: Container(
-                                                                height: 210.h,
                                                                 width: 380.w,
                                                                 padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
                                                                 child: Column(       mainAxisSize: MainAxisSize.min,children: [
@@ -1333,9 +1292,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                       ),
                                                                     ],
                                                                   ),
-//
-
-
                                                                   SizedBox(height: 20.h),
                                                                   Row(
                                                                     children: [
@@ -1354,40 +1310,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                     ],
                                                                   ),
                                                                   SizedBox(height: 20.h),
-                                                                  Row(
-                                                                    children: [
-                                                                      SizedBox(
-                                                                        width:12.5.w,
-                                                                      ),
-                                                                      Transform.scale(
-                                                                        scale: 1.3,
-                                                                        child: Checkbox(
-
-                                                                            shape: RoundedRectangleBorder(
-                                                                                borderRadius: BorderRadius.circular(4)),
-                                                                            value: isChecked,
-                                                                            onChanged: (bool? value) {
-                                                                              // This is where we update the state when the checkbox is tapped
-                                                                              setState(() {
-                                                                                isChecked =value !;
-                                                                              });
-                                                                            }),
-                                                                      ),
-                                                                      SizedBox(
-                                                                        width: 7.w,
-                                                                      ),
-
-                                                                      Text(
-                                                                        'Report contact',
-
-                                                                        style: GoogleFonts.inter(
-                                                                            textStyle: TextStyle(
-                                                                                fontSize: 14.sp,
-                                                                                fontWeight: FontWeight.w400,
-                                                                                color: Color.fromRGBO(0,0,0, 1))),
-                                                                      ),
-                                                                    ],
-                                                                  ),
                                                                   Row(
                                                                     mainAxisAlignment: MainAxisAlignment.end,
                                                                     children: [
@@ -1421,7 +1343,11 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                 ["isBlocked"] ==
                                                                                     true))
                                                                                 ? "Unblock"
-                                                                                : "Block"
+                                                                                : "Block", style: GoogleFonts.inter(
+                                                                            textStyle: TextStyle(
+                                                                                fontSize: 16.sp,
+                                                                                fontWeight: FontWeight.w700,
+                                                                                color: Colors.red)),
                                                                         ),
                                                                       ),
                                                                     ],
@@ -1433,7 +1359,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                     );
                                                   },
                                                   child: Text(
-
                                                     ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["isBlocked"] == true ||
                                                         chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]
                                                         ["isBlocked"] ==
@@ -1447,176 +1372,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                             color:
                                                             Color.fromRGBO(255, 0, 0, 1))),
                                                   ))
-//                                               PopupMenuItem(
-//                                                   onTap:(){
-//                                                     Future<void>.delayed(
-//                                                         Duration(),
-//                                                     ()=> showDialog(context: context, barrierColor: Colors.black26,builder: (context) {
-//                                                     return  AlertDialog(
-//
-//                                                           shape: RoundedRectangleBorder(
-//                                                               borderRadius: BorderRadius
-//                                                                   .circular(8)),
-//                                                           insetPadding: EdgeInsets
-//                                                               .only(left: 12,
-//                                                               right: 12),
-//                                                           titlePadding: EdgeInsets
-//                                                               .all(0),
-//                                                         title:Container(
-//                                                           height: 210.h,
-//                                                           width: 380.w,
-//                                                           padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
-//                                                           child: Column(       mainAxisSize: MainAxisSize.min,children: [
-//                                                             Row(
-//                                                               mainAxisAlignment: MainAxisAlignment.start,
-//                                                               children: [
-//                                                                 SizedBox(width: 10.w,),
-//                                                                 Text(
-//                                                                   'Block ${emptyChatRoomDetails.data!.data()!["name"] }?',
-//                                                                   style: GoogleFonts.inter(
-//                                                                       textStyle: TextStyle(
-//                                                                           fontSize: 16.sp,
-//                                                                           fontWeight: FontWeight.w700,
-//                                                                           color: Color.fromRGBO(0, 0, 0, 1))),
-//                                                                 ),
-//                                                               ],
-//                                                             ),
-// //
-//
-//
-//                                                             SizedBox(height: 20.h),
-//                                                             Row(
-//                                                               children: [
-//                                                                 SizedBox(
-//                                                                   width:25.w,
-//                                                                 ),
-//                                                                 Text(
-//                                                                   'Blocked contacts cannot call or send you\nmessages. ',
-//
-//                                                                   style: GoogleFonts.inter(
-//                                                                       textStyle: TextStyle(
-//                                                                           fontSize: 15.sp,
-//                                                                           fontWeight: FontWeight.w400,
-//                                                                           color: Color.fromRGBO(157, 157, 157, 1))),
-//                                                                 ),
-//                                                               ],
-//                                                             ),
-//                                                             SizedBox(height: 20.h),
-//                                                             Row(
-//                                                               children: [
-//                                                                 SizedBox(
-//                                                                   width:12.5.w,
-//                                                                 ),
-//                                                                 Transform.scale(
-//                                                                   scale: 1.3,
-//                                                                   child: Checkbox(
-//
-//                                                                       shape: RoundedRectangleBorder(
-//                                                                           borderRadius: BorderRadius.circular(4)),
-//                                                                       value: isChecked,
-//                                                                       onChanged: (bool? value) {
-//                                                                         // This is where we update the state when the checkbox is tapped
-//                                                                         setState(() {
-//                                                                           isChecked =value !;
-//                                                                         });
-//                                                                       }),
-//                                                                 ),
-//                                                                 SizedBox(
-//                                                                   width: 7.w,
-//                                                                 ),
-//
-//                                                                 Text(
-//                                                                   'Report contact',
-//
-//                                                                   style: GoogleFonts.inter(
-//                                                                       textStyle: TextStyle(
-//                                                                           fontSize: 14.sp,
-//                                                                           fontWeight: FontWeight.w400,
-//                                                                           color: Color.fromRGBO(0,0,0, 1))),
-//                                                                 ),
-//                                                               ],
-//                                                             ),
-//                                                             Row(
-//                                                               mainAxisAlignment: MainAxisAlignment.end,
-//                                                               children: [
-//                                                                 TextButton(
-//                                                                   onPressed: () {
-//                                                                     Navigator.pop(context);
-//                                                                   },
-//                                                                   child: Text(
-//                                                                     'Cancel',
-//                                                                     style: GoogleFonts.inter(
-//                                                                         textStyle: TextStyle(
-//                                                                             fontSize: 16.sp,
-//                                                                             fontWeight: FontWeight.w700, color: Color.fromRGBO(0, 163, 255, 1))),
-//                                                                   ),
-//                                                                 ),
-//                                                                 TextButton(
-//                                                                   onPressed: ()async{
-//                                                                     Navigator.of(context).pop();
-//                                                                     await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
-//                                                                       "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
-//                                                                           .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
-//                                                                           true)
-//                                                                           ? false
-//                                                                           : true
-//                                                                     });
-//                                                                   },
-//                                                                   child: Text(
-//                                                                       ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["isBlocked"] == true ||
-//                                                                           chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]
-//                                                                           ["isBlocked"] ==
-//                                                                               true))
-//                                                                           ? "Unblock"
-//                                                                           : "Block"
-//                                                                   ),
-//                                                                 ),
-//                                                               ],
-//                                                             )
-//                                                           ],),
-//                                                         )
-//                                                       );
-//                                                     }
-//                                                         ));
-//                                                   },
-//                                                   // onTap: () {
-//                                                   //   Future.delayed(Duration(seconds: 0),
-//                                                   //           () =>
-//                                                   //           showConfirmationDialog3(
-//                                                   //               context));
-//                                                   // },
-//                                                   // child: Text(
-//                                                   //   "Block",
-//                                                   //   style: GoogleFonts.inter(
-//                                                   //       textStyle: TextStyle(
-//                                                   //           fontSize: 16.sp,
-//                                                   //           fontWeight: FontWeight.w400,
-//                                                   //           color:
-//                                                   //           Color.fromRGBO(255, 0, 0, 1))),
-//                                                   // )
-//                                                child: Text(((chatRoomSnapshot.data!.data()!["members"]
-//                                                 ["${widget.uid}"][
-//                                                 "isBlocked"] ==
-//                                                     true ||
-//                                                     chatRoomSnapshot
-//                                                         .data!
-//                                                         .data()!["members"][chatRoomSnapshot
-//                                                         .data!
-//                                                         .data()!["members"]["${widget.uid}"]
-//                                                     ["peeruid"]]["isBlocked"] ==
-//                                                         true))
-//                                                     ? "Unblock"
-//                                                     : "Block",
-//                                                  style: GoogleFonts.inter(
-//                                                    textStyle: TextStyle(
-//                                                        fontSize: 16.sp,
-//                                                        fontWeight: FontWeight.w400,
-//                                                        color: Color.fromRGBO(255, 0, 0, 1)
-//                                                    )
-//                                                  ),
-//                                                ),
-//                                                 value: 6,
-//                                                 )
                                             ])
                                       ]
                                           : [
@@ -1830,7 +1585,8 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                 notUserMessages = 0;
                                               });
                                             },
-                                            icon: Icon(Icons.delete))
+                                            icon: Icon(Icons.delete)
+                                        )
                                             : Container(),
                                         IconButton(
                                             onPressed: () async {
@@ -1887,17 +1643,23 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                         showConfirmationDialog1(context)
                                 );
                               }
-                              break;
+                               break;
                               case 3:{
                                 FlutterClipboard.copy(copied).then(( value ){
-                                  final snackBar = snackbar(
-                                      content: "Message copied");
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
+                                  Fluttertoast.showToast(
+                                      msg: "Message copied",
+
+                                      timeInSecForIosWeb: 1);
+
                                 }
                                 );
+                                setState(() {
+                                  messages.clear();
+                                  notUserMessages = 0;
+                                });
                               }
-                            }},itemBuilder:(context)=>[
+                            }
+                            },itemBuilder:(context)=>[
                                           PopupMenuItem(
                                             value:1,
                                               child: Text(
@@ -2010,18 +1772,18 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                     ? (peerSnapshot.data!.data()!["status"] == "online")
                                                                     ? "Online":
                                                                 (peerSnapshot.data!.data()!["status"] == "typing")?
-                                                                "Typing 1..."
+                                                                "typing..."
                                                                     : (userSnapshot.data!.data()!["lastseenStatus"] == false &&
                                                                     peerSnapshot.data!.data()!["lastseenStatus"] == false)
-                                                                    ? "Last seen ${getDateTimeInChat(datetime:
+                                                                    ? "last seen ${getDateTimeInChat(datetime:
                                                                 getDateTimeSinceEpoch(datetime: peerSnapshot.data!.
                                                                 data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch
                                                                   (datetime: peerSnapshot.data!.data()!["status"]))}"
-                                                                    : "Last seen ${getDateTimeInChat(datetime:
+                                                                    : "last seen ${getDateTimeInChat(datetime:
                                                                 getDateTimeSinceEpoch(datetime: peerSnapshot.data!.
                                                                 data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch
                                                                   (datetime: peerSnapshot.data!.data()!["status"]))}"
-                                                                    : "Tap here for user info",
+                                                                    : "tap here for user info",
                                                                 style: GoogleFonts.inter(
                                                                   textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500, color:  Color.fromRGBO(
                                                                       0, 0, 0, 1)),
@@ -2045,403 +1807,420 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                       ),
 
                                     ),
-                                    body: Container(
-                                      decoration: BoxDecoration(
-                                        // color: Color(black),
-                                        image: DecorationImage(
-                                          image: (Map.from(
-                                              chatRoomSnapshot.data!
-                                                  .data()!['members']["${widget
-                                                  .uid}"]).containsKey(
-                                              "wallpaper") == true)
-                                              ? (chatRoomSnapshot.data!
-                                              .data()!['members']["${widget
-                                              .uid}"]["wallpaper"] != null)
-                                              ? AssetImage(
-                                              chatRoomSnapshot.data!
-                                                  .data()!['members']["${widget
-                                                  .uid}"]["wallpaper"])
-                                              : AssetImage(
-                                              (themedata.value.index == 0)
-                                                  ? "assets/chatLightBg.jpg"
-                                                  : "assets/chatDarkBg.jpg")
-                                              : AssetImage(
-                                              (themedata.value.index == 0)
-                                                  ? "assets/chatLightBg.jpg"
-                                                  : "assets/chatDarkBg.jpg"),
-                                          fit: BoxFit.cover,
-                                          // colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
-                                        ),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                            child: NotificationListener<
-                                                ScrollNotification>(
-                                                onNotification: (
-                                                    ScrollNotification scrollInfo
-                                                    ) {
-                                                  if (scrollInfo.metrics
-                                                      .maxScrollExtent ==
-                                                      scrollInfo.metrics
-                                                          .pixels) {
-                                                    readUserMessages();
-                                                  }
-                                                  return true;
-                                                },
-                                                child:
-                                                (!snapshot.hasData)
-                                                    ? Center(
-                                                  child: Text("No messages"),
-                                                )
-                                                    :
-                                                Container(
-                                                  child: GroupedListView(
-                                                      sort: false,
-                                                      elements: snapshot.data!,
-                                                      // groupBy: (DocumentSnapshot<Map<String, dynamic>> element) =>
-                                                      //     getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: element["timestamp"])),
-                                                      groupBy: (
-                                                          DocumentSnapshot<Map<
-                                                              String,
-                                                              dynamic>> element) =>
-                                                          DateFormat(
-                                                              'yyyy-MM-dd')
-                                                              .format(
-                                                            tz.TZDateTime.from(
-                                                                getDateTimeSinceEpoch(
-                                                                    datetime: element["timestamp"]),
-                                                                tz.local),
-                                                          ),
-                                                      reverse: true,
-                                                      // padding: EdgeInsets.all(10.0),
-                                                      groupHeaderBuilder: (
-                                                          DocumentSnapshot<Map<
-                                                              String,
-                                                              dynamic>> element) =>
-                                                          buildGroupHeaderItem(
-                                                              element),
-                                                      indexedItemBuilder: (context, DocumentSnapshot<Map<String, dynamic>> element, index) =>
-                                                      (sizingInformation
-                                                          .deviceScreenType ==
-                                                          DeviceScreenType
-                                                              .desktop)
-                                                          ?
-                                                      GestureDetector(
-                                                          behavior: HitTestBehavior
-                                                              .opaque,
-                                                          child: buildItem(
-                                                            document: element,
-                                                            chatRoomSnapshot: chatRoomSnapshot
-                                                                .data!,
-                                                            sizingInformation: sizingInformation,
-                                                            // userDetailSnapshot: userDetailSnapshot.data!,
-                                                            index: index,
-                                                            replyIndex: (snapshot
-                                                                .data!.length +
-                                                                1) - index,
-                                                          ))
-                                                          : SwipeTo(
-                                                          onRightSwipe: (element
-                                                              .data()!["delete"]["everyone"] ==
-                                                              true)
-                                                              ? null
-                                                              : () {
-                                                            replyUserName =
-                                                            (widget.uid !=
-                                                                element
-                                                                    .data()!["from"])
-                                                                ? chatRoomSnapshot
-                                                                .data!
-                                                                .data()!["members"]["${widget
-                                                                .puid}"]["name"]
-                                                                : "You";
-                                                            if (!mounted)
-                                                              return;
-                                                            setState(() {
-                                                              replyMessageMap =
-                                                                  replyMap(
-                                                                      documentId: element
-                                                                          .id,
-                                                                      documentIndex: (snapshot
-                                                                          .data!
-                                                                          .length +
-                                                                          1) -
-                                                                          index,
-                                                                      fromUid: element
-                                                                          .data()!["from"],
-                                                                      type: element
-                                                                          .data()!["type"],
-                                                                      data: element
-                                                                          .data()!["data"]);
-                                                            });
-
-                                                            focusNode
-                                                                .requestFocus();
-                                                            print('personal: deena');
-                                                          },
-                                                          child: GestureDetector(
-                                                              behavior: HitTestBehavior
-                                                                  .opaque,
-                                                              onLongPress: (element.data()!["delete"]["everyone"] == true)
-                                                                  ? null
-                                                                  : () {
-                                                                print("check count ${notUserMessages}");
-                                                                print("selected white msg...................");
-                                                                print("uid is ${widget.uid}");
-                                                                if (messages.isEmpty == true) {
-                                                                  messages[index] = element;
-                                                                  copied = element.data()!["data"]["text"];
-                                                                  deliverTime = element.data()!["timestamp"];
-                                                                  readTime = formatTime(getDateTimeSinceEpoch(datetime: element["read"]["timestamp"]));
-                                                                  msgTime =  formatTime(getDateTimeSinceEpoch(datetime: element["timestamp"]));
-                                                                  print('dheeee${msgTime}');
-                                                                  print('dheeee${msgTime}');
-                                                                  if (element.data()!["from"] != widget.uid) {
-                                                                    notUserMessages += 1;
-                                                                  }
-                                                                }
-                                                                if (!mounted) return;
-                                                                setState(() {
-                                                                  if (isSearching) {
-                                                                    isSearching = false;
-                                                                    searchTextEditingController.clear();
-
-                                                                  }
-                                                                });
-                                                                log(notUserMessages.toString());
-                                                                log(messages.length.toString());
-                                                              },
-                                                              onTap: () {
-                                                                if (messages.isNotEmpty) {
-                                                                  if (messages.values.contains(element)) {
-                                                                    // if (!mounted) return;
-                                                                    // setState(() {
-                                                                    messages.remove(messages.inverse[element]);
-                                                                    // });
-                                                                    if (element.data()!["from"] != widget.uid) {
-                                                                      notUserMessages += 1;
-                                                                    }
-                                                                  } else {
-                                                                    if (element.data()!["delete"]["everyone"] == false) {
-                                                                      messages[index] = element;
-                                                                    }
-                                                                    if (element.data()!["from"] != widget.uid) {
-                                                                      notUserMessages += 1;
-                                                                    }
-                                                                  }
-                                                                }
-                                                                if (!mounted) return;
-                                                                setState(() {
-
-                                                                });
-                                                                log(notUserMessages.toString());
-                                                                log(messages.length.toString());
-                                                              },
-                                                              child: Container(
-                                                                  color: (index <=
-                                                                      lastUnreadCount &&
-                                                                      lastUnreadCount !=
-                                                                          0)
-                                                                      ? unreadMessageAnimation
-                                                                      .value
-                                                                      : (messages.values.contains(element))
-                                                                      ? Color.fromRGBO(130, 120, 95, 0.3)
-                                                                      : Color(transparent),
-                                                                  child:
-                                                                  (element.data()!["delete"]["personal"] == true)?
-                                                                  (element.data()!["from"] == widget.uid)?
-                                                                  Container(
-
-                                                                  ):
-                                                                  buildItem(
-                                                                      sizingInformation: sizingInformation,
-                                                                      document: element,
-                                                                      // sizingInformation: sizingInformation,
-                                                                      chatRoomSnapshot: chatRoomSnapshot.data!,
-                                                                      // userDetailSnapshot: userDetailSnapshot.data!,
-                                                                      index: index,
-                                                                      replyIndex: (snapshot.data!.length + 1) - index):
-                                                                  buildItem(
-                                                                      sizingInformation: sizingInformation,
-                                                                      document: element,
-                                                                      // sizingInformation: sizingInformation,
-                                                                      chatRoomSnapshot: chatRoomSnapshot.data!,
-                                                                      // userDetailSnapshot: userDetailSnapshot.data!,
-                                                                      index: index,
-                                                                      replyIndex: (snapshot.data!.length + 1) - index)
-
-                                                              )
-                                                          )
-                                                      ),
-                                                      controller: listScrollController,
-                                                      useStickyGroupSeparators: true,
-                                                      floatingHeader: true,
-                                                      order: GroupedListOrder
-                                                          .DESC),
-                                                )
-                                              // }
-                                              // }),
-                                            ),
+                                    body: GestureDetector(
+                                      onTap: () {
+                                        FocusScope.of(context).requestFocus(FocusNode());
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          // color: Color(black),
+                                          image: DecorationImage(
+                                            image: (Map.from(
+                                                chatRoomSnapshot.data!
+                                                    .data()!['members']["${widget
+                                                    .uid}"]).containsKey(
+                                                "wallpaper") == true)
+                                                ? (chatRoomSnapshot.data!
+                                                .data()!['members']["${widget
+                                                .uid}"]["wallpaper"] != null)
+                                                ? AssetImage(
+                                                chatRoomSnapshot.data!
+                                                    .data()!['members']["${widget
+                                                    .uid}"]["wallpaper"])
+                                                : AssetImage(
+                                                (themedata.value.index == 0)
+                                                    ? "assets/chatLightBg.jpg"
+                                                    : "assets/chatDarkBg.jpg")
+                                                : AssetImage(
+                                                (themedata.value.index == 0)
+                                                    ? "assets/chatLightBg.jpg"
+                                                    : "assets/chatDarkBg.jpg"),
+                                            fit: BoxFit.cover,
+                                            // colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
                                           ),
-                                          Container(
-                                            // height: 66,
-                                            color: Colors.transparent,
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                (replyMessageMap != null)
-                                                    ? Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 20,
-                                                      right: 20,
-                                                      top: 20,
-                                                      bottom: 8),
-                                                  child: Container(
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 30,
-                                                        ),
-                                                        Container(width:200.w,
-                                                          padding: EdgeInsets.all(8),decoration: BoxDecoration(
-                                                              color: (themedata.value.index == 0) ? Color.fromRGBO(242, 242, 242, 1) :Color.fromRGBO(242, 242, 242, 1) ,
-                                                              borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                                                          child: IntrinsicHeight(
-                                                            child: Row(
-                                                              children: [
-                                                                Container(
-                                                                  color: Color.fromRGBO(248, 206, 97, 1),
-                                                                  width: 4,
-                                                                ),SizedBox(width:8),
-                                                                Flexible(
-                                                                  child: Column(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Text(
-                                                                        replyUserName!,
-                                                                        style: GoogleFonts
-                                                                            .inter(
-                                                                          textStyle: textStyle(
-                                                                              fontSize: 14.sp,
-                                                                              color: Color.fromRGBO(7, 66, 255, 0.5)),
-                                                                        ),
-                                                                        maxLines: 1,
-                                                                        softWrap: true,
-                                                                      ),
-                                                                      const SizedBox(
-                                                                          height: 8),
-                                                                      Text(
-                                                                        (inverseDataType[replyMessageMap!["type"]] ==
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                              child: NotificationListener<
+                                                  ScrollNotification>(
+                                                  onNotification: (
+                                                      ScrollNotification scrollInfo
+                                                      ) {
+                                                    if (scrollInfo.metrics
+                                                        .maxScrollExtent ==
+                                                        scrollInfo.metrics
+                                                            .pixels) {
+                                                      readUserMessages();
+                                                    }
+                                                    return true;
+                                                  },
+                                                  child:
+                                                  (!snapshot.hasData)
+                                                      ? Center(
+                                                    child: Text("No messages"),
+                                                  )
+                                                      :
+                                                  Container(
+                                                    child: GroupedListView(
+                                                        sort: false,
+                                                        elements: snapshot.data!,
+                                                        // groupBy: (DocumentSnapshot<Map<String, dynamic>> element) =>
+                                                        //     getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: element["timestamp"])),
+                                                        groupBy: (
+                                                            DocumentSnapshot<Map<
+                                                                String,
+                                                                dynamic>> element) =>
+                                                            DateFormat(
+                                                                'yyyy-MM-dd')
+                                                                .format(
+                                                              tz.TZDateTime.from(
+                                                                  getDateTimeSinceEpoch(
+                                                                      datetime: element["timestamp"]),
+                                                                  tz.local),
+                                                            ),
+                                                        reverse: true,
+                                                        // padding: EdgeInsets.all(10.0),
+                                                        groupHeaderBuilder: (
+                                                            DocumentSnapshot<Map<
+                                                                String,
+                                                                dynamic>> element) =>
+                                                            buildGroupHeaderItem(
+                                                                element),
+                                                        indexedItemBuilder: (context, DocumentSnapshot<Map<String, dynamic>> element, index) =>
+                                                        (sizingInformation
+                                                            .deviceScreenType ==
+                                                            DeviceScreenType
+                                                                .desktop)
+                                                            ?
+                                                        GestureDetector(
+                                                            behavior: HitTestBehavior
+                                                                .opaque,
+                                                            child: buildItem(
+                                                              document: element,
+                                                              chatRoomSnapshot: chatRoomSnapshot
+                                                                  .data!,
+                                                              sizingInformation: sizingInformation,
+                                                              // userDetailSnapshot: userDetailSnapshot.data!,
+                                                              index: index,
+                                                              replyIndex: (snapshot
+                                                                  .data!.length +
+                                                                  1) - index,
+                                                            ))
+                                                            : SwipeTo(
+                                                            onRightSwipe: (element
+                                                                .data()!["delete"]["everyone"] ==
+                                                                true)
+                                                                ? null
+                                                                : () {
+                                                              replyUserName =
+                                                              (widget.uid !=
+                                                                  element
+                                                                      .data()!["from"])
+                                                                  ? chatRoomSnapshot
+                                                                  .data!
+                                                                  .data()!["members"]["${widget
+                                                                  .puid}"]["name"]
+                                                                  : "You";
+                                                              if (!mounted)
+                                                                return;
+                                                              setState(() {
+                                                                replyMessageMap =
+                                                                    replyMap(
+                                                                        documentId: element
+                                                                            .id,
+                                                                        documentIndex: (snapshot
+                                                                            .data!
+                                                                            .length +
+                                                                            1) -
+                                                                            index,
+                                                                        fromUid: element
+                                                                            .data()!["from"],
+                                                                        type: element
+                                                                            .data()!["type"],
+                                                                        data: element
+                                                                            .data()!["data"]);
+                                                              });
+
+                                                              focusNode
+                                                                  .requestFocus();
+                                                              print('personal: deena');
+                                                            },
+                                                            child: GestureDetector(
+                                                                behavior: HitTestBehavior
+                                                                    .opaque,
+                                                                onLongPress: (element.data()!["delete"]["everyone"] == true)
+                                                                    ? null
+                                                                    : () {
+                                                                  print("check count ${notUserMessages}");
+                                                                  print("selected white msg...................");
+                                                                  print("uid is ${widget.uid}");
+                                                                  if (messages.isEmpty == true) {
+                                                                    messages[index] = element;
+                                                                    copied = element.data()!["data"]["text"];
+                                                                    deliverTime = element.data()!["timestamp"];
+                                                                    readTime = formatTime(getDateTimeSinceEpoch(datetime: element["read"]["timestamp"]));
+                                                                    msgTime =  formatTime(getDateTimeSinceEpoch(datetime: element["timestamp"]));
+                                                                    print('dheeee${msgTime}');
+                                                                    print('dheeee${msgTime}');
+                                                                    if (element.data()!["from"] != widget.uid) {
+                                                                      notUserMessages += 1;
+                                                                    }
+                                                                  }
+                                                                  if (!mounted) return;
+                                                                  setState(() {
+                                                                    if (isSearching) {
+                                                                      isSearching = false;
+                                                                      searchTextEditingController.clear();
+
+                                                                    }
+                                                                  });
+                                                                  log(notUserMessages.toString());
+                                                                  log(messages.length.toString());
+                                                                },
+                                                                onTap: () {
+                                                                  if (messages.isNotEmpty) {
+                                                                    if (messages.values.contains(element)) {
+                                                                      // if (!mounted) return;
+                                                                      // setState(() {
+                                                                      messages.remove(messages.inverse[element]);
+                                                                      // });
+                                                                      if (element.data()!["from"] != widget.uid) {
+                                                                        notUserMessages += 1;
+                                                                      }
+                                                                    } else {
+                                                                      if (element.data()!["delete"]["everyone"] == false) {
+                                                                        messages[index] = element;
+                                                                      }
+                                                                      if (element.data()!["from"] != widget.uid) {
+                                                                        notUserMessages += 1;
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                  if (!mounted) return;
+                                                                  setState(() {
+
+                                                                  });
+                                                                  log(notUserMessages.toString());
+                                                                  log(messages.length.toString());
+                                                                },
+                                                                child: Container(
+                                                                    color: (index <=
+                                                                        lastUnreadCount &&
+                                                                        lastUnreadCount !=
                                                                             0)
-                                                                            ? replyMessageMap!["data"]["text"]
-                                                                            : replyMessageMap!["type"],
-                                                                        style: GoogleFonts
-                                                                            .inter(
-                                                                            textStyle: textStyle(
-                                                                                fontSize: 14)),
-                                                                        maxLines: 2,
-                                                                        softWrap: true,
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                Spacer(),
-                                                                Padding(
-                                                                  padding:EdgeInsets.only(bottom:20.h),
-                                                                  child: GestureDetector(
-                                                                    child: Icon(
-                                                                        Icons.close,
-                                                                        size: 18),
-                                                                    onTap: (){
-                                                                      if (!mounted)
-                                                                        return;
-                                                                      setState(() {
-                                                                        replyMessageMap =
-                                                                        null;
-                                                                      });
-                                                                    },
-                                                                  ),
+                                                                        ? unreadMessageAnimation
+                                                                        .value
+                                                                        : (messages.values.contains(element))
+                                                                        ? Color.fromRGBO(130, 120, 95, 0.3)
+                                                                        : Color(transparent),
+                                                                    child:
+                                                                    (element.data()!["delete"]["personal"] == true)?
+                                                                    (element.data()!["from"] == widget.uid)?
+                                                                    Container():
+                                                                    buildItem(
+                                                                        sizingInformation: sizingInformation,
+                                                                        document: element,
+                                                                        // sizingInformation: sizingInformation,
+                                                                        chatRoomSnapshot: chatRoomSnapshot.data!,
+                                                                        // userDetailSnapshot: userDetailSnapshot.data!,
+                                                                        index: index,
+                                                                        replyIndex: (snapshot.data!.length + 1) - index):
+                                                                    buildItem(
+                                                                        sizingInformation: sizingInformation,
+                                                                        document: element,
+                                                                        // sizingInformation: sizingInformation,
+                                                                        chatRoomSnapshot: chatRoomSnapshot.data!,
+                                                                        // userDetailSnapshot: userDetailSnapshot.data!,
+                                                                        index: index,
+                                                                        replyIndex: (snapshot.data!.length + 1) - index)
+
                                                                 )
-                                                              ],
+                                                            )
+                                                        ),
+                                                        controller: listScrollController,
+                                                        useStickyGroupSeparators: true,
+                                                        floatingHeader: true,
+                                                        order: GroupedListOrder
+                                                            .DESC),
+                                                  )
+                                                // }
+                                                // }),
+                                              ),
+                                            ),
+                                            Container(
+                                              // height: 66,
+                                              color: Colors.transparent,
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  (replyMessageMap != null)
+                                                      ? Padding(
+                                                    padding: EdgeInsets.only(),
+                                                    child: Container(
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment
+                                                            .start,
+                                                        children: [
+                                                          SizedBox(width: 30,),
+                                                          Container(width:280.w,
+                                                            padding: EdgeInsets.all(8),decoration: BoxDecoration(
+                                                                color: (themedata.value.index == 0) ? Color.fromRGBO(242, 242, 242, 1) :Color.fromRGBO(242, 242, 242, 1) ,
+                                                                borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                                                            child: IntrinsicHeight(
+                                                              child: Row(
+                                                                children: [
+                                                                  Container(
+                                                                    color: Color.fromRGBO(248, 206, 97, 1),
+                                                                    width: 4,
+                                                                  ),SizedBox(width:8),
+                                                                  Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Text(
+                                                                          replyUserName!,
+                                                                          style: GoogleFonts
+                                                                              .inter(
+                                                                            textStyle: textStyle(
+                                                                                fontSize: 14.sp,
+                                                                                color: Color.fromRGBO(7, 66, 255, 0.5)),
+                                                                          ),
+                                                                          maxLines: 1,
+                                                                          softWrap: true,
+                                                                        ),
+                                                                        const SizedBox(height: 8),
+                                                                        (inverseDataType[replyMessageMap!["type"]] == 1)?
+                                                                            Container(width: 35, height: 35,
+                                                                              child : CachedNetworkImage(
+                                                                                imageUrl: replyMessageMap!["data"]["image"],
+                                                                              )
+                                                                            ):
+                                                                        Text(
+                                                                          (inverseDataType[replyMessageMap!["type"]] ==
+                                                                              0)
+                                                                              ? replyMessageMap!["data"]["text"]
+                                                                              : replyMessageMap!["type"],
+                                                                          style: GoogleFonts
+                                                                              .inter(
+                                                                              textStyle: textStyle(
+                                                                                  fontSize: 14)),
+                                                                          maxLines: 2,
+                                                                          softWrap: true,
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  Spacer(),
+                                                                  Container(
+                                                                      width:35.w,
+                                                                      height:35.h,
+                                                                      child: ClipOval(
+                                                                        child: (chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"] != null)
+                                                                            ? CachedNetworkImage(
+                                                                          fit: BoxFit.cover,
+                                                                          fadeInDuration: const Duration(milliseconds: 400),
+                                                                          progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                                                            child: Container(
+                                                                              width: 20.0,
+                                                                              height: 20.0,
+                                                                              child: CircularProgressIndicator(value: downloadProgress.progress),
+                                                                            ),
+                                                                          ),
+                                                                          imageUrl: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
+                                                                          errorWidget: (context, url, error) => Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
+                                                                        )
+                                                                            : Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
+                                                                      )),
+                                                                  SizedBox(width:10.w),
+                                                                  Padding(
+                                                                    padding:EdgeInsets.only(bottom:20.h),
+                                                                    child: GestureDetector(
+                                                                      child: Icon(
+                                                                          Icons.close,
+                                                                          size: 18),
+                                                                      onTap: (){
+                                                                        if (!mounted)
+                                                                          return;
+                                                                        setState(() {
+                                                                          replyMessageMap =
+                                                                          null;
+                                                                        });
+                                                                      },
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
 
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                )
-                                                    : Container(),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10,
-                                                      left: 10,
-                                                      right: 10,
-                                                      top: 10),
-                                                  child: ((chatRoomSnapshot
-                                                      .data!
-                                                      .data()!["members"]["${widget
-                                                      .uid}"]["isBlocked"] ==
-                                                      true ||
-                                                      chatRoomSnapshot.data!
-                                                          .data()!["members"][chatRoomSnapshot
-                                                          .data!
-                                                          .data()!["members"]["${widget
-                                                          .uid}"]["peeruid"]]
-                                                      ["isBlocked"] ==
-                                                          true))
-                                                      ? Padding(
-                                                    padding: const EdgeInsets
-                                                        .only(top: 5,
-                                                        bottom: 5,
-                                                        left: 10,
-                                                        right: 10),
-                                                    child: Text(
-                                                        (chatRoomSnapshot.data!
-                                                            .data()!["members"]["${widget
-                                                            .uid}"]["isBlocked"] ==
-                                                            true)
-                                                            ? "You are blocked by ${chatRoomSnapshot
-                                                            .data!
-                                                            .data()!["members"][chatRoomSnapshot
-                                                            .data!
-                                                            .data()!["members"]["${widget
-                                                            .uid}"]["peeruid"]]["name"]}. You cant send text unless you are unblocked by your peer!"
-                                                            : "You have blocked ${chatRoomSnapshot
-                                                            .data!
-                                                            .data()!["members"][chatRoomSnapshot
-                                                            .data!
-                                                            .data()!["members"]["${widget
-                                                            .uid}"]["peeruid"]]["name"]}. You cant send text unless you unblock your peer!",
-                                                        textAlign: TextAlign
-                                                            .center,
-                                                        style: GoogleFonts
-                                                            .inter(
-                                                            textStyle: textStyle(
-                                                                fontSize: 14,
-                                                                color: (themedata
-                                                                    .value
-                                                                    .index == 0)
-                                                                    ? Color(
-                                                                    materialBlack)
-                                                                    : Color(
-                                                                    white)))),
                                                   )
-                                                      : Column(
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          //textField for personal chat
-                                                          Flexible(
-                                                            child: RawKeyboardListener(
-                                                              focusNode: focusNode,
-                                                              onKey: (event) async{
-
-                                                              },
+                                                      : Container(),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 10,
+                                                        left: 10,
+                                                        right: 10,
+                                                        top: 10),
+                                                    child: ((chatRoomSnapshot
+                                                        .data!
+                                                        .data()!["members"]["${widget
+                                                        .uid}"]["isBlocked"] ==
+                                                        true ||
+                                                        chatRoomSnapshot.data!
+                                                            .data()!["members"][chatRoomSnapshot
+                                                            .data!
+                                                            .data()!["members"]["${widget
+                                                            .uid}"]["peeruid"]]
+                                                        ["isBlocked"] ==
+                                                            true))
+                                                        ? null
+                                                    // Padding(
+                                                    //   padding: const EdgeInsets
+                                                    //       .only(top: 5,
+                                                    //       bottom: 5,
+                                                    //       left: 10,
+                                                    //       right: 10),
+                                                    //   child: Text(
+                                                    //       (chatRoomSnapshot.data!
+                                                    //           .data()!["members"]["${widget
+                                                    //           .uid}"]["isBlocked"] ==
+                                                    //           true)
+                                                    //           ? "You are blocked by ${chatRoomSnapshot
+                                                    //           .data!
+                                                    //           .data()!["members"][chatRoomSnapshot
+                                                    //           .data!
+                                                    //           .data()!["members"]["${widget
+                                                    //           .uid}"]["peeruid"]]["name"]}. You cant send text unless you are unblocked by your peer!"
+                                                    //           : "You have blocked ${chatRoomSnapshot
+                                                    //           .data!
+                                                    //           .data()!["members"][chatRoomSnapshot
+                                                    //           .data!
+                                                    //           .data()!["members"]["${widget
+                                                    //           .uid}"]["peeruid"]]["name"]}. You cant send text unless you unblock your peer!",
+                                                    //       textAlign: TextAlign
+                                                    //           .center,
+                                                    //       style: GoogleFonts
+                                                    //           .inter(
+                                                    //           textStyle: textStyle(
+                                                    //               fontSize: 14,
+                                                    //               color: (themedata
+                                                    //                   .value
+                                                    //                   .index == 0)
+                                                    //                   ? Color(
+                                                    //                   materialBlack)
+                                                    //                   : Color(
+                                                    //                   white)))),
+                                                    // )
+                                                        : Column(
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            //textField for personal chat
+                                                            Flexible(
                                                               child: textField(
+
                                                                   onChanged : (event) async {
                                                                     if(textEditingController.text.isNotEmpty) {
                                                                       // print("1 event.runtime ${event.runtimeType} RawKeyDownEvent ${RawKeyDownEvent} event.logicalKey.keyId ${event.logicalKey.keyId}");
@@ -2486,7 +2265,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                   hintText: "Ping here...",
                                                                   hintStyle: GoogleFonts.inter(
                                                                       textStyle: textStyle(fontSize: 14, color: (themedata.value.index == 0) ? Color(grey) : Color(lightGrey))),
-                                                                  border: false,
+
                                                                   onSubmitted: (canSend)
                                                                       ? (value) async {
                                                                     if (textEditingController.text.trim() != "") {
@@ -2695,7 +2474,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                                                   onTap: () async {
 
                                                                                                     return await imageNvideo().then((value) async {
-                                                                                                      Navigator.of(context).pop();
+                                                                                                      Navigator.pop(context);
                                                                                                       if (value!.files.isNotEmpty) {
                                                                                                         print('check1');
                                                                                                         Navigator.push(
@@ -2970,7 +2749,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                           ),
                                                                           SizedBox(width:20.w),
                                                                           GestureDetector( onTap: () async {
-                                                                            Navigator.of(context).pop();
                                                                             final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
                                                                             if (photo != null) {
                                                                               int size = await photo.length();
@@ -3029,206 +2807,206 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                                   )
                                                               ),
                                                             ),
-                                                          ),
 
 
-                                                          Padding(
-                                                            padding: const EdgeInsets
-                                                                .only(
-                                                                right: 8.0),
-                                                            // padding: EdgeInsets.zero,
-                                                            child: (canSend)
-                                                                ? GestureDetector(
-                                                              // elevation: 0,
-                                                                child: Container(
-                                                                  height: 45,
-                                                                  width: 45,
-                                                                  clipBehavior: Clip
-                                                                      .hardEdge,
-                                                                  decoration: BoxDecoration(
-                                                                    shape: BoxShape
-                                                                        .circle,
-                                                                    color: Color(
-                                                                        accent),
-                                                                  ),
-                                                                  child: Center(
-                                                                    child: Icon(
-                                                                      Icons.send,
-                                                                      color: Colors.black,
+                                                            Padding(
+                                                              padding: const EdgeInsets
+                                                                  .only(
+                                                                  right: 8.0),
+                                                              // padding: EdgeInsets.zero,
+                                                              child: (canSend)
+                                                                  ? GestureDetector(
+                                                                // elevation: 0,
+                                                                  child: Container(
+                                                                    height: 45,
+                                                                    width: 45,
+                                                                    clipBehavior: Clip
+                                                                        .hardEdge,
+                                                                    decoration: BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                      color: Color(
+                                                                          accent),
+                                                                    ),
+                                                                    child: Center(
+                                                                      child: Icon(
+                                                                        Icons.send,
+                                                                        color: Colors.black,
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                                // padding: EdgeInsets.all(20),
-                                                                // shape: CircleBorder(),
-                                                                // color: Color(accent),
-                                                                onTap: canSend
-                                                                    ? () async {
-                                                                  if (textEditingController
-                                                                      .text
-                                                                      .trim() !=
-                                                                      "") {
-                                                                    await writeUserMessage(
-                                                                        type: 0,
-                                                                        peerPic: (chatRoomSnapshot
-                                                                            .data!
-                                                                            .data()!["members"]["${widget
-                                                                            .puid}"]["pic"] !=
-                                                                            null)
-                                                                            ? chatRoomSnapshot
-                                                                            .data!
-                                                                            .data()!["members"]["${widget
-                                                                            .puid}"]["pic"]
-                                                                            : null,
-                                                                        peerName: chatRoomSnapshot
-                                                                            .data!
-                                                                            .data()!["members"]["${widget
-                                                                            .puid}"]["name"],
-                                                                        // peerChattingWith: userDetailSnapshot.data!.data()!["chattingWith"],
-                                                                        replyMap: replyMessageMap,
-                                                                        message: textEditingController
-                                                                            .text);
-                                                                    if (replyMessageMap !=
-                                                                        null &&
-                                                                        replyUserName !=
-                                                                            null) {
-                                                                      if (!mounted)
-                                                                        return;
-                                                                      setState(() {
-                                                                        replyMessageMap =
-                                                                        null;
-                                                                        replyUserName =
-                                                                        null;
-                                                                      });
-                                                                    }
-                                                                    if (emojiShowing) {
-                                                                      if (!mounted)
-                                                                        return;
-                                                                      setState(() {
-                                                                        emojiShowing =
-                                                                        false;
-                                                                      });
-                                                                    }
-                                                                    textEditingController
-                                                                        .clear();
-                                                                    await instance.collection("user-detail").doc(uid).update({
-                                                                      "status": "online",
-                                                                      "chattingWith": null,
-                                                                    });
-                                                                  }
-                                                                }
-                                                                    : null)
-                                                                : RecordButton(
-                                                                controller: voiceRecordAnimationController,
-                                                                valueNotifier: recordAudioValueNotifier,
-                                                                function: () async {
-                                                                  File file = File(
-                                                                      recordAudioValueNotifier
-                                                                          .value);
-                                                                  if (file
-                                                                      .existsSync()) {
-                                                                    int length = await file
-                                                                        .length();
-                                                                    Uint8List bytes = await file
-                                                                        .readAsBytes();
-
-                                                                    if (length <
-                                                                        52428800) {
-                                                                      if (widget
-                                                                          .state ==
-                                                                          0) {
-                                                                        await writeUserMessage(
-                                                                          type: 9,
-                                                                          // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                  // padding: EdgeInsets.all(20),
+                                                                  // shape: CircleBorder(),
+                                                                  // color: Color(accent),
+                                                                  onTap: canSend
+                                                                      ? () async {
+                                                                    if (textEditingController
+                                                                        .text
+                                                                        .trim() !=
+                                                                        "") {
+                                                                      await writeUserMessage(
+                                                                          type: 0,
+                                                                          peerPic: (chatRoomSnapshot
+                                                                              .data!
+                                                                              .data()!["members"]["${widget
+                                                                              .puid}"]["pic"] !=
+                                                                              null)
+                                                                              ? chatRoomSnapshot
+                                                                              .data!
+                                                                              .data()!["members"]["${widget
+                                                                              .puid}"]["pic"]
+                                                                              : null,
                                                                           peerName: chatRoomSnapshot
                                                                               .data!
                                                                               .data()!["members"]["${widget
                                                                               .puid}"]["name"],
-                                                                          peerPic: chatRoomSnapshot
-                                                                              .data!
-                                                                              .data()!["members"]["${widget
-                                                                              .puid}"]["pic"],
+                                                                          // peerChattingWith: userDetailSnapshot.data!.data()!["chattingWith"],
                                                                           replyMap: replyMessageMap,
-                                                                          file: bytes,
-                                                                          contentType: "audio/" +
-                                                                              file
-                                                                                  .path
-                                                                                  .split(
-                                                                                  ".")
-                                                                                  .last,
-                                                                        );
-                                                                        if (replyMessageMap !=
-                                                                            null &&
-                                                                            replyUserName !=
-                                                                                null) {
-                                                                          if (!mounted)
-                                                                            return;
-                                                                          setState(() {
-                                                                            replyMessageMap =
-                                                                            null;
-                                                                            replyUserName =
-                                                                            null;
-                                                                          });
-                                                                        }
-                                                                      } else {
-                                                                        await writeGroupMessage(
+                                                                          message: textEditingController
+                                                                              .text);
+                                                                      if (replyMessageMap !=
+                                                                          null &&
+                                                                          replyUserName !=
+                                                                              null) {
+                                                                        if (!mounted)
+                                                                          return;
+                                                                        setState(() {
+                                                                          replyMessageMap =
+                                                                          null;
+                                                                          replyUserName =
+                                                                          null;
+                                                                        });
+                                                                      }
+                                                                      if (emojiShowing) {
+                                                                        if (!mounted)
+                                                                          return;
+                                                                        setState(() {
+                                                                          emojiShowing =
+                                                                          false;
+                                                                        });
+                                                                      }
+                                                                      textEditingController
+                                                                          .clear();
+                                                                      await instance.collection("user-detail").doc(uid).update({
+                                                                        "status": "online",
+                                                                        "chattingWith": null,
+                                                                      });
+                                                                    }
+                                                                  }
+                                                                      : null)
+                                                                  : RecordButton(
+                                                                  controller: voiceRecordAnimationController,
+                                                                  valueNotifier: recordAudioValueNotifier,
+                                                                  function: () async {
+                                                                    File file = File(
+                                                                        recordAudioValueNotifier
+                                                                            .value);
+                                                                    if (file
+                                                                        .existsSync()) {
+                                                                      int length = await file
+                                                                          .length();
+                                                                      Uint8List bytes = await file
+                                                                          .readAsBytes();
+
+                                                                      if (length <
+                                                                          52428800) {
+                                                                        if (widget
+                                                                            .state ==
+                                                                            0) {
+                                                                          await writeUserMessage(
                                                                             type: 9,
-                                                                            members: chatRoomSnapshot
+                                                                            // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                            peerName: chatRoomSnapshot
                                                                                 .data!
-                                                                                .data()!["members"],
-                                                                            file: bytes,
+                                                                                .data()!["members"]["${widget
+                                                                                .puid}"]["name"],
+                                                                            peerPic: chatRoomSnapshot
+                                                                                .data!
+                                                                                .data()!["members"]["${widget
+                                                                                .puid}"]["pic"],
                                                                             replyMap: replyMessageMap,
+                                                                            file: bytes,
                                                                             contentType: "audio/" +
                                                                                 file
                                                                                     .path
                                                                                     .split(
                                                                                     ".")
                                                                                     .last,
-                                                                            groupName: chatRoomSnapshot
-                                                                                .data!
-                                                                                .data()!["title"],
-                                                                            groupPic: chatRoomSnapshot
-                                                                                .data!
-                                                                                .data()!["pic"]);
-                                                                        if (replyMessageMap !=
-                                                                            null &&
-                                                                            replyUserName !=
-                                                                                null) {
-                                                                          if (!mounted)
-                                                                            return;
-                                                                          setState(() {
-                                                                            replyMessageMap =
-                                                                            null;
-                                                                            replyUserName =
-                                                                            null;
-                                                                          });
+                                                                          );
+                                                                          if (replyMessageMap !=
+                                                                              null &&
+                                                                              replyUserName !=
+                                                                                  null) {
+                                                                            if (!mounted)
+                                                                              return;
+                                                                            setState(() {
+                                                                              replyMessageMap =
+                                                                              null;
+                                                                              replyUserName =
+                                                                              null;
+                                                                            });
+                                                                          }
+                                                                        } else {
+                                                                          await writeGroupMessage(
+                                                                              type: 9,
+                                                                              members: chatRoomSnapshot
+                                                                                  .data!
+                                                                                  .data()!["members"],
+                                                                              file: bytes,
+                                                                              replyMap: replyMessageMap,
+                                                                              contentType: "audio/" +
+                                                                                  file
+                                                                                      .path
+                                                                                      .split(
+                                                                                      ".")
+                                                                                      .last,
+                                                                              groupName: chatRoomSnapshot
+                                                                                  .data!
+                                                                                  .data()!["title"],
+                                                                              groupPic: chatRoomSnapshot
+                                                                                  .data!
+                                                                                  .data()!["pic"]);
+                                                                          if (replyMessageMap !=
+                                                                              null &&
+                                                                              replyUserName !=
+                                                                                  null) {
+                                                                            if (!mounted)
+                                                                              return;
+                                                                            setState(() {
+                                                                              replyMessageMap =
+                                                                              null;
+                                                                              replyUserName =
+                                                                              null;
+                                                                            });
+                                                                          }
                                                                         }
+                                                                      } else {
+                                                                        final snackBar = snackbar(
+                                                                            content: "File size is greater than 50MB");
+                                                                        ScaffoldMessenger
+                                                                            .of(
+                                                                            context)
+                                                                            .showSnackBar(
+                                                                            snackBar);
                                                                       }
-                                                                    } else {
-                                                                      final snackBar = snackbar(
-                                                                          content: "File size is greater than 50MB");
-                                                                      ScaffoldMessenger
-                                                                          .of(
-                                                                          context)
-                                                                          .showSnackBar(
-                                                                          snackBar);
                                                                     }
-                                                                  }
-                                                                }),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
+                                                                  }),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          Offstage(offstage: !emojiShowing,
-                                              child: emojiOffstage()),
-                                          Offstage(offstage: !attachmentShowing,
-                                              child: attachmentOffstage(
-                                                  chatRoomSnapshot: chatRoomSnapshot)),
-                                        ],
+                                            Offstage(offstage: !emojiShowing,
+                                                child: emojiOffstage()),
+                                            Offstage(offstage: !attachmentShowing,
+                                                child: attachmentOffstage(
+                                                    chatRoomSnapshot: chatRoomSnapshot)),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
@@ -3307,37 +3085,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                         ? null
                                         : (messages.isEmpty)
                                         ? [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 20.0),
-                                        child: GestureDetector(
-                                          onTap: ()  {
 
-                                          },
-
-                                          child: SvgPicture.asset(
-                                            'assets/per_chat_icons/call_icon.svg',
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(1.0),
-                                        child: GestureDetector(
-                                          child: SvgPicture.asset(
-                                              'assets/per_chat_icons/video icon.svg'),
-                                          onTap: () {
-
-                                            // Navigator.push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //       builder: (context) =>AppBarListView()
-                                            //
-                                            //   ),
-                                            // );
-                                          },
-
-                                        ),
-                                      ),
                                       PopupMenuButton(shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(5)) ,
                                           onSelected: (value) async {
                                             switch (value) {
@@ -3708,66 +3456,77 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                             }
                                           },
                                           icon: Icon(Entypo.forward)),
-                                      PopupMenuButton(itemBuilder:(context)=>[
-                                        PopupMenuItem(
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>Messageinfo(msgData: copied,deliverTime: deliverTime,readTime: readTime,msgTime: msgTime)),
-                                                );
-                                              },
-                                              child: Text(
-                                                "Info",
-                                                style: GoogleFonts.inter(
-                                                    textStyle: TextStyle(
-                                                        fontSize: 16.sp,
-                                                        fontWeight: FontWeight.w400,
-                                                        color: Color.fromRGBO(
-                                                            0, 0, 0, 1))),
-                                              ),
-                                            )
-                                        ),
-                                        PopupMenuItem(
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Future.delayed(Duration(seconds: 0),
-                                                        () =>
-                                                        showConfirmationDialog1(context)
-                                                );
-                                              },
-                                              child: Text(
-                                                "Report",
-                                                style: GoogleFonts.inter(
-                                                    textStyle: TextStyle(
-                                                        fontSize: 16.sp,
-                                                        fontWeight: FontWeight.w400,
-                                                        color: Color.fromRGBO(0,0,0,1))),
-                                              ),
-                                            )
-                                        ),
-                                        PopupMenuItem(
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                FlutterClipboard.copy(copied).then(( value ){
-                                                  final snackBar = snackbar(
-                                                      content: "Message copied");
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(snackBar);
-                                                }
-                                                );
+                                      PopupMenuButton(
+                             onSelected: (value) async {
+                               switch (value) {
+                                 case 1:
+                                   {
 
-                                              },
-                                              child: Text(
-                                                "Copy",
-                                                style: GoogleFonts.inter(
-                                                    textStyle: TextStyle(
-                                                        fontSize: 16.sp,
-                                                        fontWeight: FontWeight.w400,
-                                                        color: Color.fromRGBO(
-                                                            0, 0, 0, 1))),
-                                              ),
+                                     Navigator.push(
+                                       context,
+                                       MaterialPageRoute(
+                                           builder: (context) =>Messageinfo(msgData: copied,deliverTime: deliverTime,readTime: readTime,msgTime: msgTime)),
+                                     );
+                                   }
+                                   break;
+                                 case 2:{
+                                   Future.delayed(Duration(seconds: 0),
+                                           () =>
+                                           showConfirmationDialog1(context)
+                                   );
+                                 }
+                                 break;
+                                 case 3:{
+                                   FlutterClipboard.copy(copied).then(( value ){
+                                     Fluttertoast.showToast(
+                                         msg: "Message copied",
+                                         timeInSecForIosWeb: 1);
+                                   }
+                                   );
+                                   setState(() {
+                                     messages.clear();
+                                     notUserMessages = 0;
+                                   });
+
+                                 }
+                               }
+                                    },
+                                        itemBuilder:(
+
+                                          context)=>[
+                                        PopupMenuItem(
+                                          value:1,
+                                            child: Text(
+                                              "Info",
+                                              style: GoogleFonts.inter(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 16.sp,
+                                                      fontWeight: FontWeight.w400,
+                                                      color: Color.fromRGBO(
+                                                          0, 0, 0, 1))),
+                                            )
+                                        ),
+                                        PopupMenuItem(
+                                          value:2,
+                                            child: Text(
+                                              "Report",
+                                              style: GoogleFonts.inter(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 16.sp,
+                                                      fontWeight: FontWeight.w400,
+                                                      color: Color.fromRGBO(0,0,0,1))),
+                                            )
+                                        ),
+                                        PopupMenuItem(
+                                          value:3,
+                                            child: Text(
+                                              "Copy",
+                                              style: GoogleFonts.inter(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 16.sp,
+                                                      fontWeight: FontWeight.w400,
+                                                      color: Color.fromRGBO(
+                                                          0, 0, 0, 1))),
                                             )
                                         ),
                                       ])
@@ -5170,32 +4929,30 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                               )
                                   : null,
                               actions: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 20.0),
-                                  child: InkWell(
-                                    splashColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    onTap: ()  {
-
-                                    },
-
-                                    child: SvgPicture.asset(
-                                      'assets/per_chat_icons/call_icon.svg',
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(1.0),
-                                  child: GestureDetector(
-                                    child: SvgPicture.asset(
-                                        'assets/per_chat_icons/video icon.svg'),
-                                    onTap: () {
-
-                                    },
-
-                                  ),
-                                ),
+                                // Padding(
+                                //   padding: const EdgeInsets.only(right: 20.0),
+                                //   child: InkWell(
+                                //
+                                //     onTap: ()  {
+                                //
+                                //     },
+                                //
+                                //     child: SvgPicture.asset(
+                                //       'assets/per_chat_icons/call_icon.svg',
+                                //     ),
+                                //   ),
+                                // ),
+                                // Padding(
+                                //   padding: EdgeInsets.all(1.0),
+                                //   child: GestureDetector(
+                                //     child: SvgPicture.asset(
+                                //         'assets/per_chat_icons/video icon.svg'),
+                                //     onTap: () {
+                                //
+                                //     },
+                                //
+                                //   ),
+                                // ),
                                 PopupMenuButton(
                                     icon:Icon(Icons.more_vert,color:Colors.black),
                                     shape: RoundedRectangleBorder(
@@ -5243,20 +5000,10 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                           }
                                           break;
                                         case 4:
-                                          {
-                                            await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
-                                              "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
-                                                  .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
-                                                  true)
-                                                  ? false
-                                                  : true
-                                            });
-                                          }
+                                          {}
                                           break;
-                                        case 5:{}
-                                        break;
 
-                                        case 6:{//for block
+                                        case 5:{//for block
                                           await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
                                             "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
                                                 .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
@@ -5382,12 +5129,10 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                                 textStyle: TextStyle(
                                                     fontSize: 16.sp,
                                                     fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1))),
+                                                    color: Color.fromRGBO(0, 0, 0, 1))),
                                           )),
                                       PopupMenuItem(
                                           onTap: () {
-
                                             // Future.delayed(Duration(seconds: 0),
                                             //         () =>
                                             //         showConfirmationDialog3(
@@ -6334,13 +6079,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              SizedBox(
-                width: (sizingInformation.deviceScreenType ==
-                    DeviceScreenType.desktop) ? MediaQuery
-                    .of(context)
-                    .size
-                    .width / 10 : 0,
-              ),
+
               Flexible(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -6356,12 +6095,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                         );
                       },
                       child: ChatBubble(
-                        padding: EdgeInsets.only(
-                            left: 11.w, right: 11.w, top: 10.h, bottom: 7.h),
+                        padding: EdgeInsets.only(left: 11.w, right: 11.w, top: 10.h, bottom: 7.h),
                         alignment: Alignment.centerRight,
-                        clipper: ChatBubbleClipper5(type: BubbleType.sendBubble,
-                            radius: 18,
-                            secondRadius: 0),
+                        clipper: ChatBubbleClipper5(type: BubbleType.sendBubble, radius: 18, secondRadius: 0),
                         backGroundColor: Color.fromRGBO(112, 112, 112, 1),
                         elevation: 0,
                         child: Column(
@@ -6477,10 +6213,8 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                         fontWeight: FontWeight.w400,
                                         textStyle: textStyle(
                                           color: (themedata.value.index == 0)
-                                              ? Color.fromRGBO(
-                                              255, 255, 255, 0.57)
-                                              : Color.fromRGBO(
-                                              255, 255, 255, 0.57),
+                                              ? Color.fromRGBO(255, 255, 255, 0.57)
+                                              : Color.fromRGBO(255, 255, 255, 0.57),
                                         )),
                                   ),
                                   SizedBox(width: 5.w),
@@ -6488,14 +6222,8 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                       ? (chatRoomSnapshot
                                       .data()!["members"]["${widget
                                       .puid}"]["lastRead"] != null)
-                                      ? (getDateTimeSinceEpoch(
-                                      datetime: chatRoomSnapshot
-                                          .data()!["members"]["${widget
-                                          .puid}"]["lastRead"])
-                                      .difference(getDateTimeSinceEpoch(
-                                      datetime: document["timestamp"]))
-                                      .inMicroseconds >
-                                      0)
+                                      ? (getDateTimeSinceEpoch(datetime: chatRoomSnapshot.data()!["members"]["${widget.puid}"]["lastRead"])
+                                      .difference(getDateTimeSinceEpoch(datetime: document["timestamp"])).inMicroseconds > 0)
                                       ? Icon(
                                     Icons.done_all,
                                     size: 15,
@@ -6533,33 +6261,15 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-
-              SizedBox(
-                width: (sizingInformation.deviceScreenType ==
-                    DeviceScreenType.desktop) ? MediaQuery
-                    .of(context)
-                    .size
-                    .width / 15 : 0,
-              ),
             ],
           ),
         )
         // sender
-
-            : Padding(
-          padding: EdgeInsets.only(
-              left: 10, right: 50, top: 8, bottom: 8),
+            : Padding(padding: EdgeInsets.only(left: 10, right: 50, top: 3.6, bottom:3.6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                width: (sizingInformation.deviceScreenType ==
-                    DeviceScreenType.desktop) ? MediaQuery
-                    .of(context)
-                    .size
-                    .width / 15 : 0,
-              ),
               Flexible(
                 child: Column(
                   children: [
@@ -6598,8 +6308,7 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                     bottomRight: Radius
                                         .circular(15))
                             ),
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
+
                             child: Column(
                               children: [
                                 (document["forwardCount"] == 0)
@@ -6716,13 +6425,6 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                     : Stack(
 
                                   children: [
-                                    // Text(
-                                    //   (widget.state == 0) ? (chatRoomSnapshot.data()!["members"]["${widget.puid}"]["name"]) : userName,
-                                    //   overflow: TextOverflow.ellipsis,
-                                    //   maxLines: 1,
-                                    //   softWrap: true,
-                                    //   style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, color: Color(accent))),
-                                    // ),
                                     Padding(
                                         padding: const EdgeInsets.only(top: 5,
                                             right: 60,
@@ -6763,17 +6465,11 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              SizedBox(
-                width: (sizingInformation.deviceScreenType ==
-                    DeviceScreenType.desktop) ? MediaQuery
-                    .of(context)
-                    .size
-                    .width / 10 : 0,
-              ),
+
             ],
           ),
         ));
-    //reciever
+        //reciever
   }
 
 

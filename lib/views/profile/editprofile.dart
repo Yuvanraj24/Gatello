@@ -128,7 +128,8 @@ class _Edit_ProfileState extends State<Edit_Profile> {
                          color: Colors.white),
                    ),
                    SizedBox(width: 11.w),
-                   RichText(text: TextSpan(style:DefaultTextStyle.of(context).style,
+                   RichText(
+                       text: TextSpan(style:DefaultTextStyle.of(context).style,
                        children:[
                          TextSpan(text: 'Lives in ',style: GoogleFonts.inter(textStyle: TextStyle(
                              fontWeight: FontWeight.w700,fontSize:14,color: Color.fromRGBO(0, 0, 0, 0.5),decoration:

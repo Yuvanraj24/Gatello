@@ -26,7 +26,7 @@ class CreateUsername extends StatefulWidget {
 class _CreateUsernameState extends State<CreateUsername> {
 
   var userList;
-  String status="";
+  String status="null";
 
   @override
   void initState() {
@@ -108,7 +108,6 @@ class _CreateUsernameState extends State<CreateUsername> {
                           child: Column(
                             children: [
                               TextFormField(
-
                                 controller: _userName,
                                 onChanged: (text){
                                   widget.userName = _userName.text.toString();
@@ -118,7 +117,14 @@ class _CreateUsernameState extends State<CreateUsername> {
                                     print(text);
 
                                     print("if(${text}==${userList[i]["username"]})");
-                                    if(text==userList[i]["username"])
+                                   if(_userName.text.isEmpty){
+
+                                     setState(() {
+                                       status ="null";
+                                     });
+
+                                   }
+                                    else if(text==userList[i]["username"])
                                     {
                                       print("username exists");
                                       setState(() {
@@ -157,17 +163,22 @@ class _CreateUsernameState extends State<CreateUsername> {
                                         children: [
                                           Spacer(),
 
-                                          IconButton(
-                                            padding: EdgeInsets.only(bottom: 3,left: 30),
-                                            alignment: Alignment.bottomCenter,
-                                            iconSize: 20.w,
-                                            icon: Icon(Icons.refresh, color: Colors.black),
-                                            onPressed: () {},
-                                          ),
+                                          // IconButton(
+                                          //   padding: EdgeInsets.only(bottom: 3,left: 30),
+                                          //   alignment: Alignment.bottomCenter,
+                                          //   iconSize: 20.w,
+                                          //   icon: Icon(Icons.refresh, color: Colors.black),
+                                          //   onPressed: () {},
+                                          // ),
                                           Padding(
                                             padding: EdgeInsets.only(top: 20,left: 10),
-                                            child: (status == "exists")?
-                                            SvgPicture.asset('assets/icons_assets/wrong.svg',width: 16.w,):
+                                            child:
+                                            (status == "null")?
+                                                null:
+                                            (status == "exists")?
+                                            //SvgPicture.asset('assets/icons_assets/wrong.svg',width: 16.w,)
+                                            Icon(Icons.close,
+                                            color: Colors.red,):
                                             SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),
                                           ),
                                         ],

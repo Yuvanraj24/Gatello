@@ -113,13 +113,13 @@ class _ContactListState extends State<InviteFriends> {
               appBar: AppBar(
                 centerTitle: false,
                 automaticallyImplyLeading: false,
-                elevation: 0,
+
                 leading: GestureDetector(
                     onTap:(){
                       Navigator.pop(context);
                     },
                     child:Center(
-                      child: Text('     Back',style:GoogleFonts.inter(
+                      child: Text('Back',style:GoogleFonts.inter(
                           textStyle:TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600,color:Colors.black)
                       )),
                     )),
