@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:alt_sms_autofill/alt_sms_autofill.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/views/add_email.dart';
@@ -9,6 +11,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:http/http.dart' as http;
+import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:tuple/tuple.dart';
 import '../../handler/Network.dart';
 import '../Others/Routers.dart';
@@ -24,7 +28,7 @@ class Otp extends StatefulWidget {
   String name;
   String password;
   String mobileNo;
-  String? otp;
+  TextEditingController? otpController;
 
   Otp({
     required this.name,
@@ -39,13 +43,13 @@ class Otp extends StatefulWidget {
 }
 
 class _OtpState extends State<Otp> {
-  OtpFieldController _otpController = OtpFieldController();
-  String otpText = "";
+
   bool loading = false;
   ValueNotifier<Tuple4> verifyOtpValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   ValueNotifier<Tuple4> sendOtpValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   int _counter = 60;
   Timer? _timer;
+
   void _startTimer() {
     _counter = 13;
     if (_timer != null) {
@@ -71,10 +75,51 @@ class _OtpState extends State<Otp> {
       body: {"number": int.parse(phoneNumber)},
     );
   }
+
+
+  String _comingSms = 'Unknown';
+
+  Future<void> initSmsListener() async {
+
+    String comingSms;
+    
+    try {
+      comingSms = (await AltSmsAutofill().listenForSms)!;
+      
+      print('Lotus88${comingSms}');
+      print('yuvan${comingSms.contains('Gatello')}');
+      if(comingSms.contains('Gatello')) {
+        if (!mounted) return;
+        setState(() {
+          _comingSms = comingSms;
+          print("====>Message: ${_comingSms}");
+          print("${_comingSms[32]}");
+          widget.otpController?.text =
+              _comingSms[20] + _comingSms[21] + _comingSms[22] + _comingSms[23]
+                  + _comingSms[24] +
+                  _comingSms[25]; //used to set the code in the message to a string and setting it to a textcontroller. message length is 38. so my code is in string index 32-37.
+        });
+      }
+    } on PlatformException {
+      comingSms = 'Failed to get Sms.';
+    }
+
+
+    print('otp has done${ widget.otpController?.text}');
+  }
   void initState(){
-
+    super.initState();
     _startTimer();
+    widget.otpController = TextEditingController();
+    initSmsListener();
 
+
+  }
+  @override
+  void dispose() {
+    widget.otpController!.dispose();
+    AltSmsAutofill().unregisterListener();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -101,108 +146,138 @@ class _OtpState extends State<Otp> {
                 ),
               )),
         ),
-        body: Container(
-          padding: EdgeInsets.only(
-              left: 12.w, right: 12.w, top: 150.h, bottom: 35.h),
-          child: Center(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Enter confirmation code",
-                    style: GoogleFonts.fredoka(
-                        textStyle: TextStyle(
-                            fontSize: 28.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                  ),
-                  SizedBox(height: 9.h),
-                  Text(
-                    'Enter the code we sent to',
-                    style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 13.h,
-                            fontWeight: FontWeight.w500,
-                            color: HexColor('#646363'))),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    widget.mobileNo,
-                    style: GoogleFonts.roboto(
-                        textStyle: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black)),
-                  ),
-
-                  Container(
-
-                    //   color: Colors.pink,
-                    height: 81.h,
-                    child: OTPTextField(
-                      keyboardType: TextInputType.number,
-                      // textFieldAlignment: MainAxisAlignment.spaceBetween,
-                      //    isDense: true,
-
-                      controller: _otpController,
-                      length: 6,
-                      fieldStyle: FieldStyle.underline,
-                      // contentPadding: EdgeInsets.all(17.h),
-                      width: curWidth * 0.88,
-                      fieldWidth: 50.w,
-                      otpFieldStyle: OtpFieldStyle(
-                        backgroundColor: Colors.transparent,
-                        borderColor: Colors.pink,
-                        focusBorderColor: Colors.black,
-                        enabledBorderColor: Colors.black,
-                        errorBorderColor: Colors.red,
-                      ),
-                      // outlineBorderRadius: 5,
+        body: GestureDetector(
+          onTap: (){
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Container(
+            padding: EdgeInsets.only(
+                left: 12.w, right: 12.w, top: 150.h, bottom: 35.h),
+            child: Center(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Enter confirmation code",
+                      style: GoogleFonts.fredoka(
+                          textStyle: TextStyle(
+                              fontSize: 28.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                    ),
+                    SizedBox(height: 9.h),
+                    Text(
+                      'Enter the code we sent to',
                       style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                              fontSize: 30.sp,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 13.h,
+                              fontWeight: FontWeight.w500,
+                              color: HexColor('#646363'))),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      widget.mobileNo,
+                      style: GoogleFonts.roboto(
+                          textStyle: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w700,
                               color: Colors.black)),
-                      onChanged: (pin) {},
-                      onCompleted: (pin) {
-                        widget.otp = pin;
-                        //return pressEvent();
+                    ),
+                    SizedBox(height: 16.h),
+                    Container(
+
+                      //   color: Colors.pink,
+
+                      height: 81.h,
+child:PinCodeTextField(
+  appContext: context,
+  pastedTextStyle: TextStyle(
+    color: Colors.green.shade600,
+    fontWeight: FontWeight.bold,
+  ),
+  length: 6,
+  obscureText: false,
+  animationType: AnimationType.fade,
+  pinTheme: PinTheme(
+    inactiveColor: HexColor('#646363'),
+      activeColor: HexColor('#646363'),
+      selectedColor: HexColor('#646363'),
+      shape: PinCodeFieldShape.box,
+      borderRadius: BorderRadius.circular(10),
+      fieldHeight: 50,
+      fieldWidth: 40,
+      inactiveFillColor: Colors.white,
+      // inactiveColor: ColorUtils.greyBorderColor,
+      // selectedColor: ColorUtils.greyBorderColor,
+      selectedFillColor: Colors.white,
+      activeFillColor: Colors.white,
+      // activeColor: ColorUtils.greyBorderColor
+  ),
+  cursorColor: Colors.black,
+  animationDuration: Duration(milliseconds: 300),
+  enableActiveFill: true,
+  controller: widget.otpController,
+  keyboardType: TextInputType.number,
+
+  onCompleted: (value) {
+
+    value==widget.otpController?.text;
+
+
+    print('Lotus32${  value}');
+    print('Lotus33${  widget.otpController?.text}');
+
+   verifyOtp1(widget.mobileNo,widget.otpController!.text).then((value) => Fluttertoast.showToast(
+       msg: "OTP VERIFIED",
+       toastLength: Toast.LENGTH_SHORT,
+       timeInSecForIosWeb: 1)).then((value) => navigateToNext());
+
+    //do something or move to next screen when code complete
+  },
+  onChanged: (value) {
+    value==widget.otpController?.text;
+   // widget.otp==value;
+    print('Lotus42${  value}');
+    print('Lotus43${  widget.otpController?.text}');
+  },
+
+),
+
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: otpResend(),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        print(widget.name);
+                        print(widget.birthDay);
+                        print(widget.userName);
+                        print(widget.password);
+                        print(widget.mobileNo);
+                        print(widget.otpController?.text);
+                        verifyOtp1(widget.mobileNo,widget.otpController!.text).then((value) => navigateToNext());
                       },
+                      child: Text(
+                        'Continue',
+                        style: GoogleFonts.inter(
+                            textStyle: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black)),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          elevation: 5,
+                          onPrimary: Colors.black,
+                          minimumSize: Size(234.w, 48.h),
+                          primary: Color.fromRGBO(248, 206, 97, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(35),
+                          )),
                     ),
-                  ),
-                  Spacer(),
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: otpResend(),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      print(widget.name);
-                      print(widget.birthDay);
-                      print(widget.userName);
-                      print(widget.password);
-                      print(widget.mobileNo);
-                      print(widget.otp);
-                      verifyOtp1(widget.mobileNo,widget.otp!).then((value) => navigateToNext());
-                    },
-                    child: Text(
-                      'Continue',
-                      style: GoogleFonts.inter(
-                          textStyle: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black)),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        elevation: 5,
-                        onPrimary: Colors.black,
-                        minimumSize: Size(234.w, 48.h),
-                        primary: Color.fromRGBO(248, 206, 97, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(35),
-                        )),
-                  ),
-                ]),
+                  ]),
+            ),
           ),
         ),
       ),
@@ -219,8 +294,7 @@ class _OtpState extends State<Otp> {
                 userName: widget.userName,
                 password: widget.password,
                 mobileNo: widget.mobileNo,
-                otp: widget.otp.toString(),
-
+                otp: widget.otpController!.text,
               )));
 
     }
@@ -247,7 +321,7 @@ class _OtpState extends State<Otp> {
     //print(body.toString());
     var body = jsonEncode(<String, dynamic>{
       "number": widget.mobileNo,
-      "otp":widget.otp
+      "otp":widget.otpController?.text
     });
 
     try {
@@ -259,7 +333,7 @@ class _OtpState extends State<Otp> {
           print(response.body.toString());
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => AddEmail(
-                name: widget.name,birthDay: widget.birthDay, userName: widget.userName,password: widget.password, mobileNo: widget.mobileNo,otp: widget.otp.toString(),
+                name: widget.name,birthDay: widget.birthDay, userName: widget.userName,password: widget.password, mobileNo: widget.mobileNo,otp: widget.otpController!.text,
 
               )));
         }
@@ -282,9 +356,10 @@ class _OtpState extends State<Otp> {
           onPressed: (_counter > 0)
               ? null
               : () async {
+            widget.otpController?.clear();
             await sendOtp(widget.mobileNo);
             _startTimer();
-            // return await PhoneAuthWeb().verifyPhoneWeb(phoneNumber: widget.countryCode + widget.phone);
+            initSmsListener();
           },
           child: (_counter > 0)
               ? Text(

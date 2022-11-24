@@ -27,6 +27,7 @@ import '../../../Others/exception_string.dart';
 import '../../../Others/lottie_strings.dart';
 import '../../../Style/Colors.dart';
 import '../../../Style/Text.dart';
+import '../../../components/PreloadPageViewer.dart';
 import '../../../components/SnackBar.dart';
 import '../../../components/container.dart';
 import '../../../components/flatButton.dart';
@@ -170,7 +171,6 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
   //       });
   //     }
   //   });
-
   @override
   Widget build(BuildContext context) {
     int nums=0;
@@ -698,58 +698,58 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                                             }
                                                           });
                                                         },
-                                                child: CarouselSlider
-                                                    .builder(
-
-                                                  itemCount: feedsValueNotifier
-                                                      .value
-                                                      .item2
-                                                      .result[index]
-                                                      .posts
-                                                      .length,
-                                                  itemBuilder: (
-                                                      BuildContext context,
-                                                      int itemIndex,
-                                                      int pageViewIndex) =>
-                                                      Container(
-
-                                                        child: Text(
-                                                            "$itemIndex"),
-                                                        height: 259
-                                                            .h,
-                                                        width: MediaQuery
-                                                            .of(
-                                                            context)
-                                                            .size
-                                                            .width,
-                                                        decoration: BoxDecoration(
-
-                                                            image: DecorationImage(
-                                                                image: NetworkImage(
-                                                                    feedsValueNotifier
-                                                                        .value
-                                                                        .item2
-                                                                        .result[index]
-                                                                        .
-                                                                    posts[itemIndex]
-                                                                ),
-                                                                fit: BoxFit
-                                                                    .cover)),
-                                                      ),
-                                                  options: CarouselOptions(
-                                                    enableInfiniteScroll: false,
-                                                    aspectRatio: 16 /
-                                                        9,
-                                                    viewportFraction: 1,
-                                                  ),
-                                                )
-                                              // child: Container(
-                                              //   child: PreloadPageViewWidget(
-                                              //     valueNotifier: feedsValueNotifier,
-                                              //     index: index,
-                                              //   //  sizingInformation: sizingInformation,
-                                              //   ),
-                                              // ),
+                                                // child: CarouselSlider
+                                                //     .builder(
+                                                //
+                                                //   itemCount: feedsValueNotifier
+                                                //       .value
+                                                //       .item2
+                                                //       .result[index]
+                                                //       .posts
+                                                //       .length,
+                                                //   itemBuilder: (
+                                                //       BuildContext context,
+                                                //       int itemIndex,
+                                                //       int pageViewIndex) =>
+                                                //       Container(
+                                                //
+                                                //         child: Text(
+                                                //             "$itemIndex"),
+                                                //         height: 259
+                                                //             .h,
+                                                //         width: MediaQuery
+                                                //             .of(
+                                                //             context)
+                                                //             .size
+                                                //             .width,
+                                                //         decoration: BoxDecoration(
+                                                //
+                                                //             image: DecorationImage(
+                                                //                 image: NetworkImage(
+                                                //                     feedsValueNotifier
+                                                //                         .value
+                                                //                         .item2
+                                                //                         .result[index]
+                                                //                         .
+                                                //                     posts[itemIndex]
+                                                //                 ),
+                                                //                 fit: BoxFit
+                                                //                     .cover)),
+                                                //       ),
+                                                //   options: CarouselOptions(
+                                                //     enableInfiniteScroll: false,
+                                                //     aspectRatio: 16 /
+                                                //         9,
+                                                //     viewportFraction: 1,
+                                                //   ),
+                                                // )
+                                              child: Container(
+                                                child: PreloadPageViewWidget(
+                                                  valueNotifier: feedsValueNotifier,
+                                                  index: index,
+                                                //  sizingInformation: sizingInformation,
+                                                ),
+                                              ),
 
 
                                             ),
@@ -1203,12 +1203,42 @@ Spacer(),
                                   Requests_Page())),
                               child: SvgPicture.asset('assets/pops_asset/No_Request_Icon.svg',height:18.h,
                                 width:18.w,)
+                          ),
+                          SpeedDialChild(backgroundColor:Color.fromRGBO(248, 206, 97, 1),
+                            onTap: () async{  return await files().then((value) {
+                              if (value != null && value.files.isNotEmpty) {
+                                fileList.clear();
+                                if (value.files.length < 10) {
+                                  for (int i = 0; i < value.files.length; i++) {
+                                    if (value.files[i].size < 52428800) {
+                                      fileList.add(value.files[i]);
+                                    } else {
+                                      final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    }
+                                  }
+                                  return Navigator.push(context, MaterialPageRoute(builder:
+                                      (context) =>
+                                      Post_Page(state: 0,
+                                          fileList: fileList))).then((value) async {
+                                    if (value != null) {
+                                      return await feedsApiCall(uid: uid.toString());
+                                    }
+                                  });
+                                } else {
+                                  final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                }
+                              }
+                            });},
+                            child: Icon(Icons.add),
                           )
 
                         ],
                       )
                   );
-                } else if (feedsValueNotifier.value.item1 == 2) {
+                }
+                else if (feedsValueNotifier.value.item1 == 2) {
                   print('worked2');
                   if (feedsValueNotifier.value.item3 == "no timeline available") {
                     print('worked3');

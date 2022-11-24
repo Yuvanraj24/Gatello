@@ -17,12 +17,12 @@ class _ShowpageState extends State<Showpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     body:GestureDetector(
-       onLongPressStart:(onPressed) {
+      body:GestureDetector(
+        onLongPressStart:(onPressed) {
 
-       },
-       child: Column(),
-     ),
+        },
+        child: Column(),
+      ),
     );
   }
 }

@@ -3,11 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/profile/tabbarprofile.dart';
 import 'package:gatello/views/status/showpage.dart';
 import 'package:gatello/views/tabbar/calls/call.dart';
 import 'package:gatello/views/tabbar/calls/incomingcall.dart';
+import 'package:gatello/views/tabbar/chats/personal_chat_screen/test_chat/test_chat.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/contact_card.dart';
 import 'package:gatello/views/tabbar/pops/No%20request.dart';
 import 'package:gatello/views/tabbar/pops/Requests.dart';
@@ -50,7 +52,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'Database/StorageManager.dart';
-
 import 'Others/components/LottieComposition.dart';
 import 'Others/lottie_strings.dart';
 import 'Style/Colors.dart';
@@ -60,13 +61,24 @@ import 'views/tabbar/pings_chat/select_contact/select_contact.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 Future<void> main() async {
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await FlutterDownloader.initialize();
   tz.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Color.fromRGBO(248, 206, 97, 1),
+    statusBarIconBrightness: Brightness.dark
+  ));
+  SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  );
   runApp(MyApp());
+
+ // FlutterNativeSplash.remove();
 }
 const String ip = 'http://3.108.219.188:5000';
 const String signUpip = '$ip/signup';
@@ -149,7 +161,10 @@ class _MyAppState extends State<MyApp> {
                           valueListenable: themedata,
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
-                              return (newuser == false) ? Tabbar():LoginScreen() ;
+                              return (newuser == false) ?
+                              Tabbar()
+                             // AddProfilePic(uid: null, birthDay: null, username: null, mobileNo: null, email: null, password: null, name: null,)
+                                  :LoginScreen();
 
                             } else {
                               return lottieAnimation(loadingLottie);

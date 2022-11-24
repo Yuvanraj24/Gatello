@@ -13,10 +13,6 @@ class SelectBirthday extends StatefulWidget {
     required this.name,
   });
 
-
-
-
-
   @override
   State<SelectBirthday> createState() => _SelectBirthdayState();
 }
@@ -48,84 +44,87 @@ class _SelectBirthdayState extends State<SelectBirthday> {
               ),
             )),
       ),
-      body: Container(
-        padding: EdgeInsets.only(top: 150.h, left: 15.w, right: 15.w, bottom: 35.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'When\'s Your Birthday?',
-              style: GoogleFonts.fredoka(
-                  textStyle: TextStyle(
-                      fontSize: 28.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black)),
-            ),
-            TextButton(
-                onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context) =>
-                      BirthdayGatello()));
-                },
-                child: Text("Why do I need to provide my date of birth?",
-                    style: GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:11.sp))),
-            SizedBox(height:15.h,),
-            Text("BIRTHDAY",style: GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:11.sp)),
-            SizedBox(height:25.h,),
-            Divider(color:Colors.black,thickness:1.w,),
-            DatePickerWidget(
-              looping: false,
-              firstDate: DateTime(1800),
-              lastDate: DateTime.now(),
-              dateFormat:
-              // "MM-dd(E)",
-              "dd/MMMM/yyyy",
-              onChange: (DateTime newDate, a) {
-                setState(() {
-                  _selectedDate = newDate;
-                });
-                print("this is date :${_selectedDate}");
-              },
-              pickerTheme: DateTimePickerTheme(confirmTextStyle:TextStyle(color: Colors.yellow),
-                cancelTextStyle:TextStyle(color: Colors.yellow),
-                backgroundColor: Colors.transparent,
-                itemTextStyle: TextStyle(color: Colors.black, fontSize: 19),
-                dividerColor: Colors.black,
+      body: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Container(
+          padding: EdgeInsets.only(top: 150.h, left: 15.w, right: 15.w, bottom: 35.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'When\'s Your Birthday?',
+                style: GoogleFonts.fredoka(
+                    textStyle: TextStyle(
+                        fontSize: 28.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black)),
               ),
-            ),
-            SizedBox(height: 30),
-            Spacer(),
-            ElevatedButton(
-                onPressed: () {
-                  int yearDiff = currentDate.year - _selectedDate.year;
-                  int monthDiff = currentDate.month - _selectedDate.month;
-                  int dayDiff = currentDate.day - _selectedDate.day;
-                  print("Year diff : ${yearDiff}");
-                  print("month diff : ${monthDiff}");
-                  print("day diff : ${dayDiff}");
-                  if(yearDiff>18 || yearDiff == 18 && monthDiff >= 0 && dayDiff >=0){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateUsername(name: widget.name, birthDay: _selectedDate.toString(),),
-                        ));
-                  }else{
-                    Fluttertoast.showToast(msg: "You are not eligible");
-                  }
+              TextButton(
+                  onPressed: () {
+                    Navigator.push(context,MaterialPageRoute(builder: (context) =>
+                        BirthdayGatello()));
+                  },
+                  child: Text("Why do I need to provide my date of birth?",
+                      style: GoogleFonts.inter(fontWeight:FontWeight.w500,fontSize:11.sp))),
+              SizedBox(height:15.h,),
 
-
+              DatePickerWidget(
+                looping: false,
+                firstDate: DateTime(1800),
+                lastDate: DateTime(2016),
+                dateFormat:
+                // "MM-dd(E)",
+                "dd/MMMM/yyyy",
+                onChange: (DateTime newDate, a) {
+                  setState(() {
+                    _selectedDate = newDate;
+                  });
+                  print("this is date :${_selectedDate}");
                 },
-                style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
-                    shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(27)),
-                    fixedSize: Size(234.w, 50.h)),
-                child: Text(
-                  "Continue",
-                  style: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black)),
-                )),
-          ],
+                pickerTheme: DateTimePickerTheme(confirmTextStyle:TextStyle(color: Colors.yellow),
+                  cancelTextStyle:TextStyle(color: Colors.yellow),
+                  backgroundColor: Colors.transparent,
+                  itemTextStyle: TextStyle(color: Colors.black, fontSize: 19),
+                  dividerColor: Colors.black,
+                ),
+              ),
+              SizedBox(height: 30),
+              Spacer(),
+              ElevatedButton(
+                  onPressed: () {
+                    int yearDiff = currentDate.year - _selectedDate.year;
+                    int monthDiff = currentDate.month - _selectedDate.month;
+                    int dayDiff = currentDate.day - _selectedDate.day;
+                    print("Year diff : ${yearDiff}");
+                    print("month diff : ${monthDiff}");
+                    print("day diff : ${dayDiff}");
+                    if(yearDiff > 16 || yearDiff == 16 && monthDiff >= 0 && dayDiff >= 0){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateUsername(name: widget.name, birthDay: _selectedDate.toString(),),
+                          ));
+                    }else{
+                      Fluttertoast.showToast(msg: "You are not eligible");
+                    }
+
+
+                  },
+                  style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
+                      shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(27)),
+                      fixedSize: Size(234.w, 50.h)),
+                  child: Text(
+                    "Continue",
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black)),
+                  )),
+            ],
+          ),
         ),
       ),
     );

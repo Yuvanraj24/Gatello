@@ -26,7 +26,7 @@ const String editprofileUrl = '$ip/edit/profile';
 const String sendOTPUrl = '$ip/sendotp';
 const String verifyOTPUrl = '$ip/verifyotp';
 const String postDetailsUrl = '$ip/details/post';
-
+const String statusPostUrl='$ip/create/status';
 //*** Deejos Backend */
 const String contactDetailsUrl = 'https://www.gatello.com/contacts/add';
 

@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -17,9 +18,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:collection/collection.dart';
 import 'package:tuple/tuple.dart';
-
 import '../Helpers/DateTimeHelper.dart';
-
 extension InvertMap<K, V> on Map<K, V> {
   Map<V, K> get inverse => Map.fromEntries(entries.map((e) => MapEntry(e.value, e.key)));
 }
@@ -300,7 +299,6 @@ bool groupReadReceipt({required Map members, required String timestamp, required
 //   anchorElement.click();
 //   anchorElement.remove();
 // }
-
 // blobToUrl(Uint8List bytes, String type) {
 //   final Blob blob = Blob([bytes], type);
 //   // return blob.toString();
@@ -313,20 +311,26 @@ const kCurve = Curves.ease;
 ///**********************download */
 late String _localPath;
 Future downloadFile(String url, String fileName, TargetPlatform platform) async {
-  print('rrrrrrrr');
-  final bool hasGranted = await _checkPermission(platform);
+
+   final bool hasGranted = await _checkPermission(platform);
   if (hasGranted) {
-    print('yyyyyyyyyyyy');
-    await _prepareSaveDir();
-    final taskId = await FlutterDownloader.enqueue(
-      url: url,
-      savedDir: _localPath,
-      fileName: fileName,
-      showNotification: true,
-      openFileFromNotification: true,
-      saveInPublicStorage: true,
-    );
-    await FlutterDownloader.open(taskId: taskId!);
+     print('yyyyyyyyyyyy');
+     await _prepareSaveDir();
+     print('rrrrrrrr');
+    // final taskId = await FlutterDownloader.enqueue(
+    //   url: url,
+    //   savedDir: _localPath,
+    //   fileName: fileName,
+    //   showNotification: true,
+    //   openFileFromNotification: true,
+    //   saveInPublicStorage: true,
+    // );
+     final taskId  = await FileDownloader.downloadFile(
+       url: url,
+       name: fileName,
+     );
+     await FlutterDownloader.open(taskId: taskId.toString());
+
   }
 }
 

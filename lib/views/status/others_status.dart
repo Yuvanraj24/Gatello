@@ -49,9 +49,9 @@ class _OtherstatusState extends State<Otherstatus> with TickerProviderStateMixin
       body:Stack(
           children:[
             Container(height:double.infinity.h,width:double.infinity.w,decoration:BoxDecoration(
-             color:Colors.black, image:DecorationImage(image:NetworkImage('https://images.unsplash.com/photo-1589419621083-1ead66c96fa7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWlja2V5JTIwbW91c2V8ZW58MHx8MHx8&w=1000&q=80'),
-                )
-          ),),
+                color:Colors.black, image:DecorationImage(image:NetworkImage('https://images.unsplash.com/photo-1589419621083-1ead66c96fa7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWlja2V5JTIwbW91c2V8ZW58MHx8MHx8&w=1000&q=80'),
+            )
+            ),),
             Positioned(top:28.h,left:10.w,right:12.w,
               child: Row(children: [
                 GestureDetector(onTap:() {
@@ -79,26 +79,26 @@ class _OtherstatusState extends State<Otherstatus> with TickerProviderStateMixin
                       borderRadius: BorderRadius.circular(5)),
                   itemBuilder: (context) =>
                   [PopupMenuItem(
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [Text('Mute', style:
-                            GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400, color: Color.fromRGBO(0, 0, 0, 1))),
-                          ),
-                        ],
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [Text('Mute', style:
+                      GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400, color: Color.fromRGBO(0, 0, 0, 1))),
                       ),
+                      ],
                     ),
+                  ),
                     PopupMenuItem(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                        children:[Text('Ping', style: GoogleFonts.inter(fontWeight: FontWeight.w400,
-                                textStyle: TextStyle(color: Color.fromRGBO(0, 0, 0, 1))),
-                          ),
-                        ],
+                      children:[Text('Ping', style: GoogleFonts.inter(fontWeight: FontWeight.w400,
+                          textStyle: TextStyle(color: Color.fromRGBO(0, 0, 0, 1))),
                       ),
+                      ],
+                    ),
                     ),
                     PopupMenuItem(child: Column(crossAxisAlignment:CrossAxisAlignment.start,
-                        children: [Text('View profile', style:
-                            GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400)),
-                          ),
-                        ],
+                      children: [Text('View profile', style:
+                      GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400)),
                       ),
+                      ],
+                    ),
                     ),
                   ],
                 )
@@ -348,57 +348,57 @@ class _StatusdetailsState extends State<Statusdetails> {
           ),
         ),
         title: Text('My status', style: GoogleFonts.inter(
-              textStyle: TextStyle(fontSize:18.sp, fontWeight: FontWeight.w400,
-                  color: Color.fromRGBO(0, 0, 0, 1)))),
+            textStyle: TextStyle(fontSize:18.sp, fontWeight: FontWeight.w400,
+                color: Color.fromRGBO(0, 0, 0, 1)))),
       ),
       body:Column(
         children: [
           ListView.builder(itemCount:3,shrinkWrap:true,
             itemBuilder: (context, index) {
-            return Container(padding:EdgeInsets.symmetric(vertical:7.h),
-              child: ListTile(
-                leading:Container(height:70.h,width:69.w,decoration:BoxDecoration(shape:BoxShape.circle,
-                    image:DecorationImage(image: NetworkImage
-                      ('http://www.goodmorningimagesdownload.com/wp-content/uploads/2021/07/Cute-Whatsapp-DP-Wallpaper-Download-3-300x300.jpg'),
-                        fit:BoxFit.fill),
-                    border:Border.all(width:2.w,color:Color.fromRGBO(248, 206, 97, 1))),),
-                title:Text('37 views',style:GoogleFonts.inter(fontWeight:FontWeight.w700,fontSize:14.sp,
-                color:Color.fromRGBO(0,0,0,1))),
-                subtitle:Text('Today at 6:00am',style:GoogleFonts.inter(fontWeight:FontWeight.w400,fontSize:11.sp,
-                  color:Color.fromRGBO(121, 117, 117, 1))),
-                trailing: PopupMenuButton(
-                  child:SvgPicture.asset('assets/status_assets/statusdetails.svg'),
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(
-                          5)),
-                  itemBuilder:
-                      (context) =>
-                  [
-                    PopupMenuItem(
-                      child:
-                      Column(
-                        crossAxisAlignment:CrossAxisAlignment.start,
-                        children: [Text('Also show in Pop  status', style:
+              return Container(padding:EdgeInsets.symmetric(vertical:7.h),
+                child: ListTile(
+                    leading:Container(height:70.h,width:69.w,decoration:BoxDecoration(shape:BoxShape.circle,
+                        image:DecorationImage(image: NetworkImage
+                          ('http://www.goodmorningimagesdownload.com/wp-content/uploads/2021/07/Cute-Whatsapp-DP-Wallpaper-Download-3-300x300.jpg'),
+                            fit:BoxFit.fill),
+                        border:Border.all(width:2.w,color:Color.fromRGBO(248, 206, 97, 1))),),
+                    title:Text('37 views',style:GoogleFonts.inter(fontWeight:FontWeight.w700,fontSize:14.sp,
+                        color:Color.fromRGBO(0,0,0,1))),
+                    subtitle:Text('Today at 6:00am',style:GoogleFonts.inter(fontWeight:FontWeight.w400,fontSize:11.sp,
+                        color:Color.fromRGBO(121, 117, 117, 1))),
+                    trailing: PopupMenuButton(
+                      child:SvgPicture.asset('assets/status_assets/statusdetails.svg'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.circular(
+                              5)),
+                      itemBuilder:
+                          (context) =>
+                      [
+                        PopupMenuItem(
+                          child:
+                          Column(
+                            crossAxisAlignment:CrossAxisAlignment.start,
+                            children: [Text('Also show in Pop  status', style:
                             GoogleFonts.inter(textStyle: TextStyle(fontWeight: FontWeight.w400, color: Color.fromRGBO(0, 0, 0, 1))),
+                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      child:
-                      Column(crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [Text('Delete', style: GoogleFonts.inter(
+                        ),
+                        PopupMenuItem(
+                          child:
+                          Column(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [Text('Delete', style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w400, textStyle: TextStyle(color: Color.fromRGBO(0, 0, 0, 1))),
+                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-              ),
-            );
-          },),SizedBox(height:30.h),
+                        ),
+                      ],
+                    )
+                ),
+              );
+            },),SizedBox(height:30.h),
           Text('Your status updates will disappear after 24 hours',style:GoogleFonts.inter(
               fontWeight:FontWeight.w400,fontSize:14.sp,
               color:Color.fromRGBO(121, 117, 117, 1))),

@@ -1,33 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gatello/views/profile/info.dart';
+import 'package:gatello/views/profile/info.dart'as Info_Page;
 import 'package:gatello/views/profile/link.dart';
 import 'package:gatello/views/profile/profile_details.dart';
 import 'package:gatello/views/profile/skill.dart';
 import 'package:gatello/views/profile/workexperience.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tuple/tuple.dart';
-
+import '/core/models/profile_detail.dart' as profileDetailsModel;
+import '../../Others/Routers.dart';
 import '../../Others/exception_string.dart';
+import '../../core/Models/Default.dart';
 import '../../core/models/exception/pops_exception.dart';
+import '../../handler/Network.dart';
 
 class SeeMoreText extends StatefulWidget {
   final VoidCallback? onPressed;
   String phone;
   String email;
-
-   SeeMoreText({Key? key,required this.onPressed,required this.phone,required this.email}) : super(key: key);
+ String? uid;
+   SeeMoreText({Key? key,required this.onPressed,required this.phone,required this.email,this.uid}) : super(key: key);
 
   @override
   State<SeeMoreText> createState() => _TextsuState();
 }
 
 class _TextsuState extends State<SeeMoreText> {
+
   int i=0;
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
+  Future profileDetailsApiCall() async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: profileDetailsValueNotifier,
+      jsonModel: profileDetailsModel.profileDetailsFromJson,
+      url: profileDetailsUrl,
+      requestMethod: 1,
+      body: {"user_id": (widget.uid != null) ? widget.uid : widget.uid, "followee_id": ""},
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    print('uid for seemore${widget.uid}');
+   // print('phnum${profileDetailsValueNotifier.value.item2.result.profileDetails.phone}');
     return Container(
           padding: EdgeInsets.only(right:30,left: 30),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +85,9 @@ class _TextsuState extends State<SeeMoreText> {
               GestureDetector(
                   onTap:(){
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Info_Page(uid: '',),));
+                        MaterialPageRoute(builder: (context) => Info_Page.Info_Page(uid: widget.uid.toString(),
+                          phone: profileDetailsValueNotifier.value.item2.result.profileDetails.phone,
+                        ),));
                   },
                   child:  Container(height:20,width:20,
                       child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),

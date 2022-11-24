@@ -163,7 +163,9 @@ class ApiHandler {
           if (response.statusCode == 200) {
 
             var jsonResponse = json.decode(response.body);
+
             print("JSON RESP ${jsonResponse}");
+
             inspect(jsonResponse);
             if (jsonResponse["status"].toString() == "OK") {
               valueNotifier.value = Tuple4(1, jsonModel(utf8.decode(Runes(response.body).string.codeUnits)),
@@ -177,7 +179,8 @@ class ApiHandler {
               valueNotifier.value =
                   (message != null) ? Tuple4(3, defaultFromJson(response.body), message, jsonResponse) : Tuple4(2, exceptionFromJson(alert), "Something went wrong!", null);
             }
-          } else {
+          }
+          else {
 
             switch (response.statusCode) {
 

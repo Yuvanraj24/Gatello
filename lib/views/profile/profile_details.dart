@@ -992,6 +992,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gatello/views/profile/editprofile.dart';
+
+
 import 'package:gatello/views/profile/see_more.dart';
 import 'package:gatello/views/tabbar/pops/circle_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -1010,6 +1012,7 @@ import '../../handler/Network.dart';
 import 'bio_dialog.dart';
 import '/core/models/profile_detail.dart' as profileDetailsModel;
 import 'followers.dart';
+
 
 class Profile extends StatefulWidget {
   final String? userId;
@@ -1089,7 +1092,7 @@ class _ProfileState extends State<Profile> {
     final data1=await _getUID();
     final data2 = await profileDetailsApiCall();
     final data3 = await myFeedsApiCall();
-    return [data1,data2, data3];
+    return [data1,data2,data3];
   }
 
   void initState() {
@@ -1170,14 +1173,19 @@ class _ProfileState extends State<Profile> {
                                   [
                                     PopupMenuItem(
                                       child: Center(
-                                        child: Text(
-                                          'Settings',
-                                          style: GoogleFonts.inter(
-                                              textStyle: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 14,
-                                                  color: Color.fromRGBO(
-                                                      0, 0, 0, 1))),
+                                        child: GestureDetector(
+                                          onTap: (){
+
+                                          },
+                                          child: Text(
+                                            'Settings',
+                                            style: GoogleFonts.inter(
+                                                textStyle: TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 14,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 1))),
+                                          ),
                                         ),
                                       ),
                                     )
@@ -1250,7 +1258,8 @@ class _ProfileState extends State<Profile> {
                                                     profileDetailsValueNotifier
                                                         .value.item2
                                                         .result.profileDetails
-                                                        .profileUrl,
+                                                        .profileUrl.toString(),
+
                                                   ),
                                                   fit: BoxFit.fill),
                                               border: Border.all(
@@ -1318,6 +1327,7 @@ class _ProfileState extends State<Profile> {
                                                               .profileDetails
                                                               .postsCount
                                                               .toString(),
+                                                         // 'fff',
                                                           style: GoogleFonts
                                                               .inter(
                                                               textStyle: TextStyle(
@@ -1362,7 +1372,8 @@ class _ProfileState extends State<Profile> {
                                                               .result
                                                               .profileDetails
                                                               .followingCount
-                                                              .toString(),
+                                                             .toString(),
+                                                         // 'ggg',
                                                           style: GoogleFonts
                                                               .inter(
                                                               textStyle: TextStyle(
@@ -1408,7 +1419,7 @@ class _ProfileState extends State<Profile> {
                                                                         .item2
                                                                         .result
                                                                         .profileDetails
-                                                                        .userId)),
+                                                                        .userId.toString())),
                                                       );
                                                     },
                                                     child: Column(
@@ -1421,6 +1432,7 @@ class _ProfileState extends State<Profile> {
                                                               .profileDetails
                                                               .followersCount
                                                               .toString(),
+                                                        //  'jjj',
                                                           style: GoogleFonts
                                                               .inter(
                                                               textStyle: TextStyle(
@@ -1472,7 +1484,8 @@ class _ProfileState extends State<Profile> {
                                           Text(
                                             profileDetailsValueNotifier
                                                 .value.item2.result
-                                                .profileDetails.name,
+                                                .profileDetails.name.toString(),
+                                           // 'hh',
                                             style: GoogleFonts.inter(
                                                 textStyle: TextStyle(
                                                     fontSize: 20.sp,
@@ -1555,11 +1568,13 @@ class _ProfileState extends State<Profile> {
                                                                 TextDecoration
                                                                     .none))),
                                                     TextSpan(
-                                                        text: profileDetailsValueNotifier
+                                                        text:
+                                                        profileDetailsValueNotifier
                                                             .value
                                                             .item2.result
                                                             .profileDetails
-                                                            .city,
+                                                            .city.toString(),
+
                                                         style: GoogleFonts
                                                             .inter(
                                                             textStyle: TextStyle(
@@ -1602,7 +1617,7 @@ class _ProfileState extends State<Profile> {
                                           Text(
                                             profileDetailsValueNotifier
                                                 .value.item2.result
-                                                .profileDetails.job,
+                                                .profileDetails.job.toString(),
                                             style: GoogleFonts.inter(
                                                 textStyle: TextStyle(
                                                     fontSize: 14.sp,
@@ -1661,7 +1676,7 @@ class _ProfileState extends State<Profile> {
                                                             .item2
                                                             .result
                                                             .profileDetails
-                                                            .company,
+                                                            .company.toString(),
                                                         style: GoogleFonts
                                                             .inter(
                                                             textStyle: TextStyle(
@@ -1696,11 +1711,7 @@ class _ProfileState extends State<Profile> {
                                           SizedBox(width: 10.w),
                                           GestureDetector(
                                             onTap: () {
-                                              Future.delayed(
-                                                  Duration(seconds: 0),
-                                                      () =>
-                                                      showConfirmationDialog(
-                                                          context));
+
                                             },
                                             child: Container(
                                                 height: 20,
@@ -1769,10 +1780,14 @@ class _ProfileState extends State<Profile> {
                                       i = 0;
                                     });
                                   },
-                                  phone: profileDetailsValueNotifier
+                                  phone:
+                                  profileDetailsValueNotifier
                                       .value.item2.result.profileDetails.phone,
-                                  email: profileDetailsValueNotifier
+
+                                  email:
+                                  profileDetailsValueNotifier
                                       .value.item2.result.profileDetails.email,
+uid: uid.toString(),
                                 )
                                     : Column(
                                   children: [
@@ -1809,167 +1824,168 @@ class _ProfileState extends State<Profile> {
                                         Padding(
                                           padding: const EdgeInsets.only(
                                               top: 20),
-                                          child: GridView.builder(
-                                            itemCount: myFeedsValueNotifier
-                                                .value.item2.result.length,
-                                            gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 3,
-                                                mainAxisSpacing: 5,
-                                                crossAxisSpacing: 5),
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemBuilder: (context, gridIndex) {
-                                              return GestureDetector(
-                                                behavior: HitTestBehavior
-                                                    .opaque,
-                                                onTap: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Profile()));
-                                                },
-                                                child: Stack(
-                                                  alignment: Alignment.center,
-                                                  fit: StackFit.expand,
-                                                  children: [
-                                                    (myFeedsValueNotifier
-                                                        .value
-                                                        .item2
-                                                        .result[gridIndex]
-                                                        .posts[0]
-                                                        .toString()
-                                                        .contains("mp4") ||
-                                                        myFeedsValueNotifier
-                                                            .value
-                                                            .item2
-                                                            .result[gridIndex]
-                                                            .posts[0]
-                                                            .toString()
-                                                            .contains("mpeg4"))
-                                                        ? Stack(
-                                                      children: [
-                                                        Container(
-                                                          color: Color(
-                                                              materialBlack),
-                                                        ),
-                                                        Center(
-                                                            child: Container(
-                                                              height: 60.h,
-                                                              width: 60.w,
-                                                              child: Icon(
-                                                                Icons
-                                                                    .play_arrow_rounded,
-                                                                size: 45,
-                                                                color:
-                                                                Color.fromRGBO(
-                                                                    248,
-                                                                    206,
-                                                                    97,
-                                                                    1),
-                                                              ),
-                                                              decoration:
-                                                              BoxDecoration(
-                                                                  shape: BoxShape
-                                                                      .circle,
-                                                                  color: Color
-                                                                      .fromRGBO(
-                                                                      255,
-                                                                      255,
-                                                                      255,
-                                                                      1)),
-                                                            ))
-                                                      ],
-                                                    )
-                                                        : CachedNetworkImage(
-                                                      fit: BoxFit.cover,
-                                                      fadeInDuration:
-                                                      const Duration(
-                                                          milliseconds:
-                                                          400),
-                                                      progressIndicatorBuilder:
-                                                          (context, url,
-                                                          downloadProgress) =>
-                                                          Center(
-                                                            child: Container(
-                                                              width: 20.0,
-                                                              height: 20.0,
-                                                              child: CircularProgressIndicator(
-                                                                  value:
-                                                                  downloadProgress
-                                                                      .progress),
-                                                            ),
-                                                          ),
-                                                      imageUrl:
-                                                      myFeedsValueNotifier
-                                                          .value
-                                                          .item2
-                                                          .result[gridIndex]
-                                                          .posts[0],
-                                                      errorWidget: (context,
-                                                          url, error) =>
-                                                          Image.asset(
-                                                              "assets/noProfile.jpg",
-                                                              fit:
-                                                              BoxFit.cover),
-                                                    ),
-                                                    // : CachedNetworkImage(
-                                                    //     fadeInDuration: const Duration(milliseconds: 400),
-                                                    //     progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                                                    //       child: Container(
-                                                    //         width: 20.0,
-                                                    //         height: 20.0,
-                                                    //         child: CircularProgressIndicator(value: downloadProgress.progress),
-                                                    //       ),
-                                                    //     ),
-                                                    //     imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
-                                                    //     fit: BoxFit.cover,
-                                                    //     errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
-                                                    //   ),
-                                                    (myFeedsValueNotifier
-                                                        .value
-                                                        .item2
-                                                        .result[gridIndex]
-                                                        .posts
-                                                        .length >
-                                                        1)
-                                                        ? Positioned(
-                                                        top: 5,
-                                                        right: 5,
-                                                        child: Icon(
-                                                          Icons
-                                                              .collections_rounded,
-                                                          color: Color(white),
-                                                          size: 15,
-                                                        ))
-                                                        : Container()
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
+                                          // child: GridView.builder(
+                                          //   itemCount: myFeedsValueNotifier
+                                          //       .value.item2.result.length,
+                                          //   gridDelegate:
+                                          //   SliverGridDelegateWithFixedCrossAxisCount(
+                                          //       crossAxisCount: 3,
+                                          //       mainAxisSpacing: 5,
+                                          //       crossAxisSpacing: 5),
+                                          //   physics: NeverScrollableScrollPhysics(),
+                                          //   shrinkWrap: true,
+                                          //   itemBuilder: (context, gridIndex) {
+                                          //     return GestureDetector(
+                                          //       behavior: HitTestBehavior
+                                          //           .opaque,
+                                          //       onTap: () {
+                                          //         Navigator.push(
+                                          //             context,
+                                          //             MaterialPageRoute(
+                                          //                 builder: (context) =>
+                                          //                     Profile()));
+                                          //       },
+                                          //       child: Stack(
+                                          //         alignment: Alignment.center,
+                                          //         fit: StackFit.expand,
+                                          //         children: [
+                                          //           (myFeedsValueNotifier
+                                          //               .value
+                                          //               .item2
+                                          //               .result[gridIndex]
+                                          //               .posts[0]
+                                          //               .toString()
+                                          //               .contains("mp4") ||
+                                          //               myFeedsValueNotifier
+                                          //                   .value
+                                          //                   .item2
+                                          //                   .result[gridIndex]
+                                          //                   .posts[0]
+                                          //                   .toString()
+                                          //                   .contains("mpeg4"))
+                                          //               ? Stack(
+                                          //             children: [
+                                          //               Container(
+                                          //                 color: Color(
+                                          //                     materialBlack),
+                                          //               ),
+                                          //               Center(
+                                          //                   child: Container(
+                                          //                     height: 60.h,
+                                          //                     width: 60.w,
+                                          //                     child: Icon(
+                                          //                       Icons
+                                          //                           .play_arrow_rounded,
+                                          //                       size: 45,
+                                          //                       color:
+                                          //                       Color.fromRGBO(
+                                          //                           248,
+                                          //                           206,
+                                          //                           97,
+                                          //                           1),
+                                          //                     ),
+                                          //                     decoration:
+                                          //                     BoxDecoration(
+                                          //                         shape: BoxShape
+                                          //                             .circle,
+                                          //                         color: Color
+                                          //                             .fromRGBO(
+                                          //                             255,
+                                          //                             255,
+                                          //                             255,
+                                          //                             1)),
+                                          //                   ))
+                                          //             ],
+                                          //           )
+                                          //               : CachedNetworkImage(
+                                          //             fit: BoxFit.cover,
+                                          //             fadeInDuration:
+                                          //             const Duration(
+                                          //                 milliseconds:
+                                          //                 400),
+                                          //             progressIndicatorBuilder:
+                                          //                 (context, url,
+                                          //                 downloadProgress) =>
+                                          //                 Center(
+                                          //                   child: Container(
+                                          //                     width: 20.0,
+                                          //                     height: 20.0,
+                                          //                     child: CircularProgressIndicator(
+                                          //                         value:
+                                          //                         downloadProgress
+                                          //                             .progress),
+                                          //                   ),
+                                          //                 ),
+                                          //             imageUrl:
+                                          //             myFeedsValueNotifier
+                                          //                 .value
+                                          //                 .item2
+                                          //                 .result[gridIndex]
+                                          //                 .posts[0],
+                                          //             errorWidget: (context,
+                                          //                 url, error) =>
+                                          //                 Image.asset(
+                                          //                     "assets/noProfile.jpg",
+                                          //                     fit:
+                                          //                     BoxFit.cover),
+                                          //           ),
+                                          //           // : CachedNetworkImage(
+                                          //           //     fadeInDuration: const Duration(milliseconds: 400),
+                                          //           //     progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                          //           //       child: Container(
+                                          //           //         width: 20.0,
+                                          //           //         height: 20.0,
+                                          //           //         child: CircularProgressIndicator(value: downloadProgress.progress),
+                                          //           //       ),
+                                          //           //     ),
+                                          //           //     imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
+                                          //           //     fit: BoxFit.cover,
+                                          //           //     errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
+                                          //           //   ),
+                                          //           (myFeedsValueNotifier
+                                          //               .value
+                                          //               .item2
+                                          //               .result[gridIndex]
+                                          //               .posts
+                                          //               .length >
+                                          //               1)
+                                          //               ? Positioned(
+                                          //               top: 5,
+                                          //               right: 5,
+                                          //               child: Icon(
+                                          //                 Icons
+                                          //                     .collections_rounded,
+                                          //                 color: Color(white),
+                                          //                 size: 15,
+                                          //               ))
+                                          //               : Container()
+                                          //         ],
+                                          //       ),
+                                          //     );
+                                          //   },
+                                          // ),
                                         ),
-                                        // GridView.builder(
-                                        //     itemCount:5,
-                                        //   //  feedsValueNotifier.value.item2.result.length,
-                                        //     shrinkWrap:true,
-                                        //     itemBuilder: ( context,index){
-                                        //
-                                        //       return InkWell(
-                                        //         onTap: (){
-                                        //           print('dhina:${ feedsValueNotifier.value.item2.result[index].posts[index]}');
-                                        //         },
-                                        //         child: Image.network(
-                                        //            // feedsValueNotifier.value.item2.result[index].posts[index],
-                                        //             'https://wallpaperaccess.com/full/33115.jpg',
-                                        //            // 'https://z.com/full/33115.jpg',
-                                        //             fit:BoxFit.fill),
-                                        //       );},
-                                        //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
-                                        //         crossAxisSpacing:3,mainAxisSpacing:3)),
+                                        GridView.builder(
+                                            itemCount:5,
+                                          //  feedsValueNotifier.value.item2.result.length,
+                                            shrinkWrap:true,
+                                            itemBuilder: ( context,index){
 
-// GridView.builder(gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, crossAxisSpacing: 5),
+                                              return InkWell(
+                                                onTap: (){
+                                                  print('dhina:${ feedsValueNotifier.value.item2.result[index].posts[index]}');
+                                                },
+                                                child: Image.network(
+                                                   // feedsValueNotifier.value.item2.result[index].posts[index],
+                                                    'https://wallpaperaccess.com/full/33115.jpg',
+                                                   // 'https://z.com/full/33115.jpg',
+                                                    fit:BoxFit.fill),
+                                              );},
+                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
+                                                crossAxisSpacing:3,mainAxisSpacing:3)),
+
+// GridView.builder(
+//     gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, crossAxisSpacing: 5),
 //     itemCount: myFeedsValueNotifier.value.item2.result.length,
 //     itemBuilder: (context, gridIndex){
 // return CachedNetworkImage(
@@ -2036,6 +2052,8 @@ class _ProfileState extends State<Profile> {
                       );
                     }
                     else if (profileDetailsValueNotifier.value.item1 == 2) {
+
+
                       print('111');
                       return exceptionScaffold(
                           context: context,
@@ -2081,7 +2099,9 @@ showConfirmationDialog(BuildContext context) {
     // barrierDismissible: false,
     context: context,
     builder: (BuildContext context) {
-      return BioDialog();
+      return BioDialog(
+
+      );
     },
   );
 }

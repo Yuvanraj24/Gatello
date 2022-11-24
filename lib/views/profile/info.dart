@@ -3,12 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gatello/views/profile/info.dart';
+import 'package:gatello/views/profile/link.dart';
+import 'package:gatello/views/profile/profile_details.dart';
+import 'package:gatello/views/profile/skill.dart';
+import 'package:gatello/views/profile/workexperience.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tuple/tuple.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../Firebase/Writes.dart';
+import '../../Others/Routers.dart';
+import '../../Others/exception_string.dart';
+import '../../components/SnackBar.dart';
+import '../../core/Models/Default.dart';
+import '../../core/models/exception/pops_exception.dart';
+import '../../handler/Network.dart';
 
 class Info_Page extends StatefulWidget {
   final String uid;
   final String? username;
   final String? fullname;
-  //final String? phone;
+  final String? phone;
   final String? dob;
   final String? email;
   final String? designation;
@@ -22,8 +41,9 @@ class Info_Page extends StatefulWidget {
   final String? relationshipStatus;
   final String? about;
   final String? userPicture;
-  const Info_Page({Key? key,   this.member,
-   // this.phone,
+  const Info_Page({Key? key,
+    this.member,
+    this.phone,
     this.dob,
     this.email,
     this.about,
@@ -38,7 +58,8 @@ class Info_Page extends StatefulWidget {
     this.relationshipStatus,
     this.userPicture,
     required this.uid,
-    this.username,}) : super(key: key);
+    this.username,
+     }) : super(key: key);
 
   @override
   State<Info_Page> createState() => _Info_PageState();
@@ -51,7 +72,8 @@ TextEditingController _info4=TextEditingController();
 
 
 class _Info_PageState extends State<Info_Page> {
-
+  String? userPictureFileName;
+  bool loading = false;
   final List<String> items = ['Public', 'Friends', 'Only me'];
   String? selectedValue1;
   String? selectedValue2;
@@ -59,8 +81,78 @@ class _Info_PageState extends State<Info_Page> {
   String? selectedValue4;
   String? selectedValue5;
   bool isSwitched = true;
+  Uint8List? userPicture;
+  ValueNotifier<Tuple4> profileDetailsUpdateValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
+  Future profileDetailUpdateApiCallFormData() async {
+    return await ApiHandler()
+        .apiHandler(valueNotifier: profileDetailsUpdateValueNotifier,
+        jsonModel: defaultFromJson, url: editprofileUrl + "?profile_url=", requestMethod: 1, formData: [
+          Tuple4("profile_file", userPicture!, "Image", "Jpeg")
+        ], formBody: {
+          "user_id": widget.uid,
+          // "username": usernameTextEditingController.text,
+          // "name": fullnameTextEditingController.text,
+          "phone":widget.phone!,
+          // "phone": countryCode + " " + phoneTextEditingController.text,
+          // "phone": widget.phone!,
+          // "dob": selectedDate.toString(),
+          "email": widget.email!,
+          // "designation": designationTextEditingController.text,
+          // "city": cityTextEditingController.text,
+          // "member": memberTextEditingController.text,
+          // "company": companyTextEditingController.text,
+          // "job": jobTextEditingController.text,
+          // "college": collegeTextEditingController.text,
+          // "high_school": schoolTextEditingController.text,
+          // "interest": interestTextEditingController.text,
+          // "relationship_status": relationshipStatusTextEditingController.text,
+          // "relationship_status": relationShipStatus,
+          // "about": aboutTextEditingController.text,
+        });
+  }
+  Future profileDetailUpdateApiCallBody() async {
+    ByteData bytes = await rootBundle.load('assets/noProfile.jpg');
+    return await ApiHandler().apiHandler(
+        valueNotifier: profileDetailsUpdateValueNotifier,
+        jsonModel: defaultFromJson,
+        url: editprofileUrl + "?profile_url=${userPicture ?? ""}",
+        requestMethod: 1,
+        formData: (userPicture == null) ? [Tuple4("profile_file", bytes.buffer.asUint8List(), "Image", "Jpeg")] : null,
+        formBody: {
+          "user_id": widget.uid,
+          // "username": usernameTextEditingController.text,
+          // "name": fullnameTextEditingController.text,
+          // "phone": countryCode + " " + phoneTextEditingController.text,
+          "phone": widget.phone!,
+          // "dob": selectedDate.toString(),
+          "email": widget.email!,
+          // "designation": designationTextEditingController.text,
+          // "city": cityTextEditingController.text,
+          // "member": memberTextEditingController.text,
+          // "company": companyTextEditingController.text,
+          // "job": jobTextEditingController.text,
+          // "college": collegeTextEditingController.text,
+          // "high_school": schoolTextEditingController.text,
+          // "interest": interestTextEditingController.text,
+          // "relationship_status": relationshipStatusTextEditingController.text,
+          // "relationship_status": relationShipStatus,
+          // "about": aboutTextEditingController.text,
+        });
+  }
+  @override
+  void initState(){
+    super.initState();
+  }
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    print('uid for info${widget.uid}');
     return Scaffold(resizeToAvoidBottomInset:false,
       appBar: AppBar(
         leading: GestureDetector(onTap:(){Navigator.pop(context);},
@@ -115,22 +207,26 @@ class _Info_PageState extends State<Info_Page> {
                       fontWeight: FontWeight.w700,fontSize:14.sp,color: Color.fromRGBO(0, 0, 0, 0.5),decoration:
                   TextDecoration.none
                   ))),
-                  Container( height:30.h,width:148.w,color:Colors.transparent,
-                    padding: EdgeInsets.only(top:20),
-                    child:  TextField(autofocus: true,
-                      cursorColor: Colors.black,cursorHeight:20.h,
-                      controller:_info,
-                      decoration: InputDecoration(
-                        hintText: '',
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(10)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1.w,
-                                color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(10)),
-                      ),),
+                  Flexible(
+                    child: Container(
+
+                      height:30.h,width:148.w,
+                      padding: EdgeInsets.only(top:20),
+                      child:  TextField(autofocus: true,
+                        cursorColor: Colors.black,cursorHeight:20.h,
+                        controller:_info,
+                        decoration: InputDecoration(
+                          hintText: '',
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 1.w,
+                                  color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10)),
+                        ),),
+                    ),
                   ),
                   DropdownButtonHideUnderline(
                     child: DropdownButton2(
@@ -767,8 +863,24 @@ class _Info_PageState extends State<Info_Page> {
                 shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 primary:Color.fromRGBO(248, 206, 97, 1),fixedSize: Size(336.w,47.h),
               ),
-              onPressed: (){
-                Navigator.pop(context);
+              onPressed: ()async{
+
+                if (profileDetailsUpdateValueNotifier.value.item1 == 1) {
+                  await updateFirestore();
+                  if (!mounted) return;
+                  setState(() {
+                    loading = false;
+                  });
+                  Navigator.pop(context, true);
+                } else if (profileDetailsUpdateValueNotifier.value.item1 == 2 || profileDetailsUpdateValueNotifier.value.item1 == 3) {
+                  if (!mounted) return;
+                  setState(() {
+                    loading = false;
+                  });
+                  final snackBar = snackbar(content: profileDetailsUpdateValueNotifier.value.item3);
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
+
               }, child: Text('Save',style: GoogleFonts.inter(
               textStyle: TextStyle(
                   color: Color.fromRGBO(0, 0, 0, 1),fontSize:20,fontWeight: FontWeight.w700
@@ -783,4 +895,83 @@ class _Info_PageState extends State<Info_Page> {
       ),
     );
   }
+
+  Future updateFirestore() async {
+    FirebaseFirestore instance = FirebaseFirestore.instance;
+    String? url;
+    if (userPicture != null) {
+      var taskSnapshot = await Write(uid: widget.uid).userProfile(uid: widget.uid, file: userPicture!, fileName: userPictureFileName!, contentType: "Image/jpeg");
+      url = await taskSnapshot.ref.getDownloadURL();
+    }
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    instance.collection("user-detail").doc(widget.uid).update({
+      // "name": fullnameTextEditingController.text,
+      // "description": aboutTextEditingController.text,
+      "pic": url,
+      "updatedAt": timestamp,
+    });
+    // Future<QuerySnapshot<Map<String, dynamic>>> personalChatRoomDetails =
+    //     instance.collection("personal-chat-room-detail").where("roomId", isGreaterThanOrEqualTo: widget.uid, isLessThanOrEqualTo: widget.uid + '\uf8ff').get();
+    // await personalChatRoomDetails.then((value) {
+    //   if (value.docs.isNotEmpty) {
+    //     value.docs.forEach((element) async {
+    //       await instance.collection("personal-chat-room-detail").doc(element.id).update({
+    //         "members.${widget.uid}.name": fullnameTextEditingController.text,
+    //         "members.${widget.uid}.pic": url,
+    //       });
+    //     });
+    //   }
+    // });
+
+    Future<QuerySnapshot<Map<String, dynamic>>> personalChatRoomDetailsNotBlocked =
+    instance.collection("personal-chat-room-detail").where("members.${widget.uid}.isBlocked", isEqualTo: false).get();
+    await personalChatRoomDetailsNotBlocked.then((value) {
+      if (value.docs.isNotEmpty) {
+        value.docs.forEach((element) async {
+          await instance.collection("personal-chat-room-detail").doc(element.id).update({
+         //   "members.${widget.uid}.name": fullnameTextEditingController.text,
+            "members.${widget.uid}.pic": url,
+          });
+        });
+      }
+    });
+
+    Future<QuerySnapshot<Map<String, dynamic>>> personalChatRoomDetailsBlocked =
+    instance.collection("personal-chat-room-detail").where("members.${widget.uid}.isBlocked", isEqualTo: true).get();
+    await personalChatRoomDetailsBlocked.then((value) {
+      if (value.docs.isNotEmpty) {
+        value.docs.forEach((element) async {
+          await instance.collection("personal-chat-room-detail").doc(element.id).update({
+           // "members.${widget.uid}.name": fullnameTextEditingController.text,
+            "members.${widget.uid}.pic": url,
+          });
+        });
+      }
+    });
+
+    Future<QuerySnapshot<Map<String, dynamic>>> groupDetailsRemoved = instance.collection("group-detail").where("members.${widget.uid}.isRemoved", isEqualTo: true).get();
+    await groupDetailsRemoved.then((value) {
+      if (value.docs.isNotEmpty) {
+        value.docs.forEach((element) async {
+          await instance.collection("group-detail").doc(element.id).update({
+            // "members.${widget.uid}.name": fullnameTextEditingController.text,
+            "members.${widget.uid}.pic": url,
+          });
+        });
+      }
+    });
+    Future<QuerySnapshot<Map<String, dynamic>>> groupDetailsNotRemoved = instance.collection("group-detail").where("members.${widget.uid}.isRemoved", isEqualTo: false).get();
+    await groupDetailsNotRemoved.then((value) {
+      if (value.docs.isNotEmpty) {
+        value.docs.forEach((element) async {
+          await instance.collection("group-detail").doc(element.id).update({
+            // "members.${widget.uid}.name": fullnameTextEditingController.text,
+            "members.${widget.uid}.pic": url,
+          });
+        });
+      }
+    });
+  }
+
+
 }

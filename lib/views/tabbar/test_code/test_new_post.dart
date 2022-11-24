@@ -160,8 +160,8 @@ class _Post_PageState extends State<Post_Page> {
 
   Future<dynamic> sendData() async {
 
-final data1=await _getUID();
-final data2=await initialiser();
+    final data1=await _getUID();
+    final data2=await initialiser();
     // final data2 = await userDetailsApiCall();
     // final data3=await updatePostApiCall();
     return [data1,data2];
@@ -169,7 +169,7 @@ final data2=await initialiser();
   }
   @override
   void initState() {
-_future=sendData();
+    _future=sendData();
 
     super.initState();
   }
@@ -195,135 +195,214 @@ _future=sendData();
           builder: (context, _) {
             if (initLoading == false) {
               return FutureBuilder(
-                future: _future,
-                builder: (context,_) {
-                  return Scaffold(
-                      backgroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
-                      appBar: AppBar(
-                        centerTitle: false,
-                        automaticallyImplyLeading: false,
-                        elevation: 0,
-                        title: (widget.state == 0)
-                            ? InkWell(
-                          onTap: (){
-                            print('lotus${ userDetailsValueNotifier.value.item2.result.username}');
-                          },
-                              child: Text(
-                          "Create Post",
-                          style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                        ),
-                            )
-                            : Text(
-                          "Edit Post",
-                          style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-                        ),
-                        leading: IconButton(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          onPressed: () => Navigator.pop(context),
-                          icon: Icon(
-                            Icons.chevron_left,
+                  future: _future,
+                  builder: (context,_) {
+                    return Scaffold(
+                        backgroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
+                        appBar: AppBar(
+                          centerTitle: false,
+                          automaticallyImplyLeading: false,
+                          elevation: 0,
+                          title: (widget.state == 0)
+                              ? InkWell(
+                            onTap: (){
+                              print('lotus${ userDetailsValueNotifier.value.item2.result.username}');
+                            },
+                            child: Text(
+                              "Create Post",
+                              style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                            ),
+                          )
+                              : Text(
+                            "Edit Post",
+                            style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                          ),
+                          leading: IconButton(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            onPressed: () => Navigator.pop(context),
+                            icon: Icon(
+                              Icons.chevron_left,
+                            ),
                           ),
                         ),
-                      ),
-                      body: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(maxWidth: 800.0),
-                              child: Column(
-                                children: [
-                                  InkWell(
-                                    // onTap: ()async {
-                                    //       return await files().then((value) {
-                                    //     if (value != null && value.files.isNotEmpty) {
-                                    //       fileList.clear();
-                                    //       if (value.files.length < 10) {
-                                    //         for (int i = 0; i < value.files.length; i++) {
-                                    //           if (value.files[i].size < 52428800) {
-                                    //             fileList.add(value.files[i]);
-                                    //           } else {
-                                    //             final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
-                                    //             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                    //           }
-                                    //         }
-                                    //         return Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                    //             Post(state: 0,
-                                    //                 fileList: fileList))).then((value) async {
-                                    //           if (value != null) {
-                                    //             return await feedsApiCall(uid: uid.toString());
-                                    //           }
-                                    //         });
-                                    //       } else {
-                                    //         final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
-                                    //         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                    //       }
-                                    //     }
-                                    //   });
-                                    // },
-                                    child: Text(
-                                      'Add photo and videos',
-                                      style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16.sp,
-                                          color: Color.fromRGBO(0, 0, 0, 1)),
+                        body: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: 800.0),
+                                child: Column(
+                                  children: [
+                                    InkWell(
+                                      // onTap: ()async {
+                                      //       return await files().then((value) {
+                                      //     if (value != null && value.files.isNotEmpty) {
+                                      //       fileList.clear();
+                                      //       if (value.files.length < 10) {
+                                      //         for (int i = 0; i < value.files.length; i++) {
+                                      //           if (value.files[i].size < 52428800) {
+                                      //             fileList.add(value.files[i]);
+                                      //           } else {
+                                      //             final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
+                                      //             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                      //           }
+                                      //         }
+                                      //         return Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                      //             Post(state: 0,
+                                      //                 fileList: fileList))).then((value) async {
+                                      //           if (value != null) {
+                                      //             return await feedsApiCall(uid: uid.toString());
+                                      //           }
+                                      //         });
+                                      //       } else {
+                                      //         final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
+                                      //         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                      //       }
+                                      //     }
+                                      //   });
+                                      // },
+                                      child: Text(
+                                        'Add photo and videos',
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16.sp,
+                                            color: Color.fromRGBO(0, 0, 0, 1)),
+                                      ),
                                     ),
-                                  ),
-                                  // InkWell(
-                                  //   onTap: () async {
-                                  //     return await files().then((value) {
-                                  //
-                                  //       if (value != null && value.files.isNotEmpty) {
-                                  //
-                                  //         fileList.clear();
-                                  //         if (value.files.length < 10) {
-                                  //
-                                  //           for (int i = 0; i < value.files.length; i++) {
-                                  //
-                                  //             if (value.files[i].size < 52428800) {
-                                  //
-                                  //               fileList.add(value.files[i]);
-                                  //
-                                  //             } else {
-                                  //
-                                  //               final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
-                                  //               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                  //             }
-                                  //           }
-                                  //           // return Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                  //           //     Post(state: 0, fileList: fileList))).then((value) async {
-                                  //           //   if (value != null) {
-                                  //           //     return await feedsApiCall(uid: getUID());
-                                  //           //   }
-                                  //           // }
-                                  //           // );
-                                  //         } else {
-                                  //           final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
-                                  //           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                  //         }
-                                  //       }
-                                  //     });
-                                  //   },
-                                  //   child: Text(
-                                  //     'Add photo and videos',
-                                  //     style: GoogleFonts.inter(
-                                  //         fontWeight: FontWeight.w400,
-                                  //         fontSize: 16.sp,
-                                  //         color: Color.fromRGBO(0, 0, 0, 1)),
-                                  //   ),
-                                  // ),
-                                  (widget.state == 0)
-                                      ? Flexible(
-                                    child: Stack(
-                                      children: [
-                                        InkWell(
-                                          onTap: (){print('Lotus:${fileList.length.toString()}');},
-                                          child: PageView.builder(
+                                    // InkWell(
+                                    //   onTap: () async {
+                                    //     return await files().then((value) {
+                                    //
+                                    //       if (value != null && value.files.isNotEmpty) {
+                                    //
+                                    //         fileList.clear();
+                                    //         if (value.files.length < 10) {
+                                    //
+                                    //           for (int i = 0; i < value.files.length; i++) {
+                                    //
+                                    //             if (value.files[i].size < 52428800) {
+                                    //
+                                    //               fileList.add(value.files[i]);
+                                    //
+                                    //             } else {
+                                    //
+                                    //               final snackBar = snackbar(content: "${value.files[i].name} file exceeds 50mb.");
+                                    //               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    //             }
+                                    //           }
+                                    //           // return Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                    //           //     Post(state: 0, fileList: fileList))).then((value) async {
+                                    //           //   if (value != null) {
+                                    //           //     return await feedsApiCall(uid: getUID());
+                                    //           //   }
+                                    //           // }
+                                    //           // );
+                                    //         } else {
+                                    //           final snackBar = snackbar(content: "Only 10 files can be uploaded per post.");
+                                    //           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    //         }
+                                    //       }
+                                    //     });
+                                    //   },
+                                    //   child: Text(
+                                    //     'Add photo and videos',
+                                    //     style: GoogleFonts.inter(
+                                    //         fontWeight: FontWeight.w400,
+                                    //         fontSize: 16.sp,
+                                    //         color: Color.fromRGBO(0, 0, 0, 1)),
+                                    //   ),
+                                    // ),
+                                    (widget.state == 0)
+                                        ? Flexible(
+                                      child: Stack(
+                                        children: [
+                                          InkWell(
+                                            onTap: (){print('Lotus:${fileList.length.toString()}');},
+                                            child: PageView.builder(
+                                                controller: pageController,
+                                                physics: BouncingScrollPhysics(),
+                                                itemCount: fileList.length,
+                                                onPageChanged: (page) {
+                                                  if (!mounted) return;
+                                                  setState(() {
+                                                    currentPageIndex = page;
+                                                  });
+                                                },
+                                                itemBuilder: (context, pageIndex) {
+                                                  return (fileList[pageIndex].extension!.contains("mp4") ||
+                                                      fileList[pageIndex].extension!.contains("mpeg4"))
+                                                      ? VideoPlayerContainer(
+                                                    videoUrl: fileList[pageIndex].path!,
+                                                  )
+                                                      : Image.memory(
+                                                    fileList[pageIndex].bytes!,
+                                                    fit: BoxFit.contain,
+                                                  );
+                                                }),
+                                          ),
+                                          (fileList.length != 0 && fileList.length != 1)
+                                              ? Align(
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              width: MediaQuery.of(context).size.width,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  MaterialButton(
+                                                      elevation: 0,
+                                                      padding: EdgeInsets.all(20),
+                                                      shape: CircleBorder(),
+                                                      color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+                                                      onPressed: () {
+                                                        pageController.previousPage(duration: kDuration, curve: kCurve);
+                                                      },
+                                                      child: Icon(
+                                                        Icons.keyboard_arrow_left,
+                                                        color: (themedata.value.index == 0) ? Color(black) : Color(white),
+                                                      )),
+                                                  MaterialButton(
+                                                      elevation: 0,
+                                                      padding: EdgeInsets.all(20),
+                                                      shape: CircleBorder(),
+                                                      color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+                                                      onPressed: () {
+                                                        pageController.nextPage(duration: kDuration, curve: kCurve);
+                                                      },
+                                                      child: Icon(
+                                                        Icons.keyboard_arrow_right,
+                                                        color: (themedata.value.index == 0) ? Color(black) : Color(white),
+                                                      )),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                              : Container(),
+                                          Positioned(
+                                              top: 10,
+                                              right: 10,
+                                              child: Chip(
+                                                backgroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
+                                                label: Text(
+                                                  "${currentPageIndex + 1}" + "/" + "${fileList.length}",
+                                                  style: GoogleFonts.poppins(
+                                                      textStyle: textStyle(
+                                                        fontSize: 10,
+                                                      )),
+                                                ),
+                                              ))
+                                        ],
+                                      ),
+                                    )
+                                        : Flexible(
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          PageView.builder(
                                               controller: pageController,
                                               physics: BouncingScrollPhysics(),
-                                              itemCount: fileList.length,
+                                              itemCount: fileUrlList.length,
                                               onPageChanged: (page) {
                                                 if (!mounted) return;
                                                 setState(() {
@@ -331,380 +410,301 @@ _future=sendData();
                                                 });
                                               },
                                               itemBuilder: (context, pageIndex) {
-                                                return (fileList[pageIndex].extension!.contains("mp4") ||
-                                                    fileList[pageIndex].extension!.contains("mpeg4"))
+                                                // return VideoPlayerContainer(
+                                                //   videoUrl: blobToUrl(fileList[pageIndex].bytes!, "Video/mpeg4"),
+                                                // );
+                                                return (fileUrlList[pageIndex].contains("mp4") || fileUrlList[pageIndex].contains("mpeg4"))
                                                     ? VideoPlayerContainer(
-                                                  videoUrl: fileList[pageIndex].path!,
+                                                  videoUrl: fileUrlList[pageIndex],
                                                 )
-                                                    : Image.memory(
-                                                  fileList[pageIndex].bytes!,
-                                                  fit: BoxFit.contain,
+                                                // : Image.network(
+                                                //     fileUrlList[pageIndex],
+                                                //     fit: BoxFit.cover,
+                                                //   );
+                                                    : CachedNetworkImage(
+                                                  fit: BoxFit.cover,
+                                                  fadeInDuration: const Duration(milliseconds: 400),
+                                                  progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                                    child: Container(
+                                                      width: 20.0,
+                                                      height: 20.0,
+                                                      child: CircularProgressIndicator(value: downloadProgress.progress),
+                                                    ),
+                                                  ),
+                                                  imageUrl: fileUrlList[pageIndex],
+                                                  errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
                                                 );
                                               }),
-                                        ),
-                                        (fileList.length != 0 && fileList.length != 1)
-                                            ? Align(
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                            width: MediaQuery.of(context).size.width,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                MaterialButton(
-                                                    elevation: 0,
-                                                    padding: EdgeInsets.all(20),
-                                                    shape: CircleBorder(),
-                                                    color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
-                                                    onPressed: () {
-                                                      pageController.previousPage(duration: kDuration, curve: kCurve);
-                                                    },
-                                                    child: Icon(
-                                                      Icons.keyboard_arrow_left,
-                                                      color: (themedata.value.index == 0) ? Color(black) : Color(white),
-                                                    )),
-                                                MaterialButton(
-                                                    elevation: 0,
-                                                    padding: EdgeInsets.all(20),
-                                                    shape: CircleBorder(),
-                                                    color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
-                                                    onPressed: () {
-                                                      pageController.nextPage(duration: kDuration, curve: kCurve);
-                                                    },
-                                                    child: Icon(
-                                                      Icons.keyboard_arrow_right,
-                                                      color: (themedata.value.index == 0) ? Color(black) : Color(white),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                            : Container(),
-                                        Positioned(
-                                            top: 10,
-                                            right: 10,
-                                            child: Chip(
-                                              backgroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
-                                              label: Text(
-                                                "${currentPageIndex + 1}" + "/" + "${fileList.length}",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: textStyle(
-                                                      fontSize: 10,
-                                                    )),
+                                          (fileUrlList.length != 0 && fileUrlList.length != 1)
+                                              ? Align(
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              width: MediaQuery.of(context).size.width,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  MaterialButton(
+                                                      elevation: 0,
+                                                      padding: EdgeInsets.all(20),
+                                                      shape: CircleBorder(),
+                                                      color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+                                                      onPressed: () {
+                                                        pageController.previousPage(duration: kDuration, curve: kCurve);
+                                                      },
+                                                      child: Icon(
+                                                        Icons.keyboard_arrow_left,
+                                                        color: (themedata.value.index == 0) ? Color(black) : Color(white),
+                                                      )),
+                                                  MaterialButton(
+                                                      elevation: 0,
+                                                      padding: EdgeInsets.all(20),
+                                                      shape: CircleBorder(),
+                                                      color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+                                                      onPressed: () {
+                                                        pageController.nextPage(duration: kDuration, curve: kCurve);
+                                                      },
+                                                      child: Icon(
+                                                        Icons.keyboard_arrow_right,
+                                                        color: (themedata.value.index == 0) ? Color(black) : Color(white),
+                                                      )),
+                                                ],
                                               ),
-                                            ))
-                                      ],
-                                    ),
-                                  )
-                                      : Flexible(
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        PageView.builder(
-                                            controller: pageController,
-                                            physics: BouncingScrollPhysics(),
-                                            itemCount: fileUrlList.length,
-                                            onPageChanged: (page) {
-                                              if (!mounted) return;
-                                              setState(() {
-                                                currentPageIndex = page;
-                                              });
-                                            },
-                                            itemBuilder: (context, pageIndex) {
-                                              // return VideoPlayerContainer(
-                                              //   videoUrl: blobToUrl(fileList[pageIndex].bytes!, "Video/mpeg4"),
-                                              // );
-                                              return (fileUrlList[pageIndex].contains("mp4") || fileUrlList[pageIndex].contains("mpeg4"))
-                                                  ? VideoPlayerContainer(
-                                                videoUrl: fileUrlList[pageIndex],
-                                              )
-                                              // : Image.network(
-                                              //     fileUrlList[pageIndex],
-                                              //     fit: BoxFit.cover,
-                                              //   );
-                                                  : CachedNetworkImage(
-                                                fit: BoxFit.cover,
-                                                fadeInDuration: const Duration(milliseconds: 400),
-                                                progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                                                  child: Container(
-                                                    width: 20.0,
-                                                    height: 20.0,
-                                                    child: CircularProgressIndicator(value: downloadProgress.progress),
-                                                  ),
+                                            ),
+                                          )
+                                              : Container(),
+                                          Positioned(
+                                              top: 10,
+                                              right: 10,
+                                              child: Chip(
+                                                backgroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
+                                                label: Text(
+                                                  "${currentPageIndex + 1}" + "/" + "${fileUrlList.length}",
+                                                  style: GoogleFonts.poppins(
+                                                      textStyle: textStyle(
+                                                        fontSize: 10,
+                                                      )),
                                                 ),
-                                                imageUrl: fileUrlList[pageIndex],
-                                                errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
-                                              );
-                                            }),
-                                        (fileUrlList.length != 0 && fileUrlList.length != 1)
-                                            ? Align(
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                            width: MediaQuery.of(context).size.width,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                MaterialButton(
-                                                    elevation: 0,
-                                                    padding: EdgeInsets.all(20),
-                                                    shape: CircleBorder(),
-                                                    color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
-                                                    onPressed: () {
-                                                      pageController.previousPage(duration: kDuration, curve: kCurve);
-                                                    },
-                                                    child: Icon(
-                                                      Icons.keyboard_arrow_left,
-                                                      color: (themedata.value.index == 0) ? Color(black) : Color(white),
-                                                    )),
-                                                MaterialButton(
-                                                    elevation: 0,
-                                                    padding: EdgeInsets.all(20),
-                                                    shape: CircleBorder(),
-                                                    color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
-                                                    onPressed: () {
-                                                      pageController.nextPage(duration: kDuration, curve: kCurve);
-                                                    },
-                                                    child: Icon(
-                                                      Icons.keyboard_arrow_right,
-                                                      color: (themedata.value.index == 0) ? Color(black) : Color(white),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                            : Container(),
-                                        Positioned(
-                                            top: 10,
-                                            right: 10,
-                                            child: Chip(
-                                              backgroundColor: (themedata.value.index == 0) ? Color(lightGrey) : Color(materialBlack),
-                                              label: Text(
-                                                "${currentPageIndex + 1}" + "/" + "${fileUrlList.length}",
-                                                style: GoogleFonts.poppins(
-                                                    textStyle: textStyle(
-                                                      fontSize: 10,
-                                                    )),
+                                              ))
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Row(
+                                        children: [
+                                          Flexible(
+                                            child: Form(
+                                              key: _formKey,
+                                              child: textFormField(
+
+                                                // errorStyle: GoogleFonts.poppins(textStyle: textStylusernamee(fontsize: 12, color: Color(white))),
+                                                  textStyle: GoogleFonts.poppins(textStyle: textStyle()),
+                                                  textEditingController: descriptionTextEditingController,
+                                                  hintText: "Add a description",
+                                                  hintStyle: GoogleFonts.poppins(textStyle: textStyle(color: Color(grey))),
+                                                  border: false,
+                                                  maxLines: 5,
+                                                  autofocus: true,
+                                                  fillColor: (themedata.value.index == 0) ? Color(white) : Color(lightBlack),
+                                                  validator: (value) => defaultValidator(value: value,
+                                                      type: "Description")
                                               ),
-                                            ))
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Row(
-                                      children: [
-                                        Flexible(
-                                          child: Form(
-                                            key: _formKey,
-                                            child: textFormField(
-
-                                              // errorStyle: GoogleFonts.poppins(textStyle: textStylusernamee(fontsize: 12, color: Color(white))),
-                                                textStyle: GoogleFonts.poppins(textStyle: textStyle()),
-                                                textEditingController: descriptionTextEditingController,
-                                                hintText: "Add a description",
-                                                hintStyle: GoogleFonts.poppins(textStyle: textStyle(color: Color(grey))),
-                                                border: false,
-                                                maxLines: 5,
-                                                autofocus: true,
-                                                fillColor: (themedata.value.index == 0) ? Color(white) : Color(lightBlack),
-                                                validator: (value) => defaultValidator(value: value,
-                                                    type: "Description")
                                             ),
                                           ),
-                                        ),
-                                        // ElevatedButton(
-                                        //     style: ElevatedButton.styleFrom(
-                                        //       elevation: 0,
-                                        //       shape: RoundedRectangleBorder(
-                                        //           borderRadius: BorderRadius.circular(5)),
-                                        //       primary: Color.fromRGBO(248, 206, 97, 1),
-                                        //       fixedSize: Size(194.w, 43.h),
-                                        //     ),
-                                        //     onPressed: () {
-                                        //       print('lotus:${fileList.length}');
-                                        //       // params =
-                                        //       //     "?user_id=${uid}&username=${username}&profile_url=${profile_url}&description=${description}";
-                                        //       // print(params);
-                                        //       // print("Description : $description");
-                                        //       // var body = jsonEncode(<String, dynamic>{});
-                                        //       // createPost(body);
-                                        //       onPressed: (isLoading)
-                                        //           ? null
-                                        //           : (widget.state == 0)
-                                        //           ? () async {
-                                        //         if (!mounted) return;
-                                        //         setState(() {
-                                        //           isLoading = true;
-                                        //         });
-                                        //         if (_formKey.currentState!.validate()) {
-                                        //           return await userDetailsApiCall().whenComplete(() async {
-                                        //             if (userDetailsValueNotifier.value.item1 == 1) {
-                                        //               return await createPostApiCall(
-                                        //                   uid: userDetailsValueNotifier.value.item2.result.userId,
-                                        //                   name: userDetailsValueNotifier.value.item2.result.username,
-                                        //                   profilePic: userDetailsValueNotifier.value.item2.result.profileUrl,
-                                        //                   description: descriptionTextEditingController.text)
-                                        //                   .whenComplete(() async {
-                                        //                 if (createPostValueNotifier.value.item1 == 1) {
-                                        //                   Navigator.pop(context, true);
-                                        //                 } else if (createPostValueNotifier.value.item1 == 2 || createPostValueNotifier.value.item1 == 3) {
-                                        //                   if (!mounted) return;
-                                        //                   setState(() {
-                                        //                     isLoading = false;
-                                        //                   });
-                                        //                   final snackBar = snackbar(content:createPostValueNotifier.value.item3.toString());
-                                        //                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                        //                 }
-                                        //               });
-                                        //             } else if (userDetailsValueNotifier.value.item1 == 2 || userDetailsValueNotifier.value.item1 == 3) {
-                                        //               if (!mounted) return;
-                                        //               setState(() {
-                                        //                 isLoading = false;
-                                        //               });
-                                        //               final snackBar = snackbar(content: userDetailsValueNotifier.value.item3.toString());
-                                        //               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                        //             }
-                                        //           });
-                                        //         } else {
-                                        //           if (!mounted) return;
-                                        //           setState(() {
-                                        //             isLoading = false;
-                                        //           });
-                                        //           final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
-                                        //           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                        //         }
-                                        //       }
-                                        //           : () async {
-                                        //         if (!mounted) return;
-                                        //         setState(() {
-                                        //           isLoading = true;
-                                        //         });
-                                        //         if (_formKey.currentState!.validate()) {
-                                        //           return await updatePostApiCall().whenComplete(() async {
-                                        //             if (updatePostValueNotifier.value.item1 == 1) {
-                                        //               Navigator.pop(context, true);
-                                        //             } else if (updatePostValueNotifier.value.item1 == 2 || updatePostValueNotifier.value.item1 == 3) {
-                                        //               if (!mounted) return;
-                                        //               setState(() {
-                                        //                 isLoading = false;
-                                        //               });
-                                        //               final snackBar = snackbar(content: updatePostValueNotifier.value.item3.toString());
-                                        //               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                        //             }
-                                        //           });
-                                        //         } else {
-                                        //           if (!mounted) return;
-                                        //           setState(() {
-                                        //             isLoading = false;
-                                        //           });
-                                        //           final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
-                                        //           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                        //         }
-                                        //       };
-                                        //     },
-                                        //     child: Text(
-                                        //       'Post',
-                                        //       style: GoogleFonts.inter(
-                                        //           textStyle: TextStyle(
-                                        //               color: Color.fromRGBO(0, 0, 0, 1),
-                                        //               fontSize: 24.sp,
-                                        //               fontWeight: FontWeight.w700)),
-                                        //     )),
-                                        MaterialButton(
-                                          elevation: 0,
-                                          shape: CircleBorder(),
-                                          color: Color(accent),
-                                          padding: EdgeInsets.all(20),
-                                          onPressed: (isLoading)
-                                              ? null
-                                              : (widget.state == 0)
-                                              ? () async {
-                                            print('lotus:${fileList.length}');
-                                            if (!mounted) return;
-                                            setState(() {
-                                              isLoading = true;
-                                            });
-                                            if (_formKey.currentState!.validate()) {
+                                          // ElevatedButton(
+                                          //     style: ElevatedButton.styleFrom(
+                                          //       elevation: 0,
+                                          //       shape: RoundedRectangleBorder(
+                                          //           borderRadius: BorderRadius.circular(5)),
+                                          //       primary: Color.fromRGBO(248, 206, 97, 1),
+                                          //       fixedSize: Size(194.w, 43.h),
+                                          //     ),
+                                          //     onPressed: () {
+                                          //       print('lotus:${fileList.length}');
+                                          //       // params =
+                                          //       //     "?user_id=${uid}&username=${username}&profile_url=${profile_url}&description=${description}";
+                                          //       // print(params);
+                                          //       // print("Description : $description");
+                                          //       // var body = jsonEncode(<String, dynamic>{});
+                                          //       // createPost(body);
+                                          //       onPressed: (isLoading)
+                                          //           ? null
+                                          //           : (widget.state == 0)
+                                          //           ? () async {
+                                          //         if (!mounted) return;
+                                          //         setState(() {
+                                          //           isLoading = true;
+                                          //         });
+                                          //         if (_formKey.currentState!.validate()) {
+                                          //           return await userDetailsApiCall().whenComplete(() async {
+                                          //             if (userDetailsValueNotifier.value.item1 == 1) {
+                                          //               return await createPostApiCall(
+                                          //                   uid: userDetailsValueNotifier.value.item2.result.userId,
+                                          //                   name: userDetailsValueNotifier.value.item2.result.username,
+                                          //                   profilePic: userDetailsValueNotifier.value.item2.result.profileUrl,
+                                          //                   description: descriptionTextEditingController.text)
+                                          //                   .whenComplete(() async {
+                                          //                 if (createPostValueNotifier.value.item1 == 1) {
+                                          //                   Navigator.pop(context, true);
+                                          //                 } else if (createPostValueNotifier.value.item1 == 2 || createPostValueNotifier.value.item1 == 3) {
+                                          //                   if (!mounted) return;
+                                          //                   setState(() {
+                                          //                     isLoading = false;
+                                          //                   });
+                                          //                   final snackBar = snackbar(content:createPostValueNotifier.value.item3.toString());
+                                          //                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                          //                 }
+                                          //               });
+                                          //             } else if (userDetailsValueNotifier.value.item1 == 2 || userDetailsValueNotifier.value.item1 == 3) {
+                                          //               if (!mounted) return;
+                                          //               setState(() {
+                                          //                 isLoading = false;
+                                          //               });
+                                          //               final snackBar = snackbar(content: userDetailsValueNotifier.value.item3.toString());
+                                          //               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                          //             }
+                                          //           });
+                                          //         } else {
+                                          //           if (!mounted) return;
+                                          //           setState(() {
+                                          //             isLoading = false;
+                                          //           });
+                                          //           final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
+                                          //           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                          //         }
+                                          //       }
+                                          //           : () async {
+                                          //         if (!mounted) return;
+                                          //         setState(() {
+                                          //           isLoading = true;
+                                          //         });
+                                          //         if (_formKey.currentState!.validate()) {
+                                          //           return await updatePostApiCall().whenComplete(() async {
+                                          //             if (updatePostValueNotifier.value.item1 == 1) {
+                                          //               Navigator.pop(context, true);
+                                          //             } else if (updatePostValueNotifier.value.item1 == 2 || updatePostValueNotifier.value.item1 == 3) {
+                                          //               if (!mounted) return;
+                                          //               setState(() {
+                                          //                 isLoading = false;
+                                          //               });
+                                          //               final snackBar = snackbar(content: updatePostValueNotifier.value.item3.toString());
+                                          //               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                          //             }
+                                          //           });
+                                          //         } else {
+                                          //           if (!mounted) return;
+                                          //           setState(() {
+                                          //             isLoading = false;
+                                          //           });
+                                          //           final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
+                                          //           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                          //         }
+                                          //       };
+                                          //     },
+                                          //     child: Text(
+                                          //       'Post',
+                                          //       style: GoogleFonts.inter(
+                                          //           textStyle: TextStyle(
+                                          //               color: Color.fromRGBO(0, 0, 0, 1),
+                                          //               fontSize: 24.sp,
+                                          //               fontWeight: FontWeight.w700)),
+                                          //     )),
+                                          MaterialButton(
+                                            elevation: 0,
+                                            shape: CircleBorder(),
+                                            color: Color(accent),
+                                            padding: EdgeInsets.all(20),
+                                            onPressed: (isLoading)
+                                                ? null
+                                                : (widget.state == 0)
+                                                ? () async {
+                                              print('lotus:${fileList.length}');
+                                              if (!mounted) return;
+                                              setState(() {
+                                                isLoading = true;
+                                              });
+                                              if (_formKey.currentState!.validate()) {
 
-                                              return await userDetailsApiCall().whenComplete(() async {
-                                                if (userDetailsValueNotifier.value.item1 == 1) {
-                                                  return await createPostApiCall(
-                                                      uid: userDetailsValueNotifier.value.item2.result.userId,
-                                                      name: userDetailsValueNotifier.value.item2.result.username,
-                                                      profilePic: userDetailsValueNotifier.value.item2.result.profileUrl,
-                                                      description: descriptionTextEditingController.text)
-                                                      .whenComplete(() async {
-                                                    if (createPostValueNotifier.value.item1 == 1) {
-                                                      Navigator.pop(context, true);
-                                                    } else if (createPostValueNotifier.value.item1 == 2 ||
-                                                        createPostValueNotifier.value.item1 == 3) {
-                                                      if (!mounted) return;
-                                                      setState(() {
-                                                        isLoading = false;
-                                                      });
-                                                      final snackBar = snackbar(content: createPostValueNotifier.value.item3.toString());
-                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                    }
-                                                  });
-                                                } else if (userDetailsValueNotifier.value.item1 == 2 || userDetailsValueNotifier.value.item1 == 3) {
-                                                  if (!mounted) return;
-                                                  setState(() {
-                                                    isLoading = false;
-                                                  });
-                                                  final snackBar = snackbar(content: userDetailsValueNotifier.value.item3.toString());
-                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                }
-                                              });
-                                            } else {
+                                                return await userDetailsApiCall().whenComplete(() async {
+                                                  if (userDetailsValueNotifier.value.item1 == 1) {
+                                                    return await createPostApiCall(
+                                                        uid: userDetailsValueNotifier.value.item2.result.userId,
+                                                        name: userDetailsValueNotifier.value.item2.result.username,
+                                                        profilePic: userDetailsValueNotifier.value.item2.result.profileUrl,
+                                                        description: descriptionTextEditingController.text)
+                                                        .whenComplete(() async {
+                                                      if (createPostValueNotifier.value.item1 == 1) {
+                                                        Navigator.pop(context, true);
+                                                      } else if (createPostValueNotifier.value.item1 == 2 ||
+                                                          createPostValueNotifier.value.item1 == 3) {
+                                                        if (!mounted) return;
+                                                        setState(() {
+                                                          isLoading = false;
+                                                        });
+                                                        final snackBar = snackbar(content: createPostValueNotifier.value.item3.toString());
+                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                      }
+                                                    });
+                                                  } else if (userDetailsValueNotifier.value.item1 == 2 || userDetailsValueNotifier.value.item1 == 3) {
+                                                    if (!mounted) return;
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+                                                    final snackBar = snackbar(content: userDetailsValueNotifier.value.item3.toString());
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                });
+                                              } else {
+                                                if (!mounted) return;
+                                                setState(() {
+                                                  isLoading = false;
+                                                });
+                                                final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
+                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                              }
+                                            }
+                                                : () async {
                                               if (!mounted) return;
                                               setState(() {
-                                                isLoading = false;
+                                                isLoading = true;
                                               });
-                                              final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
-                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                            }
-                                          }
-                                              : () async {
-                                            if (!mounted) return;
-                                            setState(() {
-                                              isLoading = true;
-                                            });
-                                            if (_formKey.currentState!.validate()) {
-                                              return await updatePostApiCall().whenComplete(() async {
-                                                if (updatePostValueNotifier.value.item1 == 1) {
-                                                  Navigator.pop(context, true);
-                                                } else if (updatePostValueNotifier.value.item1 == 2 || updatePostValueNotifier.value.item1 == 3) {
-                                                  if (!mounted) return;
-                                                  setState(() {
-                                                    isLoading = false;
-                                                  });
-                                                  final snackBar = snackbar(content: updatePostValueNotifier.value.item3.toString());
-                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                }
-                                              });
-                                            } else {
-                                              if (!mounted) return;
-                                              setState(() {
-                                                isLoading = false;
-                                              });
-                                              final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
-                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                            }
-                                          },
-                                          child: (isLoading)
-                                              ? CircularProgressIndicator()
-                                              : Icon(
-                                            Icons.send_outlined,
-                                            color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )),
-                      ));
-                }
+                                              if (_formKey.currentState!.validate()) {
+                                                return await updatePostApiCall().whenComplete(() async {
+                                                  if (updatePostValueNotifier.value.item1 == 1) {
+                                                    Navigator.pop(context, true);
+                                                  } else if (updatePostValueNotifier.value.item1 == 2 || updatePostValueNotifier.value.item1 == 3) {
+                                                    if (!mounted) return;
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+                                                    final snackBar = snackbar(content: updatePostValueNotifier.value.item3.toString());
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                });
+                                              } else {
+                                                if (!mounted) return;
+                                                setState(() {
+                                                  isLoading = false;
+                                                });
+                                                final snackBar = snackbar(content: "Please fill out all the required fields before uploading!");
+                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                              }
+                                            },
+                                            child: (isLoading)
+                                                ? CircularProgressIndicator()
+                                                : Icon(
+                                              Icons.send_outlined,
+                                              color: (themedata.value.index == 0) ? Color(white) : Color(materialBlack),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )),
+                        ));
+                  }
               );
             } else {
               return exceptionScaffold(

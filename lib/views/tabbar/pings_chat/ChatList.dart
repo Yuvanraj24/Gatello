@@ -31,6 +31,7 @@ import '../../../components/flatButton.dart';
 import '../../../main.dart';
 import '../../../utils/DynamicLinkParser.dart';
 import '../chats/personal_chat_screen/ChatPage.dart';
+import '../tabbar_view.dart';
 //import '../Settings/Settings.dart' as settingsPage;
 
 class Chat extends StatefulWidget {

@@ -1,7 +1,38 @@
+// fireBaseUnBlockList()async{
+//   //blockList =  instance.collection("user-detail").doc(uid).get();
+//   print("Unblock FB List method is called");
+//   await instance.collection("user-detail").doc(uid).get().then(
+//           (doc) {
+//         var fal = doc.data()!['blockList'].length;
+//         var fList = doc.data()!['blockList'];
+//         print("Unblock user block Deatails... ${fList}");
+//         print("UnBlockList in FireStore ${fal}");
+//         for(int i=0; i<=fal; i++){
+//           print("Unblock Loop is Called");
+//           blockList.add(doc.data()!['blockList'][i]);
+//           print("Unblock Local Block List : ${blockList[i]}");
+//         }
+//         print("Unblock Total final UBL : ${blockList}");
+//
+//       }
+//   ).whenComplete((){
+//     unBlock();
+//   }).then(
+//           (val) async {
+//         await instance.collection("user-detail").doc(uid).update({
+//           "blockList" :blockList
+//         });
+//       });
+//
+// }
+
+import 'dart:collection';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fast_contacts/fast_contacts.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +50,8 @@ import 'package:gatello/views/tabbar/pops/pops.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:substring_highlight/substring_highlight.dart';
@@ -26,6 +59,7 @@ import 'package:tuple/tuple.dart';
 import '../../Authentication/Authentication.dart';
 import '../../Firebase/FirebaseNotifications.dart';
 import '../../Firebase/Writes.dart';
+import '../../Helpers/GetContactHelper.dart';
 import '../../Others/Routers.dart';
 import '../../Others/Structure.dart';
 import '../../Others/components/LottieComposition.dart';
@@ -46,6 +80,7 @@ import 'dart:developer' as dev;
 import '../invitefriends.dart';
 import '../profile/profile_details.dart';
 import '../settings/settings_home_screen.dart';
+import '../status/status_test.dart';
 import 'Delete1Dialog.dart';
 import '/core/models/profile_detail.dart' as profileDetailsModel;
 import 'chats/personal_chat_screen/ChatPage.dart';
@@ -61,13 +96,235 @@ class _TabState extends State<Tabbar> {
   TextEditingController searchChat = TextEditingController();
   FirebaseFirestore instance = FirebaseFirestore.instance;
   //String nameSearch='';
-
+  int pos=1;
   bool isSelected = false;
   var lifecycleEventHandler;
   int overallUnreadChatList = 18;
   Future? _future;
   String? userId;
   bool tabSearch = false;
+
+  List<Contact> contacts = [];
+  int conLen=0;
+  List<String> contactNames = [];
+
+  Future<List<Contact>> getContacts() async {
+    PermissionStatus contactpermission = await Permission.contacts.request();
+    if (contactpermission.isGranted || contactpermission.isLimited) {
+      contacts = await FastContacts.allContacts;
+      conLen=contacts.length;
+      for(int i=0;i<contacts.length;i++)
+      {
+        contactNames.add(contacts[i].displayName);
+      }
+      setState(() {
+        conLen=contacts.length;
+      });
+
+      getDataList();
+
+    } else {
+
+    }
+    return contacts;// return contactList;
+  }
+
+  List fBPhone=[];
+  List contacts1 = [];
+  List contacts2 = [];
+  List contactNumber = [];
+  List contactName = [];
+  List conNames=[];
+  Map <String,String> conMap = Map();
+  getDataList() async {
+
+    print("Contact Size:${contacts.length}");
+    print("FBPhone Size:${fBPhone.length}");
+
+    int x=0;
+
+    for(x=0;x<contacts.length;x++)
+    {
+      try {
+        String mob = contacts[x].phones[0];
+        mob=mob.replaceAll(" ", "");
+        mob=mob.replaceAll("-", "");
+        print("Mob:${mob}(${x}) Size:(${mob.length})");
+
+        if(mob.length>10 && mob.length==12)
+        {
+          print("ifdrop");
+          mob=mob.substring(2,12);
+          print(mob);
+          contacts1.add(mob);
+        }
+        else if(mob.length>10 && mob.length==13)
+        {
+          print("ifdrop");
+          mob=mob.substring(3,13);
+          print(mob);
+          contacts1.add(mob);
+        }
+        else
+        {
+          contacts1.add(mob);
+        }
+
+      }
+      catch(e)
+      {
+        print("Exception${e}");
+      }
+
+    }
+
+    print("Con1${contacts1}");
+    setState(() {
+
+    });
+    int i=0,j=0;
+
+    for(i=0;i<contacts1.length;i++)
+    {
+      for(j=0;j<fBPhone.length;j++)
+      {
+        if(contacts1[i]==fBPhone[j])
+        {
+          var x=contacts2.contains(fBPhone[j]);
+          print("Contact Check : ${x}");
+
+          if(x==false) {
+            contacts2.add(contacts1[i]);
+            conNames.add(contactNames[i]);
+          }
+        }
+      }
+    }
+    // print("contactNumber:${contacts2} ${conNames}");
+    contactNumber = LinkedHashSet<String>.from(contacts2).toList();
+    contactName = LinkedHashSet<String>.from(conNames).toList();
+    print("{contactNumber${contactNumber}");
+    print("contactName${contactName}");
+    print("conMap${conMap}");
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String encodedMap = json.encode(conMap);
+    print(encodedMap);
+
+    String encodedMap1 = json.encode(contactName);
+    print(encodedMap1);
+
+    String encodedMap2 = json.encode(contactNumber);
+    print(encodedMap2);
+
+    prefs.setString('conMap', encodedMap);
+    prefs.setString('conNames', encodedMap1);
+    prefs.setString('conNums', encodedMap2);
+  }
+
+
+  bool _isRequesting = false;
+  bool _isFinish = false;
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> body = [];
+  List conId=[];
+  Future userChatList({required String searchQuery, int limit = 50}) async {
+    if (!_isRequesting && !_isFinish) {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot;
+      _isRequesting = true;
+      if (body.isEmpty) {
+
+        querySnapshot = await instance
+            .collection("user-detail")
+            .where("name",
+            isGreaterThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery)
+            .where("name",
+            isLessThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery +
+                '\uf8ff')
+            .orderBy("name")
+            .limit(limit)
+            .get();
+      } else {
+        querySnapshot = await instance
+            .collection("user-detail")
+            .where("name",
+            isGreaterThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery)
+            .where("name",
+            isLessThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery +
+                '\uf8ff')
+            .orderBy("name")
+            .startAfterDocument(body[body.length - 1])
+            .limit(limit)
+            .get();
+      }
+      if (querySnapshot != null) {
+
+        if (!mounted) return;
+        setState(() {
+          // print("QS Len: ${querySnapshot.docs.length}");
+          body.addAll(querySnapshot.docs);
+          print("Body Added ${querySnapshot.docs}");
+
+          String phone,name,id;
+          Stream<QuerySnapshot> chatRef = instance.collection("user-detail").snapshots();
+          chatRef.forEach((field) {
+            field.docs.asMap().forEach((index, data) {
+              // print("Con:${field.docs[index]["phone"]}");
+              phone=field.docs[index]["phone"];
+              name=field.docs[index]["name"];
+              id=field.docs[index]["uid"];
+
+              phone=phone.replaceAll(" ", "");
+              print("Con:${phone}(${phone.length})");
+              print("ConName:${name}(${name.length})");
+
+              if(phone.length>10 && phone.length<=13)
+              {
+                print("ifdrop");
+                phone=phone.substring(3,13);
+                print(phone);
+                fBPhone.add(phone);
+                // conMap[phone]=name;
+                // conId.add(id);
+                conMap[phone]=id;
+
+
+              }
+              else
+              {
+                fBPhone.add(phone);
+                conMap[phone]=id;
+
+              }
+
+              // print(fBPhone);
+
+
+
+
+            });
+            print("ConMap:${conMap}");
+            print("ConIds:${conId}");
+            setState(() {
+              getDataList();
+            });
+          });
+
+        });
+        if (querySnapshot.docs.length < limit) {
+          print('Lotus777${querySnapshot.docs}');
+          _isFinish = true;
+        }
+      }
+      _isRequesting = false;
+    }
+  }
+
+
+
+
+
+
 
 //  String? puid;
   final ScrollController storyScrollController = ScrollController();
@@ -125,7 +382,14 @@ class _TabState extends State<Tabbar> {
     final data2 = await profileDetailsApiCall();
     final data3 = await lifecycleInit();
     final data4 = await fcmMain();
-    return [data1, data2, data3, data4];
+    final data5 = await getDataList();
+    final data6 = await getContacts();
+
+    // if (widget.state == 0 || widget.state == 4 || widget.state == 6) {
+
+
+    var userSnap = instance.collection("user-detail").doc(widget.uid).snapshots();
+    return [data1, data2, data3, data4,userSnap,data5,data6];
   }
 
   bool callBack() {
@@ -137,12 +401,19 @@ class _TabState extends State<Tabbar> {
     return isSelected;
     print('working1');
   }
+  late Future<List<Contact>> _contacts;
+  TextEditingController searchTextEditingController = TextEditingController();
 
   @override
   void initState() {
+
+    // fireBaseBlockList1();
     _future = sendData();
     getFCMToken().then((value) => print("fcm token:" + value));
     FirebaseMessaging.onMessage.listen(firebaseMessagingHandler);
+    userChatList(searchQuery: searchTextEditingController.text);
+    _contacts = getContacts();
+    getDataList();
     // PingsChatViewKey = GlobalKey<_PingsChatViewState>();
     // _pingsChatViewState=GlobalKey();
     super.initState();
@@ -174,6 +445,7 @@ class _TabState extends State<Tabbar> {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: FutureBuilder(
           future: _future,
@@ -257,6 +529,19 @@ class _TabState extends State<Tabbar> {
                                                 //     ),
                                                 //   ),
                                                 // ),
+                                                GestureDetector( onTap:(){
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                Profile()
+
+                                                          //  feedsValueNotifier.value.item2.result[index].userId
+
+                                                        ),
+                                                      );
+                                                },child:
+
                                                 (pic != null)
                                                     ? CachedNetworkImage(
                                                   fit: BoxFit.cover,
@@ -301,7 +586,9 @@ class _TabState extends State<Tabbar> {
                                                                 .circle,
                                                             image: DecorationImage(
                                                                 image: AssetImage(
-                                                                    "assets/noProfile.jpg"))),
+                                                                    "assets/noProfile.jpg")
+                                                            )
+                                                        ),
                                                       ),
                                                 )
                                                     : Container(
@@ -316,7 +603,7 @@ class _TabState extends State<Tabbar> {
                                                           fit: BoxFit
                                                               .cover)),
                                                   //   child: Image.asset("assets/noProfile.jpg")
-                                                ),
+                                                ),),
                                                 SizedBox(
                                                   width: 25.w,
                                                 ),
@@ -681,12 +968,13 @@ class _TabState extends State<Tabbar> {
                                     PingsChatView(
                                         uid: userId.toString(),
                                         callBack: callBack,
-                                        key: globalKey),
+                                        key: globalKey,
+                                      isForward: false,),
                                     // Center(
                                     //   child: Text("Pops...!"),
                                     // ),
                                     Story(scrollController: storyScrollController),
-                                    Status(),
+                                    Status(uid: userId.toString()),
                                   ],
                                 ),
                               ),
@@ -703,19 +991,19 @@ class _TabState extends State<Tabbar> {
                         ? Color(white)
                         : Color(materialBlack),
                     child: Center(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              lottieAnimation(loadingLottie),
-                              Text("Loading")
-                            ],
-                          ),
-                        ))),
+                        // child : Text("Loading...")
+                        child : Image.asset("assets/gatellologo1.gif")
+
+                        ),
+                    ),
               );
             }
           }),
     );
   }
+
+
+
   showDeleteDialog2(BuildContext context) {
     showDialog(
       // barrierDismissible: false,
@@ -765,11 +1053,15 @@ class _TabState extends State<Tabbar> {
     );
   }
 }
+
+
+//----------------- Second File Class -----------------
 class PingsChatView extends StatefulWidget {
   final Map<int, DocumentSnapshot<Map<String, dynamic>>>? messages;
   final String? postDescription;
   final String? postId;
   final String? postTitle;
+  final bool isForward;
   final String? postUrl;
   final int? state;
   final String uid;
@@ -778,6 +1070,7 @@ class PingsChatView extends StatefulWidget {
   final String? search;
   PingsChatView(
       {Key? key,
+       required this.isForward,
         this.postTitle,
         this.postId,
         this.postDescription,
@@ -787,15 +1080,19 @@ class PingsChatView extends StatefulWidget {
         this.messages,
         required this.uid,
         this.callBack,
+
         this.search})
       : super(key: key);
   @override
   _PingsChatViewState createState() => _PingsChatViewState();
 }
-class _PingsChatViewState extends State<PingsChatView>
-    with SingleTickerProviderStateMixin {
+class _PingsChatViewState extends State<PingsChatView> with SingleTickerProviderStateMixin {
   List<String> selectlen = [];
   bool isSent = false;
+
+  var name;
+
+  var peerName;
   int index = 0;
   String nameSearch = '';
   var heroImg;
@@ -823,9 +1120,11 @@ class _PingsChatViewState extends State<PingsChatView>
   List selectedDocs = [];
   List filteredChats = [];
   var listData;
-
   int totalUnreadCount = 0;
   List unreadTabCount = [];
+
+  Future? _future;
+
 
   deletefun() {
     print('LOtus777777');
@@ -844,6 +1143,22 @@ class _PingsChatViewState extends State<PingsChatView>
     ["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]);
 
     print("Uid is a $puid");
+  }
+  var peerN=Map();
+  getLocalPeerName(name){
+
+    instance.collection("user-detail").doc(name).get().then((doc) {
+      var fPhone = doc.data()!['phone'];
+      print("fPhone ${fPhone}");
+      getContactName(fPhone).then((value) {
+        print("peer b4 print");
+        peerN[name] =  (value == null)? fPhone: value;
+
+        print("peer after print ${peerN}");
+      }).then((value) {
+        print("value is : ${peerName}");
+      });
+    });
   }
   deletefun1() {
     print('LOtus777777');
@@ -872,24 +1187,226 @@ class _PingsChatViewState extends State<PingsChatView>
     }
 
   }
+
+  List<Contact> contacts = [];
+  int conLen=0;
+  List<String> contactNames = [];
+
+  Future<List<Contact>> getContacts() async {
+    PermissionStatus contactpermission = await Permission.contacts.request();
+    if (contactpermission.isGranted || contactpermission.isLimited) {
+      contacts = await FastContacts.allContacts;
+      conLen=contacts.length;
+      for(int i=0;i<contacts.length;i++)
+      {
+        contactNames.add(contacts[i].displayName);
+      }
+      setState(() {
+        conLen=contacts.length;
+      });
+
+      getDataList();
+
+    } else {
+
+    }
+    return contacts;// return contactList;
+  }
+
+  List fBPhone=[];
+  List contacts1 = [];
+  List contacts2 = [];
+  List contactNumber = [];
+  List contactName = [];
+  List conNames=[];
+  Map <String,String> conMap = Map();
+  getDataList() async {
+
+    print("Contact Size:${contacts.length}");
+    print("FBPhone Size:${fBPhone.length}");
+
+    int x=0;
+
+    for(x=0;x<contacts.length;x++)
+    {
+      try {
+        String mob = contacts[x].phones[0];
+        mob=mob.replaceAll(" ", "");
+        mob=mob.replaceAll("-", "");
+        print("Mob:${mob}(${x}) Size:(${mob.length})");
+
+        if(mob.length>10 && mob.length==12)
+        {
+          print("ifdrop");
+          mob=mob.substring(2,12);
+          print(mob);
+          contacts1.add(mob);
+        }
+        else if(mob.length>10 && mob.length==13)
+        {
+          print("ifdrop");
+          mob=mob.substring(3,13);
+          print(mob);
+          contacts1.add(mob);
+        }
+        else
+        {
+          contacts1.add(mob);
+        }
+
+      }
+      catch(e)
+      {
+        print("Exception${e}");
+      }
+
+    }
+
+    print("Con1${contacts1}");
+    setState(() {
+
+    });
+    int i=0,j=0;
+
+    for(i=0;i<contacts1.length;i++)
+    {
+      for(j=0;j<fBPhone.length;j++)
+      {
+        if(contacts1[i]==fBPhone[j])
+        {
+          var x=contacts2.contains(fBPhone[j]);
+          print("Contact Check : ${x}");
+
+          if(x==false) {
+            contacts2.add(contacts1[i]);
+            conNames.add(contactNames[i]);
+          }
+        }
+      }
+    }
+    // print("contactNumber:${contacts2} ${conNames}");
+    contactNumber = LinkedHashSet<String>.from(contacts2).toList();
+    contactName = LinkedHashSet<String>.from(conNames).toList();
+    print("{contactNumber${contactNumber}");
+    print("contactName${contactName}");
+    print("conMap${conMap}");
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String encodedMap = json.encode(conMap);
+    print(encodedMap);
+
+    String encodedMap1 = json.encode(contactName);
+    print(encodedMap1);
+
+    String encodedMap2 = json.encode(contactNumber);
+    print(encodedMap2);
+
+    prefs.setString('conMap', encodedMap);
+    prefs.setString('conNames', encodedMap1);
+    prefs.setString('conNums', encodedMap2);
+  }
+
+
+  bool _isRequesting = false;
+  bool _isFinish = false;
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> body = [];
+  List conId=[];
+  Future userChatList({required String searchQuery, int limit = 50}) async {
+    if (!_isRequesting && !_isFinish) {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot;
+      _isRequesting = true;
+      if (body.isEmpty) {
+
+        querySnapshot = await instance
+            .collection("user-detail")
+            .where("name",
+            isGreaterThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery)
+            .where("name",
+            isLessThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery +
+                '\uf8ff')
+            .orderBy("name")
+            .limit(limit)
+            .get();
+      } else {
+        querySnapshot = await instance
+            .collection("user-detail")
+            .where("name",
+            isGreaterThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery)
+            .where("name",
+            isLessThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery +
+                '\uf8ff')
+            .orderBy("name")
+            .startAfterDocument(body[body.length - 1])
+            .limit(limit)
+            .get();
+      }
+      if (querySnapshot != null) {
+
+        if (!mounted) return;
+        setState(() {
+          // print("QS Len: ${querySnapshot.docs.length}");
+          body.addAll(querySnapshot.docs);
+          print("Body Added ${querySnapshot.docs}");
+
+          String phone,name,id;
+          Stream<QuerySnapshot> chatRef = instance.collection("user-detail").snapshots();
+          chatRef.forEach((field) {
+            field.docs.asMap().forEach((index, data) {
+              // print("Con:${field.docs[index]["phone"]}");
+              phone=field.docs[index]["phone"];
+              name=field.docs[index]["name"];
+              id=field.docs[index]["uid"];
+
+              phone=phone.replaceAll(" ", "");
+              print("Con:${phone}(${phone.length})");
+              print("ConName:${name}(${name.length})");
+
+              if(phone.length>10 && phone.length<=13)
+              {
+                print("ifdrop");
+                phone=phone.substring(3,13);
+                print(phone);
+                fBPhone.add(phone);
+                // conMap[phone]=name;
+                // conId.add(id);
+                conMap[phone]=id;
+
+
+              }
+              else
+              {
+                fBPhone.add(phone);
+                conMap[phone]=id;
+
+              }
+
+              // print(fBPhone);
+
+
+
+
+            });
+            print("ConMap:${conMap}");
+            print("ConIds:${conId}");
+            setState(() {
+              getDataList();
+            });
+          });
+
+        });
+        if (querySnapshot.docs.length < limit) {
+          print('Lotus777${querySnapshot.docs}');
+          _isFinish = true;
+        }
+      }
+      _isRequesting = false;
+    }
+  }
+
+  late Future<List<Contact>> _contacts;
+  TextEditingController searchTextEditingController = TextEditingController();
   @override
-  // filterChats(){
-  //   List docs=[];
-  //   if (searchChat.text.isNotEmpty){
-  //     docs.retainWhere((docs) {
-  //       String searchTerm = searchChat.text.toLowerCase();
-  //       String personName = docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["name"];
-  //       return personName.contains(searchTerm);
-  //     } );
-  //     setState(() {
-  //       filteredChats=docs;
-  //       for(var i=0; i<filteredChats.length; i++){
-  //         print(filteredChats[i].displayName);
-  //         listData = filteredChats[i].displayName;
-  //       }
-  //     });
-  //   }
-  // }
   void dispose() {
     tabController.dispose();
     super.dispose();
@@ -897,9 +1414,57 @@ class _PingsChatViewState extends State<PingsChatView>
 
   @override
   void initState() {
+    _future = sendData();
+    userChatList(searchQuery: searchTextEditingController.text);
+    _contacts = getContacts();
+    getDataList();
+    getLocalPeerName(name);
     tabController = TabController(vsync: this, length: 2);
+    fireBaseBlockList1();
+
+
     super.initState();
     tileData = pingsChatListData();
+  }
+
+
+  List blockedList=[];
+  fireBaseBlockList1()async{
+
+    print("Getting Block List for ${puid}");
+
+    await instance.collection("user-detail").doc("${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}").get().then(
+            (doc) {
+          var fal = doc.data()!['blockList'].length;
+          var fList = doc.data()!['blockList'];
+          print("The user block Deatails... ${fList}");
+          print("BlockList in FireStore ${fal}");
+          for(int i=0; i<=fal-1; i++){
+            print("Loop is Called");
+            blockedList.add(doc.data()!['blockList'][i]);
+            print(" Local Block List : ${blockedList[i]}");
+          }
+          print("Total final BL : ${blockedList}");
+
+        }
+    ).whenComplete((){
+      // block();
+    });
+
+
+  }
+
+
+
+  Future<dynamic> sendData() async {
+    final data1 = await fcmMain();
+    final data2 = await getDataList();
+    final data3 = await getContacts();
+
+    var pinglistDetail =  instance.collection("personal-chat-room-detail").where("members.${widget.uid}.delete", isEqualTo: false).snapshots();
+
+    var userSnap = instance.collection("user-detail").doc(widget.uid).snapshots();
+    return [pinglistDetail,data1, data2, data3,userSnap];
   }
 
   @override
@@ -917,45 +1482,32 @@ class _PingsChatViewState extends State<PingsChatView>
     List<Widget> tabs = [
       Tab(
         child: Text(
-          "Personal",
-          style: GoogleFonts.poppins(
-              textStyle: textStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black)),
+          "Personal", style: GoogleFonts.poppins(
+              textStyle: textStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Colors.black)),
         ),
       ),
       Tab(
-        child: Text(
-          "Group",
-          style: GoogleFonts.poppins(
-              textStyle: textStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black)),
+        child: Text("Group", style: GoogleFonts.poppins(textStyle: textStyle(
+                  fontSize: 14.sp, fontWeight: FontWeight.w500, color: Colors.black)),
         ),
       )
     ];
+
+
     Widget getChatList(SizingInformation sizingInformation) {
       return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: instance
-              .collection("personal-chat-room-detail")
-              .where("members.${widget.uid}.delete", isEqualTo: false)
-              .snapshots(),
+          stream: instance.collection("personal-chat-room-detail").where("members.${widget.uid}.delete", isEqualTo: false).snapshots(),
           builder: (context, chatRoomdetailsnap) {
             if (chatRoomdetailsnap.connectionState == ConnectionState.active &&
                 chatRoomdetailsnap.hasData &&
                 chatRoomdetailsnap.data != null &&
                 chatRoomdetailsnap.data!.docs.isNotEmpty) {
+              getLocalPeerName(name);
               docs = chatRoomdetailsnap.data!.docs;
               docs.sort((b, a) => getDateTimeSinceEpoch(
                   datetime: a.data()["timestamp"])
                   .compareTo(
                   getDateTimeSinceEpoch(datetime: b.data()["timestamp"])));
-              // print(docs.toString());
-              // print("LENGTH:${docs.length}");
-
-              // totalUnreadCount=int.parse(docs[index].data()["members"]["${widget.uid}"]["unreadCount"]);
 
               print("TOTAL UNREAD:${totalUnreadCount}");
               print(
@@ -970,7 +1522,17 @@ class _PingsChatViewState extends State<PingsChatView>
                       // important
                       _isSelected[index] = false;
                     }
-                    var name = docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["name"];
+                    // var userSnap = instance.collection("user-detail").doc(widget.uid).collection("blockList").get();
+
+                    List blockedList=[];
+
+                    var puids = "JhRKwvnKe4Wxu1nYaucwZVurRlt1";
+                    name = docs[index].data()["members"]["${widget.uid}"]["peeruid"];
+                    print('puid is print : ${name}');
+                    getLocalPeerName(name);
+
+                    print("Map of puid is : ${peerN}");
+                    // getContacts().then((value) => print("Contact List : ${value}"));
                     var pic = docs[index].data()["members"][
                     "${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]
                     ["pic"];
@@ -978,6 +1540,8 @@ class _PingsChatViewState extends State<PingsChatView>
                     ["peeruid"];
                     var members = docs[index].data()["members"];
                     if (nameSearch.isEmpty) {
+
+
                       return Padding(
                           padding: EdgeInsets.only(bottom: 2),
                           child: ListTile(
@@ -985,7 +1549,7 @@ class _PingsChatViewState extends State<PingsChatView>
                               tileColor: Colors.white,
                               selectedTileColor:
                               Color.fromRGBO(248, 206, 97, 0.31),
-                              onLongPress: () {
+                              onLongPress:(widget.isForward==false)? () {
                                 setState(() {
                                   _isSelected[index] = !_isSelected[index];
                                   if (isFirstTime) {
@@ -1025,8 +1589,8 @@ class _PingsChatViewState extends State<PingsChatView>
                                 selectedItems?.length.toString();
 
                                 // print('Lotus66${selectlen}');
-                              },
-                              onTap: () {
+                              }:null,
+                              onTap:(widget.isForward==false)?  () {
                                 print("Long Press Flag:${longPressedFlag}");
                                 if (longPressedFlag) {
                                   setState(() {
@@ -1062,23 +1626,32 @@ class _PingsChatViewState extends State<PingsChatView>
                                   }
                                 } else {
                                   print("Page Open");
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ChatPage(
-                                              state: 0,
-                                              uid: widget.uid,
-                                              puid:
-                                              docs[index].data()["members"]
-                                              ["${widget.uid}"]
-                                              ["peeruid"])));
+                                  Navigator.push(context, PageTransition(
+                                      duration: Duration(milliseconds: 120),
+                                      type: PageTransitionType.rightToLeft, child: ChatPage(
+                                      state: 0,
+                                      uid: widget.uid,
+                                      puid:
+                                      docs[index].data()["members"]
+                                      ["${widget.uid}"]
+                                      ["peeruid"])));
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => ChatPage(
+                                  //             state: 0,
+                                  //             uid: widget.uid,
+                                  //             puid:
+                                  //             docs[index].data()["members"]
+                                  //             ["${widget.uid}"]
+                                  //             ["peeruid"])));
                                 }
-                              },
+                              }: null,
                               contentPadding: EdgeInsets.only(
                                   left: 10, right: 10, top: 4, bottom: 4),
                               //  contentPadding: EdgeInsets.all(10),
                               leading: GestureDetector(
-                                onTap: () {
+                                onTap:(widget.isForward==false)?  () {
                                   showDialog(
                                       barrierDismissible: true,
                                       context: context,
@@ -1091,8 +1664,26 @@ class _PingsChatViewState extends State<PingsChatView>
                                   heroImg = docs[index].data()["members"][
                                   "${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]
                                   ["pic"];
-                                },
-                                child: Container(
+                                }: null,
+                                child:
+                                blockedList.contains(puid)?
+                                    Image.asset("assets/noProfile.jpg", fit: BoxFit.cover):
+                                // instance
+                                //     .collection('user-detail').doc(widget.uid)
+                                //     .where('blockList', arrayContains: '${puid}')
+                                //     .get()?
+                                // instance.collection("personal-chat-room-detail")
+                                //     .where("members.${widget.uid}.isBlocked") == false?
+                                // chatRoomSnapshot.data!.data()!["members"][
+
+
+                                  // "${chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["peeruid"]}"]
+                                // ["isBlocked"]
+                                // (instance.collection("pe").data!.data()!["members"][
+                                // "${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]}"]
+                                // ["isBlocked"] =
+                                //     false)?
+                                Container(
                                   child: (docs[index].data()["members"][
                                   "${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]
                                   ["pic"] !=
@@ -1128,10 +1719,12 @@ class _PingsChatViewState extends State<PingsChatView>
                                     width: 50.w,
                                   ),
                                 ),
+
+                               // :Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
                               ),
                               title: SubstringHighlight(
                                 caseSensitive: false,
-                                text: name,
+                                text: peerN[name].toString(),
                                 textStyle: GoogleFonts.inter(
                                     textStyle: TextStyle(
                                         fontSize: 16.sp,
@@ -1152,16 +1745,21 @@ class _PingsChatViewState extends State<PingsChatView>
                                   ? Padding(
                                 padding: EdgeInsets.only(top: 8),
                                 child: Column(children: [
-                                  Text(
-                                      readTimestamp(int.parse(docs[index]
-                                          .data()["timestamp"])),
-                                      style: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                            fontSize: 10.sp,
-                                            color: Color.fromRGBO(
-                                                0, 0, 0, 1),
-                                            fontWeight: FontWeight.w400),
-                                      )),
+                                  InkWell(
+                                    onTap: (){
+                                      print('Lotus77${docs[index].data()}');
+                                    },
+                                    child: Text(
+                                        readTimestamp(int.parse(docs[index]
+                                            .data()["timestamp"])),
+                                        style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                              fontSize: 10.sp,
+                                              color: Color.fromRGBO(
+                                                  0, 0, 0, 1),
+                                              fontWeight: FontWeight.w400),
+                                        )),
+                                  ),
                                   SizedBox(height: 3.h),
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -1260,7 +1858,7 @@ class _PingsChatViewState extends State<PingsChatView>
                                           print('Lotus2');
                                           await writeUserMessage(
                                               type: 5,
-                                              peerName: name,
+                                              peerName: peerN[name],
                                               peerPic: pic,
                                               uid: widget.uid,
                                               puid: id,
@@ -1320,7 +1918,6 @@ class _PingsChatViewState extends State<PingsChatView>
                                                     return "";
                                                 }
                                               }
-
                                               String? getMessage(
                                                   int type) {
                                                 print('Lotus7');
@@ -1361,7 +1958,7 @@ class _PingsChatViewState extends State<PingsChatView>
                                                         .inverse[
                                                     value.data()![
                                                     "type"]]!,
-                                                    peerName: name,
+                                                    peerName: peerN[name],
                                                     peerPic: pic,
                                                     uid: widget.uid,
                                                     puid: id,
@@ -1513,15 +2110,20 @@ class _PingsChatViewState extends State<PingsChatView>
                                                     'ffffffffffffffffffff');
                                               }
                                             });
+                                        Navigator.pop(context);
                                       },
                                       child: Text(
                                         'send',
                                         style: GoogleFonts.poppins(
                                             textStyle:
                                             textStyle(fontSize: 10)),
-                                      )))));
+                                      )
+                                  )
+                              )
+                          ));
                     }
-                    if (name.toString().toLowerCase().startsWith(nameSearch.toLowerCase())) {
+                    if (peerN[name].toString().toLowerCase().startsWith(nameSearch.toLowerCase())) {
+
                       return Padding(
                         padding: EdgeInsets.only(bottom: 2),
                         child: ListTile(
@@ -1620,7 +2222,7 @@ class _PingsChatViewState extends State<PingsChatView>
 
                           title: SubstringHighlight(
                             caseSensitive: false,
-                            text: name,
+                            text: peerN[name].toString(),
                             textStyle: GoogleFonts.inter(
                                 textStyle: TextStyle(
                                     fontSize: 16.sp,
@@ -1883,7 +2485,7 @@ class _PingsChatViewState extends State<PingsChatView>
                             term: searchChat.text,
                           ),
                           subtitle: SubstringHighlight(
-                            text: docs[index1].data()["lastMessage"],
+                            text:(docs[index1].data()["lastMessage"]!=null)? docs[index1].data()["lastMessage"]:'',
                             textStyle: GoogleFonts.inter(
                                 textStyle: TextStyle(
                                     fontSize: 14.sp,
@@ -2130,8 +2732,7 @@ class _PingsChatViewState extends State<PingsChatView>
                                                 ? value.data()![
                                             "data"]
                                             ["image"]
-                                                : value.data()![
-                                            "data"]
+                                                : value.data()!
                                             ["video"]
                                                 : null,
                                             storyDescription: (dataTypeMap
@@ -2272,12 +2873,14 @@ class _PingsChatViewState extends State<PingsChatView>
                                     //   }
                                     // });
                                     // print('Lotus1:${selectedDocs.toString()}');
+                                    Navigator.pop(context);
                                   },
                                   child: Text(
                                     'send',
                                     style: GoogleFonts.poppins(
                                         textStyle: textStyle(fontSize: 10)),
-                                  ))));
+                                  )
+                              )));
                     }
                     if (groupName.toString().toLowerCase().startsWith(nameSearch.toLowerCase())) {
                       return ListTile(
@@ -2801,6 +3404,7 @@ class _PingsChatViewState extends State<PingsChatView>
                                     //   }
                                     // });
                                     // print('Lotus1:${selectedDocs.toString()}');
+                                    Navigator.pop(context);
                                   },
                                   child: Text(
                                     'send',
@@ -3101,7 +3705,9 @@ class _PingsChatViewState extends State<PingsChatView>
                     fontWeight: FontWeight.w500,
                     color: (themedata.value.index == 0)
                         ? Color(black)
-                        : Color(white))),
+                        : Color(white)
+                )
+            ),
           ),
           floatingActionButton: (widget.state == null)
               ? (index == 0)

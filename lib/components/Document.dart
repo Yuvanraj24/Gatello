@@ -46,7 +46,8 @@ class _DocumentDownloaderState extends State<DocumentDownloader> {
               icon: Icon(Icons.download),
               onPressed: () async {
                 print('ffffffffffff');
-                await downloadFile(widget.url, widget.url.split("?").first.split("%2F").last, Theme.of(context).platform);
+                await downloadFile(widget.url, widget.url.split("?").first.split("%2F").last,
+                    Theme.of(context).platform);
               },
             ),
           )

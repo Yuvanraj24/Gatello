@@ -78,7 +78,7 @@ child: CarouselSlider.builder(itemCount:  widget.valueNotifier.value.item2.resul
         child: Stack(
           children: [
             Container(
-              color: Color(materialBlack),
+              color: Colors.black,
             ),
             Center(
                 child: Icon(

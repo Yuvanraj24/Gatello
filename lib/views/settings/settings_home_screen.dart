@@ -21,6 +21,7 @@ import '../../core/Models/Default.dart';
 import '../../core/models/exception/pops_exception.dart';
 import '../../handler/Network.dart';
 import '../login_screen.dart';
+import '../tabbar/chats/personal_chat_screen/test_chat/test_chat.dart';
 import '../tabbar/pops/circle_indicator.dart';
 import '/core/models/profile_detail.dart'as userDetailsModel;
 class Setting extends StatefulWidget {
@@ -405,14 +406,19 @@ class _SettingState extends State<Setting> {
                               color: Color.fromRGBO(0, 0, 0, 1))
                         ],
                       ),
-                        title: Text(
-                          'Dark mode',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color.fromRGBO(0, 0, 0, 1)
-                              )),
+                        title: GestureDetector(
+                          // onTap: (){
+                          //   Navigator.push(context, MaterialPageRoute(builder: (context)=>DarkMode()));
+                          // },
+                          child: Text(
+                            'Dark mode',
+                            style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color.fromRGBO(0, 0, 0, 1)
+                                )),
+                          ),
                         ),
 
                       ),

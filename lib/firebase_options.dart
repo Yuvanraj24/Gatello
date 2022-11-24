@@ -44,40 +44,42 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC2shipWrrs3moxXzkiyZ2oUD1bs_S6XKc',
-    appId: '1:1073199558423:web:a9a596e1a24f8eb6f0d152',
-    messagingSenderId: '1073199558423',
-    projectId: 'gatello-274cd',
-    authDomain: 'gatello-274cd.firebaseapp.com',
-    storageBucket: 'gatello-274cd.appspot.com',
-    measurementId: 'G-JBMXQE9RQB',
+    apiKey: 'AIzaSyCZRRCJ_m0yfwVo-DEeZ17Beyp5M8XlE_w',
+    appId: '1:391313841103:web:2c8904191f1515123a10ba',
+    messagingSenderId: '391313841103',
+    projectId: 'gatello-5d386',
+    authDomain: 'gatello-5d386.firebaseapp.com',
+    storageBucket: 'gatello-5d386.appspot.com',
+    measurementId: 'G-3DSK9G2QEX',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDsm8_yZL6GE4BOPUAMYrgorjxCh4-TF5E',
-    appId: '1:1073199558423:android:e705a17bc502d90cf0d152',
-    messagingSenderId: '1073199558423',
-    projectId: 'gatello-274cd',
-    storageBucket: 'gatello-274cd.appspot.com',
+    apiKey: 'AIzaSyAomWdGgiatrauXZHk3PIrbF4hCBpWYHnk',
+    appId: '1:391313841103:android:8952842cd858b8323a10ba',
+    messagingSenderId: '391313841103',
+    projectId: 'gatello-5d386',
+    storageBucket: 'gatello-5d386.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDTBVasv4oGps3J8KZtZc2rpsSBVqYMflg',
-    appId: '1:1073199558423:ios:73cad14d35aa597af0d152',
-    messagingSenderId: '1073199558423',
-    projectId: 'gatello-274cd',
-    storageBucket: 'gatello-274cd.appspot.com',
-    iosClientId: '1073199558423-pneet7hm8528s01dgkev83fq2r4ksm4a.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDY3l_CXjVOKsbsBjbsRFo_zBz0dBAAN0g',
+    appId: '1:391313841103:ios:c0d4c10a3baead6d3a10ba',
+    messagingSenderId: '391313841103',
+    projectId: 'gatello-5d386',
+    storageBucket: 'gatello-5d386.appspot.com',
+    androidClientId: '391313841103-5vemnjp6th85chp0j8o39ombfk43j5k1.apps.googleusercontent.com',
+    iosClientId: '391313841103-24mjjvg8oi7nev6vhun51lbcq66sfb6j.apps.googleusercontent.com',
     iosBundleId: 'com.gatello.user',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDTBVasv4oGps3J8KZtZc2rpsSBVqYMflg',
-    appId: '1:1073199558423:ios:73cad14d35aa597af0d152',
-    messagingSenderId: '1073199558423',
-    projectId: 'gatello-274cd',
-    storageBucket: 'gatello-274cd.appspot.com',
-    iosClientId: '1073199558423-pneet7hm8528s01dgkev83fq2r4ksm4a.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDY3l_CXjVOKsbsBjbsRFo_zBz0dBAAN0g',
+    appId: '1:391313841103:ios:c0d4c10a3baead6d3a10ba',
+    messagingSenderId: '391313841103',
+    projectId: 'gatello-5d386',
+    storageBucket: 'gatello-5d386.appspot.com',
+    androidClientId: '391313841103-5vemnjp6th85chp0j8o39ombfk43j5k1.apps.googleusercontent.com',
+    iosClientId: '391313841103-24mjjvg8oi7nev6vhun51lbcq66sfb6j.apps.googleusercontent.com',
     iosBundleId: 'com.gatello.user',
   );
 }

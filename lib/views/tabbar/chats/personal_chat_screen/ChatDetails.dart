@@ -20,6 +20,7 @@ import '../../../../Authentication/Authentication.dart';
 import '../../../../Firebase.dart';
 import '../../../../Firebase/Writes.dart';
 import '../../../../Helpers/DateTimeHelper.dart';
+import '../../../../Helpers/GetContactHelper.dart';
 import '../../../../Others/components/LottieComposition.dart';
 import '../../../../Others/lottie_strings.dart';
 import '../../../../Style/Colors.dart';
@@ -31,6 +32,7 @@ import '../../../../components/SnackBar.dart';
 import '../../../../components/flatButton.dart';
 
 import '../../../../main.dart';
+import '../../tabbar_view.dart';
 import 'ChatDetailsUpdate.dart';
 class ChatDetails extends StatefulWidget {
   ///* peeruid for personal chat and gid for group chat
@@ -178,7 +180,23 @@ class _ChatDetailsState extends State<ChatDetails> {
         break;
     }
   }
+  var peerName;
+  @override
+  void initState() {
+    instance.collection("user-detail").doc(widget.puid).get().then((doc) {
+      var fPhone = doc.data()!['phone'];
+      print("fPhone ${fPhone}");
+      getContactName(fPhone).then((value) {print("peer b4 print");
+      peerName = value.toString();
+      print("peer after print");
+      }).then((value) {
+        print("value is : ${peerName}");
+      });
+    });
 
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -317,7 +335,7 @@ class _ChatDetailsState extends State<ChatDetails> {
                           SizedBox(height:11.h),
                           Row(mainAxisAlignment:MainAxisAlignment.center,
                             children: [
-                              Text((widget.state == 0) ? chatDetailSnapshot.data!.data()!["name"] : chatDetailSnapshot.data!.data()!["title"],
+                              Text((widget.state == 0) ? peerName : chatDetailSnapshot.data!.data()!["title"],
                                   textAlign: TextAlign.center, style: GoogleFonts.inter(textStyle: textStyle(fontSize:20.sp,
                                       fontWeight:FontWeight.w700))),
                               SizedBox(width:4.w),
@@ -666,7 +684,7 @@ class _ChatDetailsState extends State<ChatDetails> {
               Container(
                 child: (pic != null)
                         ?   CachedNetworkImage(
-                      imageUrl: chatDetailSnapshot.data!.data()!["pic"],
+                      imageUrl: pic,
                       imageBuilder: (context, imageProvider) => Container(
                         width: 44.0.w,
                         height: 44.0.h,
@@ -677,7 +695,20 @@ class _ChatDetailsState extends State<ChatDetails> {
                         ),
                       ),
                       placeholder: (context, url) => CircularProgressIndicator(),
-                    ):
+                  errorWidget: (context, url, error) =>
+                      Container(
+                        width: 44.0.w,
+                        height: 44.0.h,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "assets/noProfile.jpg")
+                            )
+                        ),
+                      ),
+
+                ):
                     SvgPicture.asset((widget.state == 0) ? "assets/invite_friends/profilepicture.svg" : "assets/invite_friends/profilepicture.svg", fit: BoxFit.cover,
                       height:44.h,
                       width: 44.w,

@@ -28,22 +28,22 @@ class Acountsuccess extends StatefulWidget {
 class _AcountsuccessState extends State<Acountsuccess> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Center(
-            child: TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: GestureDetector(onTap:() {
-                Navigator.pop(context);
-              },
-                child: Text(
-                  'Back', style: GoogleFonts.roboto(
-                      textStyle: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: Colors.black)),
-                ),
-              ),
-            )),
+    return Scaffold(appBar: AppBar(
+        automaticallyImplyLeading: false,
+        // leading: Center(
+        //     child: TextButton(
+        //       onPressed: () {
+        //         Navigator.pop(context);
+        //       },
+        //       child: GestureDetector(onTap:() {
+        //         Navigator.pop(context);
+        //       },
+        //         child: Text(
+        //           'Back', style: GoogleFonts.roboto(
+        //               textStyle: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: Colors.black)),
+        //         ),
+        //       ),
+        //     )),
       ),
       body: Center(
         child: Column(crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,28 +63,31 @@ class _AcountsuccessState extends State<Acountsuccess> {
                   color: Colors.black)),
               ),
               Spacer(),
-              ElevatedButton(
+              Padding(
+                padding:  EdgeInsets.only(bottom: 35.h),
+                child: ElevatedButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AddProfilePic(mobileNo: widget.mobileNo ,username: widget.username,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: widget.uid),));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddProfilePic(mobileNo: widget.mobileNo ,username: widget.username,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: widget.uid),));
             },
             child: Text(
-              'Continue',
-              style: GoogleFonts.inter(
-                  textStyle: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black)),
+                'Continue',
+                style: GoogleFonts.inter(
+                    textStyle: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black)),
             ),
             style: ElevatedButton.styleFrom(
-                elevation: 5,
-                onPrimary: Colors.black,
-                //  padding: EdgeInsets.all(10),
-                minimumSize: Size(234.w, 48.h),
-                primary: Color.fromRGBO(248, 206, 97, 1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(35),
-                )),
+                  elevation: 5,
+                  onPrimary: Colors.black,
+                  //  padding: EdgeInsets.all(10),
+                  minimumSize: Size(234.w, 48.h),
+                  primary: Color.fromRGBO(248, 206, 97, 1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(35),
+                  )),
           ),
+              ),
         ]),
       ),
     );
