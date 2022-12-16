@@ -61,8 +61,6 @@ import 'views/tabbar/pings_chat/select_contact/select_contact.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 Future<void> main() async {
-  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await FlutterDownloader.initialize();
   tz.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,8 +75,6 @@ Future<void> main() async {
     [DeviceOrientation.portraitUp],
   );
   runApp(MyApp());
-
- // FlutterNativeSplash.remove();
 }
 const String ip = 'http://3.108.219.188:5000';
 const String signUpip = '$ip/signup';

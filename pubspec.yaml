@@ -113,6 +113,8 @@ dependencies:
   flutter_native_splash: ^2.2.15
   flutter_colorpicker: ^1.0.3
   page_transition: ^2.0.9
+  get_storage: ^2.0.3
+  story: ^0.8.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.9.3
@@ -310,6 +312,7 @@ flutter:
     - assets/gatello_asset/briefLogo.png
     - assets/settngs/QR.svg
     - assets/settngs/account_icon.svg
+    - assets/welcomeback.png
     - assets/select_contact/right_arrow.svg
     - assets/icons_assets/signup_camera.svg
     - assets/icons_assets/signup_gallery.svg
@@ -317,6 +320,9 @@ flutter:
     - assets/gatello.gif
     - assets/gatellologo1.gif
     - assets/audio/
+    - assets/Animation - 1669350283797-150x150 1.gif
+    - assets/profile_assets/default_cover.svg
+    - assets/status_assets/seen_icon.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

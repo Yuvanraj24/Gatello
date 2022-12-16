@@ -64,7 +64,8 @@ Map<int, String> dataTypeMap = {
   6: "✨ Gif", //just text
   7: "📍 Location", //just text
   8: "👤 Contact", //just text
-  9: "🎤 Voice"
+  9: "🎤 Voice",
+  10: "viewonce"
 };
 
 String getMessage(int index, Map data) {
@@ -89,6 +90,8 @@ String getMessage(int index, Map data) {
       return data['contact'];
     case 9:
       return data['voice'];
+    case 10:
+      return data['viewonce'];
     default:
       return "";
   }
@@ -116,6 +119,7 @@ Map replyMap({required String documentId, required int documentIndex, required S
       "location": (index == 7) ? dataString : null,
       "contact": (index == 8) ? dataString : null,
       "voice": (index == 9) ? dataString : null,
+      "viewonce": (index == 10) ? dataString : null,
     }
   };
 }
@@ -167,7 +171,7 @@ Map addGroupMembersMap({required List<Map<String, dynamic>> members}) {
   Map result = {};
   for (Map<String, dynamic> member in members) {
     result.addAll({
-      member["uid"]: {"isRemoved": false, "pic": member["pic"], "name": member["name"], "claim": "member", "lastRead": null, "unreadCount": 0}
+      member["uid"]: {"delete":false, "isRemoved": false, "pic": member["pic"], "name": member["name"], "claim": "member", "lastRead": null, "unreadCount": 0}
     });
   }
   return result;
@@ -191,11 +195,11 @@ Future<Uint8List?> downloadToBytes(String url) async {
 
 Map createGroupMembersMap({required String? adminPic, required String adminName, required String adminUid, required List<Map<String, dynamic>> members}) {
   Map result = {
-    adminUid: {"isRemoved": false, "pic": adminPic, "name": adminName, "claim": "admin", "lastRead": null, "unreadCount": 0}
+    adminUid: {"delete":false, "isRemoved": false, "pic": adminPic, "name": adminName, "claim": "admin", "lastRead": null, "unreadCount": 0}
   };
   for (Map<String, dynamic> member in members) {
     result.addAll({
-      member["uid"]: {"isRemoved": false, "pic": member["pic"], "name": member["name"], "claim": "member", "lastRead": null, "unreadCount": 0}
+      member["uid"]: {"delete":false, "isRemoved": false, "pic": member["pic"], "name": member["name"], "claim": "member", "lastRead": null, "unreadCount": 0}
     });
   }
   print(result);
@@ -224,6 +228,7 @@ Map dataMap({required int index, required String data}) {
     "location": (index == 7) ? data : null,
     "contact": (index == 8) ? data : null,
     "voice": (index == 9) ? data : null,
+    "viewonce": (index == 10) ? data : null,
   };
 }
 

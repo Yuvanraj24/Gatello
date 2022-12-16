@@ -13,6 +13,7 @@ class _BlockCustomDialogState extends State<BlockCustomDialog> {
   List<bool> _isChecked = [false, false, false];
 
   bool isChecked = false;
+
   showConfirmationDialog3(BuildContext context) {
     showDialog(
       // barrierDismissible: false,

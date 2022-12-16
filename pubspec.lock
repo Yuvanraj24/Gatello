@@ -674,6 +674,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.6.5"
+  get_storage:
+    dependency: "direct main"
+    description:
+      name: get_storage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.3"
   giphy_picker:
     dependency: "direct main"
     description:
@@ -1232,6 +1239,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  story:
+    dependency: "direct main"
+    description:
+      name: story
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.0"
   story_view:
     dependency: "direct main"
     description:

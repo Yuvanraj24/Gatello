@@ -23,7 +23,7 @@ class _All_popsState extends State<All_pops> {
     return await ApiHandler().apiHandler(
       valueNotifier: profileDetailsValueNotifier,
       jsonModel: profileDetailsModel.profileDetailsFromJson,
-      url: profileDetailsUrl,
+        url: 'http://3.110.105.86:4000/view/profile',
       requestMethod: 1,
    //   body: {"user_id": (widget.userId != null) ? widget.userId : getUID(), "followee_id": ""},
       body: { "user_id":"s8b6XInslPffQEgz8sVTINsPhcx2","followee_id" : "ftP6vQPaE0eEWrgVzzu48kplEFR2"}

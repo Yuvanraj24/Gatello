@@ -71,6 +71,7 @@ import 'block_dialog.dart';
 import 'clear_dialog.dart';
 import 'mute_notification.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+
 class ChatPage extends StatefulWidget {
   final String uid;
   ///* peeruid for personal chat and gid for group chat
@@ -83,6 +84,7 @@ class ChatPage extends StatefulWidget {
   @override
   ChatPageState createState() => ChatPageState();
 }
+
 class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   final ImagePicker _picker = ImagePicker();
   static var httpClient = new HttpClient();
@@ -120,11 +122,9 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   bool _isFinish = false;
   bool isChecked =false;
   List<DocumentSnapshot<Map<String, dynamic>>> chatList = [];
-  StreamController<List<DocumentSnapshot<
-      Map<String, dynamic>>>> _streamController = StreamController<
+  StreamController<List<DocumentSnapshot< Map<String, dynamic>>>> _streamController = StreamController<
       List<DocumentSnapshot<Map<String, dynamic>>>>();
-  StreamController<DocumentSnapshot<
-      Map<String, dynamic>>> _chatRoomStreamController = StreamController<
+  StreamController<DocumentSnapshot< Map<String, dynamic>>> _chatRoomStreamController = StreamController<
       DocumentSnapshot<Map<String, dynamic>>>();
   TextEditingController textEditingController = TextEditingController();
   TextEditingController searchTextEditingController = TextEditingController();
@@ -136,37 +136,127 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   int lastUnreadCount = 0;
   String? lastReadTimestamp;
   var lifecycleEventHandler;
-
-  // List<String> groupMemberIds = [];
   Map? replyMessageMap;
   String? replyUserName;
   String tempPuid = "";
   late final AudioCache _audioCache;
   List recentEmojiList = [];
-  List search = [];
+  List<DocumentSnapshot<Map<String, dynamic>>> searchMessages = [];
 
-  // for(){
-  //   i=0;i<
-  // }
+  List peerDeletedList=[];
+  List getPeerDeleteList = [];
+
+
+
+
+  getPDList()async{
+    messages.forEach((key, value) async {
+      await instance.collection("group-chat").doc(widget.puid).collection("messages").doc(value.data()!["timestamp"]).get().then(
+              (docs) {
+
+            print("This is Group-Chat doc : ${docs}");
+
+            print('This is msg timestamp check for group ${instance.collection("group-chat")
+                .doc(widget.puid)
+                .collection("messages")
+                .doc(value.data()!["timestamp"])}');
+
+            var gm = docs.data()!["data"]["text"];
+            var gmL = docs.data()!['peerdeletedlist'].length;
+            var gDL = docs.data()!['peerdeletedlist'];
+            print("get peer delete list : ${gDL}");
+            print("get text msg in group...! ${gm}");
+            print("get peerDeleteList Length in the Group : ${gmL}");
+            // var fal = doc.data()!['blockList'].length;
+            // var fList = doc.data()!['blockList'];
+            // print("The user block Deatails... ${fList}");
+            //  print("BlockList in FireStore length ${fal}");
+            for(int i=0; i < gmL; i++){
+              print("Loop is Called");
+              getPeerDeleteList.add(docs.data()!['peerdeletedlist'][i]);
+              print("get peerDelete List : ${getPeerDeleteList[i]}");
+            }
+            print("Total get final PDL : ${getPeerDeleteList}");
+
+          });
+
+    });
+
+
+
+  }
+
+  peerDLAdd(){
+    print("Length of PD List : ${peerDeletedList.length}");
+    print("PD List that print ${peerDeletedList}");
+    peerDeletedList.add(widget.uid);
+    print("PD List Before set : ${peerDeletedList}");
+    var listToSet = peerDeletedList.toSet();
+    print("Set after list to set : ${listToSet}");
+    peerDeletedList = listToSet.toList();
+    print("PD List after set: ${peerDeletedList}");
+  }
+  peerDeleteList()async{
+    print("Firebase Peer Delete List Function called is worked..!");
+    print("GID : ${widget.puid}");
+    messages.forEach((key, value) async {
+      await instance.collection("group-chat").doc(widget.puid).collection("messages").doc(value.data()!["timestamp"]).get().then(
+              (docs) {
+
+            print("This is Group-Chat doc : ${docs}");
+
+            print('This is msg timestamp check for group ${instance
+                .collection("group-chat")
+                .doc(widget.puid)
+                .collection("messages")
+                .doc(value.data()!["timestamp"])}');
+
+            var gm = docs.data()!["data"]["text"];
+            var gmL = docs.data()!['peerdeletedlist'].length;
+            var gDL = docs.data()!['peerdeletedlist'];
+            print("peer delete list : ${gDL}");
+            print("text msg in group...! ${gm}");
+            print("peerDeleteList Length in the Group : ${gmL}");
+            // var fal = doc.data()!['blockList'].length;
+            // var fList = doc.data()!['blockList'];
+            // print("The user block Deatails... ${fList}");
+            //  print("BlockList in FireStore length ${fal}");
+            for(int i=0; i < gmL; i++){
+              print("Loop is Called");
+              peerDeletedList.add(docs.data()!['peerdeletedlist'][i]);
+              print("peerDelete List : ${peerDeletedList[i]}");
+            }
+            print("Total final PDL : ${peerDeletedList}");
+
+          }
+      ).whenComplete((){
+        peerDLAdd();
+        print("When complete for peerDelete...! function is called...!");
+      }).then(
+              (val) async {
+            print("came to then after peerDL function->>>!");
+            await instance.collection("group-chat").doc(widget.puid).collection("messages").doc(value.data()!["timestamp"]).update({
+              "peerdeletedlist" :peerDeletedList
+            });
+
+          });
+    });
+  }
 
   List blockList = [];
   List blockedByList = [];
-//  List Finalindex = snapshot.data!;
+  List groupTyingList = [];
 
   block(){
     print("Length of Block List : ${blockList.length}");
     print("Block List that print ${blockList}");
     blockList.add(widget.puid);
+    print("Block List Before set : ${blockList}");
+    var listToSet = blockList.toSet();
+    print("Set after list to set : ${listToSet}");
+    blockList = listToSet.toList();
+    print("Block List after set: ${blockList}");
 
-    // for(int i=0; i<=blockList.length; i++){
-    //   if(blockList[i] == widget.puid){
-    //     print("if is printed");
-    //     print("remomed from List : ${blockList.remove(i)}");
-    //     blockList.remove(i);
-    //   }else{
-    //     print("Else is printed...!");
-    //   }
-    // }
 
   }
   blockedBy(){
@@ -174,119 +264,137 @@ class ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     print("Blocked By List that print ${blockedByList}");
     blockedByList.add(widget.uid);
     print("After Add Blocked By Lisy : ${blockedByList}");
+    var listToSet = blockedByList.toSet();
+    blockedByList = listToSet.toList();
+    print("After set to list change :${blockedByList}");
+  }
+  unBlockedBy(){
+    var listToSet = blockedByList.toSet();
+    blockedByList = listToSet.toList();
+    print("After set to list change :${blockedByList}");
+    print("Length of UnBlocked By List : ${blockedByList.length}");
+    print("UnBlocked By List that print ${blockedByList}");
+    blockedByList.remove(widget.uid);
+    print("After Add UnBlocked By Lisy : ${blockedByList}");
+
   }
   unBlock(){
     blockList.remove(widget.puid);
+    print("Removed id from blocked : ${blockList.remove(widget.puid)}");
+    var listToSet = blockList.toSet();
+    blockList = listToSet.toList();
+    print("BlockList After Unblock : ${blockList}");
   }
 
-  Future<FilePickerResult?> imageNvideo() async =>
-      await FilePicker.platform.pickFiles(
 
+  grpTypingList(){
+    print("Length of typing  List : ${groupTyingList.length}");
+    print("Blocked By List that print ${groupTyingList}");
+    groupTyingList.add(widget.uid);
+    print("After Add Blocked By Lisy : ${groupTyingList}");
+    var listToSet = groupTyingList.toSet();
+    groupTyingList = listToSet.toList();
+    print("After set to list change :${groupTyingList}");
+  }
+  grpTypingListRemove(){
+    var listToSet = groupTyingList.toSet();
+    groupTyingList = listToSet.toList();
+    print("After set to list change :${groupTyingList}");
+    print("Length of typing remove By List : ${groupTyingList.length}");
+    print("Blocked By List that print ${groupTyingList}");
+    groupTyingList.remove(widget.uid);
+    print("After remove typing list...  : ${groupTyingList}");
+
+  }
+
+  Future<FilePickerResult?> imageNvideo() async => await FilePicker.platform.pickFiles(
           withData: true,
           allowMultiple: true,
           type: FileType.custom,
           allowedExtensions: ['jpg', 'jpeg','mp4', 'mpeg4']
-
-        // withData: true,
-        // allowedExtensions: ['jpg'],
       );
 
-
-
-
-  // ValueNotifier<int> totalChatCount = ValueNotifier<int>(0);
   Future<Uint8List> loadMarkerImage() async {
     var byteData = await rootBundle.load("assets/images/placeholder.png");
     return byteData.buffer.asUint8List();
   }
-
-//   Future<void> onMapCreated(MapboxMapController controller) async {
-//   print("Map Created");
-//
-//   var markerImage = await loadMarkerImage();
-//
-//   controller.addImage('marker', markerImage);
-//
-//   await controller.addSymbol(
-//   const SymbolOptions(
-//   iconSize: 0.2,
-//   iconImage: "marker",
-//   geometry: LatLng(13.107280,80.131210),
-//   iconAnchor: "bottom",
-//   ),
-//   );
-// }
 
   Future<void> _getUID() async {
     SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     uid = sharedPrefs.getString("userid");
   }
 
+  fireBaseUnBlockList()async{
+    print("Firebase UnBlock-List Function called is worked..!");
+    //blockList =  instance.collection("user-detail").doc(uid).get();
+    await instance.collection("user-detail").doc(uid).get().then(
+            (doc) {
+          var fal = doc.data()!['blockList'].length;
+          var fList = doc.data()!['blockList'];
+          print("The user block Deatails... ${fList}");
+          print("UnBlockList in FireStore length ${fal}");
+          for(int i=0; i<fal; i++){
+            print("Loop is Called");
+            blockList.add(doc.data()!['blockList'][i]);
+            print(" Local UnBlock List : ${blockList[i]}");
+          }
+          print("Total final UBL : ${blockList}");
 
-fireBaseBlockList()async{
-  await instance.collection("user-detail").doc(uid).get().then(
-          (doc) {
-        var fal = doc.data()!['blockList'].length;
-        print("BlockList in FireStore ${fal}");
-        for(int i=fal; i<=fal; i++){
-          instance.collection("user-detail").doc(uid).update({
-
-            "blockList"[i]: widget.puid
+        }
+    ).whenComplete((){
+      unBlock();
+      print("When complete for unblock function is called...!");
+    }).then(
+            (val) async {
+          await instance.collection("user-detail").doc(uid).update({
+            "blockList" :blockList
           });
 
-          instance.collection("user-detail").doc(uid).get().then(
-                  (doc) {
-                print("BlockList : : : ${doc.data()!['blockList']}");
+          fireBaseUnBlockedByList();
+
+        });
+  }
 
 
-              }
-          );
-
-        }
-
-      }
-  );
-}
-
-
-fireBaseBlockList1()async{
-
-  //blockList =  instance.collection("user-detail").doc(uid).get();
-  await instance.collection("user-detail").doc(uid).get().then(
-          (doc) {
-        var fal = doc.data()!['blockList'].length;
-        var fList = doc.data()!['blockList'];
-        print("The user block Deatails... ${fList}");
-        print("BlockList in FireStore ${fal}");
-        for(int i=0; i<=fal; i++){
-          print("Loop is Called");
-          blockList.add(doc.data()!['blockList'][i]);
-          print(" Local Block List : ${blockList[i]}");
-        }
-        print("Total final BL : ${blockList}");
-
-      }
-  ).whenComplete((){
-    block();
-  }).then(
-          (val) async {
-    await instance.collection("user-detail").doc(uid).update({
-      "blockList" :blockList
-    });
-  });
-
-
-}
-
-  fireBaseBlockedByList()async{
+  fireBaseBlockList1()async{
+    print("Firebase Block-List Function called is worked..!");
 
     //blockList =  instance.collection("user-detail").doc(uid).get();
+    await instance.collection("user-detail").doc(uid).get().then(
+            (doc) {
+          var fal = doc.data()!['blockList'].length;
+          var fList = doc.data()!['blockList'];
+          print("The user block Deatails... ${fList}");
+          print("BlockList in FireStore length ${fal}");
+          for(int i=0; i<fal; i++){
+            print("Loop is Called");
+            blockList.add(doc.data()!['blockList'][i]);
+            print(" Local Block List : ${blockList[i]}");
+          }
+          print("Total final BL : ${blockList}");
+
+        }
+    ).whenComplete((){
+      block();
+      print("When complete for block function is called...!");
+    }).then(
+            (val) async {
+          await instance.collection("user-detail").doc(uid).update({
+            "blockList" :blockList
+          });
+
+          fireBaseBlockedByList();
+
+        });
+  }
+
+  fireBaseBlockedByList()async{
     print("fireBaseBlockedByList is start Called...!");
     print("PUID : ${widget.puid}");
     await instance.collection("user-detail").doc(widget.puid).get().then(
             (doc) {
-              print("hello Bro>>>");
-              print(doc.data()!['name']);
+          print("hello Bro>>>");
+          print(doc.data()!['name']);
           var fal = doc.data()!['blockedByList'].length;
           var fList = doc.data()!['blockedByList'];
           print("The user block by Deatails... ${fList}");
@@ -310,6 +418,103 @@ fireBaseBlockList1()async{
 
 
   }
+
+
+
+  groupTypingList()async{
+    print("groupTyping list is start Called...!");
+    print("PUID : ${widget.puid}");
+    await instance.collection("group-detail").doc(widget.puid).get().then(
+            (doc) {
+          print("grp Bro>>>");
+          print(doc.data()!['title']);
+          var fal = doc.data()!['typinglist'].length;
+          var fList = doc.data()!['typinglist'];
+          print("The group typing list Deatails... ${fList}");
+          print("group typing List in FireStore ${fal}");
+          groupTyingList.clear();
+          for(int i=0; i<fal; i++){
+            print("Loop is Called in grp typing");
+            groupTyingList.add(doc.data()!['typinglist'][i]);
+            print(" Local grp typing List : ${groupTyingList[i]}");
+          }
+          print("Total final grp type list : ${groupTyingList}");
+
+        }
+    ).whenComplete((){
+      grpTypingList();
+    }).then(
+            (val) async {
+          await instance.collection("group-detail").doc(widget.puid).update({
+            "typinglist" : groupTyingList
+          });
+        });
+
+
+  }
+  groupTypingListRemove()async{
+    print("groupTyping remove list is start Called...!");
+    print("PUID : ${widget.puid}");
+    await instance.collection("group-detail").doc(widget.puid).get().then(
+            (doc) {
+          print("grp Bro>>>");
+          print(doc.data()!['title']);
+          var fal = doc.data()!['typinglist'].length;
+          var fList = doc.data()!['typinglist'];
+          print("The group typing list Deatails... ${fList}");
+          print("group typing List in FireStore ${fal}");
+          groupTyingList.clear();
+          for(int i=0; i<fal; i++){
+            print("Loop is Called in grp typing...");
+            groupTyingList.add(doc.data()!['typinglist'][i]);
+            print(" Local grp typing List : ${groupTyingList[i]}");
+          }
+          print("Total final grp type list : ${groupTyingList}");
+
+        }
+    ).whenComplete((){
+      grpTypingListRemove();
+    }).then(
+            (val) async {
+          await instance.collection("group-detail").doc(widget.puid).update({
+            "typinglist" : groupTyingList
+          });
+        });
+
+
+  }
+  fireBaseUnBlockedByList()async{
+    print("fireBaseBlockedByList is start Called...!");
+    print("PUID : ${widget.puid}");
+    await instance.collection("user-detail").doc(widget.puid).get().then(
+            (doc) {
+          print("hello Bro>>>");
+          print(doc.data()!['name']);
+          var fal = doc.data()!['blockedByList'].length;
+          var fList = doc.data()!['blockedByList'];
+          print("The user block by Deatails... ${fList}");
+          print("Blocked By List in FireStore ${fal}");
+          for(int i=0; i<fal; i++){
+            print("Loop is Called");
+            blockedByList.add(doc.data()!['blockedByList'][i]);
+            print(" Local Blocked By List : ${blockedByList[i]}");
+          }
+          print("Total final BL By : ${blockedByList}");
+
+        }
+    ).whenComplete((){
+      unBlockedBy();
+    }).then(
+            (val) async {
+          await instance.collection("user-detail").doc(widget.puid).update({
+            "blockedByList" : blockedByList
+          });
+        });
+
+
+  }
+
+
   clearChat() async {
     String roomid = roomId(uid: widget.uid, puid: widget.puid);
     print('Room IDs${roomid}');
@@ -336,7 +541,6 @@ fireBaseBlockList1()async{
 
   showConfirmationDialog(BuildContext context) {
     showDialog(
-      // barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return CustomDialog();
@@ -344,8 +548,7 @@ fireBaseBlockList1()async{
     );
   }
 
-  Future<FilePickerResult?> audio() async =>
-      await FilePicker.platform.pickFiles(
+  Future<FilePickerResult?> audio() async => await FilePicker.platform.pickFiles(
         withData: true,
         allowMultiple: true,
         type: FileType.custom,
@@ -361,6 +564,7 @@ fireBaseBlockList1()async{
       },
     );
   }
+
   showConfirmationDialog2(BuildContext context) {
     showDialog(
       // barrierDismissible: false,
@@ -370,6 +574,7 @@ fireBaseBlockList1()async{
       },
     );
   }
+
   showConfirmationDialog3(BuildContext context) {
     showDialog(
       // barrierDismissible: false,
@@ -379,7 +584,7 @@ fireBaseBlockList1()async{
       },
     );
   }
-  // Future<DocumentSnapshot<Map<String, dynamic>>>? emptyFuture;
+
   Future<FilePickerResult?> files() async =>
       await FilePicker.platform.pickFiles(
         type :FileType.any,
@@ -396,8 +601,6 @@ fireBaseBlockList1()async{
         type: FileType.custom,
         allowedExtensions: ['jpg', 'jpeg'],
 
-        // withData: true,
-        // allowedExtensions: ['jpg'],
       );
 
   Future<FilePickerResult?> video() async =>
@@ -409,16 +612,6 @@ fireBaseBlockList1()async{
         allowedExtensions: ['mp4', 'mpeg4'],
       );
 
-  // Future<FilePickerResult?> audio() async =>
-  //     await FilePicker.platform.pickFiles(
-  //       withData: true,
-  //       allowMultiple: true,
-  //       // withData: true,
-  //       type: FileType.custom,
-  //       allowedExtensions: ['mp3'],
-  //     );
-
-  //*<- user chat stuff starts here ->*//
   userChatRoomDocExists() {
     String roomid = roomId(uid: widget.uid, puid: widget.puid);
     instance.collection("personal-chat-room-detail").doc(roomid)
@@ -492,8 +685,6 @@ fireBaseBlockList1()async{
     }
   }
 
-  //!better to find a way to paginate in stream. this optimized the last read of messages and can update a particular message feature
-
   Future readUserMessages() async {
     String roomid = roomId(uid: widget.uid, puid: widget.puid);
     if (!_isRequesting && !_isFinish) {
@@ -530,103 +721,117 @@ fireBaseBlockList1()async{
   }
 
   getUserLastMessage() {
+    print("get user lastMsg function is called..!");
 
     String roomid = roomId(uid: widget.uid, puid: widget.puid);
-    getLastMessageSub =
-        instance.collection("personal-chat").doc(roomid).collection("messages")
-            .orderBy("timestamp", descending: true).limit(1).snapshots()
-            .listen((event) async {
-          if (event.docs.isNotEmpty) {
+    getLastMessageSub = instance.collection("personal-chat").doc(roomid).collection("messages")
+        .orderBy("timestamp", descending: true).limit(instance.collection("personal-chat").doc(roomid).collection("messages").toString().length).snapshots()
+        .listen((event) async {
+      if (event.docs.isNotEmpty) {
+        if (chatList.isEmpty || chatList.first.id != event.docs.first.id) {
+          print(
+              "msg id check : ${event.docs.first.data()!["data"]["text"]}");
 
-            if (chatList.isEmpty || chatList.first.id != event.docs.first.id) {
-              chatList.insert(0, event.docs.first);
-              if (chatList.length >= 1 && personalChatRoomDocExists == false) {
-                personalChatRoomDocExists = true;
-              }
-              // _streamController.add(chatList);
-
-              if (!_streamController.isClosed) {
-                _streamController.add(chatList);
-              }
-              DocumentSnapshot<
-                  Map<String, dynamic>> userDetailsDoc = await instance
-                  .collection("user-detail").doc(widget.uid).get();
-              DocumentSnapshot<
-                  Map<String, dynamic>> peerDetailsDoc = await instance
-                  .collection("user-detail").doc(widget.puid).get();
-              DocumentSnapshot<
-                  Map<String, dynamic>> personalRoomDoc = await instance
-                  .collection("personal-chat-room-detail").doc(roomid).get();
-              // listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-              String timestamp = DateTime
-                  .now()
-                  .millisecondsSinceEpoch
-                  .toString();
-              print(DateTime.now().compareTo(getDateTimeSinceEpoch(
-                  datetime: event.docs.first.data()["timestamp"])));
-              if ((DateTime.now().compareTo(getDateTimeSinceEpoch(
-                  datetime: event.docs.first.data()["timestamp"])) == 1) &&
-                  ((userDetailsDoc.data()!["readRecieptStatus"] == true &&
-                      peerDetailsDoc.data()!["readRecieptStatus"] == true)
-                      ? getDateTimeSinceEpoch(
-                      datetime: event.docs.first.data()["timestamp"]).compareTo(
-                      getDateTimeSinceEpoch(datetime: lastReadTimestamp!)) >= 0
-                      : personalRoomDoc.data()!["members"][widget
-                      .uid]["unreadCount"] != 0)) {
-                print("AudTest:${event.docs.first.data()["from"]} == ${widget.uid}");
-                if (event.docs.first.data()["from"] == widget.uid) {
-                  print("Playing S sound");
-                  await _audioCache.play('sendTone.mp3');
-                } else {
-                  print("Playing R sound");
-                  await _audioCache.play('recieve_Tone.mpeg');
-                }
-              }
-              if (personalRoomDoc.data()!["members"][widget
-                  .uid]["unreadCount"] != 0) {
-                WriteBatch writeBatch = instance.batch();
-                if (event.docs[0].data()["from"] == widget.puid &&
-                    userDetailsDoc.data()!["readRecieptStatus"] == true &&
-                    peerDetailsDoc.data()!["readRecieptStatus"] == true) {
-                  writeBatch.update(
-                      instance.collection("personal-chat").doc(roomid)
-                          .collection("messages")
-                          .doc(event.docs[0].id), {
-                    "read": {"uid": "${widget.uid}", "timestamp": timestamp},
-                  });
-                }
-                if (userDetailsDoc.data()!["readRecieptStatus"] == true &&
-                    peerDetailsDoc.data()!["readRecieptStatus"] == true) {
-                  writeBatch
-                      .update(
-                      instance.collection("personal-chat-room-detail").doc(
-                          roomid), {
-                    "members.${widget.uid}.lastRead": timestamp,
-                    "members.${widget.uid}.unreadCount": 0
-                  });
-                } else {
-
-                  print("calling else");
-                  writeBatch.update(
-                      instance.collection("personal-chat-room-detail").doc(
-                          roomid), {"members.${widget.uid}.unreadCount": 0});
-                }
-                writeBatch.commit();
-              }
+          print("The length of the docs : ${event.docs.length}");
+          print("The length of the docs new : ${instance.collection("personal-chat").doc(roomid).collection("messages").toString().length}");
+          for (int i = 0; i < event.docs.length; i++){
+            if (event.docs[i].data()!["delete"]["personal"] == false && event.docs[i].data()!["delete"]["peerdelete"] == false)
+            {
+              chatList.insert(0, event.docs[i]);
+              print("chat list i : ${chatList[0]}");
+              print("text of chat list i : ${chatList[0].data()!["data"]["text"]}");
+              break;
+            }
+            else {
+              print("MSG of delete data is true.... ${event.docs[i]
+                  .data()!["delete"]["personal"]}.......${event.docs[i]
+                  .data()!["delete"]["peerdelete"]}");
             }
           }
-        });
+          print("B4 insert ${chatList}");
+          print("After insert ${chatList}");
+
+          print("The msg...! : ${chatList[0].data()!["data"]["text"]}");
+
+          if (chatList.length >= 1 && personalChatRoomDocExists == false) {
+            personalChatRoomDocExists = true;
+          }
+          // _streamController.add(chatList);
+
+          if (!_streamController.isClosed) {
+            _streamController.add(chatList);
+          }
+          DocumentSnapshot<
+              Map<String, dynamic>> userDetailsDoc = await instance
+              .collection("user-detail").doc(widget.uid).get();
+          DocumentSnapshot<
+              Map<String, dynamic>> peerDetailsDoc = await instance
+              .collection("user-detail").doc(widget.puid).get();
+          DocumentSnapshot<
+              Map<String, dynamic>> personalRoomDoc = await instance
+              .collection("personal-chat-room-detail").doc(roomid).get();
+          // listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+          String timestamp = DateTime
+              .now()
+              .millisecondsSinceEpoch
+              .toString();
+          print(DateTime.now().compareTo(getDateTimeSinceEpoch(
+              datetime: event.docs.first.data()["timestamp"])));
+          if ((DateTime.now().compareTo(getDateTimeSinceEpoch(
+              datetime: event.docs.first.data()["timestamp"])) == 1) &&
+              ((userDetailsDoc.data()!["readRecieptStatus"] == true &&
+                  peerDetailsDoc.data()!["readRecieptStatus"] == true)
+                  ? getDateTimeSinceEpoch(
+                  datetime: event.docs.first.data()["timestamp"]).compareTo(
+                  getDateTimeSinceEpoch(datetime: lastReadTimestamp!)) >= 0
+                  : personalRoomDoc.data()!["members"][widget
+                  .uid]["unreadCount"] != 0)) {
+            print("AudTest:${event.docs.first.data()["from"]} == ${widget.uid}");
+            if (event.docs.first.data()["from"] == widget.uid) {
+              print("Playing S sound");
+              await _audioCache.play('sendTone.mp3');
+            } else {
+              print("Playing R sound");
+              await _audioCache.play('recieve_Tone.mpeg');
+            }
+          }
+          if (personalRoomDoc.data()!["members"][widget
+              .uid]["unreadCount"] != 0) {
+            WriteBatch writeBatch = instance.batch();
+            if (event.docs[0].data()["from"] == widget.puid &&
+                userDetailsDoc.data()!["readRecieptStatus"] == true &&
+                peerDetailsDoc.data()!["readRecieptStatus"] == true) {
+              writeBatch.update(
+                  instance.collection("personal-chat").doc(roomid)
+                      .collection("messages")
+                      .doc(event.docs[0].id), {
+                "read": {"uid": "${widget.uid}", "timestamp": timestamp},
+              });
+            }
+            if (userDetailsDoc.data()!["readRecieptStatus"] == true &&
+                peerDetailsDoc.data()!["readRecieptStatus"] == true) {
+              writeBatch
+                  .update(
+                  instance.collection("personal-chat-room-detail").doc(
+                      roomid), {
+                "members.${widget.uid}.lastRead": timestamp,
+                "members.${widget.uid}.unreadCount": 0
+              });
+            } else {
+
+              print("calling else");
+              writeBatch.update(
+                  instance.collection("personal-chat-room-detail").doc(
+                      roomid), {"members.${widget.uid}.unreadCount": 0});
+            }
+            writeBatch.commit();
+          }
+        }
+      }
+    });
+    print("get last msg printed :- ${getLastMessageSub}");
   }
-  // getBubbleCount(){
-  //   String roomid = roomId(uid: widget.uid, puid: widget.puid);
-  //
-  //   Future<QuerySnapshot<Map<String, dynamic>>> bubbleCount =
-  //   instance.collection("personal-chat").doc(roomid).collection(
-  //       "messages").where(
-  //       "delete" ).where("peerdelete",isEqualTo:false).get();
-  //
-  //
-  // }
+
   Future writeUserMessage({
     required int type,
     String? message,
@@ -654,7 +859,7 @@ fireBaseBlockList1()async{
     }
     WriteBatch writeBatch = instance.batch();
     try {
-      print('444444444444444444444444');
+      print('4444444444444444444444444');
       if (personalChatRoomDocExists) {
 
         writeBatch.set(instance.collection("personal-chat").doc(roomid).collection("messages").doc(timestamp), {
@@ -912,10 +1117,7 @@ fireBaseBlockList1()async{
                 WriteBatch writeBatch = instance.batch();
                 if (event.docs.first.data()["from"] != widget.uid) {
                   writeBatch.set(
-                      instance.collection("group-chat")
-                          .doc(widget.puid)
-                          .collection("messages")
-                          .doc(event.docs.first.id),
+                      instance.collection("group-chat").doc(widget.puid).collection("messages").doc(event.docs.first.id),
                       {
                         "read": FieldValue.arrayUnion([
                           {"uid": widget.uid, "timestamp": timestamp}
@@ -963,7 +1165,7 @@ fireBaseBlockList1()async{
     }
     WriteBatch writeBatch = instance.batch();
     try {
-      print('444444444444444444444444');
+      print('4444444444444444444444444');
       writeBatch.set(
           instance.collection("group-chat").doc(widget.puid).collection(
               "messages").doc(timestamp), {
@@ -979,6 +1181,7 @@ fireBaseBlockList1()async{
         "reply": (replyMap != null) ? replyMap : null,
         "delete":{"everyone": false, "personal":false,"peerdelete":false }
       });
+
       writeBatch.set(
           instance.collection("group-detail").doc(widget.puid),
           {
@@ -986,6 +1189,7 @@ fireBaseBlockList1()async{
             "messageBy": "${widget.uid}",
             "lastMessage": (type == 0) ? message! : dataTypeMap[type],
             "delete": false,
+            "typing" : true,
             "members": groupWriteMessageMembersMap(members: members),
           },
           SetOptions(merge: true));
@@ -1000,6 +1204,7 @@ fireBaseBlockList1()async{
           userToken.add(peerDocSnap.data()!["uid"]);
         }
       });
+
       await sendNotificationForChat(
           userTokens: userToken,
           name: groupName,
@@ -1085,11 +1290,12 @@ fireBaseBlockList1()async{
   }
 
 var peerName;
+  var fPhone;
 
   @override
   void initState() {
     instance.collection("user-detail").doc(widget.puid).get().then((doc) {
-      var fPhone = doc.data()!['phone'];
+      fPhone = doc.data()!['phone'];
       print("fPhone ${fPhone}");
       getContactName(fPhone).then((value) {print("peer b4 print");
       peerName = value.toString();
@@ -1209,7 +1415,6 @@ var peerName;
                           List<DocumentSnapshot<Map<String, dynamic>>>>(
                           stream: _streamController.stream,
                           builder: (context, snapshot) {
-
                             return ResponsiveBuilder(
                                 builder: (context, sizingInformation) {
                                   return Scaffold(
@@ -1219,9 +1424,11 @@ var peerName;
                                           color: Color.fromRGBO(0, 0, 0, 1)
                                       ),
                                       centerTitle: false,
+                                      leadingWidth: 40,
                                       automaticallyImplyLeading: false,
                                       backgroundColor: (themedata.value.index == 0) ? Color.fromRGBO(248, 206, 97, 1) : Colors.white,
                                       elevation: 0,
+                                      titleSpacing: 0,
                                       leading: (sizingInformation.deviceScreenType != DeviceScreenType.desktop)
                                           ? GestureDetector(
                                           onTap: (messages.isNotEmpty)
@@ -1337,119 +1544,86 @@ var peerName;
                                                   }
                                                   break;
                                                 case 4:
-                                                  {}
-                                                  break;
-                                                  break;
+                                                  {
+                                                    Future<void>.delayed(
+                                                        Duration(),
+                                                            ()=> showDialog(context: context, barrierColor: Colors.black26,builder: (context)=>
+                                                            AlertDialog(
+                                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                                              insetPadding: EdgeInsets.only(left: 12, right: 12),
+                                                              titlePadding: EdgeInsets.all(0),
+                                                              title: Container(
+                                                                width: 380.w,
+                                                                padding: EdgeInsets.only(left: 20.w, top: 20.h, bottom: 0,right: 12.w),
+                                                                child: Column(       mainAxisSize: MainAxisSize.min,children: [
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                    children: [
+                                                                      Text(
+                                                                        'Clearing or deleting a chat?',
+                                                                        style: GoogleFonts.inter(
+                                                                            textStyle: TextStyle(
+                                                                                fontSize: 16.sp,
+                                                                                fontWeight: FontWeight.w700,
+                                                                                color: Color.fromRGBO(0, 0, 0, 1))),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  SizedBox(height: 20.h),
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        'Clearing or deleting entire chats will only\nremove messages from this device',
 
-                                                case 5:{//for block
-                                                  // print('Lotus77${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["isBlocked"] == true}');
-                                                  // print('Lotus87${ chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]
-                                                  // ["isBlocked"] ==
-                                                  //     true}');
-                                                  // await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
-                                                  //   "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
-                                                  //       .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["peeruid"]]["isBlocked"] ==
-                                                  //       true)
-                                                  //       ? false
-                                                  //       : true
-                                                  // });
-                                                  // Future<void>.delayed(
-                                                  //     Duration(),
-                                                  //         ()=> showDialog(context: context, barrierColor: Colors.black26,builder: (context)=>
-                                                  //         AlertDialog(
-                                                  //           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                                  //           insetPadding: EdgeInsets.only(left: 12, right: 12),
-                                                  //           titlePadding: EdgeInsets.all(0),
-                                                  //           title: Container(
-                                                  //             width: 380.w,
-                                                  //             padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
-                                                  //             child: Column(       mainAxisSize: MainAxisSize.min,children: [
-                                                  //               Row(
-                                                  //                 mainAxisAlignment: MainAxisAlignment.start,
-                                                  //                 children: [
-                                                  //                   SizedBox(width: 10.w,),
-                                                  //                   Text(
-                                                  //                     'Block ${emptyChatRoomDetails.data!.data()!["name"] }?',
-                                                  //                     style: GoogleFonts.inter(
-                                                  //                         textStyle: TextStyle(
-                                                  //                             fontSize: 16.sp,
-                                                  //                             fontWeight: FontWeight.w700,
-                                                  //                             color: Color.fromRGBO(0, 0, 0, 1))),
-                                                  //                   ),
-                                                  //                 ],
-                                                  //               ),
-                                                  //               SizedBox(height: 20.h),
-                                                  //               Row(
-                                                  //                 children: [
-                                                  //                   SizedBox(
-                                                  //                     width:25.w,
-                                                  //                   ),
-                                                  //                   Text(
-                                                  //                     'Blocked contacts cannot call or send you\nmessages. ',
-                                                  //
-                                                  //                     style: GoogleFonts.inter(
-                                                  //                         textStyle: TextStyle(
-                                                  //                             fontSize: 15.sp,
-                                                  //                             fontWeight: FontWeight.w400,
-                                                  //                             color: Color.fromRGBO(157, 157, 157, 1))),
-                                                  //                   ),
-                                                  //                 ],
-                                                  //               ),
-                                                  //               SizedBox(height: 20.h),
-                                                  //               Row(
-                                                  //                 mainAxisAlignment: MainAxisAlignment.end,
-                                                  //                 children: [
-                                                  //                   TextButton(
-                                                  //                     onPressed: () {
-                                                  //                       Navigator.pop(context);
-                                                  //                     },
-                                                  //                     child: Text(
-                                                  //                       'Cancel',
-                                                  //                       style: GoogleFonts.inter(
-                                                  //                           textStyle: TextStyle(
-                                                  //                               fontSize: 16.sp,
-                                                  //                               fontWeight: FontWeight.w700,
-                                                  //                               color: Color.fromRGBO(0, 163, 255, 1))),
-                                                  //                     ),
-                                                  //                   ),
-                                                  //                   TextButton(
-                                                  //                     onPressed: ()async{
-                                                  //                       Navigator.of(context).pop();
-                                                  //                       await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
-                                                  //                         "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
-                                                  //                             .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
-                                                  //                             true)
-                                                  //                             ? false
-                                                  //                             : true
-                                                  //                       });
-                                                  //                     },
-                                                  //                     child: Text(
-                                                  //                       ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["isBlocked"] == true ||
-                                                  //                           chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]
-                                                  //                           ["isBlocked"] ==
-                                                  //                               true))
-                                                  //                           ? "Unblock"
-                                                  //                           : "Block", style: GoogleFonts.inter(
-                                                  //                         textStyle: TextStyle(
-                                                  //                             fontSize: 16.sp,
-                                                  //                             fontWeight: FontWeight.w700,
-                                                  //                             color: Colors.red)),
-                                                  //                     ),
-                                                  //                   ),
-                                                  //                 ],
-                                                  //               )
-                                                  //             ],),
-                                                  //           ),
-                                                  //         )
-                                                  //     )
-                                                  // );
-                                                  // await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
-                                                  //   "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
-                                                  //       .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
-                                                  //       true)
-                                                  //       ? false
-                                                  //       : true
-                                                  // });
+                                                                        style: GoogleFonts.inter(
+                                                                            textStyle: TextStyle(
+                                                                                fontSize: 15.sp,
+                                                                                fontWeight: FontWeight.w400,
+                                                                                color: Color.fromRGBO(157, 157, 157, 1))),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  SizedBox(height: 20.h),
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                                    children: [
+                                                                      TextButton(
+                                                                        onPressed: () {
+                                                                          Navigator.pop(context);
+                                                                        },
+                                                                        child: Text(
+                                                                          'Cancel',
+                                                                          style: GoogleFonts.inter(
+                                                                              textStyle: TextStyle(
+                                                                                  fontSize: 16.sp,
+                                                                                  fontWeight: FontWeight.w700,
+                                                                                  color: Color.fromRGBO(0, 163, 255, 1))),
+                                                                        ),
+                                                                      ),
+                                                                      TextButton(
+                                                                        onPressed: () {
+                                                                          Navigator.of(context).pop();
+                                                                          clearChat();
+                                                                        },
+                                                                        child: Text("Clear chat", style: GoogleFonts.inter(
+                                                                            textStyle: TextStyle(
+                                                                                fontSize: 16.sp,
+                                                                                fontWeight: FontWeight.w700,
+                                                                                color: Colors.red)),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                ],),
+                                                              ),
+                                                            )
+                                                        )
+                                                    );
+                                                    print("Varudhu da");
+                                                  }
+                                                  break;
+                                                  break;
+                                                case 5:{
                                                 }
                                                 break;
 
@@ -1504,8 +1678,7 @@ var peerName;
                                                             color: Color.fromRGBO(
                                                                 0, 0, 0, 1))),
                                                   )),
-
-                                              PopupMenuItem(
+                                              PopupMenuItem(  value:3,
                                                   onTap: () async{
                                                     print('Lotus65${chatRoomSnapshot.data!.data()!["members"][
                                                     "${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}"]
@@ -1518,40 +1691,19 @@ var peerName;
                                                           ? false
                                                           : true
                                                     });
-
-                                                    // Future.delayed(Duration(seconds: 0),
-                                                    //         () =>
-                                                    //         showConfirmationDialog(context)
-                                                    // );
-                                                    //
-                                                    //docs[index].data()["members"]["${docs[index].data()
-                                                    // ["members"]["${widget.uid}"]["peeruid"]}"]["mute"] == true
-
                                                   },
                                                   child:  Text(
-
-                                                      // ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["mute"] == true ||
-                                                      //     chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]
-                                                      //     ["${widget.uid}"]["peeruid"]]
-                                                      //     ["mute"] ==
-                                                      //         true)
-                                                      // )
                                                       (chatRoomSnapshot.data!.data()!["members"][
                                                       "${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}"]
                                                       ["mute"] ==
                                                           true)
-
                                                           ? "Unmute notifications"
                                                           : "Mute notifications "
                                                   )
 
                                               ),
-                                              PopupMenuItem(
+                                              PopupMenuItem(  value:4,
                                                   onTap: () {
-                                                    // Future.delayed(Duration(seconds: 0),
-                                                    //         () =>
-                                                    //         showConfirmationDialog2(
-                                                    //             context));
                                                     clearChat();
                                                   },
 
@@ -1564,7 +1716,7 @@ var peerName;
                                                             color: Color.fromRGBO(
                                                                 0, 0, 0, 1))),
                                                   )),
-                                              PopupMenuItem(
+                                              PopupMenuItem(  value:5,
                                                   onTap: () async{
                                                     Future<void>.delayed(
                                                         Duration(),
@@ -1575,14 +1727,13 @@ var peerName;
                                                               titlePadding: EdgeInsets.all(0),
                                                               title: Container(
                                                                 width: 380.w,
-                                                                padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
+                                                                padding: EdgeInsets.only(left:20.w, top: 20.h, bottom: 0,right: 12.w),
                                                                 child: Column(       mainAxisSize: MainAxisSize.min,children: [
                                                                   Row(
                                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                                     children: [
-                                                                      SizedBox(width: 10.w,),
                                                                       Text(
-                                                                        'Block ${emptyChatRoomDetails.data!.data()!["name"] }?',
+                                                                        'Block ${peerName}?',
                                                                         style: GoogleFonts.inter(
                                                                             textStyle: TextStyle(
                                                                                 fontSize: 16.sp,
@@ -1594,11 +1745,8 @@ var peerName;
                                                                   SizedBox(height: 20.h),
                                                                   Row(
                                                                     children: [
-                                                                      SizedBox(
-                                                                        width:25.w,
-                                                                      ),
                                                                       Text(
-                                                                        'Blocked contacts cannot call or send you\nmessages. ',
+                                                                        'Blocked contacts cannot send you\nmessages. ',
 
                                                                         style: GoogleFonts.inter(
                                                                             textStyle: TextStyle(
@@ -1627,39 +1775,7 @@ var peerName;
                                                                       ),
                                                                       TextButton(
                                                                         onPressed: ()async{
-                                                                           Navigator.of(context).pop();
-                                                                           fireBaseBlockList1();
-                                                                           fireBaseBlockedByList();
-
-
-
-                                                                          // await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
-                                                                          //   "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
-                                                                          //       .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
-                                                                          //       true)
-                                                                          //       ? false
-                                                                          //       : true
-                                                                          // });
-
-                                                                           // ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["isBlocked"] == true ||
-                                                                           //     chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]
-                                                                           //     ["isBlocked"] == true))?
-                                                                           // Navigator.pop(context)
-                                                                           //     : block().then(
-                                                                           //     await instance.collection("user-detail").doc(uid).update({
-                                                                           //       "blockList" :BlockList
-                                                                           //     })
-                                                                           // );
-                                                                          // Navigator.of(context).pop();
-                                                                          //  await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
-                                                                          //    "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
-                                                                          //        .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
-                                                                          //        true)
-                                                                          //        ? false : true
-                                                                          //  });
-
-                                                                         //  await instance.collection("user-detail").doc(uid).get().then((doc) => print("BlockList in FireStore ${doc.data()!['blockList'].length}"));
-
+                                                                          Navigator.of(context).pop();
                                                                           await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
                                                                             "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
                                                                                 .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
@@ -1667,19 +1783,12 @@ var peerName;
                                                                                 ? false
                                                                                 : true
                                                                           });
-                                                                           ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["isBlocked"] == true ||
-                                                                               chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]
-                                                                               ["isBlocked"] == true))?
-                                                                           Navigator.pop(context)
-                                                                               : block().then(
-                                                                               await instance.collection("user-detail").doc(uid).update({
-                                                                                 "blockList" :blockList
-                                                                               })
-                                                                           );
+                                                                          (chatRoomSnapshot.data!.data()!["members"]["${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}"]["isBlocked"] == false)?
+                                                                          fireBaseBlockList1():(chatRoomSnapshot.data!.data()!["members"]["${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}"]["isBlocked"] == true)?
+                                                                          fireBaseUnBlockList():fireBaseBlockList1();
                                                                         },
                                                                         child: Text(
-                                                                            (chatRoomSnapshot.data!.data()!["members"][
-                                                                            "${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}"]
+                                                                            (chatRoomSnapshot.data!.data()!["members"]["${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}"]
                                                                             ["isBlocked"] ==
                                                                                 true)
 
@@ -1698,33 +1807,8 @@ var peerName;
                                                             )
                                                         )
                                                     );
-
-                                                    // Navigator.of(context).pop();
-                                                    // await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
-                                                    //   "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
-                                                    //       .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
-                                                    //       true)
-                                                    //       ? false
-                                                    //       : true
-                                                    // });
-
-                                                    // Future.delayed(Duration(seconds: 0),
-                                                    //         () =>
-                                                    //         showConfirmationDialog(context)
-                                                    // );
-                                                    //
-                                                    //docs[index].data()["members"]["${docs[index].data()
-                                                    // ["members"]["${widget.uid}"]["peeruid"]}"]["mute"] == true
-
-                                                  },
+                                                    },
                                                   child:  Text(
-
-                                                    // ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["mute"] == true ||
-                                                    //     chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]
-                                                    //     ["${widget.uid}"]["peeruid"]]
-                                                    //     ["mute"] ==
-                                                    //         true)
-                                                    // )
                                                       (chatRoomSnapshot.data!.data()!["members"][
                                                       "${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}"]
                                                       ["isBlocked"] ==
@@ -1735,126 +1819,6 @@ var peerName;
                                                   )
 
                                               ),
-                                  //             PopupMenuItem(
-                                  //               value:5,
-                                  //             //    onTap: () {
-                                  //                   // Future<void>.delayed(
-                                  //                   //     Duration(),
-                                  //                   //         ()=> showDialog(context: context, barrierColor: Colors.black26,builder: (context)=>
-                                  //                   //         AlertDialog(
-                                  //                   //           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                  //                   //           insetPadding: EdgeInsets.only(left: 12, right: 12),
-                                  //                   //           titlePadding: EdgeInsets.all(0),
-                                  //                   //           title: Container(
-                                  //                   //             width: 380.w,
-                                  //                   //             padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
-                                  //                   //             child: Column(       mainAxisSize: MainAxisSize.min,children: [
-                                  //                   //               Row(
-                                  //                   //                 mainAxisAlignment: MainAxisAlignment.start,
-                                  //                   //                 children: [
-                                  //                   //                   SizedBox(width: 10.w,),
-                                  //                   //                   Text(
-                                  //                   //                     'Block ${emptyChatRoomDetails.data!.data()!["name"] }?',
-                                  //                   //                     style: GoogleFonts.inter(
-                                  //                   //                         textStyle: TextStyle(
-                                  //                   //                             fontSize: 16.sp,
-                                  //                   //                             fontWeight: FontWeight.w700,
-                                  //                   //                             color: Color.fromRGBO(0, 0, 0, 1))),
-                                  //                   //                   ),
-                                  //                   //                 ],
-                                  //                   //               ),
-                                  //                   //               SizedBox(height: 20.h),
-                                  //                   //               Row(
-                                  //                   //                 children: [
-                                  //                   //                   SizedBox(
-                                  //                   //                     width:25.w,
-                                  //                   //                   ),
-                                  //                   //                   Text(
-                                  //                   //                     'Blocked contacts cannot call or send you\nmessages. ',
-                                  //                   //
-                                  //                   //                     style: GoogleFonts.inter(
-                                  //                   //                         textStyle: TextStyle(
-                                  //                   //                             fontSize: 15.sp,
-                                  //                   //                             fontWeight: FontWeight.w400,
-                                  //                   //                             color: Color.fromRGBO(157, 157, 157, 1))),
-                                  //                   //                   ),
-                                  //                   //                 ],
-                                  //                   //               ),
-                                  //                   //               SizedBox(height: 20.h),
-                                  //                   //               Row(
-                                  //                   //                 mainAxisAlignment: MainAxisAlignment.end,
-                                  //                   //                 children: [
-                                  //                   //                   TextButton(
-                                  //                   //                     onPressed: () {
-                                  //                   //                       Navigator.pop(context);
-                                  //                   //                     },
-                                  //                   //                     child: Text(
-                                  //                   //                       'Cancel',
-                                  //                   //                       style: GoogleFonts.inter(
-                                  //                   //                           textStyle: TextStyle(
-                                  //                   //                               fontSize: 16.sp,
-                                  //                   //                               fontWeight: FontWeight.w700,
-                                  //                   //                               color: Color.fromRGBO(0, 163, 255, 1))),
-                                  //                   //                     ),
-                                  //                   //                   ),
-                                  //                   //                   TextButton(
-                                  //                   //                     onPressed: ()async{
-                                  //                   //                       Navigator.of(context).pop();
-                                  //                   //                       await instance.collection("personal-chat-room-detail").doc(chatRoomSnapshot.data!.data()!["roomId"]).update({
-                                  //                   //                         "members.${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}.isBlocked": (chatRoomSnapshot.data!
-                                  //                   //                             .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
-                                  //                   //                             true)
-                                  //                   //                             ? false
-                                  //                   //                             : true
-                                  //                   //                       });
-                                  //                   //                     },
-                                  //                   //                     child: Text(
-                                  //                   //                       ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["isBlocked"] == true ||
-                                  //                   //                           chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]
-                                  //                   //                           ["isBlocked"] ==
-                                  //                   //                               true))
-                                  //                   //                           ? "Unblock"
-                                  //                   //                           : "Block", style: GoogleFonts.inter(
-                                  //                   //                         textStyle: TextStyle(
-                                  //                   //                             fontSize: 16.sp,
-                                  //                   //                             fontWeight: FontWeight.w700,
-                                  //                   //                             color: Colors.red)),
-                                  //                   //                     ),
-                                  //                   //                   ),
-                                  //                   //                 ],
-                                  //                   //               )
-                                  //                   //             ],),
-                                  //                   //           ),
-                                  //                   //         )
-                                  //                   //     )
-                                  //                   // );
-                                  //               //  },
-                                  // //               child:Text(
-                                  // //             ((chatRoomSnapshot.data!
-                                  // //                 .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]["isBlocked"] ==
-                                  // //                 true &&
-                                  // //                 chatRoomSnapshot.data!
-                                  // //                     .data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["peeruid"]]["isBlocked"] ==
-                                  // //                     true))
-                                  // //             ? "Unblock"
-                                  // //                 : "Block"
-                                  // // ),
-                                  //
-                                  //                 child: Text(
-                                  //                   ((chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["isBlocked"] == true ||
-                                  //                       chatRoomSnapshot.data!.data()!["members"][chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]]
-                                  //                       ["isBlocked"] ==
-                                  //                           true))
-                                  //                       ? "Unblock"
-                                  //                       : "Block",
-                                  //                   style: GoogleFonts.inter(
-                                  //                       textStyle: TextStyle(
-                                  //                           fontSize: 16.sp,
-                                  //                           fontWeight: FontWeight.w400,
-                                  //                           color:
-                                  //                           Color.fromRGBO(255, 0, 0, 1))),
-                                  //                 )
-                                  //             )
                                             ])
                                       ]
                                           : [
@@ -1882,8 +1846,8 @@ var peerName;
                                             },
                                             icon: Icon(Entypo.reply))
                                             : Container(),
-                                        (notUserMessages != 0||notUserMessages == 0)
-                                            ? IconButton(
+
+                                        IconButton(
                                             onPressed: () async {
                                               (notUserMessages == 0)?
                                               await showDialog(context: context, builder:(BuildContext context){
@@ -1901,6 +1865,49 @@ var peerName;
                                                           Row(mainAxisAlignment: MainAxisAlignment.end,
                                                               children: [Column(crossAxisAlignment: CrossAxisAlignment.end,
                                                                   children: [
+
+                                                                    GestureDetector(
+                                                                      onTap:()async {
+                                                                        String roomid = roomId(uid: widget.uid, puid: widget.puid);
+                                                                        await instance.collection("personal-chat-room-detail").doc(roomid).update({
+                                                                          "lastMessage" : chatList[1].data()!["data"]["text"].toString(),
+                                                                        });
+                                                                        print('Lotus111');
+                                                                        Fluttertoast.showToast(
+                                                                            msg: "Message deleted for me",
+                                                                            timeInSecForIosWeb: 1);
+                                                                        messages.forEach((key, value) async {
+
+                                                                          await instance.collection("personal-chat").doc(roomid).collection("messages").doc(value.data()!["timestamp"]).update({
+                                                                            "delete.personal": true,
+                                                                          });
+                                                                          print('yyyyy');
+                                                                          // if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
+                                                                          //   print('delete works');
+                                                                          //   await instance.collection("personal-chat-room-detail").doc(roomid).update({
+                                                                          //     "delete": true,
+                                                                          //   });
+                                                                          //
+                                                                          // }
+
+                                                                          DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
+                                                                              .collection("personal-chat")
+                                                                              .doc(roomid)
+                                                                              .collection("messages")
+                                                                              .doc(value.data()!["timestamp"])
+                                                                              .get();
+                                                                          print('Lotus88${updatedMessage}');
+                                                                          chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
+                                                                          _streamController.add(chatList);
+
+                                                                        });
+
+                                                                        Navigator.pop(context);
+                                                                      },
+                                                                      child: Text('DELETE FOR ME',style:GoogleFonts.inter(color:Color.fromRGBO
+                                                                        (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
+                                                                    ),
+                                                                    SizedBox(height:20.h),
                                                                     GestureDetector(onTap:(){
                                                                       Fluttertoast.showToast(
                                                                           msg: "Deleted succesfully",
@@ -1933,45 +1940,6 @@ var peerName;
                                                                       child: Text('DELETE FOR EVERYONE',style:GoogleFonts.inter(color:Color.fromRGBO
                                                                         (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
                                                                     ),
-
-                                                                    SizedBox(height:20.h),
-                                                                    GestureDetector(onTap:()async {
-                                                                      print('Lotus111');
-                                                                      Fluttertoast.showToast(
-                                                                          msg: "Message deleted for me",
-                                                                          timeInSecForIosWeb: 1);
-                                                                      String roomid = roomId(uid: widget.uid, puid: widget.puid);
-                                                                      messages.forEach((key, value) async {
-
-                                                                        await instance.collection("personal-chat").doc(roomid).collection("messages").doc(value.data()!["timestamp"]).update({
-                                                                          "delete.peerdelete": true,
-                                                                        });
-                                                                        print('yyyyy');
-                                                                        // if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
-                                                                        //   print('delete works');
-                                                                        //   await instance.collection("personal-chat-room-detail").doc(roomid).update({
-                                                                        //     "delete": true,
-                                                                        //   });
-                                                                        //
-                                                                        // }
-
-                                                                        DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
-                                                                            .collection("personal-chat")
-                                                                            .doc(roomid)
-                                                                            .collection("messages")
-                                                                            .doc(value.data()!["timestamp"])
-                                                                            .get();
-                                                                        print('Lotus88${updatedMessage}');
-                                                                        chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
-                                                                        _streamController.add(chatList);
-
-                                                                      });
-
-                                                                      Navigator.pop(context);
-                                                                    },
-                                                                      child: Text('DELETE FOR ME',style:GoogleFonts.inter(color:Color.fromRGBO
-                                                                        (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
-                                                                    ),
                                                                     SizedBox(height:20.h),
                                                                     GestureDetector(onTap:(){
                                                                       Navigator.pop(context);},
@@ -1987,59 +1955,59 @@ var peerName;
                                               await  showDialog(context: context, builder:(BuildContext context)
                                               {
                                                 return AlertDialog(
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                                insetPadding: EdgeInsets.only(left: 12, right: 12),
-                                                titlePadding: EdgeInsets.only(top:0.h),
-                                                title:Container( height:170.h,   width: 380.w,
-                                                  padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
-                                                  child:Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("Delete ${messages.length} messages?",style:GoogleFonts.inter(color:Color.fromRGBO
-                                                          (0, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:16.sp)),
-                                                        SizedBox(height:20.h),
-                                                        Row(mainAxisAlignment: MainAxisAlignment.end,
-                                                            children: [Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  GestureDetector(onTap:()async {
-                                                                    String roomid = roomId(uid: widget.uid, puid: widget.puid);
-                                                                    messages.forEach((key, value) async {
-                                                                      await instance
-                                                                          .collection("personal-chat")
-                                                                          .doc(roomid)
-                                                                          .collection("messages")
-                                                                          .doc(value.data()!["timestamp"])
-                                                                          .update({
-                                                                        "delete.peerdelete": true,
-                                                                      });
-                                                                      if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
-                                                                        await instance.collection("personal-chat-room-detail").doc(roomid).update({
-                                                                          "delete": true,
+                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                                  insetPadding: EdgeInsets.only(left: 12, right: 12),
+                                                  titlePadding: EdgeInsets.only(top:0.h),
+                                                  title:Container( height:170.h,   width: 380.w,
+                                                    padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
+                                                    child:Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text("Delete ${messages.length} messages?",style:GoogleFonts.inter(color:Color.fromRGBO
+                                                            (0, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:16.sp)),
+                                                          SizedBox(height:20.h),
+                                                          Row(mainAxisAlignment: MainAxisAlignment.end,
+                                                              children: [Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    GestureDetector(onTap:()async {
+                                                                      String roomid = roomId(uid: widget.uid, puid: widget.puid);
+                                                                      messages.forEach((key, value) async {
+                                                                        await instance
+                                                                            .collection("personal-chat")
+                                                                            .doc(roomid)
+                                                                            .collection("messages")
+                                                                            .doc(value.data()!["timestamp"])
+                                                                            .update({
+                                                                          "delete.peerdelete": true,
                                                                         });
-                                                                      }
-                                                                      DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
-                                                                          .collection("personal-chat")
-                                                                          .doc(roomid)
-                                                                          .collection("messages")
-                                                                          .doc(value.data()!["timestamp"])
-                                                                          .get();
-                                                                      chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
-                                                                      _streamController.add(chatList);
-                                                                    });
-                                                                    Navigator.pop(context);
-                                                                  },
-                                                                    child: Text('DELETE FOR ME',style:GoogleFonts.inter(color:Color.fromRGBO
-                                                                      (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
-                                                                  ),
-                                                                  SizedBox(height:20.h),
+                                                                        if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
+                                                                          await instance.collection("personal-chat-room-detail").doc(roomid).update({
+                                                                            "delete": true,
+                                                                          });
+                                                                        }
+                                                                        DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
+                                                                            .collection("personal-chat")
+                                                                            .doc(roomid)
+                                                                            .collection("messages")
+                                                                            .doc(value.data()!["timestamp"])
+                                                                            .get();
+                                                                        chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
+                                                                        _streamController.add(chatList);
+                                                                      });
+                                                                      Navigator.pop(context);
+                                                                    },
+                                                                      child: Text('DELETE FOR ME',style:GoogleFonts.inter(color:Color.fromRGBO
+                                                                        (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
+                                                                    ),
+                                                                    SizedBox(height:20.h),
 
-                                                                  GestureDetector(onTap:(){Navigator.pop(context);},
-                                                                    child: Text('CANCEL',style:GoogleFonts.inter(color:Color.fromRGBO
-                                                                      (0, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
-                                                                  ),
-                                                                ])
-                                                            ]),
-                                                      ]),),
-                                              );}
+                                                                    GestureDetector(onTap:(){Navigator.pop(context);},
+                                                                      child: Text('CANCEL',style:GoogleFonts.inter(color:Color.fromRGBO
+                                                                        (0, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
+                                                                    ),
+                                                                  ])
+                                                              ]),
+                                                        ]),),
+                                                );}
                                               );
                                               if (!mounted) return;
                                               setState(() {
@@ -2048,8 +2016,8 @@ var peerName;
                                               });
                                             },
                                             icon: Icon(Icons.delete)
-                                        )
-                                            : Container(),
+                                        ),
+
                                         IconButton(
                                             onPressed: () async {
                                               setState(() {
@@ -2140,17 +2108,17 @@ var peerName;
                                                             0, 0, 0, 1))),
                                               )
                                           ),
-                                          PopupMenuItem(
-                                              value:2,
-                                              child: Text(
-                                                "Report",
-                                                style: GoogleFonts.inter(
-                                                    textStyle: TextStyle(
-                                                        fontSize: 16.sp,
-                                                        fontWeight: FontWeight.w400,
-                                                        color: Color.fromRGBO(0,0,0,1))),
-                                              )
-                                          ),
+                                          // PopupMenuItem(
+                                          //     value:2,
+                                          //     child: Text(
+                                          //       "Report",
+                                          //       style: GoogleFonts.inter(
+                                          //           textStyle: TextStyle(
+                                          //               fontSize: 16.sp,
+                                          //               fontWeight: FontWeight.w400,
+                                          //               color: Color.fromRGBO(0,0,0,1))),
+                                          //     )
+                                          // ),
                                           PopupMenuItem(
                                               value:3,
                                               child: Text(
@@ -2195,26 +2163,61 @@ var peerName;
                                         child: (messages.isEmpty)
                                             ? Row(
                                           children: [
-                                            Container(
-                                                width:35.w,
-                                                height:35.h,
-                                                child: ClipOval(
-                                                  child: (chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"] != null)
-                                                      ? CachedNetworkImage(
-                                                    fit: BoxFit.cover,
-                                                    fadeInDuration: const Duration(milliseconds: 400),
-                                                    progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                                                      child: Container(
-                                                        width: 20.0,
-                                                        height: 20.0,
-                                                        child: CircularProgressIndicator(value: downloadProgress.progress),
-                                                      ),
+                                            (chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"] != null)&&(chatRoomSnapshot.data!.data()!["members"]["${chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["peeruid"]}"]["isBlocked"] == false)
+                                                ? CachedNetworkImage(
+                                              imageBuilder:
+                                                  (context,
+                                                  imageProvider) =>
+                                                  Container(
+                                                    width: 40.w,
+                                                    height: 40.h,
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      shape: BoxShape
+                                                          .circle,
+                                                      image: DecorationImage(
+                                                          image:
+                                                          imageProvider,
+                                                          fit: BoxFit
+                                                              .cover),
                                                     ),
-                                                    imageUrl: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
-                                                    errorWidget: (context, url, error) => Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
-                                                  )
-                                                      : Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
-                                                )),
+                                                  ),
+                                              fit: BoxFit.cover,
+                                              fadeInDuration: const Duration(milliseconds: 400),
+                                              progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                                child: Container(
+                                                  width: 20.0,
+                                                  height: 20.0,
+                                                  child: CircularProgressIndicator(value: downloadProgress.progress),
+                                                ),
+                                              ),
+                                              imageUrl: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
+                                              errorWidget: (context, url, error) =>     Container(
+                                                width: 40.w,
+                                                height: 40.h,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape
+                                                        .circle,
+                                                    image: DecorationImage(
+                                                        image: AssetImage(
+                                                            "assets/noProfile.jpg")
+                                                    )
+                                                ),
+                                              ),
+                                            )
+                                                : Container(
+                                              width: 40.w,
+                                              height: 40.h,
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape
+                                                      .circle,
+                                                  image: DecorationImage(
+                                                      image: AssetImage(
+                                                          "assets/noProfile.jpg"),
+                                                      fit: BoxFit
+                                                          .cover)),
+                                              //   child: Image.asset("assets/noProfile.jpg")
+                                            ),
                                             SizedBox(
                                               width: 10,
                                             ),
@@ -2222,7 +2225,8 @@ var peerName;
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text((widget.state == 0) ? peerName:
+                                                  Text((widget.state == 0) ? (peerName == null)?fPhone:peerName
+                                                      :
                                                   emptyChatRoomDetails.data!.data()!["title"],
                                                       style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.black))),
                                                   SizedBox(height:2),
@@ -2235,8 +2239,9 @@ var peerName;
                                                             if (userSnapshot.connectionState == ConnectionState.active &&
                                                                 peerSnapshot.connectionState == ConnectionState.active) {
                                                               return Text(
-                                                                (userSnapshot.data!.data()!["onlineStatus"] == true &&
-                                                                    peerSnapshot.data!.data()!["onlineStatus"] == true)
+                                                                (userSnapshot.data!.data()!["onlineStatus"] == true && peerSnapshot.data!.data()!["onlineStatus"] == true && (chatRoomSnapshot.data!.data()!["members"]["${chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["peeruid"]}"]
+                                                                ["isBlocked"] ==
+                                                                    false))
                                                                     ? (peerSnapshot.data!.data()!["status"] == "online")
                                                                     ? "Online":
                                                                 (peerSnapshot.data!.data()!["status"] == "typing")?
@@ -2309,9 +2314,9 @@ var peerName;
                                         ),
                                         child: Column(
                                           children: [
+
                                             Expanded(
-                                              child: NotificationListener<
-                                                  ScrollNotification>(
+                                              child: NotificationListener<ScrollNotification>(
                                                   onNotification: (
                                                       ScrollNotification scrollInfo
                                                       ) {
@@ -2327,67 +2332,41 @@ var peerName;
                                                   (!snapshot.hasData)
                                                       ? Center(
                                                     child: Text("No messages"),
-                                                  )
-                                                      :
+                                                  ) :
                                                   Stack(
-
-                                                    children: [Container(
+                                                    children: [
+                                                      Container(
                                                       child: GroupedListView(
                                                           sort: false,
                                                           elements: snapshot.data!,
-                                                          // groupBy: (DocumentSnapshot<Map<String, dynamic>> element) =>
-                                                          //     getDateTimeInChat(datetime: getDateTimeSinceEpoch(datetime: element["timestamp"])),
-                                                          groupBy: (
-                                                              DocumentSnapshot<Map<
-                                                                  String,
-                                                                  dynamic>> element) =>
-                                                              DateFormat(
-                                                                  'yyyy-MM-dd')
-                                                                  .format(
-                                                                tz.TZDateTime.from(
-                                                                    getDateTimeSinceEpoch(
+                                                          groupBy: (DocumentSnapshot<Map<String, dynamic>> element) =>
+                                                              DateFormat('yyyy-MM-dd').format(tz.TZDateTime.from( getDateTimeSinceEpoch(
                                                                         datetime: element["timestamp"]),
                                                                     tz.local),
                                                               ),
                                                           reverse: true,
-                                                          // padding: EdgeInsets.all(10.0),
-                                                          groupHeaderBuilder: (
-                                                              DocumentSnapshot<Map<
-                                                                  String,
-                                                                  dynamic>> element) =>
-                                                              buildGroupHeaderItem(
-                                                                  element),
+                                                          groupHeaderBuilder: ( DocumentSnapshot<Map<String, dynamic>> element) =>
+                                                              buildGroupHeaderItem( element ),
                                                           indexedItemBuilder: (context, DocumentSnapshot<Map<String, dynamic>> element, index) =>
-                                                          (sizingInformation
-                                                              .deviceScreenType ==
-                                                              DeviceScreenType
-                                                                  .desktop)
-                                                              ?
-                                                          GestureDetector(
-                                                              behavior: HitTestBehavior
-                                                                  .opaque,
-                                                              child: buildItem(
-                                                                document: element,
+                                                          (sizingInformation .deviceScreenType == DeviceScreenType .desktop)
+                                                              ? GestureDetector(
+                                                              behavior: HitTestBehavior.opaque,
+                                                              child: buildItem( document: element,
                                                                 chatRoomSnapshot: chatRoomSnapshot
                                                                     .data!,
                                                                 sizingInformation: sizingInformation,
                                                                 // userDetailSnapshot: userDetailSnapshot.data!,
                                                                 index: index,
-                                                                replyIndex: (snapshot
-                                                                    .data!.length +
+                                                                replyIndex: (snapshot.data!.length +
                                                                     1) - index,
-                                                              ))
-                                                              : SwipeTo(
-                                                              onRightSwipe: (element
-                                                                  .data()!["delete"]["everyone"] ==
-                                                                  true)
+                                                              )) : SwipeTo(
+                                                              onRightSwipe: (element.data()!["delete"]["everyone"] == true)
                                                                   ? null
                                                                   : () {
-
+                                                                print("Deenaa${snapshot.data}");
+                                                                print("Deenaa${searchMessages.length}");
                                                                 FocusScope.of(context).requestFocus(focusNode);
-                                                                replyUserName =
-                                                                (widget.uid !=
-                                                                    element
+                                                                replyUserName = (widget.uid != element
                                                                         .data()!["from"])
                                                                     ? chatRoomSnapshot
                                                                     .data!
@@ -2515,7 +2494,7 @@ var peerName;
                                                           useStickyGroupSeparators: true,
                                                           floatingHeader: true,
                                                           order: GroupedListOrder
-                                                              .DESC),
+                                                              .DESC)
                                                     ),
                                                       Positioned(bottom:2.h,right:25.w,
                                                         child:  AnimatedOpacity(
@@ -2532,8 +2511,6 @@ var peerName;
                                                       )
                                                     ],
                                                   )
-                                                // }
-                                                // }),
                                               ),
                                             ),
                                             Container(
@@ -2651,68 +2628,31 @@ var peerName;
                                                         left: 10,
                                                         right: 10,
                                                         top: 10),
-                                                    child:  (chatRoomSnapshot.data!.data()!["members"][
+                                                    child:  ((chatRoomSnapshot.data!.data()!["members"][
                                                     "${chatRoomSnapshot.data!.data()!["members"]["${widget.uid}"]["peeruid"]}"]
                                                     ["isBlocked"] ==
-                                                        true)
+                                                        true)||(chatRoomSnapshot.data!.data()!["members"][
+                                                    "${chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["peeruid"]}"]
+                                                    ["isBlocked"] ==
+                                                        true))
                                                         ? null
-                                                    // Padding(
-                                                    //   padding: const EdgeInsets
-                                                    //       .only(top: 5,
-                                                    //       bottom: 5,
-                                                    //       left: 10,
-                                                    //       right: 10),
-                                                    //   child: Text(
-                                                    //       (chatRoomSnapshot.data!
-                                                    //           .data()!["members"]["${widget
-                                                    //           .uid}"]["isBlocked"] ==
-                                                    //           true)
-                                                    //           ? "You are blocked by ${chatRoomSnapshot
-                                                    //           .data!
-                                                    //           .data()!["members"][chatRoomSnapshot
-                                                    //           .data!
-                                                    //           .data()!["members"]["${widget
-                                                    //           .uid}"]["peeruid"]]["name"]}. You cant send text unless you are unblocked by your peer!"
-                                                    //           : "You have blocked ${chatRoomSnapshot
-                                                    //           .data!
-                                                    //           .data()!["members"][chatRoomSnapshot
-                                                    //           .data!
-                                                    //           .data()!["members"]["${widget
-                                                    //           .uid}"]["peeruid"]]["name"]}. You cant send text unless you unblock your peer!",
-                                                    //       textAlign: TextAlign
-                                                    //           .center,
-                                                    //       style: GoogleFonts
-                                                    //           .inter(
-                                                    //           textStyle: textStyle(
-                                                    //               fontSize: 14,
-                                                    //               color: (themedata
-                                                    //                   .value
-                                                    //                   .index == 0)
-                                                    //                   ? Color(
-                                                    //                   materialBlack)
-                                                    //                   : Color(
-                                                    //                   white)))),
-                                                    // )
                                                         : Column(
                                                       children: [
                                                         Row(
                                                           children: [
-                                                            //textField for personal chat
+//textField for personal chat
                                                             Flexible(
                                                               child: textField(
                                                                   focusNode: focusNode,
-
-
                                                                   onChanged : (event) async {
-
                                                                     if(textEditingController.text.isNotEmpty) {
-                                                                      // print("1 event.runtime ${event.runtimeType} RawKeyDownEvent ${RawKeyDownEvent} event.logicalKey.keyId ${event.logicalKey.keyId}");
+// print("1 event.runtime ${event.runtimeType} RawKeyDownEvent ${RawKeyDownEvent} event.logicalKey.keyId ${event.logicalKey.keyId}");
                                                                       await instance.collection("user-detail").doc(uid).update({
                                                                         "status": "typing",
                                                                         "chattingWith": null,
                                                                       });
                                                                     } else{
-                                                                      // print("2 event.runtime ${event.runtimeType} RawKeyDownEvent ${RawKeyDownEvent} event.logicalKey.keyId ${event.logicalKey.keyId}");
+// print("2 event.runtime ${event.runtimeType} RawKeyDownEvent ${RawKeyDownEvent} event.logicalKey.keyId ${event.logicalKey.keyId}");
                                                                       await instance.collection("user-detail").doc(uid).update({
                                                                         "status": "online",
                                                                         "chattingWith": null,
@@ -2759,7 +2699,7 @@ var peerName;
                                                                               ? chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"]
                                                                               : null,
                                                                           peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
-                                                                          // peerChattingWith: userDetailSnapshot.data!.data()!["chattingWith"],
+// peerChattingWith: userDetailSnapshot.data!.data()!["chattingWith"],
                                                                           replyMap: replyMessageMap,
                                                                           message: textEditingController.text);
                                                                       if (replyMessageMap != null && replyUserName != null) {
@@ -2787,12 +2727,79 @@ var peerName;
                                                                   fillColor: (themedata.value.index == 0) ? Color(white) : Color(lightBlack),
                                                                   suffixIcon: Flexible(
                                                                     child: Container(
-                                                                      width: 80.w,
+                                                                      width: 90.w,
                                                                       child: Row(
                                                                         children: [
                                                                           GestureDetector(
-                                                                            child: SvgPicture.asset(
-                                                                                "assets/group_info/chat_attachments.svg",
+                                                                              onTap: () async {
+                                                                                return await imageNvideo().then((value) async {
+                                                                                  Navigator.pop(context);
+                                                                                  if (value!.files.isNotEmpty) {
+                                                                                    print('once view is checked');
+                                                                                    Navigator.push(
+                                                                                        context,
+                                                                                        MaterialPageRoute(
+                                                                                          builder: (context) => AssetPageView(
+                                                                                            fileList: value.files,
+                                                                                            onPressed: () async {
+                                                                                              Navigator.pop(context);
+                                                                                              for (var file in value.files) {
+                                                                                                print('check2');
+                                                                                                if (file.size < 52428800 && file.bytes != null) {
+                                                                                                  print('check3');
+                                                                                                  if (widget.state == 0) {
+                                                                                                    print('check4');
+                                                                                                    await writeUserMessage(
+                                                                                                      type:(file.extension=='jpg' || file.extension=='jpeg') ? 10 : 10 ,
+// peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+                                                                                                      peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
+                                                                                                      peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
+                                                                                                      replyMap: replyMessageMap,
+                                                                                                      file: file.bytes,
+                                                                                                      contentType: (file.extension=='jpg' || file.extension=='jpeg')?"image/" +file.extension! :"video/" +file.extension!,
+                                                                                                    );
+                                                                                                    if (replyMessageMap != null && replyUserName != null) {
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        replyMessageMap = null;
+                                                                                                        replyUserName = null;
+                                                                                                      });
+                                                                                                    }
+                                                                                                  } else {
+                                                                                                    print('check5');
+                                                                                                    await writeGroupMessage(
+                                                                                                        type: (file.extension=='jpg' || file.extension=='jpeg') ? 1 : 2,
+                                                                                                        members: chatRoomSnapshot.data!.data()!["members"],
+                                                                                                        file: file.bytes,
+                                                                                                        replyMap: replyMessageMap,
+                                                                                                        contentType: (file.extension=='jpg' || file.extension=='jpeg')?"image/" +file.extension! :"video/" +file.extension!,
+                                                                                                        groupName: chatRoomSnapshot.data!.data()!["title"],
+                                                                                                        groupPic: chatRoomSnapshot.data!.data()!["pic"]);
+                                                                                                    if (replyMessageMap != null && replyUserName != null) {
+                                                                                                      if (!mounted) return;
+                                                                                                      setState(() {
+                                                                                                        replyMessageMap = null;
+                                                                                                        replyUserName = null;
+                                                                                                      });
+                                                                                                    }
+                                                                                                  }
+                                                                                                } else {
+                                                                                                  final snackBar = snackbar(content: "File size is greater than 50MB");
+                                                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                                }
+                                                                                              }
+                                                                                            },
+                                                                                          ),
+                                                                                        ));
+                                                                                  }
+                                                                                });
+                                                                              }, child: SvgPicture.asset(
+                                                                              "assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/viewoncetf.svg",
+                                                                              height:18.h,width: 18.w
+                                                                          )),
+                                                                          SizedBox(width:10.w),
+                                                                          GestureDetector(
+                                                                            child: SvgPicture.asset("assets/group_info/chat_attachments.svg",
                                                                                 height:18.h,width: 18.w
                                                                             ),
                                                                             onTap: () {
@@ -2837,7 +2844,7 @@ var peerName;
 
                                                                                                               await writeUserMessage(
                                                                                                                 type: 4,
-                                                                                                                // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+// peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
                                                                                                                 peerName:
                                                                                                                 chatRoomSnapshot.data!.data()!["members"]
                                                                                                                 ["${widget.puid}"]["name"],
@@ -2897,22 +2904,22 @@ var peerName;
                                                                                                   onTap: () async {
                                                                                                     Navigator.of(context).pop();
                                                                                                     final XFile? photo = await _picker.pickImage(source: ImageSource.camera,
-                                                                                                      imageQuality: 25);
-                                                                                                    // PickedFile compressedImage = await imagePicker.getImage(
-                                                                                                    //   source: ImageSource.camera,
-                                                                                                    //   imageQuality: 85,
-                                                                                                    // );
-                                                                                                    // Navigator.pop(context);
-                                                                                                    // return await image().then((value) async {
+                                                                                                        imageQuality: 25);
+// PickedFile compressedImage = await imagePicker.getImage(
+//   source: ImageSource.camera,
+//   imageQuality: 85,
+// );
+// Navigator.pop(context);
+// return await image().then((value) async {
                                                                                                     if (photo != null) {
                                                                                                       int size = await photo.length();
                                                                                                       Uint8List bytes = await photo.readAsBytes();
-                                                                                                      // for (var file in value.files) {
+// for (var file in value.files) {
                                                                                                       if (size < 52428800 && bytes != null) {
                                                                                                         if (widget.state == 0) {
                                                                                                           await writeUserMessage(
                                                                                                             type: 1,
-                                                                                                            // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+// peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
                                                                                                             peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
                                                                                                             peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
                                                                                                             replyMap: replyMessageMap,
@@ -2947,9 +2954,9 @@ var peerName;
                                                                                                         final snackBar = snackbar(content: "File size is greater than 50MB");
                                                                                                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                                                                                       }
-                                                                                                      // }
+// }
                                                                                                     }
-                                                                                                    // });
+// });
                                                                                                   },
 
                                                                                                   child: iconCreation(
@@ -2980,7 +2987,7 @@ var peerName;
                                                                                                                         print('check4');
                                                                                                                         await writeUserMessage(
                                                                                                                           type:(file.extension=='jpg' || file.extension=='jpeg') ? 1 : 2 ,
-                                                                                                                          // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+// peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
                                                                                                                           peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
                                                                                                                           peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
                                                                                                                           replyMap: replyMessageMap,
@@ -2994,7 +3001,8 @@ var peerName;
                                                                                                                             replyUserName = null;
                                                                                                                           });
                                                                                                                         }
-                                                                                                                      } else {
+                                                                                                                      }
+                                                                                                                      else {
                                                                                                                         await writeGroupMessage(
                                                                                                                             type: 1,
                                                                                                                             members: chatRoomSnapshot.data!.data()!["members"],
@@ -3048,7 +3056,7 @@ var peerName;
 
                                                                                                               await writeUserMessage(
                                                                                                                 type: 3,
-                                                                                                                // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+// peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
                                                                                                                 peerName:
                                                                                                                 chatRoomSnapshot.data!.data()!["members"]
                                                                                                                 ["${widget.puid}"]["name"],
@@ -3115,7 +3123,7 @@ var peerName;
                                                                                                           if (widget.state == 0) {
                                                                                                             await writeUserMessage(
                                                                                                               type: 7,
-                                                                                                              // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+// peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
                                                                                                               peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
                                                                                                               peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
                                                                                                               replyMap: replyMessageMap,
@@ -3178,7 +3186,7 @@ var peerName;
 
                                                                                                             await writeUserMessage(
                                                                                                               type: 8,
-                                                                                                              // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+// peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
                                                                                                               peerName: chatRoomSnapshot.data!
                                                                                                                   .data()!["members"]["${widget.puid}"]["name"],
                                                                                                               peerPic: chatRoomSnapshot.data!.data()!["members"]
@@ -3235,18 +3243,18 @@ var peerName;
                                                                                   });
                                                                             },
                                                                           ),
-                                                                          SizedBox(width:20.w),
+                                                                          SizedBox(width:10.w),
                                                                           GestureDetector( onTap: () async {
                                                                             final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
                                                                             if (photo != null) {
                                                                               int size = await photo.length();
                                                                               Uint8List bytes = await photo.readAsBytes();
-                                                                              // for (var file in value.files) {
+// for (var file in value.files) {
                                                                               if (size < 52428800 && bytes != null) {
                                                                                 if (widget.state == 0) {
                                                                                   await writeUserMessage(
                                                                                     type: 1,
-                                                                                    // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+// peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
                                                                                     peerName: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["name"],
                                                                                     peerPic: chatRoomSnapshot.data!.data()!["members"]["${widget.puid}"]["pic"],
                                                                                     replyMap: replyMessageMap,
@@ -3281,31 +3289,34 @@ var peerName;
                                                                                 final snackBar = snackbar(content: "File size is greater than 50MB");
                                                                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                                                               }
-                                                                              // }
+// }
                                                                             }
-                                                                            // });
+// });
                                                                           },
                                                                             child:SvgPicture.asset('assets/group_info/cameraicon_chat.svg',
                                                                                 height:22.h,width: 22.w),
                                                                           ),
                                                                           SizedBox(width:10.w),
+
+
+
+
                                                                         ],
                                                                       ),
                                                                     ),
                                                                   )
                                                               ),
                                                             ),
-
-
+                                                            SizedBox(width: 5),
                                                             Padding(
                                                               padding: const EdgeInsets
                                                                   .only(
-                                                                  right: 8.0),
-                                                              // padding: EdgeInsets.zero,
+                                                                  right: 6),
+// padding: EdgeInsets.zero,
                                                               child: (canSend)
                                                                   ? GestureDetector(
-                                                                // elevation: 0,
-                                                                  child: Container(
+// elevation: 0,
+                                                                  child: Container (
                                                                     height: 45,
                                                                     width: 45,
                                                                     clipBehavior: Clip
@@ -3323,9 +3334,9 @@ var peerName;
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                  // padding: EdgeInsets.all(20),
-                                                                  // shape: CircleBorder(),
-                                                                  // color: Color(accent),
+// padding: EdgeInsets.all(20),
+// shape: CircleBorder(),
+// color: Color(accent),
                                                                   onTap: canSend
                                                                       ? () async {
                                                                     if (textEditingController
@@ -3348,7 +3359,7 @@ var peerName;
                                                                               .data!
                                                                               .data()!["members"]["${widget
                                                                               .puid}"]["name"],
-                                                                          // peerChattingWith: userDetailSnapshot.data!.data()!["chattingWith"],
+// peerChattingWith: userDetailSnapshot.data!.data()!["chattingWith"],
                                                                           replyMap: replyMessageMap,
                                                                           message: textEditingController
                                                                               .text);
@@ -3403,7 +3414,7 @@ var peerName;
                                                                             0) {
                                                                           await writeUserMessage(
                                                                             type: 9,
-                                                                            // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
+// peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
                                                                             peerName: chatRoomSnapshot
                                                                                 .data!
                                                                                 .data()!["members"]["${widget
@@ -3493,6 +3504,7 @@ var peerName;
                                             Offstage(offstage: !attachmentShowing,
                                                 child: attachmentOffstage(
                                                     chatRoomSnapshot: chatRoomSnapshot)),
+
                                           ],
                                         ),
                                       ),
@@ -3501,18 +3513,11 @@ var peerName;
                                 });
                           });
                     }
-                    //-------------------------------------------------------------------------------------------------
+                    //----------------------------------------------------------------------------------------------------------
 
                     else if (widget.state == 1) {
                       if (chatRoomSnapshot.data!.data()!["members"]["${widget
                           .uid}"]["claim"] != "removed") {
-                        // StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                        //     // stream: instance.collection("user-detail").where("uid", whereIn: groupMemberIds).snapshots(),
-                        //     // stream: instance.collection("user-detail").where("uid", whereIn: groupMemberIds).snapshots(),
-
-                        //     builder: (context, userDetailSnapshot) {
-                        //       if (userDetailSnapshot.hasData) {
-                        //         return
                         return StreamBuilder<List<DocumentSnapshot<Map<
                             String,
                             dynamic>>>>(
@@ -3523,7 +3528,9 @@ var peerName;
                                   sizingInformation) {
                                 return Scaffold(
                                   appBar: AppBar(
+                                    leadingWidth: 40,
                                     centerTitle: false,
+                                    titleSpacing: 0,
                                     automaticallyImplyLeading: false,
                                     backgroundColor: (themedata.value.index ==
                                         0)
@@ -3536,6 +3543,7 @@ var peerName;
                                         ? GestureDetector(
                                         onTap: (messages.isNotEmpty)
                                             ? () {
+                                          Navigator.of(context).popUntil((route) => route.isFirst);
                                           if (!mounted) return;
                                           setState(() {
                                             messages.clear();
@@ -3551,7 +3559,7 @@ var peerName;
                                           });
                                         }
                                             : () {
-                                          Navigator.pop(context, true);
+                                          Navigator.of(context).popUntil((route) => route.isFirst);
                                         },
                                         child: Column(
                                           mainAxisAlignment: MainAxisAlignment
@@ -3567,13 +3575,11 @@ var peerName;
                                         )
                                     )
                                         : null,
-                                    actionsIconTheme: IconThemeData(
-                                        color: Color.fromRGBO(0, 0, 0, 1)),
+                                    actionsIconTheme: IconThemeData(color: Color.fromRGBO(0, 0, 0, 1)),
                                     actions: (isSearching)
                                         ? null
                                         : (messages.isEmpty)
                                         ? [
-
                                       PopupMenuButton(shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(5)) ,
                                           onSelected: (value) async {
                                             switch (value) {
@@ -3642,44 +3648,6 @@ var peerName;
                                                                             child: Text('DELETE FOR ME',style:GoogleFonts.inter(color:Color.fromRGBO
                                                                               (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
                                                                           ),
-                                                                          // SizedBox(height:20.h),
-                                                                          // GestureDetector(onTap:(){
-                                                                          //   messages.forEach((key, value) async {
-                                                                          //     await instance
-                                                                          //         .collection("group-chat")
-                                                                          //         .doc(widget.puid)
-                                                                          //         .collection("messages")
-                                                                          //         .doc(value.data()!["timestamp"])
-                                                                          //         .update({
-                                                                          //       "delete.everyone": true,
-                                                                          //     });
-                                                                          //     if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
-                                                                          //       await instance.collection("group-detail").doc(widget.puid).update({
-                                                                          //         "delete": true,
-                                                                          //       });
-                                                                          //     }
-                                                                          //     DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
-                                                                          //         .collection("group-chat")
-                                                                          //         .doc(widget.puid)
-                                                                          //         .collection("messages")
-                                                                          //         .doc(value.data()!["timestamp"])
-                                                                          //         .get();
-                                                                          //     // DocumentSnapshot<Map<String, dynamic>> message =
-                                                                          //     //     chatList[chatList.indexWhere((element) => element.id == value.id)];
-                                                                          //     // chatList[chatList.indexWhere((element) => element.id == value.id)] =
-                                                                          //     //     message.data()!["delete"].update("everyone", (value) => true);
-                                                                          //     chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
-                                                                          //     _streamController.add(chatList);
-                                                                          //   });
-                                                                          //   if (!mounted) return;
-                                                                          //   setState(() {
-                                                                          //     messages.clear();
-                                                                          //     notUserMessages = 0;
-                                                                          //   });
-                                                                          //   Navigator.pop(context);},
-                                                                          //   child: Text('DELETE FOR EVERYONE',style:GoogleFonts.inter(color:Color.fromRGBO
-                                                                          //     (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
-                                                                          // ),
                                                                           SizedBox(height:20.h),
                                                                           GestureDetector(onTap:(){Navigator.pop(context);},
                                                                             child: Text('CANCEL',style:GoogleFonts.inter(color:Color.fromRGBO
@@ -3857,163 +3825,8 @@ var peerName;
                                                         Row(mainAxisAlignment: MainAxisAlignment.end,
                                                             children: [
                                                               Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  GestureDetector(onTap:()async {
-                                                                    print('ggggggggg');
-                                                                    Fluttertoast.showToast(
-                                                                        msg: "Deleted succesfully",
-                                                                        timeInSecForIosWeb: 1);
-                                                                 //   String roomid = roomId(uid: widget.puid, puid: widget.uid);
-                                                                    messages.forEach((key, value) async {
-                                                                      print('Lotus57${instance
-                                                                          .collection("group-chat")
-                                                                          .doc(widget.puid)
-                                                                          .collection("messages")
-                                                                          .doc(value.data()!["timestamp"])}');
-                                                                      await instance
-                                                                          .collection("group-chat")
-                                                                          .doc(widget.puid)
-                                                                          .collection("messages")
-                                                                          .doc(value.data()!["timestamp"])
-                                                                          .update({
-                                                                        "delete.peerdelete": true,
-                                                                      });
-                                                                      print('kkkkkkkkk');
-                                                                      if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
-
-                                                                        await instance.collection("group-chat-room-detail").doc(widget.puid).update({
-                                                                          "delete": true,
-                                                                        });
-                                                                      }
-                                                                      else{
-                                                                        print('llllll');
-                                                                      }
-                                                                      DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
-                                                                          .collection("group-chat")
-                                                                          .doc(widget.puid)
-                                                                          .collection("messages")
-                                                                          .doc(value.data()!["timestamp"])
-                                                                          .get();
-                                                                      chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
-                                                                      _streamController.add(chatList);
-                                                                    });
-                                                                    Navigator.pop(context);
-                                                                  },
-                                                                    child: Text('DELETE FOR ME',style:GoogleFonts.inter(color:Color.fromRGBO
-                                                                      (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
-                                                                  ),
-                                                                  SizedBox(height:20.h),
-                                                                  GestureDetector(onTap:(){           String roomid = roomId(uid: widget.uid, puid: widget.puid);
-                                                                  messages.forEach((key, value) async {
-                                                                    await instance
-                                                                        .collection("group-chat")
-                                                                        .doc(widget.puid)
-                                                                        .collection("messages")
-                                                                        .doc(value.data()!["timestamp"])
-                                                                        .update({
-                                                                      "delete.everyone": true,
-                                                                    });
-                                                                    if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
-                                                                      await instance.collection("group-detail").doc(widget.puid).update({
-                                                                        "delete": true,
-                                                                      });
-                                                                    }
-                                                                    DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
-                                                                        .collection("group-chat")
-                                                                        .doc(widget.puid)
-                                                                        .collection("messages")
-                                                                        .doc(value.data()!["timestamp"])
-                                                                        .get();
-                                                                    // DocumentSnapshot<Map<String, dynamic>> message =
-                                                                    //     chatList[chatList.indexWhere((element) => element.id == value.id)];
-                                                                    // chatList[chatList.indexWhere((element) => element.id == value.id)] =
-                                                                    //     message.data()!["delete"].update("everyone", (value) => true);
-                                                                    chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
-                                                                    _streamController.add(chatList);
-                                                                  });
-                                                                  if (!mounted) return;
-                                                                  setState(() {
-                                                                    messages.clear();
-                                                                    notUserMessages = 0;
-                                                                  });
-                                                                  Navigator.pop(context);},
-                                                                    child: Text('DELETE FOR EVERYONE',style:GoogleFonts.inter(color:Color.fromRGBO
-                                                                      (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
-                                                                  ),
-                                                                  SizedBox(height:20.h),
-                                                                  GestureDetector(onTap:(){Navigator.pop(context);},
-                                                                    child: Text('CANCEL',style:GoogleFonts.inter(color:Color.fromRGBO
-                                                                      (0, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
-                                                                  ),
-                                                                ])
-                                                            ]),
-                                                      ]),
-                                                ),
-                                              );
-
-                                            }):
-                                            await showDialog(context: context, builder:(BuildContext context){
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                                insetPadding: EdgeInsets.only(left: 12, right: 12),
-                                                titlePadding: EdgeInsets.only(top:0.h),
-                                                title:Container( height:170.h,   width: 380.w,
-                                                  padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
-                                                  color:Colors.white,
-                                                  child:Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("Delete ${messages.length} messages?",style:GoogleFonts.inter(color:Color.fromRGBO
-                                                          (0, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:16.sp)),
-                                                        SizedBox(height:20.h),
-                                                        Row(mainAxisAlignment: MainAxisAlignment.end,
-                                                            children: [
-                                                              Column(crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
-                                                                    GestureDetector(onTap:()async {
-                                                                      print('ggggggggg');
-                                                                      Fluttertoast.showToast(
-                                                                          msg: "Deleted succesfully",
-                                                                          timeInSecForIosWeb: 1);
-                                                                      //   String roomid = roomId(uid: widget.puid, puid: widget.uid);
-                                                                      messages.forEach((key, value) async {
-                                                                        print('Lotus57${instance
-                                                                            .collection("group-chat")
-                                                                            .doc(widget.puid)
-                                                                            .collection("messages")
-                                                                            .doc(value.data()!["timestamp"])}');
-                                                                        await instance
-                                                                            .collection("group-chat")
-                                                                            .doc(widget.puid)
-                                                                            .collection("messages")
-                                                                            .doc(value.data()!["timestamp"])
-                                                                            .update({
-                                                                          "delete.peerdelete": true,
-                                                                        });
-                                                                        print('kkkkkkkkk');
-                                                                        if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
 
-                                                                          await instance.collection("group-chat-room-detail").doc(widget.puid).update({
-                                                                            "delete": true,
-                                                                          });
-                                                                        }
-                                                                        else{
-                                                                          print('llllll');
-                                                                        }
-                                                                        DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
-                                                                            .collection("group-chat")
-                                                                            .doc(widget.puid)
-                                                                            .collection("messages")
-                                                                            .doc(value.data()!["timestamp"])
-                                                                            .get();
-                                                                        chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
-                                                                        _streamController.add(chatList);
-                                                                      });
-                                                                      Navigator.pop(context);
-                                                                    },
-                                                                      child: Text('DELETE FOR ME',style:GoogleFonts.inter(color:Color.fromRGBO
-                                                                        (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
-                                                                    ),
-                                                                    SizedBox(height:20.h),
                                                                     GestureDetector(onTap:(){           String roomid = roomId(uid: widget.uid, puid: widget.puid);
                                                                     messages.forEach((key, value) async {
                                                                       await instance
@@ -4049,6 +3862,127 @@ var peerName;
                                                                     });
                                                                     Navigator.pop(context);},
                                                                       child: Text('DELETE FOR EVERYONE',style:GoogleFonts.inter(color:Color.fromRGBO
+                                                                        (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
+                                                                    ),
+                                                                    SizedBox(height:20.h),
+                                                                    GestureDetector(
+
+                                                                      onTap:()async {
+                                                                        print('ggggggggg${widget.puid}');
+
+                                                                        Fluttertoast.showToast(
+                                                                            msg: "Deleted succesfully",
+                                                                            timeInSecForIosWeb: 1);
+                                                                        //   String roomid = roomId(uid: widget.puid, puid: widget.uid);
+                                                                        messages.forEach((key, value) async {
+                                                                          print('Lotus57${instance
+                                                                              .collection("group-chat")
+                                                                              .doc(widget.puid)
+                                                                              .collection("messages")
+                                                                              .doc(value.data()!["timestamp"])}');
+                                                                          await instance
+                                                                              .collection("group-chat")
+                                                                              .doc(widget.puid)
+                                                                              .collection("messages")
+                                                                              .doc(value.data()!["timestamp"])
+                                                                              .update({
+                                                                            "delete.personal": true,
+                                                                          });
+                                                                          print('kkkkkkkkk');
+                                                                          if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
+
+                                                                            await instance.collection("group-chat").doc(widget.puid).update({
+                                                                              "delete": true,
+                                                                            });
+                                                                          }
+                                                                          else{
+                                                                            print('llllll');
+                                                                          }
+                                                                          DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
+                                                                              .collection("group-chat")
+                                                                              .doc(widget.puid)
+                                                                              .collection("messages")
+                                                                              .doc(value.data()!["timestamp"])
+                                                                              .get();
+                                                                          chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
+                                                                          _streamController.add(chatList);
+                                                                        });
+                                                                        Navigator.pop(context);
+                                                                      },
+                                                                      child: Text('DELETE FOR ME',style:GoogleFonts.inter(color:Color.fromRGBO
+                                                                        (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
+                                                                    ),
+                                                                    SizedBox(height:20.h),
+                                                                    GestureDetector(onTap:(){Navigator.pop(context);},
+                                                                      child: Text('CANCEL',style:GoogleFonts.inter(color:Color.fromRGBO
+                                                                        (0, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
+                                                                    ),
+                                                                  ])
+                                                            ]),
+                                                      ]),
+                                                ),
+                                              );
+
+                                            }):
+                                            await showDialog(context: context, builder:(BuildContext context){
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                                insetPadding: EdgeInsets.only(left: 12, right: 12),
+                                                titlePadding: EdgeInsets.only(top:0.h),
+                                                title:Container( height:170.h,   width: 380.w,
+                                                  padding: EdgeInsets.only(left: 12, top: 20, bottom: 0,right: 12),
+                                                  color:Colors.white,
+                                                  child:Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text("Delete ${messages.length} messages?",style:GoogleFonts.inter(color:Color.fromRGBO
+                                                          (0, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:16.sp)),
+                                                        SizedBox(height:20.h),
+                                                        Row(mainAxisAlignment: MainAxisAlignment.end,
+                                                            children: [
+                                                              Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    GestureDetector(onTap:()async {
+                                                                      print('ggggggggg${widget.puid}');
+                                                                      Fluttertoast.showToast(
+                                                                          msg: "Deleted succesfully",
+                                                                          timeInSecForIosWeb: 1);
+                                                                      //   String roomid = roomId(uid: widget.puid, puid: widget.uid);
+                                                                      messages.forEach((key, value) async {
+                                                                        print('Lotus57${instance
+                                                                            .collection("group-chat")
+                                                                            .doc(uid)
+                                                                            .collection("messages")
+                                                                            .doc(value.data()!["timestamp"])}');
+                                                                        await instance
+                                                                            .collection("group-chat")
+                                                                            .doc(uid)
+                                                                            .collection("messages")
+                                                                            .doc(value.data()!["timestamp"])
+                                                                            .update({
+                                                                          "delete.peerdelete": true,
+                                                                        });
+                                                                        print('kkkkkkkkk');
+                                                                        if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
+
+                                                                          await instance.collection("group-chat").doc(widget.puid).update({
+                                                                            "delete": true,
+                                                                          });
+                                                                        }
+                                                                        else{
+                                                                          print('llllll');
+                                                                        }
+                                                                        DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
+                                                                            .collection("group-chat")
+                                                                            .doc(widget.puid)
+                                                                            .collection("messages")
+                                                                            .doc(value.data()!["timestamp"])
+                                                                            .get();
+                                                                        chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
+                                                                        _streamController.add(chatList);
+                                                                      });
+                                                                      Navigator.pop(context);
+                                                                    },
+                                                                      child: Text('DELETE FOR ME',style:GoogleFonts.inter(color:Color.fromRGBO
                                                                         (255, 0, 0, 1),fontWeight:FontWeight.w400,fontSize:12.sp),),
                                                                     ),
                                                                     SizedBox(height:20.h),
@@ -4154,17 +4088,17 @@ var peerName;
                                                               0, 0, 0, 1))),
                                                 )
                                             ),
-                                            PopupMenuItem(
-                                                value:2,
-                                                child: Text(
-                                                  "Report",
-                                                  style: GoogleFonts.inter(
-                                                      textStyle: TextStyle(
-                                                          fontSize: 16.sp,
-                                                          fontWeight: FontWeight.w400,
-                                                          color: Color.fromRGBO(0,0,0,1))),
-                                                )
-                                            ),
+                                            // PopupMenuItem(
+                                            //     value:2,
+                                            //     child: Text(
+                                            //       "Report",
+                                            //       style: GoogleFonts.inter(
+                                            //           textStyle: TextStyle(
+                                            //               fontSize: 16.sp,
+                                            //               fontWeight: FontWeight.w400,
+                                            //               color: Color.fromRGBO(0,0,0,1))),
+                                            //     )
+                                            // ),
                                             PopupMenuItem(
                                                 value:3,
                                                 child: Text(
@@ -4213,53 +4147,63 @@ var peerName;
                                       child: (messages.isEmpty)
                                           ? Row(
                                         children: [
-                                          Container(
-                                            width:35.w,
-                                            height:35.h,
+                                          (chatRoomSnapshot.data!
+                                              .data()!["pic"] != null)
 
-                                            child: ClipOval(
-                                              child: (chatRoomSnapshot.data!
-                                                  .data()!["pic"] != null)
+                                              ? CachedNetworkImage(
 
-                                                  ? CachedNetworkImage(
-                                                imageUrl: chatRoomSnapshot.data!.data()!["pic"],
-                                                imageBuilder: (context, imageProvider) => Container(
-                                                  width: 44.0.w,
-                                                  height: 44.0.h,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    image: DecorationImage(
-                                                        image: imageProvider, fit: BoxFit.cover),
+                                            imageUrl: chatRoomSnapshot.data!.data()!["pic"],
+                                            imageBuilder: (context, imageProvider) => Container(
+                                              width: 40.0.w,
+                                              height: 4.0.h,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                    image: imageProvider, fit: BoxFit.cover),
+                                              ),
+                                            ),
+                                            fit: BoxFit.cover,
+                                            fadeInDuration: const Duration(
+                                                milliseconds: 400),
+                                            progressIndicatorBuilder: (
+                                                context, url,
+                                                downloadProgress) =>
+                                                Center(
+                                                  child: Container(
+                                                    width: 20.0,
+                                                    height: 20.0,
+                                                    child: CircularProgressIndicator(
+                                                        value: downloadProgress
+                                                            .progress),
                                                   ),
                                                 ),
-                                                fit: BoxFit.cover,
-                                                fadeInDuration: const Duration(
-                                                    milliseconds: 400),
-                                                progressIndicatorBuilder: (
-                                                    context, url,
-                                                    downloadProgress) =>
-                                                    Center(
-                                                      child: Container(
-                                                        width: 20.0,
-                                                        height: 20.0,
-                                                        child: CircularProgressIndicator(
-                                                            value: downloadProgress
-                                                                .progress),
-                                                      ),
-                                                    ),
 
-                                                errorWidget: (context, url,
-                                                    error) => Image.asset(
-                                                    "assets/noProfile.jpg",
-                                                    fit: BoxFit.cover),
-                                              )
-                                                  :Image.asset("assets/noProfile.jpg", fit: BoxFit.cover),
+                                            errorWidget: (context, url,
+                                                error) =>    Container(
+                                              width: 40.w,
+                                              height: 40.h,
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape
+                                                      .circle,
+                                                  image: DecorationImage(
+                                                      image: AssetImage(
+                                                          "assets/noProfile.jpg")
+                                                  )
+                                              ),
                                             ),
-                                            //     :   SvgPicture.asset((widget.state == 0) ? "assets/invite_friends/profilepicture.svg" : "assets/invite_friends/profilepicture.svg", fit: BoxFit.cover,
-                                            //   height:44.h,
-                                            //   width: 44.w,
-                                            // ),
-
+                                          )
+                                              : Container(
+                                            width: 40.w,
+                                            height: 40.h,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape
+                                                    .circle,
+                                                image: DecorationImage(
+                                                    image: AssetImage(
+                                                        "assets/noProfile.jpg"),
+                                                    fit: BoxFit
+                                                        .cover)),
+                                            //   child: Image.asset("assets/noProfile.jpg")
                                           ),
                                           SizedBox(width: 10),
 
@@ -4281,22 +4225,65 @@ var peerName;
                                                   ],
                                                 ),
                                                 Container(
-
                                                     padding:EdgeInsets.only(right: 13.0),
                                                     color: Colors.transparent,
                                                     height: 12,width: double.infinity,
-                                                    child: ListView.builder(itemCount: chatRoomSnapshot.data!.data()!["members"].length,scrollDirection: Axis.horizontal,
+                                                    child: chatRoomSnapshot.data!.data()!["typinglist"].length < 1?
+                                                    ListView.builder(itemCount: chatRoomSnapshot.data!.data()!["members"].length,scrollDirection: Axis.horizontal,
                                                         primary: false,
                                                         itemBuilder: (context,index){
                                                           print('Lotus7:${chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["name"]},');
-                                                          return Text((chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["isRemoved"]==false)?'${chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["name"]}, ':'',overflow: TextOverflow.fade,     style: GoogleFonts.inter(
-                                                              textStyle: textStyle(
-                                                                  fontSize: 11.sp,
-                                                                  fontWeight: FontWeight
-                                                                      .w400,
-                                                                  color: Color.fromRGBO(0, 0, 0, 0.5))));
+                                                          return Text('${chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["name"]}',overflow: TextOverflow.fade,
+                                                              style: GoogleFonts.inter(
+                                                                  textStyle: textStyle(
+                                                                      fontSize: 11.sp,
+                                                                      fontWeight: FontWeight
+                                                                          .w400,
+                                                                      color: Color.fromRGBO(0, 0, 0, 0.5))));
 
-                                                        })),
+                                                        }):
+                                                    ((chatRoomSnapshot.data!.data()!["typinglist"][0] != widget.uid) && (chatRoomSnapshot.data!.data()!["members"]["${chatRoomSnapshot.data!.data()!["typinglist"][0]}"]["typingstatus"] == true))?
+                                                    Text("${chatRoomSnapshot.data!.data()!["members"]["${chatRoomSnapshot.data!.data()!["typinglist"][0]}"]["name"]} Typing...",style: GoogleFonts.inter(
+                                                        textStyle: textStyle(
+                                                            fontSize: 11.sp,
+                                                            fontWeight: FontWeight
+                                                                .w400,
+                                                            color: Color.fromRGBO(0, 0, 0, 0.5)))):
+                                                    chatRoomSnapshot.data!.data()!["typinglist"].length > 1?
+                                                    chatRoomSnapshot.data!.data()!["typinglist"][0] != widget.uid && chatRoomSnapshot.data!.data()!["members"]["${chatRoomSnapshot.data!.data()!["typinglist"][0]}"]["typingstatus"] == true?
+                                                    Text("${chatRoomSnapshot.data!.data()!["members"]["${chatRoomSnapshot.data!.data()!["typinglist"][1]}"]["name"]} Typing...",style: GoogleFonts.inter(
+                                                        textStyle: textStyle(
+                                                            fontSize: 11.sp,
+                                                            fontWeight: FontWeight
+                                                                .w400,
+                                                            color: Color.fromRGBO(0, 0, 0, 0.5)))):
+                                                    ListView.builder(itemCount: chatRoomSnapshot.data!.data()!["members"].length,scrollDirection: Axis.horizontal,
+                                                        primary: false,
+                                                        itemBuilder: (context,index){
+                                                          print('Lotus7:${chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["name"]},');
+                                                          return Text('${chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["name"]}',overflow: TextOverflow.fade,
+                                                              style: GoogleFonts.inter(
+                                                                  textStyle: textStyle(
+                                                                      fontSize: 11.sp,
+                                                                      fontWeight: FontWeight
+                                                                          .w400,
+                                                                      color: Color.fromRGBO(0, 0, 0, 0.5))));
+
+                                                        })
+                                                        :ListView.builder(itemCount: chatRoomSnapshot.data!.data()!["members"].length,scrollDirection: Axis.horizontal,
+                                                        primary: false,
+                                                        itemBuilder: (context,index){
+                                                          print('Lotus7:${chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["name"]},');
+                                                          return Text('${chatRoomSnapshot.data!.data()!["members"].values.elementAt(index)["name"]}',overflow: TextOverflow.fade,
+                                                              style: GoogleFonts.inter(
+                                                                  textStyle: textStyle(
+                                                                      fontSize: 11.sp,
+                                                                      fontWeight: FontWeight
+                                                                          .w400,
+                                                                      color: Color.fromRGBO(0, 0, 0, 0.5))));
+
+                                                        })
+                                                )
                                               ],
                                             ),
                                           ),
@@ -4311,7 +4298,6 @@ var peerName;
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        // color: Color(black),
                                         image: DecorationImage(
                                           image: (Map.from(chatRoomSnapshot.data!
                                               .data()!['members']["${widget
@@ -4332,18 +4318,13 @@ var peerName;
                                                   ? "assets/chatLightBg.jpg"
                                                   : "assets/chatDarkBg.jpg"),
                                           fit: BoxFit.cover,
-                                          // colorFilter: (themedata.value.index == 0)
-                                          //     ? ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.lighten)
-                                          //     : ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
                                         ),
                                       ),
                                       child: Column(
                                         children: [
                                           Expanded(
-                                            child: NotificationListener<
-                                                ScrollNotification>(
-                                                onNotification: (
-                                                    ScrollNotification scrollInfo) {
+                                            child: NotificationListener<ScrollNotification>(
+                                                onNotification: (ScrollNotification scrollInfo) {
                                                   if (scrollInfo.metrics
                                                       .maxScrollExtent ==
                                                       scrollInfo.metrics.pixels) {
@@ -4424,8 +4405,7 @@ var peerName;
                                                             });
                                                             if (!mounted) return;
                                                             setState(() {
-                                                              replyMessageMap =
-                                                                  replyMap(
+                                                              replyMessageMap = replyMap(
                                                                       documentId: element
                                                                           .id,
                                                                       documentIndex: (snapshot
@@ -4484,19 +4464,14 @@ var peerName;
                                                               FocusScope.of(context).requestFocus(FocusNode());
                                                             },
                                                             onTap: () {
-
                                                               FocusScope.of(context).requestFocus(FocusNode());
                                                               if (messages
                                                                   .isNotEmpty) {
                                                                 if (messages.values
-                                                                    .contains(
-                                                                    element)) {
-                                                                  // if (!mounted) return;
-                                                                  // setState(() {
+                                                                    .contains(element)) {
                                                                   messages.remove(
                                                                       messages
                                                                           .inverse[element]);
-                                                                  // });
                                                                   if (element
                                                                       .data()!["from"] !=
                                                                       widget.uid) {
@@ -4521,10 +4496,8 @@ var peerName;
                                                               }
                                                               if (!mounted) return;
                                                               setState(() {});
-                                                              log(notUserMessages
-                                                                  .toString());
-
-                                                            },
+                                                              log(notUserMessages.toString());
+                                                              },
                                                             child: Container(
                                                               color: (index <=
                                                                   lastUnreadCount &&
@@ -4709,6 +4682,22 @@ var peerName;
                                                       Flexible(
                                                         child: textField(
                                                           focusNode: focusNode,
+                                                            onChanged : (event) async {
+                                                              if(textEditingController.text.isNotEmpty) {
+                                                                // print("1 event.runtime ${event.runtimeType} RawKeyDownEvent ${RawKeyDownEvent} event.logicalKey.keyId ${event.logicalKey.keyId}");
+                                                                await instance.collection("user-detail").doc(uid).update({
+                                                                  "status": "typing",
+                                                                  "chattingWith": null,
+                                                                });
+                                                              } else{
+                                                                // print("2 event.runtime ${event.runtimeType} RawKeyDownEvent ${RawKeyDownEvent} event.logicalKey.keyId ${event.logicalKey.keyId}");
+                                                                await instance.collection("user-detail").doc(uid).update({
+                                                                  "status": "online",
+                                                                  "chattingWith": null,
+                                                                });
+                                                              }
+
+                                                            },
                                                           prefix:IconButton(
                                                               splashColor: Colors
                                                                   .transparent,
@@ -4786,7 +4775,6 @@ var peerName;
                                                                                     MainAxisAlignment
                                                                                         .spaceEvenly,
                                                                                     children: [
-
                                                                                       GestureDetector(
                                                                                         onTap: () async {
                                                                                           Navigator.of(context).pop();
@@ -4799,7 +4787,6 @@ var peerName;
 
                                                                                                     await writeUserMessage(
                                                                                                       type: 4,
-                                                                                                      // peerChattingWith: userDetailSnapshot!.data()!["chattingWith"],
                                                                                                       peerName:
                                                                                                       chatRoomSnapshot.data!.data()!["members"]
                                                                                                       ["${widget.puid}"]["name"],
@@ -5121,7 +5108,6 @@ var peerName;
                                                                                       ),
                                                                                       GestureDetector(
                                                                                         onTap: () async {
-
                                                                                           Navigator.of(context).pop();
                                                                                           Navigator.push(
                                                                                               context,
@@ -5267,7 +5253,7 @@ var peerName;
                                                                       : Color(
                                                                       white))),
                                                           textEditingController: textEditingController,
-                                                          hintText: "Ping here...",
+                                                          hintText: "Ping here1...",
 
                                                           hintStyle: GoogleFonts
                                                               .inter(
@@ -5576,6 +5562,8 @@ var peerName;
                         builder: (context, sizingInformation) {
                           return Scaffold(
                             appBar: AppBar(
+                              leadingWidth: 40,
+                              titleSpacing: 0,
                               centerTitle: false,
                               automaticallyImplyLeading: false,
                               backgroundColor: (themedata.value.index ==
@@ -6180,128 +6168,117 @@ var peerName;
                                 },
                                 child: Row(
                                   children: [
-                                    Container(
-                                        width: 35,
-                                        height: 35,
-                                        child: ClipOval(
-                                          child: (emptyChatRoomDetails.data!
-                                              .data()!["pic"] !=
-                                              null)
-                                              ? CachedNetworkImage(
-                                            fit: BoxFit.cover,
-                                            fadeInDuration: const Duration(
-                                                milliseconds: 400),
-                                            progressIndicatorBuilder:
-                                                (context, url,
-                                                downloadProgress) =>
-                                                Center(
-                                                  child: Container(
-                                                    width: 20.0,
-                                                    height: 20.0,
-                                                    child:
-                                                    CircularProgressIndicator(
-                                                        value:
-                                                        downloadProgress
-                                                            .progress),
-                                                  ),
-                                                ),
-                                            imageUrl: emptyChatRoomDetails
-                                                .data!
-                                                .data()!["pic"],
-                                            errorWidget: (context, url,
-                                                error) =>
-                                                Image.asset(
-                                                    "assets/noProfile.jpg",
-                                                    fit: BoxFit.cover),
-                                          )
-                                              : Image.asset(
-                                              "assets/noProfile.jpg",
-                                              fit: BoxFit.cover),
-                                        )),
+                                    (emptyChatRoomDetails.data!
+                                        .data()!["pic"] !=
+                                        null)
+                                        ? CachedNetworkImage(
+                                      imageBuilder:
+                                          (context,
+                                          imageProvider) =>
+                                          Container(
+                                            width: 40.w,
+                                            height: 40.h,
+                                            decoration:
+                                            BoxDecoration(
+                                              shape: BoxShape
+                                                  .circle,
+                                              image: DecorationImage(
+                                                  image:
+                                                  imageProvider,
+                                                  fit: BoxFit
+                                                      .cover),
+                                            ),
+                                          ),
+                                      fit: BoxFit.cover,
+                                      fadeInDuration: const Duration(
+                                          milliseconds: 400),
+                                      progressIndicatorBuilder:
+                                          (context, url,
+                                          downloadProgress) =>
+                                          Center(
+                                            child: Container(
+                                              width: 20.0,
+                                              height: 20.0,
+                                              child:
+                                              CircularProgressIndicator(
+                                                  value:
+                                                  downloadProgress
+                                                      .progress),
+                                            ),
+                                          ),
+                                      imageUrl: emptyChatRoomDetails
+                                          .data!
+                                          .data()!["pic"],
+                                      errorWidget: (context, url,
+                                          error) =>
+                                          Container(
+                                            width: 40.w,
+                                            height: 40.h,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape
+                                                    .circle,
+                                                image: DecorationImage(
+                                                    image: AssetImage(
+                                                        "assets/noProfile.jpg")
+                                                )
+                                            ),
+                                          ),
+                                    )
+                                        : Container(
+                                      width: 40.w,
+                                      height: 40.h,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape
+                                              .circle,
+                                          image: DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/noProfile.jpg"),
+                                              fit: BoxFit
+                                                  .cover)),
+                                      //   child: Image.asset("assets/noProfile.jpg")
+                                    ),
                                     SizedBox(
                                       width: 10,
                                     ),
                                     Flexible(
                                       child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                              (widget.state == 0)
-                                                  ? emptyChatRoomDetails.data!
-                                                  .data()!["name"]
-                                                  : emptyChatRoomDetails.data!
-                                                  .data()!["title"],
-                                              style: GoogleFonts.inter(
-                                                  textStyle: textStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 16.sp,
-                                                      fontWeight:
-                                                      FontWeight.w500))),
-                                          StreamBuilder<
-                                              DocumentSnapshot<
-                                                  Map<String, dynamic>>>(
-                                              stream: instance
-                                                  .collection("user-detail")
-                                                  .doc(widget.puid)
-                                                  .snapshots(),
+                                          Text((widget.state == 0) ? (peerName == null)?fPhone:peerName
+                                              :
+                                          emptyChatRoomDetails.data!.data()!["title"],
+                                              style: GoogleFonts.inter(textStyle: textStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.black))),
+                                          SizedBox(height:2),
+                                          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                                              stream: instance.collection("user-detail").doc(widget.puid).snapshots(),
                                               builder: (context, peerSnapshot) {
-                                                return StreamBuilder<
-                                                    DocumentSnapshot<
-                                                        Map<String, dynamic>>>(
-                                                  stream: instance
-                                                      .collection("user-detail")
-                                                      .doc(widget.puid)
-                                                      .snapshots(),
+                                                return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                                                  stream: instance.collection("user-detail").doc(widget.uid).snapshots(),
                                                   builder: (context, userSnapshot) {
-                                                    if (userSnapshot
-                                                        .connectionState ==
-                                                        ConnectionState
-                                                            .active &&
-                                                        peerSnapshot
-                                                            .connectionState ==
-                                                            ConnectionState
-                                                                .active) {
+                                                    if (userSnapshot.connectionState == ConnectionState.active &&
+                                                        peerSnapshot.connectionState == ConnectionState.active) {
                                                       return Text(
-                                                        (userSnapshot.data!.data()![
-                                                        "onlineStatus"] ==
-                                                            true &&
-                                                            peerSnapshot.data!
-                                                                .data()![
-                                                            "onlineStatus"] ==
-                                                                true)
-                                                            ? (peerSnapshot
-                                                            .data!
-                                                            .data()!["status"] ==
-                                                            "online")
-                                                            ? "Online"
-                                                            : (userSnapshot
-                                                            .data!.data()![
-                                                        "lastseenStatus"] ==
-                                                            true &&
-                                                            peerSnapshot
-                                                                .data!
-                                                                .data()!["lastseenStatus"] ==
-                                                                true)
-                                                            ? "Last seen ${getDateTimeInChat(
-                                                            datetime: getDateTimeSinceEpoch(
-                                                                datetime: peerSnapshot
-                                                                    .data!
-                                                                    .data()!["status"]))} at ${formatTime(
-                                                            getDateTimeSinceEpoch(
-                                                                datetime: peerSnapshot
-                                                                    .data!
-                                                                    .data()!["status"]))}"
-                                                            : "Tap here for user info 2"
-                                                            : "Tap here for user info 1",
-                                                        style: GoogleFonts
-                                                            .inter(
-                                                            textStyle: textStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w500,
-                                                                color: Colors.black )),
+                                                        (userSnapshot.data!.data()!["onlineStatus"] == true &&
+                                                            peerSnapshot.data!.data()!["onlineStatus"] == true)
+                                                            ? (peerSnapshot.data!.data()!["status"] == "online")
+                                                            ? "Online":
+                                                        (peerSnapshot.data!.data()!["status"] == "typing")?
+                                                        "typing..."
+                                                            : (userSnapshot.data!.data()!["lastseenStatus"] == false &&
+                                                            peerSnapshot.data!.data()!["lastseenStatus"] == false)
+                                                            ? "last seen ${getDateTimeInChat(datetime:
+                                                        getDateTimeSinceEpoch(datetime: peerSnapshot.data!.
+                                                        data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch
+                                                          (datetime: peerSnapshot.data!.data()!["status"]))}"
+                                                            : "last seen ${getDateTimeInChat(datetime:
+                                                        getDateTimeSinceEpoch(datetime: peerSnapshot.data!.
+                                                        data()!["status"]))} at ${formatTime(getDateTimeSinceEpoch
+                                                          (datetime: peerSnapshot.data!.data()!["status"]))}"
+                                                            : "tap here for user info",
+                                                        style: GoogleFonts.inter(
+                                                          textStyle: textStyle(fontSize: 12, fontWeight: FontWeight.w500, color:  Color.fromRGBO(
+                                                              0, 0, 0, 1)),
+                                                        ),
                                                       );
                                                     } else {
                                                       return Container();
@@ -6352,6 +6329,7 @@ var peerName;
                                             Flexible(
                                               child: textField(
                                                 focusNode: focusNode,
+
                                                 prefix: IconButton(
                                                     splashColor:
                                                     Colors.transparent,
@@ -6864,7 +6842,7 @@ var peerName;
                                                   .data()!["members"]["${widget
                                                   .puid}"]["name"])
                                                   : replyUserName
-                                                  : "You",
+                                                  : "You3",
                                               style: GoogleFonts.inter(
                                                 textStyle: textStyle(
                                                     fontSize: 14,
@@ -6874,14 +6852,16 @@ var peerName;
                                               softWrap: true,
                                             ),
                                             SizedBox(height: 8),
+                                            (inverseDataType[document.data()!["reply"]["type"]] == 1)?
+                                            Container(width: 55, height: 55,
+                                                child : CachedNetworkImage(fit:BoxFit.fill,
+                                                  imageUrl: document.data()!["reply"]["data"]["image"],
+                                                )
+                                            ):
                                             Text(
-                                              (inverseDataType[document
-                                                  .data()!["reply"]["type"]] ==
-                                                  0)
-                                                  ? document
-                                                  .data()!["reply"]["data"]["text"]
-                                                  : document
-                                                  .data()!["reply"]["type"],
+                                              (inverseDataType[document.data()!["reply"]["type"]] == 0)
+                                                  ? document.data()!["reply"]["data"]["text"]
+                                                  : document.data()!["reply"]["type"],
                                               style: GoogleFonts.inter(
                                                 textStyle: textStyle(
                                                   color: Colors.white,
@@ -7079,6 +7059,7 @@ var peerName;
                                               crossAxisAlignment: CrossAxisAlignment
                                                   .start,
                                               children: [
+
                                                 Text(
 
                                                   (document["reply"]["from"] !=
@@ -7088,7 +7069,7 @@ var peerName;
                                                       .data()!["members"]["${widget
                                                       .puid}"]["name"])
                                                       : replyUserName
-                                                      : "You",
+                                                      : "You4",
                                                   style: GoogleFonts.inter(
                                                     textStyle: textStyle(
                                                         fontSize: 12.sp,
@@ -7098,10 +7079,15 @@ var peerName;
                                                   softWrap: true,
                                                 ),
                                                 const SizedBox(height: 8),
+                                                (inverseDataType[document.data()!["reply"]["type"]] == 1)?
+                                                Container(width: 55, height: 55,
+                                                    child : CachedNetworkImage(fit:BoxFit.fill,
+                                                      imageUrl: document.data()!["reply"]["data"]["image"],
+                                                    )
+                                                ):
                                                 Text(
                                                   (inverseDataType[document
-                                                      .data()!["reply"]["type"]] ==
-                                                      0)
+                                                      .data()!["reply"]["type"]] == 0)
                                                       ? document
                                                       .data()!["reply"]["data"]["text"]
                                                       : document
@@ -7180,8 +7166,6 @@ var peerName;
 
 
   Future<void> downloadFileExample() async {
-    // FirebaseStorage firebase_storage = FirebaseStorage();
-    //First you get the documents folder location on the device...
     Directory appDocDir = Directory('/storage/emulated/0/Download');
     //Here you'll specify the file it should be saved as
     File downloadToFile = File('${appDocDir.path}/downloaded-pdf.pdf');
@@ -7231,55 +7215,9 @@ var peerName;
   }
 
   Widget messageBuilder({
-    required DocumentSnapshot<Map<String, dynamic>> document, required DocumentSnapshot<Map<String, dynamic>> chatRoomSnapshot}) {
-   // String roomid = roomId(uid: widget.uid, puid: widget.puid);
 
-//     Future<QuerySnapshot<Map<String, dynamic>>> bubbleCount =
-//     instance.collection("personal-chat").doc(roomid).collection(
-//         "messages").where(
-//         "delete" ).where("peerdelete",isEqualTo:false).get();
-//
-//
-// //List docList=document.forEach((key, value) { });
-//     print('Lotus65${bubbleCount}');
-//   //  List docList=[{'document':document.data()!['data']['document']},{'text':document.data()!['data']['text']}];
-//     var userDocument= document.data()!['delete']['peerdelete'];
-//     print('Lotus67${userDocument}');
-//     print('Lotus66${docList.length}');
-//     if(userDocument == true){
-//       print('gggggg');
-//       docList.add(document.data()!['data']['text']);
-//       print('Lotus70${docList}');
-//     }
-// else{
-//   print('not works');
-//     }
-//
-//     messages.forEach((key, value) async {
-//
-//       // await instance.collection("personal-chat").doc(roomid).collection("messages").doc(value.data()!["timestamp"]).update({
-//       //   "delete.peerdelete": true,
-//       // });
-//       print('yyyyy');
-//       // if (chatRoomSnapshot.data!.data()!["timestamp"] == value.data()!["timestamp"]) {
-//       //   print('delete works');
-//       //   await instance.collection("personal-chat-room-detail").doc(roomid).update({
-//       //     "delete": true,
-//       //   });
-//       //
-//       // }
-//
-//       DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
-//           .collection("personal-chat")
-//           .doc(roomid)
-//           .collection("messages")
-//           .doc(value.data()!["timestamp"]).collection("data").doc(value.data()!["text"])
-//           .get();
-//       print('Lotus88${updatedMessage}');
-//       chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
-//       _streamController.add(chatList);
-//       print('Lotus99${updatedMessage}');
-//     });
+    required DocumentSnapshot<Map<String, dynamic>> document, required DocumentSnapshot<Map<String, dynamic>> chatRoomSnapshot}) {
+
     switch (inverseDataType[document.data()!["type"]]) {
 
       case 0:
@@ -7460,7 +7398,6 @@ var peerName;
               filename=filename.split("?").first;
               filename=filename.split("-").last;
               print("fileName:${filename}");
-              // _downloadFile(url, filename);
               downloadFileExample();
             },
             child: DocumentDownloader(url: document.data()!["data"]["document"]));
@@ -7482,10 +7419,6 @@ var peerName;
             var url = document.data()!["data"]["image"];
             var filename = document.data()!["timestamp"];
             _downloadFile(url, filename);
-            // log(Uri.decodeFull(document.data()!["data"]["story"]).toString());
-            // Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //   return PostDetails(postId: Uri.decodeFull(document.data()!["data"]["story"]).toString().split("post_id=").last);
-            // }));
           },
           child: Column(
             children: [
@@ -7737,6 +7670,70 @@ var peerName;
               Color.fromRGBO(255, 255, 255, 1): Colors.black,))) : PlayAudio(
             url: document.data()!["data"]["voice"], type: 1,
             state: (document["from"] == widget.uid) ? 0 : 1, profilePic: chatRoomSnapshot.data()!["members"][document.data()!["from"]]["pic"]);
+
+      case 10:
+        return (document.data()!["delete"]["everyone"] == true)?
+        Text((document.data()!["from"] == widget.uid) ? "∅ You have deleted this message" : "∅ This message have been deleted",
+            style:GoogleFonts.inter(fontStyle:FontStyle.italic,textStyle:TextStyle(fontSize:11.sp,fontWeight:FontWeight.w500,
+              color: (document.data()!["from"] == widget.uid)?
+              Color.fromRGBO(255, 255, 255, 1): Colors.black,))):
+        (document.data()!["read"]["timestamp"] != null)?
+        Text("Opened..."):
+        GestureDetector(
+
+            onTap: () async {
+              print("view success 3");
+              var url = document.data()!["data"]["viewonce"];
+              var filename = url.split("https://firebasestorage.googleapis.com/v0/b/gatello-5d386.appspot.com/o/personal-chat%2F").last;filename = filename.split("?")
+                  .first;
+              filename = filename
+                  .split("-")
+                  .last;
+              print("fileName:${filename}");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          AssetPageView(
+                            stringList: [document.data()!["data"]["viewonce"]],
+                            showIndex: true,
+                          )));
+              String roomid = roomId(uid: widget.uid, puid: widget.puid);
+
+              await instance.collection("personal-chat").doc(roomid).collection("messages").get().then((value) {
+                var perMsgData = value;
+                print("Personal Msg Data ${perMsgData}");
+              });
+
+              messages.forEach((key, value) async {
+                await instance
+                    .collection("personal-chat")
+                    .doc(roomid)
+                    .collection("messages")
+                    .doc(value.data()!["timestamp"])
+                    .update({
+                  "data.viewonce": "opened",
+                });
+                DocumentSnapshot<Map<String, dynamic>> updatedMessage = await instance
+                    .collection("personal-chat")
+                    .doc(roomid)
+                    .collection("messages")
+                    .doc(value.data()!["timestamp"])
+                    .get();
+                chatList[chatList.indexWhere((element) => element.id == value.id)] = updatedMessage;
+                _streamController.add(chatList);
+              });
+            },
+            child: Container(
+              width: 200,
+              child: Row(
+                children: [
+                  SvgPicture.asset("assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/receiver_vo.svg"),
+                  SizedBox(width: 10),
+                  Text("View Once MSG"),
+                ],
+              ),
+            ));
       default:return Container();
     }
   }
@@ -7825,6 +7822,7 @@ var peerName;
                 ),
                 autofocus:true,
                 onChanged: (value) {
+                //  filter();
                   setState(() {
                     typing=true;
                   });
@@ -7884,8 +7882,6 @@ var peerName;
             }
             if (!mounted) return;
             setState(() {
-
-
               replyMessageMap =
                   replyMap(documentId: document.id,
                       documentIndex: replyIndex,

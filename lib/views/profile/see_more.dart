@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gatello/views/profile/info.dart'as Info_Page;
+import 'package:gatello/views/profile/info.dart';
 import 'package:gatello/views/profile/link.dart';
 import 'package:gatello/views/profile/profile_details.dart';
 import 'package:gatello/views/profile/skill.dart';
 import 'package:gatello/views/profile/workexperience.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:tuple/tuple.dart';
 import '/core/models/profile_detail.dart' as profileDetailsModel;
 import '../../Others/Routers.dart';
@@ -20,8 +21,13 @@ class SeeMoreText extends StatefulWidget {
   final VoidCallback? onPressed;
   String phone;
   String email;
- String? uid;
-   SeeMoreText({Key? key,required this.onPressed,required this.phone,required this.email,this.uid}) : super(key: key);
+  String? uid;
+  String  biog;
+  String gender;
+  String dob;
+  final ValueNotifier<Tuple4> valueNotifier;
+  SeeMoreText({Key? key,required this.onPressed,required this.phone,
+    required this.email,this.uid,required this.biog,required this.gender, required this.dob,required this.valueNotifier}) : super(key: key);
 
   @override
   State<SeeMoreText> createState() => _TextsuState();
@@ -32,65 +38,55 @@ class _TextsuState extends State<SeeMoreText> {
   int i=0;
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
   Future profileDetailsApiCall() async {
+    print('profile api called');
     return await ApiHandler().apiHandler(
       valueNotifier: profileDetailsValueNotifier,
       jsonModel: profileDetailsModel.profileDetailsFromJson,
-      url: profileDetailsUrl,
+      url: 'http://3.110.105.86:4000/view/profile',
       requestMethod: 1,
       body: {"user_id": (widget.uid != null) ? widget.uid : widget.uid, "followee_id": ""},
     );
   }
-
+  @override
+  void initState(){
+    profileDetailsApiCall();
+  }
 
   @override
   Widget build(BuildContext context) {
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    var inputDate = inputFormat.parse(widget.dob); // <-- dd/MM 24H format
+
+    var outputFormat = DateFormat('MM/dd/yyyy');
+    var outputDate = outputFormat.format(inputDate);
+    //   DateTime dateTime = dateFormat.parse("2019-07-19 8:40:23");
     print('uid for seemore${widget.uid}');
-   // print('phnum${profileDetailsValueNotifier.value.item2.result.profileDetails.phone}');
+    // print('phnum${profileDetailsValueNotifier.value.item2.result.profileDetails.phone}');
     return Container(
-          padding: EdgeInsets.only(right:30,left: 30),
+      padding: EdgeInsets.only(right:30,left: 30),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-    Text('Your professional bio is an important piece of',style: GoogleFonts.inter(
-      textStyle: TextStyle(fontSize:13.5.sp,fontWeight: FontWeight.w400,color:
-      Color.fromRGBO(0, 0, 0, 0.5))
-    ),),
-      SizedBox(height:5.h),
-      Text('personal branding real estate that can help you',style: GoogleFonts.inter(
-          textStyle: TextStyle(fontSize:13.5.sp,fontWeight: FontWeight.w400,color:
-          Color.fromRGBO(0, 0, 0, 0.5))
-      ),), SizedBox(height:5.h),
-      Text('catch the interest of a recruiter, earn a speaking',style: GoogleFonts.inter(
-          textStyle: TextStyle(fontSize:13.5.sp,fontWeight: FontWeight.w400,color:
-          Color.fromRGBO(0, 0, 0, 0.5))
-      ),), SizedBox(height:5.h),
-      Text('gig, land a guest blogging opportunity, gain',style: GoogleFonts.inter(
-          textStyle: TextStyle(fontSize:13.5.sp,fontWeight: FontWeight.w400,color:
-          Color.fromRGBO(0, 0, 0, 0.5))
-      ),), SizedBox(height:5.h),
-      Text('admission to a program, or prompt other',style: GoogleFonts.inter(
-          textStyle: TextStyle(fontSize:13.5.sp,fontWeight: FontWeight.w400,color:
-          Color.fromRGBO(0, 0, 0, 0.5))
-      ),), SizedBox(height:5.h),
-      Text('career wins.',style: GoogleFonts.inter(
-          textStyle: TextStyle(fontSize:13.5.sp,fontWeight: FontWeight.w400,color:
-          Color.fromRGBO(0, 0, 0, 0.5))
-      ),),
-        SizedBox(height:30.h),
+          Text(widget.biog,style: GoogleFonts.inter(
+              textStyle: TextStyle(fontSize:13.5.sp,fontWeight: FontWeight.w400,color:
+              Color.fromRGBO(0, 0, 0, 0.5))
+          ),),
+
+          SizedBox(height:30.h),
 
           Row(
             children: [
               Text('Info',style:GoogleFonts.inter(textStyle: TextStyle(fontSize:14.sp,
-                fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)),)  ),
+                  fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)),)  ),
               SizedBox(width:10.w),
               GestureDetector(
-                  onTap:(){
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Info_Page.Info_Page(uid: widget.uid.toString(),
-                          phone: profileDetailsValueNotifier.value.item2.result.profileDetails.phone,
-                        ),));
-                  },
-                  child:  Container(height:20,width:20,
-                      child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
+                onTap:(){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Info_Page(uid: widget.uid.toString(),
+
+                      ),));
+                },
+                child:  Container(height:20,width:20,
+                    child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
             ],
           ),
           SizedBox(height:13.h),
@@ -106,17 +102,23 @@ class _TextsuState extends State<SeeMoreText> {
                     color: Colors.white),
               ),
               SizedBox(width: 11.w),
-              Text(
-                'Gender : ',
-                style: GoogleFonts.inter(
-                    textStyle: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w700,
-                        color: Color.fromRGBO(165, 165, 165, 0.9))),
+              InkWell(
+                onTap: (){
+                  profileDetailsApiCall();
+                },
+                child: Text(
+                  'Gender : ',
+                  style: GoogleFonts.inter(
+                      textStyle: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Color.fromRGBO(165, 165, 165, 0.9))),
+                ),
               ),
               SizedBox(width: 8.w),
               Text(
-                'Male',
+
+                widget.gender,
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontSize: 14.sp,
@@ -153,7 +155,8 @@ class _TextsuState extends State<SeeMoreText> {
               ),
               SizedBox(width: 8.w),
               Text(
-                'December 6th 2000',
+
+                (outputDate.contains('null'))?'Enter dob': outputDate,
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontSize: 14.sp,
@@ -220,10 +223,8 @@ class _TextsuState extends State<SeeMoreText> {
               ),
               SizedBox(width: 11.w),
               Text(
-                  widget.phone,
-            // '+91 9874653631',
-                //profileDetailsValueNotifier.value.item2.result.profileDetails.name,
-             //   profileDetailsValueNotifier.value.item4.result.profile_details.phone,
+                widget.phone,
+
 
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
@@ -262,42 +263,50 @@ class _TextsuState extends State<SeeMoreText> {
                   fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)),)  ),
               SizedBox(width:10.w),
               GestureDetector(
-                  onTap:(){
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) =>Link_Page(),));
-                  },
-                  child:  Container(height:20,width:20,
-                      child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
+                onTap:(){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) =>Link_Page(),));
+                },
+                child:  Container(height:20,width:20,
+                    child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
             ],
           ),
           SizedBox(height:13.h),
-          Row(
-            children: [
-              Container(
-                height: 25.h,
-                width: 25.w,
-                child:  Column(crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset('assets/profile_assets/profilelink.svg',height: 16.h,
-                        width:16.w),
-                  ],
-                ),
-                decoration: BoxDecoration(
-                    color: Color.fromRGBO(165, 165, 165, 0.9),
-                    shape: BoxShape.circle),
-              ),
-              SizedBox(width: 11.w),
-              Text(
-                'http://deejos.in/',
-                style: GoogleFonts.inter(
-                    textStyle: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Color.fromRGBO(0, 0, 0, 1))),
-              ),
-            ],
-          ),
+          ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: widget.valueNotifier.value.item2.result.profileDetails.website.length,
+              itemBuilder: (context,index){
+                return  Padding(
+                  padding:  EdgeInsets.only(bottom:13.h),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 12.h,
+                        width: 12.w,
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(165, 165, 165, 0.9),
+                            shape: BoxShape.circle),
+                      ),
+                      SizedBox(width: 11.w),
+                      Material(color: Colors.transparent,
+                        child:
+                        Text(
+                          widget.valueNotifier.value.item2.result.profileDetails.website[index].toString(),
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                        ),
+
+
+                      ),
+
+                    ],
+                  ),
+                );
+              }),
           SizedBox(height:13.h),
           Row(
             children: [
@@ -305,12 +314,12 @@ class _TextsuState extends State<SeeMoreText> {
                   fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)),)  ),
               SizedBox(width:10.w),
               GestureDetector(
-                  onTap:(){
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) =>Work_Experience(),));
-                  },
-                  child:   Container(height:20,width:20,
-                      child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
+                onTap:(){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) =>Work_Experience(),));
+                },
+                child:   Container(height:20,width:20,
+                    child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
             ],
           ),
           SizedBox(height:16.h),
@@ -386,74 +395,53 @@ class _TextsuState extends State<SeeMoreText> {
                   fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)),)  ),
               SizedBox(width:10.w),
               GestureDetector(
-                  onTap:(){
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) =>Skill_Page(),));
-                  },
-                  child:  Container(height:20,width:20,
-                      child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
+                onTap:(){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) =>Skill_Page(),));
+                },
+                child:  Container(height:20,width:20,
+                    child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
             ],
           ),
           SizedBox(height: 19.h),
-          Row(
-            children: [
-              Container(
-                height: 12.h,
-                width: 12.w,
-                decoration: BoxDecoration(
-                    color: Color.fromRGBO(165, 165, 165, 0.9),
-                    shape: BoxShape.circle),
-              ),
-              SizedBox(width: 11.w),
-              Material(color: Colors.transparent,
-                child:
-                    Text(
-                      'Marketing Strategy',
-                      style: GoogleFonts.inter(
-                          textStyle: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w700,
-                              color: Color.fromRGBO(0, 0, 0, 1))),
-                    ),
+          ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: widget.valueNotifier.value.item2.result.profileDetails.skills.length,
+              itemBuilder: (context,index){
+                return  Padding(
+                  padding:  EdgeInsets.only(bottom:13.h),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 12.h,
+                        width: 12.w,
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(165, 165, 165, 0.9),
+                            shape: BoxShape.circle),
+                      ),
+                      SizedBox(width: 11.w),
+                      Material(color: Colors.transparent,
+                        child:
+                        Text(
+                          widget.valueNotifier.value.item2.result.profileDetails.skills[index].toString(),
+                          style: GoogleFonts.inter(
+                              textStyle: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                        ),
 
 
-                ),
+                      ),
 
-            ],
-          ),
-          SizedBox(height: 21.h),
-          Row(
-            children: [
-              Container(
-                height: 12.h,
-                width: 12.w,
-                decoration: BoxDecoration(
-                    color: Color.fromRGBO(165, 165, 165, 0.9),
-                    shape: BoxShape.circle),
-              ),
-              SizedBox(width: 11.w),
-              Row(
-                children: [
-                  Text(
-                    'Ux research',
-                    style: GoogleFonts.inter(
-                        textStyle: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Color.fromRGBO(0, 0, 0, 1))),
+                    ],
                   ),
-                 SizedBox(width:125.w),
-                  TextButton( onPressed:widget.onPressed,
-                      child: Text('See More...',style:GoogleFonts.inter(
-                          textStyle: TextStyle(fontWeight: FontWeight.w400,fontSize: 12.sp,
-                              color: Color.fromRGBO(0, 163, 255, 1)
-                          )
-                      ),))
-                ],
-              ),
-            ],
-          ),
-      ],),
+                );
+              }),
+
+
+        ],),
     );
   }
 }

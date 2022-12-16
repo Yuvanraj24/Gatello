@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:tuple/tuple.dart';
+import '../Helpers/StateHelper.dart';
 import '../Others/Routers.dart';
 import '../Others/exception_string.dart';
 import '../core/Models/Default.dart';
@@ -38,6 +40,8 @@ class AddEmail extends StatefulWidget {
   });
 
 
+
+
   @override
   State<AddEmail> createState() => _AddEmailState();
 }
@@ -60,157 +64,172 @@ class _AddEmailState extends State<AddEmail> {
   }
   FirebaseFirestore instance = FirebaseFirestore.instance;
   var url;
+
+  String? otp;
+  @override
+  void initState() {
+    otp=getData("otp");
+
+
+  }
   @override
   Widget build(BuildContext context) {
 
     return SafeArea(
 
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
+      child: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
 
-          leading: Center(
-              child: TextButton(
-                onPressed: () {
-                  //Navigator.pop(context);
-
-
-                },
-                child: GestureDetector(onTap:() {
-                  Navigator.pop(context);
-                },
-                  child: Text(
-                    'Back',
-                    style: GoogleFonts.roboto(
-                        textStyle: TextStyle(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black)),
+            leading: Center(
+                child: TextButton(
+                  onPressed: () {
+                    //Navigator.pop(context);
+                  },
+                  child: GestureDetector(onTap:() {
+                    Navigator.pop(context);
+                  },
+                    child: Text(
+                      'Back',
+                      style: GoogleFonts.roboto(
+                          textStyle: TextStyle(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black)),
+                    ),
                   ),
-                ),
-              )),
-        ),
-        body: GestureDetector(
-          onTap: (){
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: DoubleBackToCloseApp(
+                )),
+          ),
+          body: GestureDetector(
+            onTap: (){
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: DoubleBackToCloseApp(
 
-            snackBar: SnackBar(
-              content: Text("Tap again to close app"),
+              snackBar: SnackBar(
+                content: Text("Tap again to close app"),
 
-            ),
-            child: Form(
-              // autovalidateMode: AutovalidateMode.always,
-              key: _formKey,
-              child: Container(
-                padding: EdgeInsets.only(
-                    left: 12.w, right: 12.w, top: 150.h, bottom: 35.h),
-                child: Center(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Add your email address",
-                          style: GoogleFonts.fredoka(
-                              textStyle: TextStyle(
-                                  fontSize: 28.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black)),
-                        ),
-                        SizedBox(height: 9.h),
-                        Text(
-                          'This can help recover your account if you',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: HexColor('#646363'))),
-                        ),
-                        SizedBox(width: 14.h),
-                        Text(
-                          'forget your password!',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: HexColor('#646363'))),
-                        ),
-                        SizedBox(
-                          height: 14.h,
-                        ),
+              ),
+              child: Form(
+                // autovalidateMode: AutovalidateMode.always,
+                key: _formKey,
+                child: Container(
+                  padding: EdgeInsets.only(
+                      left: 12.w, right: 12.w, top: 150.h, bottom: 35.h),
+                  child: Center(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Add your email address",
+                            style: GoogleFonts.fredoka(
+                                textStyle: TextStyle(
+                                    fontSize: 28.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black)),
+                          ),
+                          SizedBox(height: 9.h),
+                          Text(
+                            'This can help recover your account if you',
+                            style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: HexColor('#646363'))),
+                          ),
+                          SizedBox(width: 14.h),
+                          Text(
+                            'forget your password!',
+                            style: GoogleFonts.inter(
+                                textStyle: TextStyle(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: HexColor('#646363'))),
+                          ),
+                          SizedBox(
+                            height: 14.h,
+                          ),
 //                     Form(
 //   autovalidate: true,
 //   child: TextFormField(
 //     validator: (value) => EmailValidator.validate(value) ? null : "Please enter a valid email",
 //   ),
 // ),
-                        Container(
-                          width: 310.w,
-                          child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value)=>emailValidator(value),
-                            controller: _emailController,
+                          Container(
+                            width: 310.w,
+                            child: TextFormField(
+                              keyboardType: TextInputType.emailAddress,
+                              validator: (value)=>emailValidator(value!),
+                              controller: _emailController,
 
-                            onChanged: (val) {
-                              widget.email = _emailController.text.toString();
-                            },
-                            cursorColor: HexColor('#0B0B0B'),
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: HexColor('#0B0B0B'))),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: HexColor('#0B0B0B'))),
-                              labelStyle: GoogleFonts.inter(
-                                  textStyle: TextStyle(
-                                      fontSize: 12.h,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black)),
-                              labelText: "EMAIL",
+                              onChanged: (val) {
+                                widget.email = _emailController.text.toString();
+                              },
+                              cursorColor: HexColor('#0B0B0B'),
+                              decoration: InputDecoration(
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: HexColor('#0B0B0B'))),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: HexColor('#0B0B0B'))),
+                                labelStyle: GoogleFonts.inter(
+                                    textStyle: TextStyle(
+                                        fontSize: 12.h,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                                labelText: "EMAIL",
 
+                              ),
+                              // validator: (value) => emailValidator(value),
+                              // onChanged: (val) {
+                              //   _email = val;
+                              // },
                             ),
-                            // validator: (value) => emailValidator(value),
-                            // onChanged: (val) {
-                            //   _email = val;
-                            // },
                           ),
-                        ),
-                        Spacer(),
-                        ElevatedButton(
-                          onPressed: () {
-                            print("EMAIL : $_email");
+                          Spacer(),
+                          ElevatedButton(
+                            onPressed: () {
+                              print("EMAIL : $_email");
 
-                            if (_formKey.currentState!.validate()) {
-                              registerFirebase(widget.userName, widget.email, widget.password,);
-                              profileDetailUpdateApiCallFormData();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                  Acountsuccess(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid)));
-                              // AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid),));
+                              if (_formKey.currentState!.validate() && _emailController.text.contains("@")) {
+                                registerFirebase(widget.userName, widget.email, widget.password,);
+                                profileDetailUpdateApiCallFormData();
+                                // Navigator.push(context, PageTransition(
+                                //     duration: Duration(milliseconds: 120),
+                                //     type: PageTransitionType.rightToLeft, child:
+                                //     Acountsuccess(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid)));
+                                // AddProfilePic(mobileNo: widget.mobileNo ,username: widget.userName,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: user?.uid),));
 
-                            } else {
-                              return null;
-                            }
+                              } else {
+                                Fluttertoast.
+                              showToast(msg: "Enter a valid Email ID");
+                                return null;
+                              }
 
-                          },
-                          child: Text(
-                            'Continue',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black)),
+                            },
+                            child: Text(
+                              'Continue',
+                              style: GoogleFonts.inter(
+                                  textStyle: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black)),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                elevation: 5,
+                                onPrimary: Colors.black,
+                                //  padding: EdgeInsets.all(10),
+                                minimumSize: Size(234.w, 48.h),
+                                primary: Color.fromRGBO(248, 206, 97, 1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(35),
+                                )),
                           ),
-                          style: ElevatedButton.styleFrom(
-                              elevation: 5,
-                              onPrimary: Colors.black,
-                              //  padding: EdgeInsets.all(10),
-                              minimumSize: Size(234.w, 48.h),
-                              primary: Color.fromRGBO(248, 206, 97, 1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(35),
-                              )),
-                        ),
-                      ]),
+                        ]),
+                  ),
                 ),
               ),
             ),
@@ -339,9 +358,6 @@ class _AddEmailState extends State<AddEmail> {
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.TOP,
               timeInSecForIosWeb: 1);
-
-          // Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => AddProfilePic()));
 
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
 

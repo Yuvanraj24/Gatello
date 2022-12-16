@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final profileDetails = profileDetailsFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -21,7 +18,6 @@ class ProfileDetails {
   String message;
   Result result;
   Error error;
-
   factory ProfileDetails.fromJson(Map<String,
       dynamic> json) => ProfileDetails(
     status: json["status"],
@@ -60,7 +56,6 @@ class Result {
       (json["profile_details"]),
     isFollowing: json["isFollowing"],
   );
-
   Map<String, dynamic> toJson() => {
     "profile_details": profileDetails.toJson(),
     "isFollowing": isFollowing,
@@ -69,10 +64,12 @@ class Result {
 
 class ProfileDetailsClass {
   ProfileDetailsClass(
-      {required this.id,
+      {
+        required this.id,
         required this.userId,
         required this.name,
         this.profileUrl,
+        this.coverUrl,
         required this.phone,
         this.dob,
         required this.email,
@@ -93,12 +90,21 @@ class ProfileDetailsClass {
         this.job,
         required this.member,
         this.relationshipStatus,
-        this.notificationToken});
+        this.notificationToken,
+        this.gender,
+        //   required this.languageKnown,
+        required this.website,
+        required this.skills,
+        //   required this.workExperience,
+
+
+      });
 
   String id;
   String userId;
   String name;
   String? profileUrl;
+  String? coverUrl;
   String phone;
   String? dob;
   String email;
@@ -120,12 +126,18 @@ class ProfileDetailsClass {
   String member;
   String? relationshipStatus;
   String? notificationToken;
+  String? gender;
+  // List<dynamic> languageKnown;
+  List<dynamic> website;
+  List<dynamic> skills;
+  // List<dynamic> workExperience;
 
   factory ProfileDetailsClass.fromJson(Map<String, dynamic> json) => ProfileDetailsClass(
     id: json["_id"],
     userId: json["user_id"],
     name: json["name"],
     profileUrl: json["profile_url"] == null ? null : json["profile_url"],
+    coverUrl: json["cover_url"] == null ? null : json["cover_url"],
     phone: json["phone"],
     dob: json["dob"] == null ? null : json["dob"],
     email: json["email"],
@@ -147,6 +159,11 @@ class ProfileDetailsClass {
     member: json["member"],
     relationshipStatus: json["relationship_status"] == null ? null : json["relationship_status"],
     notificationToken: json["notification_token"] == null ? null : json["notification_token"],
+    gender: json["gender"],
+    //  languageKnown: List<dynamic>.from(json["languageKnown"].map((x) => x)),
+    website: List<dynamic>.from(json["website"].map((x) => x)),
+    skills: List<dynamic>.from(json["skills"].map((x) => x)),
+    //  workExperience: List<dynamic>.from(json["workExperience"].map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
@@ -154,6 +171,7 @@ class ProfileDetailsClass {
     "user_id": userId,
     "name": name,
     "profile_url": profileUrl,
+    "cover_url":coverUrl,
     "phone": phone,
     "dob": dob,
     "email": email,
@@ -175,5 +193,10 @@ class ProfileDetailsClass {
     "member": member,
     "relationship_status": relationshipStatus,
     "notification_token": notificationToken,
+    "gender":gender,
+    //  "languageKnown":languageKnown,
+    "website":website,
+    "skills":skills,
+    //  "workExperience":workExperience
   };
 }

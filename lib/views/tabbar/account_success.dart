@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/add_profile_pic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Acountsuccess extends StatefulWidget {
   var uid;
@@ -19,7 +20,7 @@ class Acountsuccess extends StatefulWidget {
     required this.birthDay,
     required this.name,
     required this.email
-});
+  });
 
   @override
   State<Acountsuccess> createState() => _AcountsuccessState();
@@ -28,7 +29,9 @@ class Acountsuccess extends StatefulWidget {
 class _AcountsuccessState extends State<Acountsuccess> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         automaticallyImplyLeading: false,
         // leading: Center(
         //     child: TextButton(
@@ -49,14 +52,15 @@ class _AcountsuccessState extends State<Acountsuccess> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.center,
             children:[
               SizedBox(height:87.h),
-              Container(height:170.h,width:170.w,decoration:BoxDecoration(shape:BoxShape.circle,color:Color.fromRGBO(248, 206, 97, 1)),
-        child:Icon(Icons.done_rounded,size:120,),),
+              Image.asset('assets/Animation - 1669350283797-150x150 1.gif'),
+              //       Container(height:170.h,width:170.w,decoration:BoxDecoration(shape:BoxShape.circle,color:Color.fromRGBO(248, 206, 97, 1)),
+              // child:Icon(Icons.done_rounded,size:120,),),
               SizedBox(height:27.h),
               Text("Account Created",style:GoogleFonts.fredoka(  textStyle: TextStyle(
-              fontSize: 28.sp,
-              fontWeight: FontWeight.w500,
-              color: Colors.black)),
-          ),
+                  fontSize: 28.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black)),
+              ),
               Text("Successfully",style:GoogleFonts.fredoka(  textStyle: TextStyle(
                   fontSize: 28.sp,
                   fontWeight: FontWeight.w500,
@@ -66,29 +70,31 @@ class _AcountsuccessState extends State<Acountsuccess> {
               Padding(
                 padding:  EdgeInsets.only(bottom: 35.h),
                 child: ElevatedButton(
-            onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddProfilePic(mobileNo: widget.mobileNo ,username: widget.username,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: widget.uid),));
-            },
-            child: Text(
-                'Continue',
-                style: GoogleFonts.inter(
-                    textStyle: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black)),
-            ),
-            style: ElevatedButton.styleFrom(
-                  elevation: 5,
-                  onPrimary: Colors.black,
-                  //  padding: EdgeInsets.all(10),
-                  minimumSize: Size(234.w, 48.h),
-                  primary: Color.fromRGBO(248, 206, 97, 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(35),
-                  )),
-          ),
+                  onPressed: () {
+                    Navigator.push(context, PageTransition(
+                      duration: Duration(milliseconds: 120),
+                      type: PageTransitionType.rightToLeft, child: AddProfilePic(mobileNo: widget.mobileNo ,username: widget.username,password: widget.password, name: widget.name,birthDay: widget.birthDay,email: widget.email, uid: widget.uid),));
+                  },
+                  child: Text(
+                    'Proceed',
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black)),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      elevation: 5,
+                      onPrimary: Colors.black,
+                      //  padding: EdgeInsets.all(10),
+                      minimumSize: Size(234.w, 48.h),
+                      primary: Color.fromRGBO(248, 206, 97, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(35),
+                      )),
+                ),
               ),
-        ]),
+            ]),
       ),
     );
   }

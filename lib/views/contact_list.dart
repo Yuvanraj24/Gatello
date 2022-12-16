@@ -113,12 +113,14 @@ class _ContactListState extends State<ContactList> {
                             itemCount: snapshot.data?.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              var name = snapshot.data![index].displayName;
+                              print("ItemCount : ${snapshot.data?.length}");
+                              String name = snapshot.data![index].displayName;
                               if(nameSearch.isEmpty){
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20, right: 20),
+                               return Padding(
+                                  padding: EdgeInsets.only(left: 20, right: 20),
                                   child: ListTile(
                                     title: SubstringHighlight(
+                                      textStyleHighlight:TextStyle(color:Colors.black),
                                       caseSensitive: false,
                                       text:name,
                                       textStyle: GoogleFonts.inter(
@@ -166,13 +168,13 @@ class _ContactListState extends State<ContactList> {
                                   ),
                                 );
                               }
-                              if(name.toString().toLowerCase().contains(nameSearch.toLowerCase())){
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20, right: 20),
+                              if(name.toLowerCase().contains(nameSearch.toLowerCase())){
+                               return Padding(
+                                  padding: EdgeInsets.only(left: 20, right: 20),
                                   child: ListTile(
                                     title: SubstringHighlight(
-                                      caseSensitive: false,
                                       text:name,
+                                      textStyleHighlight:TextStyle(color:Colors.black),
                                       textStyle: GoogleFonts.inter(
                                           textStyle: TextStyle(
                                               fontSize: 14.sp,
@@ -221,56 +223,7 @@ class _ContactListState extends State<ContactList> {
                               else{Scaffold(
                                 body:Center(child:Text("No Contacts"),),
                               );}
-                              return Padding(
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                child: ListTile(
-                                  title: SubstringHighlight(
-                                    caseSensitive: false,
-                                    text:name,
-                                    textStyle: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                            fontSize: 14.sp,
-                                            color: Color.fromRGBO(0, 0, 0, 1),
-                                            fontWeight: FontWeight.w700)),
-                                    term: searchController.text,
-                                  ),
-                                  subtitle: Text(snapshot.data![index].phones[0],style:GoogleFonts.inter(
-                                      textStyle:TextStyle( fontSize: 12.sp,
-                                          color: Color.fromRGBO(0, 0, 0, 1),
-                                          fontWeight: FontWeight.w500)
-                                  ),),
-                                  trailing: (widget.state == 0)
-                                      ? Icon(DeejosIcon.chat_2_outline)
-                                      : (selectedContactsId.contains(snapshot.data![index].id))
-                                      ? Icon(Icons.done)
-                                      : null,
-                                  onTap: (widget.state == 0)
-                                      ? () async {
-                                    String uri =
-                                        'sms:${snapshot.data![index].phones[0]}?body=${Uri.encodeComponent('''Hi ${snapshot.data![index].displayName}! I am using Gatello. You can download it from https://play.google.com/store/apps/details?id=com.gatello.user''')}';
-                                    if (await canLaunch(uri)) {
-                                      await launch(uri);
-                                    } else {
-                                      throw 'Could not launch $uri';
-                                    }
-                                  }
-                                      : () async {
-                                    if (!selectedContactsId.contains(snapshot.data![index].id)) {
-                                      if (!mounted) return;
-                                      setState(() {
-                                        selectedContactsId.add(snapshot.data![index].id);
-                                        selectedContacts.add(snapshot.data![index]);
-                                      });
-                                    } else {
-                                      if (!mounted) return;
-                                      setState(() {
-                                        selectedContactsId.remove(snapshot.data![index].id);
-                                        selectedContacts.remove(snapshot.data![index]);
-                                      });
-                                    }
-                                  },
-                                ),
-                              );
+                              return Container();
                             });
                       } else {
                         return Container(

@@ -16,6 +16,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -92,7 +93,6 @@ class _AddProfilePicState extends State<AddProfilePic> {
   );
 
   Future profileDetailUpdateApiCallBody() async {
-
 
     Stream<QuerySnapshot>  userRef = instance.collection("user-detail").where("uid",isEqualTo: widget.uid).snapshots();
 
@@ -202,10 +202,9 @@ class _AddProfilePicState extends State<AddProfilePic> {
 
                   ),
                   onPressed: (){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username, Getstarted: 'Sign up' ,)
+                    Navigator.push(context, PageTransition(
+                        duration: Duration(milliseconds: 120),
+                        type: PageTransitionType.rightToLeft, child: InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username, Getstarted: 'Sign up' ,)
                         ));
 
 
@@ -440,6 +439,7 @@ class _AddProfilePicState extends State<AddProfilePic> {
 
                     ),
                     onTap: (){
+
                       svgToPng(context, widget.avatarData).then((value)async{
                         Directory tempDir = await getTemporaryDirectory();
                         String tempPath = tempDir.path;

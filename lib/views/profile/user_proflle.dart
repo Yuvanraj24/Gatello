@@ -54,7 +54,7 @@ Future? _future;
     return await ApiHandler().apiHandler(
       valueNotifier: profileDetailsValueNotifier,
       jsonModel: profileDetailsModel.profileDetailsFromJson,
-      url: profileDetailsUrl,
+      url: 'http://3.110.105.86:4000/view/profile',
       requestMethod: 1,
       body: body,
     );
@@ -124,6 +124,10 @@ if(snapshot.hasData) {
         builder: (context, sizingInformation) {
           if (profileDetailsValueNotifier.value.item1 == 1 ||
               profileDetailsValueNotifier.value.item1 == 3) {
+            String coverImg=  profileDetailsValueNotifier
+                .value.item2
+                .result.profileDetails
+                .coverUrl.toString();
             return DefaultTabController(length: 3, initialIndex: 0,
               child: Scaffold(
                 appBar: AppBar(
@@ -195,15 +199,65 @@ if(snapshot.hasData) {
                       Container(
                         height: 176.h, width: double.infinity,
                         child: Stack(
-                          children: [ Container(
-                            height: 119.h,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://images.pexels.com/photos/618833/pexels-photo-618833.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'),
-                                    fit: BoxFit.fill)),
-                          ),
+                          children: [
+                            (coverImg.isNotEmpty)
+                                ? CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              fadeInDuration:
+                              const Duration(
+                                  milliseconds:
+                                  400),
+                              imageBuilder:
+                                  (context,
+                                  imageProvider) =>
+                                  Container(
+                                    height: 119.h,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image:
+                                            imageProvider,
+                                            fit: BoxFit.fill)
+                                    ),
+                                  ),
+                              progressIndicatorBuilder:
+                                  (context, url,
+                                  downloadProgress) =>
+                                  Center(
+                                    child: CircularProgressIndicator(
+                                        value: downloadProgress
+                                            .progress),
+                                  ),
+                              imageUrl: coverImg,
+                              errorWidget:
+                                  (context, url,
+                                  error) =>
+                                  Container(
+                                    height: 119.h,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              "assets/profile_assets/default_cover.svg"),
+                                          fit: BoxFit
+                                              .cover
+
+                                      ),
+                                    ),
+                                  ),
+                            )
+                                : Container(
+                              height: 119.h,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                          "assets/profile_assets/default_cover.svg"),
+                                      fit: BoxFit
+                                          .cover)),
+                              //   child: Image.asset("assets/noProfile.jpg")
+                            ),
                             Positioned(
                               top: 92,
                               left: 21,
@@ -695,7 +749,16 @@ if(snapshot.hasData) {
                           email: profileDetailsValueNotifier.value
                               .item2.result.profileDetails.email,
                           phone: profileDetailsValueNotifier.value
-                              .item2.result.profileDetails.phone) :
+                              .item2.result.profileDetails.phone,
+                        uid: uid.toString(),
+                        biog: profileDetailsValueNotifier
+                            .value.item2.result.profileDetails.email.toString(),
+                        gender:profileDetailsValueNotifier
+                            .value.item2.result.profileDetails.gender.toString(),
+                        dob:profileDetailsValueNotifier
+                            .value.item2.result.profileDetails.dob.toString(),
+                          valueNotifier:profileDetailsValueNotifier
+                      ) :
                       Column(
                         children: [
                           TabBar(indicator: BoxDecoration(

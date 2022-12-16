@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -18,6 +19,7 @@ import 'package:story_view/widgets/story_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:tuple/tuple.dart';
 import '../../Firebase/Writes.dart';
+import '../../Others/Routers.dart';
 import '../../Others/exception_string.dart';
 import '../../components/AssetPageView.dart';
 import '../../components/SnackBar.dart';
@@ -26,13 +28,15 @@ import '../../core/models/exception/pops_exception.dart';
 import '../../handler/Network.dart';
 import 'myMoreStatus.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import '/core/models/own_status_model.dart' as OwnStatusDetailsModel;
-
+//import '/core/models/other_stories_model.dart' as otherStoriesModel;
+import '/core/models/StoriesModel.dart'as storiesModel;
+import '/core/models/StoriesModel.dart'as viewStatusModel;
 class Status extends StatefulWidget {
   String uid;
+  String profilePic;
   Status({
-    required this.uid
-
+    required this.uid,
+    required this.profilePic
   });
 
   @override
@@ -52,8 +56,11 @@ class _StatusState extends State<Status> with TickerProviderStateMixin{
 
   ValueNotifier<Tuple4> statusCreateValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   ValueNotifier<Tuple4> statusShowValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(loading), "Loading", null));
-List statusList=[];
- // var tempPort = "http://3.110.105.86:2000";
+
+  ValueNotifier<Tuple4> storiesValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(alert), "Null", null));
+  ValueNotifier<Tuple4> userViewValueNotifier = ValueNotifier<Tuple4>(Tuple4(0, exceptionFromJson(alert), "Null", null));
+  List statusList=[];
+  // var tempPort = "http://3.110.105.86:2000";
 
   Future<FilePickerResult?> gallery() async =>
       await FilePicker.platform.pickFiles(
@@ -74,7 +81,7 @@ List statusList=[];
     return await ApiHandler().apiHandler(
         valueNotifier: statusCreateValueNotifier,
         jsonModel: defaultFromJson,
-        url: "http://3.110.105.86:2000/create/status?user_id=${widget.uid}",
+        url: "http://3.110.105.86:2022/create/status?user_id=${widget.uid}",
         requestMethod: 1,
         formData: [Tuple4("status_post", profileByte, "Image", "jpg")],
         formBody: {
@@ -83,26 +90,52 @@ List statusList=[];
   }
 
 
-  showOwnStatus() async{
+  Future viewStatus({required String uid}) async{
 
     print("this is an showStatus success api...!");
     return await ApiHandler().apiHandler(
         valueNotifier: statusShowValueNotifier,
-        jsonModel: OwnStatusDetailsModel.statusDataFromJson,
-        url : "http://3.110.105.86:2000/allstatus/status",
+        jsonModel: storiesModel.storiesFromJson,
+        url: 'http://3.110.105.86:4000/view/profile/status/status',
         requestMethod: 1,
-        body: {"user_id": widget.uid,}
+        body: {"user_id": uid}
+
+    );
+
+  }
+  Future userViewStatus({required String uid,required String statusId}) async{
+
+    print("this is an showStatus success api...!");
+    return await ApiHandler().apiHandler(
+        valueNotifier: userViewValueNotifier,
+        jsonModel: viewStatusModel.storiesFromJson,
+        url: userviewStatusUrl+"?user_id=${uid}",
+        requestMethod: 1,
+        body: {"user_id": uid,"status_id":'6390f27b1a24ff32ed8e8450'}
 
     );
 
   }
 
+  Future storiesApiCall() async {
+    print('story api called');
+    // return await await getFCMToken().then((value) async {
+    return await ApiHandler().apiHandler(
+      valueNotifier: storiesValueNotifier,
+      jsonModel: viewStatusModel.storiesFromJson,
+     // jsonModel: otherStoriesModel.otherStoriesFromJson,
+      url: statusUrl,
+      requestMethod: 1,
+      body: {},
 
-
-
+    );
+    // });
+  }
   @override
   void initState() {
-
+    // storiesApiCall(uid: "JhRKwvnKe4Wxu1nYaucwZVurRlt1");
+    // viewStatus(uid: "JhRKwvnKe4Wxu1nYaucwZVurRlt1");
+    // storiesApiCall();
     controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds:60),
@@ -133,217 +166,241 @@ List statusList=[];
   @override
   Widget build(BuildContext context) {
 
-    return FutureBuilder(
-        future: showOwnStatus(),
-        builder: (context, snapshot) {
-          return SafeArea(
-            child: Scaffold(
-                body:SingleChildScrollView(
-                  child: Container(
-                    padding:EdgeInsets.fromLTRB(12.w,15.h,12.w,0.h),
-                    child:Column(crossAxisAlignment:CrossAxisAlignment.start,
-                      children:[
+    return SafeArea(
+
+
+      child: Scaffold(
+          body:SingleChildScrollView(
+            child: Container(
+              padding:EdgeInsets.fromLTRB(12.w,15.h,12.w,0.h),
+              child:Column(crossAxisAlignment:CrossAxisAlignment.start,
+                children:[
+                  GestureDetector(
+                    onTap:() {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyStatus(
+                          uid: widget.uid,
+                          statusProfile:widget.profilePic
+                      )));
+
+                    },
+                    child: Row(mainAxisAlignment:MainAxisAlignment.start,
+                      children: [
+                        // Container(height:70.h,width:69.w,decoration:BoxDecoration(shape:BoxShape.circle,
+                        //     image:DecorationImage(image: NetworkImage(widget.profilePic),
+                        //         fit:BoxFit.fill),
+                        //     border:Border.all(width:2.w,color:Color.fromRGBO(248, 206, 97, 1))),),
+                        (widget.profilePic != null)
+                            ? CachedNetworkImage(
+                          imageBuilder:
+                              (context,
+                              imageProvider) =>
+                              Container(
+                                width: 69.w,
+                                height: 70.h,
+                                decoration:
+                                BoxDecoration(
+                                    shape: BoxShape
+                                        .circle,
+                                    image: DecorationImage(
+                                        image:
+                                        imageProvider,
+                                        fit: BoxFit
+                                            .cover),
+                                    border:Border.all(width:2.w,color:Color.fromRGBO(248, 206, 97, 1))
+                                ),
+                              ),
+                          fit: BoxFit.cover,
+                          fadeInDuration: const Duration(milliseconds: 400),
+                          progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                            child: Container(
+                              width: 20.0,
+                              height: 20.0,
+                              child: CircularProgressIndicator(value: downloadProgress.progress),
+                            ),
+                          ),
+                          imageUrl: widget.profilePic,
+                          errorWidget: (context, url, error) =>     Container(
+                            width: 69.w,
+                            height: 70.h,
+                            decoration: BoxDecoration(
+                                shape: BoxShape
+                                    .circle,
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        "assets/noProfile.jpg")
+                                ),
+                                border:Border.all(width:2.w,color:Color.fromRGBO(248, 206, 97, 1))
+                            ),
+                          ),
+                        )
+                            : Container(
+                          width: 69.w,
+                          height: 70.h,
+                          decoration: BoxDecoration(
+                              shape: BoxShape
+                                  .circle,
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                      "assets/noProfile.jpg"),
+                                  fit: BoxFit
+                                      .cover),
+                              border:Border.all(width:2.w,color:Color.fromRGBO(248, 206, 97, 1))
+
+                          ),
+                          //   child: Image.asset("assets/noProfile.jpg")
+                        ),
+
+                        SizedBox(width:15.w),
                         Column(crossAxisAlignment:CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(onTap:() {
-                                // showOwnStatus();
-                                // print("value Notifier : ${statusShowValueNotifier.value}");
-                                // Navigator.push(context, MaterialPageRoute(builder: (context) => MoreStories(uid: widget.uid,
-                                // )));
-
-                              },
-                                child: Row(mainAxisAlignment:MainAxisAlignment.start,
-                                  children: [
-                                    Container(height:70.h,width:69.w,decoration:BoxDecoration(shape:BoxShape.circle,
-                                        image:DecorationImage(image: NetworkImage('https://photosfile.com/wp-content/uploads/2022/03/Exam-Time-DP-18.jpg'),
-                                            fit:BoxFit.fill),
-                                        border:Border.all(width:2.w,color:Color.fromRGBO(248, 206, 97, 1))),),SizedBox(width:15.w),
-                                    Column(crossAxisAlignment:CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(height:4.h),
-                                          Text("My Status",style:GoogleFonts.inter(textStyle:TextStyle(
-                                              fontWeight:FontWeight.w700,fontSize:14.sp,color:Color.fromRGBO(0,0,0,1)
-                                          ))),
-                                          SizedBox(height:4.h),
-                                          Text("Today at 6:00am",style:GoogleFonts.inter(textStyle:TextStyle(
-                                              fontWeight:FontWeight.w400,fontSize:11.sp,color:Color.fromRGBO(121, 117, 117, 1)
-                                          ))),
-                                        ]),
-                                  ],
-                                ),
-                              ), SizedBox(height:10.h),
-                              Text("Recent updates",style:GoogleFonts.inter(textStyle:TextStyle(
+                              SizedBox(height:4.h),
+                              Text("My Status",style:GoogleFonts.inter(textStyle:TextStyle(
                                   fontWeight:FontWeight.w700,fontSize:14.sp,color:Color.fromRGBO(0,0,0,1)
-                              ))),SizedBox(height:10.h),
-                              ListView.builder(
-                                shrinkWrap:true,
-                                physics:BouncingScrollPhysics(),
-                                itemCount: 5,
-                                // itemCount:statusprofile.length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(builder:(context) {
-                                        return Otherstatus();
-                                      },));
-                                    },
-                                    onLongPress:() {
-                                      showDialog(context: context, builder: (context){
-                                        return AlertDialog(
-                                          shape:RoundedRectangleBorder(
-                                              borderRadius:BorderRadius.circular(20)),
-                                          title:Text('Mute status',style:TextStyle(fontWeight:FontWeight.w700,
-                                              fontSize:20.sp,color:Color.fromRGBO(0,0,0,1))),
-                                          content:Text(''),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {Navigator.pop(context);},
-                                              child: Text('Cancel',style:TextStyle(fontWeight:FontWeight.w700,fontSize:14.sp,
-                                                  color:Color.fromRGBO(0, 163, 255, 1))),
-                                            ),
-                                            TextButton(onPressed: () {  },
-                                              child: Text('OK',style:TextStyle(fontWeight:FontWeight.w700,fontSize:14.sp,
-                                                  color:Color.fromRGBO(0, 0, 0, 1))),
-                                            )
-                                          ],
-                                        );
-                                      });
-                                    },
-                                    child: Container(height:80.h,width:double.infinity.w,
-                                      color:Colors.transparent,
-                                      // padding:EdgeInsets.fromLTRB(0.w,8.h,0.w,18.h),
-                                      child:Row(
-                                        children: [
-                                          Container(height:70.h,width:69.w,decoration:BoxDecoration(shape:BoxShape.circle,
-                                              image:DecorationImage(image: NetworkImage
-                                                (statusprofile[index]),
-                                                  fit:BoxFit.fill),
-                                              border:Border.all(width:2.w,color:Color.fromRGBO(248, 206, 97, 1))),),
-                                          SizedBox(width:15.w),
-                                          Column(crossAxisAlignment:CrossAxisAlignment.start,
-                                              mainAxisAlignment:MainAxisAlignment.center,
-                                              children: [
-
-                                                Text(name[index],style:GoogleFonts.inter(fontWeight:FontWeight.w700,
-                                                  fontSize:14.sp,color:Color.fromRGBO(0,0,0,1))),
-                                                Text("Today at ${time[index]}",style:GoogleFonts.inter(textStyle:TextStyle(
-                                                    fontWeight:FontWeight.w400,fontSize:11.sp,color:Color.fromRGBO(121, 117, 117, 1)
-                                                )))])
-                                        ],),
-                                    ),
-                                  );
-                                },),
-                              SizedBox(height:10.h),
-                              // Text("Viewed",style:GoogleFonts.inter(textStyle:TextStyle(
-                              //     fontWeight:FontWeight.w700,fontSize:14.sp,color:Color.fromRGBO(0,0,0,1)
-                              // ))),SizedBox(height:10.h),
-                              // ListView.builder(
-                              //   shrinkWrap:true,
-                              //   physics:BouncingScrollPhysics(),
-                              //   itemCount:statusprofile.length,
-                              //   itemBuilder: (context, index) {
-                              //     return GestureDetector(
-                              //       onTap: () {
-                              //         Navigator.push(context, MaterialPageRoute(builder:(context) {
-                              //           return Otherstatus();
-                              //         },));
-                              //       },
-                              //       onLongPress:() {
-                              //         showDialog(context: context, builder: (context){
-                              //           return AlertDialog(
-                              //             shape:RoundedRectangleBorder(
-                              //                 borderRadius:BorderRadius.circular(20)),
-                              //             title:Text('Mute status',style:TextStyle(fontWeight:FontWeight.w700,
-                              //                 fontSize:20.sp,color:Color.fromRGBO(0,0,0,1))),
-                              //             content:Text(''),
-                              //             actions: [
-                              //               TextButton(
-                              //                 onPressed: () {Navigator.pop(context);},
-                              //                 child: Text('Cancel',style:TextStyle(fontWeight:FontWeight.w700,fontSize:14.sp,
-                              //                     color:Color.fromRGBO(0, 163, 255, 1))),
-                              //               ),
-                              //               TextButton(onPressed: () {  },
-                              //                 child: Text('OK',style:TextStyle(fontWeight:FontWeight.w700,fontSize:14.sp,
-                              //                     color:Color.fromRGBO(0, 0, 0, 1))),
-                              //               )
-                              //             ],
-                              //           );
-                              //         });
-                              //       },
-                              //       child: Container(height:80.h,width:double.infinity.w,
-                              //         color:Colors.transparent,
-                              //         // padding:EdgeInsets.fromLTRB(0.w,8.h,0.w,18.h),
-                              //         child:Row(
-                              //           children: [
-                              //             Container(height:70.h,width:69.w,decoration:BoxDecoration(shape:BoxShape.circle,
-                              //                 image:DecorationImage(image: NetworkImage
-                              //                   (statusprofile[index]),
-                              //                     fit:BoxFit.fill),
-                              //                 border:Border.all(width:2.w,color:Color.fromRGBO(139, 139, 139, 1))),),
-                              //             SizedBox(width:15.w),
-                              //             Column(crossAxisAlignment:CrossAxisAlignment.start,
-                              //                 mainAxisAlignment:MainAxisAlignment.center,
-                              //                 children: [Text(name[index],style:GoogleFonts.inter(fontWeight:FontWeight.w700,
-                              //                     fontSize:14.sp,color:Color.fromRGBO(0,0,0,1))),
-                              //                   Text("Today at ${time[index]}",style:GoogleFonts.inter(textStyle:TextStyle(
-                              //                       fontWeight:FontWeight.w400,fontSize:11.sp,color:Color.fromRGBO(121, 117, 117, 1)
-                              //                   )))])
-                              //           ],),
-                              //
-                              //       ),
-                              //     );
-                              //   },),
-                            ])
-                      ],),),
-                ),
-                floatingActionButton:SpeedDial(
-                  overlayOpacity:0, spacing:17,
-                  spaceBetweenChildren: 17, activeIcon:Icons.keyboard_arrow_down_rounded,
-                  icon: Icons.keyboard_arrow_up_rounded, backgroundColor:Color.fromRGBO(248, 206, 97, 1),
-                  foregroundColor:Colors.black,
-                  children: [SpeedDialChild(
-                      onTap:() {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return ColorTest(uid: widget.uid);
-                        },));
-                      },
-                      backgroundColor:Color.fromRGBO(248, 206, 97, 1),
-                      child:SvgPicture.asset('assets/status_assets/status_text.svg')
-                  ),
-                    SpeedDialChild(
-                        onTap:() async{
-                          return await gallery().then((value) async {
-                            if (value != null && value.files.first.size<52428800) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AssetPageView(
-                                        fileList: value.files,
-                                        onPressed: () async {
-                                          Navigator.pop(context);
-                                          TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(
-                                              file: value.files.first.bytes!,
-                                              fileName: timestamp,
-                                              contentType: "image/" + value.files.first.extension!, guid: '');
-                                          profileByte = value.files.first.bytes!;
-                                          statusCreate();
-                                        },
-                                      )));
-
-                            } else {
-                              final snackBar = snackbar(content: "File size is greater than 50MB");
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            }
-                          });
-                        },
-                        backgroundColor:Color.fromRGBO(248, 206, 97, 1),
-                        child:SvgPicture.asset('assets/status_assets/camera_icon.svg')
+                              ))),
+                              SizedBox(height:4.h),
+                              Text("Today at 6:00am",style:GoogleFonts.inter(textStyle:TextStyle(
+                                  fontWeight:FontWeight.w400,fontSize:11.sp,color:Color.fromRGBO(121, 117, 117, 1)
+                              ))),
+                            ]),
+                      ],
                     ),
-                  ],
-                )
+                  ),
+                  SizedBox(height:10.h),
+                  Text("Recent updates",style:GoogleFonts.inter(textStyle:TextStyle(
+                      fontWeight:FontWeight.w700,fontSize:14.sp,color:Color.fromRGBO(0,0,0,1)
+                  ))),SizedBox(height:10.h),
+                  // ListView.builder(
+                  //   shrinkWrap:true,
+                  //   physics:BouncingScrollPhysics(),
+                  //   itemCount: statusShowValueNotifier.value.item2.result.length,
+                  //   // itemCount:statusprofile.length,
+                  //   itemBuilder: (context, index) {
+                  //
+                  //     return Image.network(statusShowValueNotifier.value.item2.result),
+                  //
+                  //  //  return Text('hfe');
+                  //  //    return GestureDetector(
+                  //  //      onTap: () {
+                  //  //        userViewStatus(uid: "JhRKwvnKe4Wxu1nYaucwZVurRlt1", statusId: '6390f27b1a24ff32ed8e8450');
+                  //  //        Navigator.push(context, MaterialPageRoute(builder:(context) {
+                  //  //          return Otherstatus();
+                  //  //        },));
+                  //  //      },
+                  //  //      onLongPress:() {
+                  //  //        showDialog(context: context, builder: (context){
+                  //  //          return AlertDialog(
+                  //  //            shape:RoundedRectangleBorder(
+                  //  //                borderRadius:BorderRadius.circular(20)),
+                  //  //            title:Text('Mute status',style:TextStyle(fontWeight:FontWeight.w700,
+                  //  //                fontSize:20.sp,color:Color.fromRGBO(0,0,0,1))),
+                  //  //            content:Text(''),
+                  //  //            actions: [
+                  //  //              TextButton(
+                  //  //                onPressed: () {Navigator.pop(context);},
+                  //  //                child: Text('Cancel',style:TextStyle(fontWeight:FontWeight.w700,fontSize:14.sp,
+                  //  //                    color:Color.fromRGBO(0, 163, 255, 1))),
+                  //  //              ),
+                  //  //              TextButton(onPressed: () {  },
+                  //  //                child: Text('OK',style:TextStyle(fontWeight:FontWeight.w700,fontSize:14.sp,
+                  //  //                    color:Color.fromRGBO(0, 0, 0, 1))),
+                  //  //              )
+                  //  //            ],
+                  //  //          );
+                  //  //        });
+                  //  //      },
+                  //  //
+                  //  //      // child: Container(
+                  //  //      //
+                  //  //      //
+                  //  //      //   height:80.h,width:double.infinity.w,
+                  //  //      //   color:Colors.transparent,
+                  //  //      //   padding:EdgeInsets.fromLTRB(0.w,8.h,0.w,18.h),
+                  //  //      //   child:Row(
+                  //  //      //     children: [
+                  //  //      //
+                  //  //      //       Container(height:70.h,width:69.w,decoration:BoxDecoration(shape:BoxShape.circle,
+                  //  //      //           // image:DecorationImage(image: NetworkImage
+                  //  //      //           //   (storiesValueNotifier.value.item2.result[index].status_post),
+                  //  //      //           //     fit:BoxFit.fill),
+                  //  //      //           border:Border.all(width:2.w,color:Color.fromRGBO(248, 206, 97, 1)),
+                  //  //      //
+                  //  //      //       ),
+                  //  //      //       child: Image.network(statusShowValueNotifier.value.item2.result[index].status_post),),
+                  //  //      //      SizedBox(width:15.w),
+                  //  //      //       Column(crossAxisAlignment:CrossAxisAlignment.start,
+                  //  //      //           mainAxisAlignment:MainAxisAlignment.center,
+                  //  //      //           children: [
+                  //  //      //
+                  //  //      //             Text(name[index],style:GoogleFonts.inter(fontWeight:FontWeight.w700,
+                  //  //      //                 fontSize:14.sp,color:Color.fromRGBO(0,0,0,1))),
+                  //  //      //             Text("Today at ${time[index]}",style:GoogleFonts.inter(textStyle:TextStyle(
+                  //  //      //                 fontWeight:FontWeight.w400,fontSize:11.sp,color:Color.fromRGBO(121, 117, 117, 1)
+                  //  //      //             )))])
+                  //  //      //     ],),
+                  //  //      // ),
+                  //  //
+                  //  //      child:  ListTile(leading:CircleAvatar(
+                  //  //
+                  //  //            child: Image.network("http://3.110.105.86:4000/${statusShowValueNotifier.value.item2.result[index].status_post}")) ,
+                  //  //          // title:Text('Elumalai') ,
+                  //  //          subtitle:
+                  //  //          Text(statusShowValueNotifier.value.item2.result[index].createdAt,style:GoogleFonts.inter(textStyle:TextStyle(
+                  //  //              fontWeight:FontWeight.w400,fontSize:11.sp,color:Color.fromRGBO(121, 117, 117, 1)
+                  //  //          ))),
+                  //  //
+                  //  //        )
+                  //  //    );
+                  //   },),
+
+
+                ],),),
+          ),
+          floatingActionButton:SpeedDial(
+            overlayOpacity:0, spacing:17,
+            spaceBetweenChildren: 17, activeIcon:Icons.keyboard_arrow_down_rounded,
+            icon: Icons.keyboard_arrow_up_rounded, backgroundColor:Color.fromRGBO(248, 206, 97, 1),
+            foregroundColor:Colors.black,
+            children: [SpeedDialChild(
+                onTap:() {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ColorTest(uid: widget.uid);
+                  },));
+                },
+                backgroundColor:Color.fromRGBO(248, 206, 97, 1),
+                child:SvgPicture.asset('assets/status_assets/status_text.svg')
             ),
-          );
-        }
+              SpeedDialChild(
+                  onTap:() async{
+                    return await gallery().then((value) async {
+                      if (value != null && value.files.first.size<52428800) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AssetPageView(
+                                  fileList: value.files,
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(
+                                        file: value.files.first.bytes!,
+                                        fileName: timestamp,
+                                        contentType: "image/" + value.files.first.extension!, guid: '');
+                                    profileByte = value.files.first.bytes!;
+                                    statusCreate();
+                                  },
+                                )));
+
+                      } else {
+                        final snackBar = snackbar(content: "File size is greater than 50MB");
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                    });
+                  },
+                  backgroundColor:Color.fromRGBO(248, 206, 97, 1),
+                  child:SvgPicture.asset('assets/status_assets/camera_icon.svg')
+              ),
+            ],
+          )
+      ),
     );
   }
   Widget statusViewed(controller){
@@ -571,7 +628,6 @@ class _ColorTestState extends State<ColorTest> {
       );
     });
   }
-
   @override
   Widget build(BuildContext context) {
 
@@ -579,8 +635,8 @@ class _ColorTestState extends State<ColorTest> {
       body:Stack(
           children:[
             Container(height:double.infinity.h,width:double.infinity.w,decoration:BoxDecoration(
-              color:currentColor
-          ),),
+                color:currentColor
+            ),),
             Positioned(left:27.w,top:40.h,right:17.w,
               child: Row(children: [
                 GestureDetector(onTap:() {
@@ -613,7 +669,7 @@ class _ColorTestState extends State<ColorTest> {
                   controller:storyController,
                   cursorColor:Colors.black,
                   style: TextStyle(fontWeight:FontWeight.w700,fontSize: 32.sp,
-                      color: currentColor1),
+                      color: currentColor),
                   decoration: InputDecoration(
 
                       enabledBorder: OutlineInputBorder(
@@ -646,6 +702,3 @@ class _ColorTestState extends State<ColorTest> {
 
 
 }
-
-
-

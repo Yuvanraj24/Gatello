@@ -20,8 +20,8 @@ String? usernameValidator(String? value) {
   }
   return null;
 }
-String? emailValidator(String? value) {
-  if (value == null || value.isEmpty || !value.contains('.com')) {
+String? emailValidator(String value) {
+  if ((value.isNotEmpty || value.contains('.com')|| value.contains('.in')|| value.contains('.org')|| value.contains('.net')|| value.contains('.co')||value.contains('.edu')||value.contains('.gov')||value.contains('.site')||value.contains('.it')||value.contains('.uk')||value.contains('.xyz')||value.contains('.info')||value.contains('.ru')||value.contains('.de')||value.contains('.ir')) == false ) {
     return 'Invalid Email';
   }
   return null;

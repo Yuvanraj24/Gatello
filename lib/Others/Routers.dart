@@ -37,4 +37,7 @@ const String storageUploadUrl = 'http://3.108.219.188:5000/upload';
 //*** terms and policy */
 const String termsUrl = 'https://www.gatello.com/us/terms';
 const String policyUrl = 'https://www.gatello.com/us/policy';
+const statusUrl="http://3.110.105.86:2022/allstatus/status";
+const viewStatusUrl="http://3.110.105.86:2022/status/status";
+const userviewStatusUrl="http://3.110.105.86:2022/userview/status";
 // http://13.126.249.57/storage?user_id=CnqkRPtZkrVp5QnEGGhqQbkVJm20&root_id=6212b2c9d6f2816d2c13d0b7&folder_name=storage

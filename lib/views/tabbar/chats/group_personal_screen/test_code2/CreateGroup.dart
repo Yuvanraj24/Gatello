@@ -24,15 +24,141 @@ import '../../../../../components/SnackBar.dart';
 import '../../../../../components/TextField.dart';
 import '../../../../../components/TextFormField.dart';
 import '../../../../../validator/validator.dart';
+import '../../personal_chat_screen/ChatPage.dart';
 class CreateGroup extends StatefulWidget {
   final List<Map<String, dynamic>> members;
+  final List memberlist;
   final String uid;
-  const CreateGroup({Key? key, required this.members,required this.uid}) : super(key: key);
+  const CreateGroup({Key? key,
+    required this.memberlist,
+    required this.members,
+    required this.uid}) : super(key: key);
 
   @override
   _CreateGroupState createState() => _CreateGroupState();
 }
 class _CreateGroupState extends State<CreateGroup> {
+  bool _isRequesting = false;
+  bool _isFinish = false;
+  List fBPhone=[];
+  Map <String,String> conMap = Map();
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> body = [];
+  var showMember;
+
+  Future userChatList({required String searchQuery, int limit = 50}) async {
+    if (!_isRequesting && !_isFinish) {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot;
+      _isRequesting = true;
+      if (body.isEmpty) {
+
+        querySnapshot = await instance
+            .collection("user-detail")
+            .where("name",
+            isGreaterThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery)
+            .where("name",
+            isLessThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery +
+                '\uf8ff')
+            .orderBy("name")
+            .limit(limit)
+            .get();
+      } else {
+        querySnapshot = await instance
+            .collection("user-detail")
+            .where("name",
+            isGreaterThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery)
+            .where("name",
+            isLessThanOrEqualTo: (searchQuery.isEmpty) ? null : searchQuery +
+                '\uf8ff')
+            .orderBy("name")
+            .startAfterDocument(body[body.length - 1])
+            .limit(limit)
+            .get();
+      }
+      if (querySnapshot != null) {
+
+        if (!mounted) return;
+        setState(() {
+          // print("QS Len: ${querySnapshot.docs.length}");
+          body.addAll(querySnapshot.docs);
+          print("Body Added ${querySnapshot.docs}");
+
+          String phone,name,id;
+          Stream<QuerySnapshot> chatRef = instance.collection("user-detail").snapshots();
+          chatRef.forEach((field) {
+            field.docs.asMap().forEach((index, data) {
+              // print("Con:${field.docs[index]["phone"]}");
+              phone=field.docs[index]["phone"];
+              name=field.docs[index]["name"];
+              id=field.docs[index]["uid"];
+
+              phone=phone.replaceAll(" ", "");
+              print("Con:${phone}(${phone.length})");
+              print("ConName:${name}(${name.length})");
+
+              if(phone.length>10 && phone.length<=13)
+              {
+                print("ifdrop");
+                phone=phone.substring(3,13);
+                print(phone);
+                fBPhone.add(phone);
+                // conMap[phone]=name;
+                // conId.add(id);
+                conMap[phone]=id;
+
+
+              }
+              else
+              {
+                fBPhone.add(phone);
+                conMap[phone]=id;
+
+              }
+
+              // print(fBPhone);
+
+
+
+
+            });
+            print("ConMap:${conMap}");
+            setState(() {
+
+            });
+          });
+
+        });
+        if (querySnapshot.docs.length < limit) {
+          print('Lotus777${querySnapshot.docs}');
+          _isFinish = true;
+        }
+      }
+      _isRequesting = false;
+    }
+  }
+  TextEditingController searchTextEditingController = TextEditingController();
+
+  List<Map<String, dynamic>> groupMemberList = [];
+  groupAdd() {
+    print("group add function is called...");
+    for (int x = 0; x < body.length; x++) {
+      for (int j = 0; j<widget.memberlist.length; j++){
+        if (body[x]["uid"] == widget.memberlist[j]) {
+          print("Came to the Adding Group Action...");
+          groupMemberList.add(body[x].data());
+          print("The New print of groupList : ${groupMemberList}");
+          print("Data of the Body => ${body[x].data()}");
+          print("SELTEST contact for create group : ${widget.memberlist[j].toString()} == ${body[x]["uid"]}");
+        }
+        else{
+          print("The Uid is not match with ---- Group member list..!");
+        }
+      }
+    }
+    print("The List count for Group member map ${groupMemberList.length}");
+  }
+
+
+  //---------------------------------------------------------------------------------
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   Uint8List? groupPicture;
@@ -52,6 +178,7 @@ class _CreateGroupState extends State<CreateGroup> {
     // final data1=await _getUID();
     // final data2=await instance.collection("user-detail").doc(uid!).get();
     // return [data1,data2];
+    groupAdd();
     return await instance.collection("user-detail").doc(widget.uid).get();
   }
   // Future<void> _getUID() async {
@@ -63,7 +190,15 @@ class _CreateGroupState extends State<CreateGroup> {
   // }
   @override
   void initState() {
-  //  _getUID();
+    //  _getUID();
+    userChatList(searchQuery: searchTextEditingController.text);
+    groupAdd();
+    print("member b4 set : ${widget.members}");
+    print(widget.members.length);
+    var a = widget.members.toSet();
+    print("a length : ${a.length}");
+    print("Set a is : ${a}");
+
     adminDetailFuture= adminDetails() ;
     super.initState();
   }
@@ -79,135 +214,138 @@ class _CreateGroupState extends State<CreateGroup> {
   Widget build(BuildContext context) {
     return SafeArea(
 
-          child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-              future:adminDetailFuture ,
-              builder: (context, snapshot) {
+        child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            future:adminDetailFuture ,
+            builder: (context, snapshot) {
 
-                if ( snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null && adminDetailFuture != null ) {
-                  print('Divya:111111');
-                  return Scaffold(
-                    floatingActionButton: FloatingActionButton(
-                      onPressed: (isLoading)
-                          ? null
-                          : () async {
-                        try {
+              if ( snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null && adminDetailFuture != null ) {
+                return Scaffold(
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: (isLoading)
+                        ? null
+                        : () async {
+                      try {
+                        if (!mounted) return;
+                        setState(() {
+                          isLoading = true;
+                        });
+                        if (_formKey.currentState!.validate() && widget.members.isNotEmpty) {
+                          String gid = nanoid(30);
+
+                          WriteBatch writeBatch = instance.batch();
+                          String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+                          String? url;
+                          if (groupPicture != null && contentType != null) {
+                            TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(guid: gid, file: groupPicture!, fileName: timestamp, contentType: contentType!);
+                            url = await taskSnapshot.ref.getDownloadURL();
+                          }
+                          writeBatch.set(instance.collection("group-detail").doc(gid), {
+                            "gid": gid,
+                            "title": titleTextEditingController.text,
+                            "pic": (url != null) ? url : null,
+                            "description": (descriptionTextEditingController.text.isNotEmpty) ? descriptionTextEditingController.text : null,
+                            "createdAt": timestamp,
+                            "createdBy": widget.uid,
+                            "typinglist": [],
+                            "updateAt": null,
+                            "timestamp": timestamp,
+                            "lastMessage": null,
+                            "messageBy": null,
+                            "members": createGroupMembersMap(
+                                adminPic: (snapshot.data!.data()!["pic"] != null) ? snapshot.data!.data()!["pic"] : null,
+                                adminName: snapshot.data!.data()!["name"],
+                                adminUid:widget.uid,
+                                members: widget.members)
+                          });
+                          // for (String uid in userList) {
+                          //   writeBatch.set(
+                          //       instance.collection("personal-group-list").doc(uid),
+                          //       {
+                          //         "groupList": FieldValue.arrayUnion([gid])
+                          //       },
+                          //       SetOptions(merge: true));
+                          // }
+                          writeBatch.commit();
                           if (!mounted) return;
                           setState(() {
-                            isLoading = true;
+                            isLoading = false;
                           });
-                          if (_formKey.currentState!.validate() && widget.members.isNotEmpty) {
-                            String gid = nanoid(30);
-
-                            WriteBatch writeBatch = instance.batch();
-                            String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-                            String? url;
-                            if (groupPicture != null && contentType != null) {
-                              TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(guid: gid, file: groupPicture!, fileName: timestamp, contentType: contentType!);
-                              url = await taskSnapshot.ref.getDownloadURL();
-                            }
-                            writeBatch.set(instance.collection("group-detail").doc(gid), {
-                              "gid": gid,
-                              "title": titleTextEditingController.text,
-                              "pic": (url != null) ? url : null,
-                              "description": (descriptionTextEditingController.text.isNotEmpty) ? descriptionTextEditingController.text : null,
-                              "createdAt": timestamp,
-                              "createdBy": widget.uid,
-                              "updateAt": null,
-                              "timestamp": timestamp,
-                              "lastMessage": null,
-                              "messageBy": null,
-                              "members": createGroupMembersMap(
-                                  adminPic: (snapshot.data!.data()!["pic"] != null) ? snapshot.data!.data()!["pic"] : null,
-                                  adminName: snapshot.data!.data()!["name"],
-                                  adminUid:widget.uid,
-                                  members: widget.members)
-                            });
-                            // for (String uid in userList) {
-                            //   writeBatch.set(
-                            //       instance.collection("personal-group-list").doc(uid),
-                            //       {
-                            //         "groupList": FieldValue.arrayUnion([gid])
-                            //       },
-                            //       SetOptions(merge: true));
-                            // }
-                            writeBatch.commit();
-                            if (!mounted) return;
-                            setState(() {
-                              isLoading = false;
-                            });
-                            return Navigator.of(context).popUntil((route) => route.isFirst);
-                          } else {
-                            if (!mounted) return;
-                            setState(() {
-                              isLoading = false;
-                            });
-                            final snackBar = snackbar(content: "Please fill out the title. Description is optional.");
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          }
-                        } catch (e) {
-                          log(e.toString());
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(
+                              state: 1,
+                              uid: widget.uid,
+                              puid: gid)));
+                        } else {
+                          if (!mounted) return;
+                          setState(() {
+                            isLoading = false;
+                          });
+                          final snackBar = snackbar(content: "Please fill out the title. Description is optional.");
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
-                      },
-                      child: Icon(Icons.done),
+                      } catch (e) {
+                        log(e.toString());
+                      }
+                    },
+                    child: Icon(Icons.done),
+                  ),
+                  appBar: AppBar(
+                    centerTitle: false,
+                    automaticallyImplyLeading: false,
+                    elevation: 0,
+                    leading: IconButton(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                    appBar: AppBar(
-                      centerTitle: false,
-                      automaticallyImplyLeading: false,
-                      elevation: 0,
-                      leading: IconButton(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      title: Text(
-                        "Create Group",
-                        style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                    title: Text(
+                      "Create Group",
+                      style: GoogleFonts.poppins(textStyle: textStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                    ),
+                  ),
+                  body: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5, bottom: 5),
+                            child: Row(
+                              children: [
+                                userImagePicker(),
+                                Flexible(
+                                  child: Form(
+                                      key: _formKey,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: title(),
+                                      )),
+                                )
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8, bottom: 8),
+                            child: description(),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            child: adminDetail(pic: (snapshot.data!.data()!["pic"] != null) ? snapshot.data!.data()!["pic"] : null, name: snapshot.data!.data()!["name"]),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            child: memberDetail(),
+                          )
+                        ],
                       ),
                     ),
-                    body: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5, bottom: 5),
-                              child: Row(
-                                children: [
-                                  userImagePicker(),
-                                  Flexible(
-                                    child: Form(
-                                        key: _formKey,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left: 8.0),
-                                          child: title(),
-                                        )),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8, bottom: 8),
-                              child: description(),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10, bottom: 10),
-                              child: adminDetail(pic: (snapshot.data!.data()!["pic"] != null) ? snapshot.data!.data()!["pic"] : null, name: snapshot.data!.data()!["name"]),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10, bottom: 10),
-                              child: memberDetail(),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return exceptionScaffold(context: context, lottieString: loadingLottie, subtitle: "Loading");
-                }
-              })
+                  ),
+                );
+              } else {
+                return exceptionScaffold(context: context, lottieString: loadingLottie, subtitle: "Loading");
+              }
+            })
 
     );
   }
@@ -307,14 +445,15 @@ class _CreateGroupState extends State<CreateGroup> {
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: ListView.separated(
-              itemCount: widget.members.length,
+              itemCount: widget.memberlist.length,
               separatorBuilder: (context, index) => Container(
                 height: 8,
               ),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                return buildItem(pic: (widget.members[index]["pic"] != null) ? widget.members[index]["pic"] : null, name: widget.members[index]["name"]);
+                groupAdd();
+                return buildItem(pic: (groupMemberList[index]["pic"] != null) ? groupMemberList[index]["pic"] : null, name: groupMemberList[index]["name"]);
               }),
         )
       ],

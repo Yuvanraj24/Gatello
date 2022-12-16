@@ -72,7 +72,7 @@ class _SettingState extends State<Setting> {
     return await ApiHandler().apiHandler(
       valueNotifier: profileDetailsValueNotifier,
       jsonModel: userDetailsModel.profileDetailsFromJson,
-      url: profileDetailsUrl,
+      url: 'http://3.110.105.86:4000/view/profile',
       requestMethod: 1,
       body: {"user_id": userId, "followee_id": ""},
     );

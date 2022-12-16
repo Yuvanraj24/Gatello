@@ -1,9 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../Style/Colors.dart';
-
 Widget textField(
     {bool obscureText = false,
       required TextStyle textStyle,
@@ -13,7 +10,7 @@ Widget textField(
       TextStyle? labelStyle,
       TextStyle? labelDisabledStyle,
       TextStyle? errorStyle,
-      Color borderColor = const Color(accent),
+      Color borderColor = const Color(yellow),
       Color cursorColor = const Color(black),
       double borderWidth = 2.0,
       double borderRadius = 25,
@@ -76,13 +73,21 @@ Widget textField(
         labelStyle: labelStyle,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
-          borderSide: (border) ? BorderSide(color:Colors.black) : BorderSide(color:Colors.black),
+          borderSide: (border) ? BorderSide(color:Colors.yellow) : BorderSide(color:Colors.yellow),
         ),
-       // floatingLabelBehavior: FloatingLabelBehavior.always,
+
+        // floatingLabelBehavior: FloatingLabelBehavior.always,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
-          borderSide: (border) ?  BorderSide(color:Colors.black) :BorderSide(color:Colors.black),
+          borderSide: (border) ?  BorderSide(color:Colors.yellow) :BorderSide(color:Colors.yellow),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+          borderSide: (border) ?  BorderSide(color:Colors.yellow) :BorderSide(color:Colors.yellow),
+        ),
+
+
+
         filled: filled,
         // counter: (counter) ? null : SizedBox.shrink(),
         // counterStyle: TextStyle(
