@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_file_downloader/flutter_file_downloader.dart';
+import 'package:gatello/Authentication/Authentication.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -65,7 +66,7 @@ Map<int, String> dataTypeMap = {
   7: "📍 Location", //just text
   8: "👤 Contact", //just text
   9: "🎤 Voice",
-  10: "viewonce"
+  10: "View Once"
 };
 
 String getMessage(int index, Map data) {
@@ -91,9 +92,20 @@ String getMessage(int index, Map data) {
     case 9:
       return data['voice'];
     case 10:
-      return data['viewonce'];
+      {
+        print("view once msg is created...!..1");
+        return data['viewonce'];
+      }
+    case 11:
+      {
+        print("case 11 called..2");
+        return data['baloon'];
+      }
     default:
-      return "";
+      {
+        print("Came to default case 2");
+        return "";
+      }
   }
 }
 
@@ -119,7 +131,9 @@ Map replyMap({required String documentId, required int documentIndex, required S
       "location": (index == 7) ? dataString : null,
       "contact": (index == 8) ? dataString : null,
       "voice": (index == 9) ? dataString : null,
-      "viewonce": (index == 10) ? dataString : null,
+      "viewonce" : (index == 10)? dataString : null,
+      "baloon" : (index == 11)? dataString : null,
+
     }
   };
 }
@@ -171,7 +185,7 @@ Map addGroupMembersMap({required List<Map<String, dynamic>> members}) {
   Map result = {};
   for (Map<String, dynamic> member in members) {
     result.addAll({
-      member["uid"]: {"delete":false, "isRemoved": false, "pic": member["pic"], "name": member["name"], "claim": "member", "lastRead": null, "unreadCount": 0}
+      member["uid"]: {"delete": false, "isRemoved": false, "pic": member["pic"], "name": member["name"], "claim": "member", "lastRead": null, "unreadCount": 0}
     });
   }
   return result;
@@ -195,11 +209,11 @@ Future<Uint8List?> downloadToBytes(String url) async {
 
 Map createGroupMembersMap({required String? adminPic, required String adminName, required String adminUid, required List<Map<String, dynamic>> members}) {
   Map result = {
-    adminUid: {"delete":false, "isRemoved": false, "pic": adminPic, "name": adminName, "claim": "admin", "lastRead": null, "unreadCount": 0}
+    adminUid: {"delete": false, "isRemoved": false, "pic": adminPic, "name": adminName, "claim": "admin", "lastRead": null, "unreadCount": 0}
   };
   for (Map<String, dynamic> member in members) {
     result.addAll({
-      member["uid"]: {"delete":false, "isRemoved": false, "pic": member["pic"], "name": member["name"], "claim": "member", "lastRead": null, "unreadCount": 0}
+      member["uid"]: {"delete": false, "isRemoved": false, "pic": member["pic"], "name": member["name"], "claim": "member", "lastRead": null, "unreadCount": 0}
     });
   }
   print(result);
@@ -228,7 +242,8 @@ Map dataMap({required int index, required String data}) {
     "location": (index == 7) ? data : null,
     "contact": (index == 8) ? data : null,
     "voice": (index == 9) ? data : null,
-    "viewonce": (index == 10) ? data : null,
+    "viewonce" : (index == 10)? data : null,
+    "baloon" : (index == 11)? data : null,
   };
 }
 
@@ -262,7 +277,7 @@ Map shareDataMap({required int contentType, required String description, require
   }
 }
 
-Map groupWriteMessageMembersMap({required Map members}) {
+Map groupWriteMessageMembersMap({required Map members,required String uid}) {
   Map result = {};
   members.forEach((key, value) {
     result.addAll({
@@ -272,7 +287,7 @@ Map groupWriteMessageMembersMap({required Map members}) {
         "name": value["name"],
         "claim": value["claim"],
         "lastRead": value["lastRead"],
-        "unreadCount": (key == 's8b6XInslPffQEgz8sVTINsPhcx2') ? 0 : value["unreadCount"] + 1
+        "unreadCount": (key == '${uid}') ? 0 : value["unreadCount"] + 1
       }
     });
   });

@@ -13,8 +13,8 @@ async {
   List conNames = json.decode(encodedMap1!);
   print(conNames);
 
-String? encodedMap2 = prefs.getString('conNums');
- List conNums = json.decode(encodedMap2!);
+  String? encodedMap2 = prefs.getString('conNums');
+  List conNums = json.decode(encodedMap2!);
   print(conNums);
 
   print(conNums.indexOf(phone));

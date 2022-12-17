@@ -45,6 +45,7 @@ import 'package:gatello/views/splash_screen1.dart';
 import 'package:gatello/views/splash_screen2.dart';
 import 'package:gatello/views/tabbar/chats/link_device_screen.dart';
 import 'package:gatello/views/tabbar/test_code/pings_test.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:gatello/views/tabbar/test_code/home.dart';
@@ -74,6 +75,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
+  await GetStorage.init();
   runApp(MyApp());
 }
 const String ip = 'http://3.108.219.188:5000';
@@ -158,9 +160,7 @@ class _MyAppState extends State<MyApp> {
                           builder: (context, value, _) {
                             if (snapshot.connectionState == ConnectionState.done) {
                               return (newuser == false) ?
-                              Tabbar()
-                             // AddProfilePic(uid: null, birthDay: null, username: null, mobileNo: null, email: null, password: null, name: null,)
-                                  :LoginScreen();
+                              Tabbar():LoginScreen();
 
                             } else {
                               return lottieAnimation(loadingLottie);

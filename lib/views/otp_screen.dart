@@ -29,7 +29,7 @@ class Otp extends StatefulWidget {
   String name;
   String password;
   String mobileNo;
-  TextEditingController? otpController;
+  TextEditingController otpController = TextEditingController();
 
   Otp({
     required this.name,
@@ -333,7 +333,7 @@ class _OtpState extends State<Otp> {
                     userName: widget.userName,
                     password: widget.password,
                     mobileNo: widget.mobileNo,
-                    otp: widget.otpController!.text,
+                    otp: widget.otpController.text,
                   ))));
 
     }

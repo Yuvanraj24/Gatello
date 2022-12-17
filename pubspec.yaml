@@ -77,7 +77,6 @@ dependencies:
   video_player: ^2.4.5
   visibility_detector: ^0.3.3
   flutter_local_notifications: ^9.7.0
-  connectivity_plus: ^2.3.6
   flutter_callkit_incoming: ^1.0.2+1
   dropdown_button2: ^1.7.1
   overlay_support: ^2.0.1
@@ -114,6 +113,8 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   page_transition: ^2.0.9
   get_storage: ^2.0.3
+  connectivity_plus: ^3.0.2
+  firebase_database: ^9.1.7
   story: ^0.8.0
 
 dev_dependencies:
@@ -209,6 +210,7 @@ flutter:
     - assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/forward.svg
     - assets/tabbar_icons/tab_view_main/archieved_icon.svg
     - assets/pops_asset/pops_gallery.svg
+    - assets/welcomeback.png
     - assets/pops_asset/pops_likebutton.svg
     - assets/pops_asset/pops_commentbutton.svg
     - assets/pops_asset/pops_share.svg
@@ -312,11 +314,12 @@ flutter:
     - assets/gatello_asset/briefLogo.png
     - assets/settngs/QR.svg
     - assets/settngs/account_icon.svg
-    - assets/welcomeback.png
     - assets/select_contact/right_arrow.svg
     - assets/icons_assets/signup_camera.svg
     - assets/icons_assets/signup_gallery.svg
     - assets/error_icon.svg
+    - assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/viewoncetf.svg
+    - assets/tabbar_icons/tab_view_main/chats_image/per_chat_ontap_icons/receiver_vo.svg
     - assets/gatello.gif
     - assets/gatellologo1.gif
     - assets/audio/

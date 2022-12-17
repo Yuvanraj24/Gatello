@@ -205,7 +205,7 @@ class _AddEmailState extends State<AddEmail> {
 
                               } else {
                                 Fluttertoast.
-                              showToast(msg: "Enter a valid Email ID");
+                                showToast(msg: "Enter a valid Email ID");
                                 return null;
                               }
 

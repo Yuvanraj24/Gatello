@@ -381,8 +381,7 @@ class _TabState extends State<Tabbar> {
 
   @override
   void initState() {
-
-    // fireBaseBlockList1();
+   // fireBaseBlockList1();
     _future = sendData();
     getFCMToken().then((value) => print("fcm token:" + value));
     FirebaseMessaging.onMessage.listen(firebaseMessagingHandler);
@@ -4130,7 +4129,7 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
             "messageBy": "${uid}",
             "lastMessage": (type == 0) ? message.toString() : dataTypeMap[type],
             "delete": false,
-            "members": groupWriteMessageMembersMap(members: members),
+            "members": groupWriteMessageMembersMap(members: members, uid: widget.uid),
           },
           SetOptions(merge: true));
       writeBatch.commit();

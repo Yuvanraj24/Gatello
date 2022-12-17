@@ -100,7 +100,7 @@ class _SelectBirthdayState extends State<SelectBirthday> {
                   },
                   pickerTheme: DateTimePickerTheme(confirmTextStyle:TextStyle(color: Colors.yellow),
                     cancelTextStyle:TextStyle(color: Colors.yellow),
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: Colors.white,
                     itemTextStyle: TextStyle(color: Colors.black, fontSize: 19),
                     dividerColor: Colors.black,
                   ),

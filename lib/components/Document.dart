@@ -43,7 +43,7 @@ class _DocumentDownloaderState extends State<DocumentDownloader> {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               hoverColor: Colors.transparent,
-              icon: Icon(Icons.download),
+              icon: Icon(Icons.add),
               onPressed: () async {
                 print('ffffffffffff');
                 await downloadFile(widget.url, widget.url.split("?").first.split("%2F").last,

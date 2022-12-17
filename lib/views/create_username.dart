@@ -39,8 +39,7 @@ class _CreateUsernameState extends State<CreateUsername> {
   }
 
 
-  fetchUsers()async
-  {
+  fetchUsers() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("user-detail").get();
     userList = querySnapshot.docs;
   }
@@ -144,7 +143,7 @@ class _CreateUsernameState extends State<CreateUsername> {
                                   });
 
                                 }
-                                else if(userNameController.text.length<4){
+                                else if(userNameController.text.length<=4){
                                   setState(() {
                                     status ="User-name must be above 4 characters";
                                   });
@@ -157,6 +156,7 @@ class _CreateUsernameState extends State<CreateUsername> {
                                   });
                                   break;
                                 }
+
                                 else{
                                   print("username available");
                                   setState(() {
@@ -195,33 +195,31 @@ class _CreateUsernameState extends State<CreateUsername> {
                               errorBorder: UnderlineInputBorder(
                                   borderSide:
                                   BorderSide(color: Colors.black)),
-                              suffixIcon: Flexible(
-                                child: Container(
-                                  width:160.w,
-                                  child: Row(
-                                    children: [
-                                      Spacer(),
+                              suffixIcon: Container(
+                                width:160.w,
+                                child: Row(
+                                  children: [
+                                    Spacer(),
 
-                                      // IconButton(
-                                      //   padding: EdgeInsets.only(bottom: 3,left: 30),
-                                      //   alignment: Alignment.bottomCenter,
-                                      //   iconSize: 20.w,
-                                      //   icon: Icon(Icons.refresh, color: Colors.black),
-                                      //   onPressed: () {},
-                                      // ),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 20,left: 10),
-                                        child:
-                                        (status == "null")?
-                                        null:
-                                        (status == "exists")?
-                                        //SvgPicture.asset('assets/icons_assets/wrong.svg',width: 16.w,)
-                                        Icon(Icons.close,
-                                          color: Colors.red,):
-                                        SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),
-                                      ),
-                                    ],
-                                  ),
+                                    // IconButton(
+                                    //   padding: EdgeInsets.only(bottom: 3,left: 30),
+                                    //   alignment: Alignment.bottomCenter,
+                                    //   iconSize: 20.w,
+                                    //   icon: Icon(Icons.refresh, color: Colors.black),
+                                    //   onPressed: () {},
+                                    // ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 20,left: 10),
+                                      child:
+                                      (status == "null")?
+                                      null:
+                                      (status == "exists")?
+                                      //SvgPicture.asset('assets/icons_assets/wrong.svg',width: 16.w,)
+                                      Icon(Icons.close,
+                                        color: Colors.red,):
+                                      SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,),
+                                    ),
+                                  ],
                                 ),
                               ),
 

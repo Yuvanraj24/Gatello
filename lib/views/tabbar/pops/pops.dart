@@ -472,16 +472,16 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
-                                                    Navigator
-                                                        .push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                          UserProfile(uid: uid.toString())
-                                                             //  Us
-
-                                                      ),
-                                                    );
+                                                    // Navigator
+                                                    //     .push(
+                                                    //   context,
+                                                    //   MaterialPageRoute(
+                                                    //       builder: (context) =>
+                                                    //       UserProfile(uid: uid.toString())
+                                                    //          //  Us
+                                                    //
+                                                    //   ),
+                                                    // );
                                                   },
                                                   child: Row(
                                                     children: [

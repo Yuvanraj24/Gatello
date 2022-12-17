@@ -8,7 +8,6 @@ import 'package:gatello/views/profile/profile_details.dart';
 import 'package:gatello/views/profile/skill.dart';
 import 'package:gatello/views/profile/workexperience.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:tuple/tuple.dart';
 import '/core/models/profile_detail.dart' as profileDetailsModel;
 import '../../Others/Routers.dart';
@@ -42,7 +41,7 @@ class _TextsuState extends State<SeeMoreText> {
     return await ApiHandler().apiHandler(
       valueNotifier: profileDetailsValueNotifier,
       jsonModel: profileDetailsModel.profileDetailsFromJson,
-      url: 'http://3.110.105.86:4000/view/profile',
+      url: profileDetailsUrl,
       requestMethod: 1,
       body: {"user_id": (widget.uid != null) ? widget.uid : widget.uid, "followee_id": ""},
     );
@@ -54,11 +53,7 @@ class _TextsuState extends State<SeeMoreText> {
 
   @override
   Widget build(BuildContext context) {
-    var inputFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    var inputDate = inputFormat.parse(widget.dob); // <-- dd/MM 24H format
 
-    var outputFormat = DateFormat('MM/dd/yyyy');
-    var outputDate = outputFormat.format(inputDate);
     //   DateTime dateTime = dateFormat.parse("2019-07-19 8:40:23");
     print('uid for seemore${widget.uid}');
     // print('phnum${profileDetailsValueNotifier.value.item2.result.profileDetails.phone}');
@@ -66,7 +61,7 @@ class _TextsuState extends State<SeeMoreText> {
       padding: EdgeInsets.only(right:30,left: 30),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.biog,style: GoogleFonts.inter(
+          Text(widget.biog.contains('null')?'none':widget.biog,style: GoogleFonts.inter(
               textStyle: TextStyle(fontSize:13.5.sp,fontWeight: FontWeight.w400,color:
               Color.fromRGBO(0, 0, 0, 0.5))
           ),),
@@ -76,7 +71,7 @@ class _TextsuState extends State<SeeMoreText> {
           Row(
             children: [
               Text('Info',style:GoogleFonts.inter(textStyle: TextStyle(fontSize:14.sp,
-                  fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)),)  ),
+                  fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)))),
               SizedBox(width:10.w),
               GestureDetector(
                 onTap:(){
@@ -118,7 +113,7 @@ class _TextsuState extends State<SeeMoreText> {
               SizedBox(width: 8.w),
               Text(
 
-                widget.gender,
+                widget.gender.isEmpty?'none':widget.gender,
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontSize: 14.sp,
@@ -156,7 +151,7 @@ class _TextsuState extends State<SeeMoreText> {
               SizedBox(width: 8.w),
               Text(
 
-                (outputDate.contains('null'))?'Enter dob': outputDate,
+                widget.dob.contains('null')?'none':widget.dob,
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontSize: 14.sp,
@@ -223,7 +218,7 @@ class _TextsuState extends State<SeeMoreText> {
               ),
               SizedBox(width: 11.w),
               Text(
-                widget.phone,
+                widget.phone.contains('null')?'none':widget.phone,
 
 
                 style: GoogleFonts.inter(
@@ -247,7 +242,7 @@ class _TextsuState extends State<SeeMoreText> {
               ),
               SizedBox(width: 11.w),
               Text(
-                widget.email,
+                widget.email.contains('null')?'none':widget.email,
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontSize: 14.sp,

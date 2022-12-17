@@ -151,39 +151,37 @@ class  _SetPasswordState extends State<SetPassword> {
                                   color: Colors.black)),
                               labelText: "PASSWORD",
 
-                              suffixIcon: Flexible(
-                                child: Container(
+                              suffixIcon: Container(
 
-                                  width:160.w,
-                                  child: Row(
-                                    children: [
-                                      Spacer(),
+                                width:160.w,
+                                child: Row(
+                                  children: [
+                                    Spacer(),
 
-                                      IconButton(
-                                        padding: EdgeInsets.only(bottom:3,left: 130),
-                                            alignment: Alignment.bottomCenter,
-                                        iconSize:20.w,
-                                      icon:     isHidden?Icon(Icons.visibility_off, size: 18.sp,color: Colors.black):
-                                      Icon(Icons.visibility, size: 18.sp,color: Colors.black),
+                                    IconButton(
+                                      padding: EdgeInsets.only(bottom:3,left: 130),
+                                          alignment: Alignment.bottomCenter,
+                                      iconSize:20.w,
+                                    icon:     isHidden?Icon(Icons.visibility_off, size: 18.sp,color: Colors.black):
+                                    Icon(Icons.visibility, size: 18.sp,color: Colors.black),
 
-                                        onPressed: () {
-                                          setState(() {
-                                            isHidden=!isHidden;
-                                          });
-                                        },
-                                      ),
-                                      Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 24.h
-                                          ),
-
+                                      onPressed: () {
+                                        setState(() {
+                                          isHidden=!isHidden;
+                                        });
+                                      },
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 24.h
+                                        ),
 
 
-                                          child:(regex(pattern: passwordPattern, input: _setPassword.text) == true || _setPassword.text.isEmpty == true) ?SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,):SvgPicture.asset('assets/error_icon.svg',width: 16.w,)
 
-                                      ),
-                                    ],
-                                  ),
+                                        child:(regex(pattern: passwordPattern, input: _setPassword.text) == true || _setPassword.text.isEmpty == true) ?SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,):SvgPicture.asset('assets/error_icon.svg',width: 16.w,)
+
+                                    ),
+                                  ],
                                 ),
                               ),
 

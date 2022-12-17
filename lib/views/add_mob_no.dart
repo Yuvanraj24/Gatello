@@ -341,6 +341,7 @@ class _AddMobileNumberState extends State<AddMobileNumber> {
   }
 
   Future sendOtp(String phoneNumber) async {
+    print('otp sentt');
     return await ApiHandler().apiHandler(
       valueNotifier: sendOtpValueNotifier,
       jsonModel: defaultFromJson,
