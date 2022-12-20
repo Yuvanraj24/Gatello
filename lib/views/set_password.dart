@@ -80,198 +80,204 @@ class  _SetPasswordState extends State<SetPassword> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               key: _formKey,
               child: Container(
-                padding: EdgeInsets.only(left: 12.w, right: 1.w,
-                 top: 150.h, bottom: 35.h),
-                child: Center(
-                  child:
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center, children: [
+
+                padding: EdgeInsets.only(
+                    left: 11.w, right: 11.w, top: 150.h, bottom: 35.h),
+                // padding: EdgeInsets.only(left: 12.w, right: 1.w,
+                //  top: 150.h, bottom: 35.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
                     Text(
-                      "Set a password",
-                           style: GoogleFonts.fredoka(
-                              textStyle: TextStyle(
-                                  fontSize: 28.sp,
-                             fontWeight: FontWeight.w500,
-                                  color:Colors.black)),
+                "Set a password",
+                     style: GoogleFonts.fredoka(
+                        textStyle: TextStyle(
+                            fontSize: 28.sp,
+                       fontWeight: FontWeight.w500,
+                            color:Colors.black)),
                     ),
                     SizedBox(height: 12.h),
 
                      Text(
-                          "Just make sure it's at least 8 characters",
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: HexColor('#646363'))),
-                        ),
+                    "Just make sure it's at least 8 characters",
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w500,
+                            color: HexColor('#646363'))),
+                  ),
                     SizedBox(width: 14.h),
-                      Text(
-                          'long.',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 13.h,
-                                  fontWeight: FontWeight.w500,
-                                  color: HexColor('#646363'))),
-                        ),
+                Text(
+                    'long.',
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 13.h,
+                            fontWeight: FontWeight.w500,
+                            color: HexColor('#646363'))),
+                  ),
 
                    SizedBox(height: 40.h),
                     Row(
-                      children: [
-                        Container(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
 
-                        width:310.w,
-                          child: TextFormField(
-                            maxLength: 20,
-                              controller: _setPassword,
-                              obscureText: isHidden,
-                              onChanged: (value) {
-                                widget.password = _setPassword.text.toString();
-                                if(_setPassword.text.length > 8){
-                                  print("Password is OK");
-                                }else{
-                                  print("password is waste");
-                                }
-                                setState(() {
+                  width:310.w,
+                    child: TextFormField(
+                     // maxLength: 20,
+                        controller: _setPassword,
+                        obscureText: isHidden,
+                        onChanged: (value) {
+                          widget.password = _setPassword.text.toString();
+                          if(_setPassword.text.length > 8){
+                            print("Password is OK");
+                          }else{
+                            print("password is waste");
+                          }
+                          setState(() {
 
-                                });
-                              },
-                            cursorColor:HexColor('#0B0B0B'),
-                            decoration: InputDecoration(
-                               enabledBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: HexColor('#0B0B0B'))),
-                                       focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: HexColor('#0B0B0B'))),
+                          });
+                        },
+                      cursorColor:HexColor('#0B0B0B'),
+                      decoration: InputDecoration(
+                         enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: HexColor('#0B0B0B'))),
+                                 focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: HexColor('#0B0B0B'))),
 
-                              labelStyle:   GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 12.h,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black)),
-                              labelText: "PASSWORD",
+                        labelStyle:   GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            fontSize: 12.h,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black)),
+                        labelText: "PASSWORD",
 
-                              suffixIcon: Container(
+                        suffixIcon: Container(
 
-                                width:160.w,
-                                child: Row(
-                                  children: [
-                                    Spacer(),
-
-                                    IconButton(
-                                      padding: EdgeInsets.only(bottom:3,left: 130),
-                                          alignment: Alignment.bottomCenter,
-                                      iconSize:20.w,
-                                    icon:     isHidden?Icon(Icons.visibility_off, size: 18.sp,color: Colors.black):
-                                    Icon(Icons.visibility, size: 18.sp,color: Colors.black),
-
-                                      onPressed: () {
-                                        setState(() {
-                                          isHidden=!isHidden;
-                                        });
-                                      },
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 24.h
-                                        ),
+                          width:60.w,
+                          child: Row(
+                            children: [
 
 
+                              IconButton(
+                                padding: EdgeInsets.only(bottom:3),
+                                    alignment: Alignment.bottomCenter,
+                                iconSize:20.w,
+                              icon:     isHidden?Icon(Icons.visibility_off, size: 18.sp,color: Colors.black):
+                              Icon(Icons.visibility, size: 18.sp,color: Colors.black),
 
-                                        child:(regex(pattern: passwordPattern, input: _setPassword.text) == true || _setPassword.text.isEmpty == true) ?SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,):SvgPicture.asset('assets/error_icon.svg',width: 16.w,)
-
-                                    ),
-                                  ],
-                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    isHidden=!isHidden;
+                                  });
+                                },
                               ),
 
-                            ),
-
-                          validator: (value) {
-
-
-                                if (value == null || regex(pattern: passwordPattern, input: value) == false) {
-
-                                    return 'Must be atleast 8 Characters, Symbols & Numbers';
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 24.h
+                                  ),
 
 
-                                }else {
 
+                                  child:(regex(pattern: passwordPattern, input: _setPassword.text) == true || _setPassword.text.isEmpty == true) ?SvgPicture.asset('assets/icons_assets/green_tick.svg',width: 16.w,):SvgPicture.asset('assets/error_icon.svg',width: 16.w,)
 
-                                  return null;
-                                  // passwordValidator(value: value);
-                                }
-                                },
+                              ),
+                            ],
                           ),
-
                         ),
 
+                      ),
+
+                    validator: (value) {
 
 
-                      ],
+                          if (value == null || regex(pattern: passwordPattern, input: value) == false) {
+
+                              return 'Must be atleast 8 Characters, Symbols & Numbers';
+
+
+                          }else {
+
+
+                            return null;
+                            // passwordValidator(value: value);
+                          }
+                          },
                     ),
 
-                                   SizedBox(height: 6.h),
-                               Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                 children: [
-                                   Text(
-                      'Must be at 8 characters and contain at least\none letter,one symbol & one number.',
+                  ),
+
+
+
+                ],
+                    ),
+
+                             SizedBox(height: 8.h),
+                         Padding(
+                           padding:  EdgeInsets.only(left:15.0),
+                           child: Row(
+                           // mainAxisAlignment: MainAxisAlignment.start,
+                             children: [
+                               Text(
+                'Must be at 8 characters and contain at least\none letter,one symbol & one number.',
+                style: GoogleFonts.inter(
+                    textStyle: TextStyle(
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w400,
+                                color: HexColor('#00A3FF'))),
+                    ),
+                             ],
+                           ),
+                         ),
+               Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (regex(pattern: passwordPattern, input: _setPassword.text) == true) {
+                        print("Name : ${widget.name}");
+                        print("Birthday : ${widget.birthDay}");
+                        print("Username : ${widget.userName}");
+                        print("Password : ${widget.password}");
+                        setData("password", widget.password.toString());
+                        setData("page","5");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddMobileNumber(name: widget.name,birthDay: widget.birthDay, userName: widget.userName,password: widget.password.toString(),)));
+
+                      } else {
+
+                        return null;
+                      }
+                    },
+                    child: Text(
+                      'Continue',
                       style: GoogleFonts.inter(
                           textStyle: TextStyle(
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: HexColor('#00A3FF'))),
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black)),
                     ),
-                                 ],
-                               ),
-               Spacer(),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (regex(pattern: passwordPattern, input: _setPassword.text) == true) {
-                              print("Name : ${widget.name}");
-                              print("Birthday : ${widget.birthDay}");
-                              print("Username : ${widget.userName}");
-                              print("Password : ${widget.password}");
-                              setData("password", widget.password.toString());
-                              setData("page","5");
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AddMobileNumber(name: widget.name,birthDay: widget.birthDay, userName: widget.userName,password: widget.password.toString(),)));
-
-                            } else {
-
-                              return null;
-                            }
-                          },
-                          child: Text(
-                            'Continue',
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black)),
-                          ),
-                          style:
-                          ElevatedButton.styleFrom(
-                              elevation: 5,
-                              onPrimary: Colors.black,
-                              //  padding: EdgeInsets.all(10),
-                              minimumSize: Size(
+                    style:
+                    ElevatedButton.styleFrom(
+                        elevation: 5,
+                        onPrimary: Colors.black,
+                        //  padding: EdgeInsets.all(10),
+                        minimumSize: Size(
 
 
-                                  234.w,48.h
-                              ),
-
-                              primary: Color.fromRGBO(248, 206, 97, 1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(35),
-                              )),
+                            234.w,48.h
                         ),
 
+                        primary: Color.fromRGBO(248, 206, 97, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(35),
+                        )),
+                  ),
+
                   ]),
-                ),
               ),
             ),
           ),

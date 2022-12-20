@@ -116,6 +116,8 @@ dependencies:
   connectivity_plus: ^3.0.2
   firebase_database: ^9.1.7
   story: ^0.8.0
+  textfield_tags: ^2.0.2
+  indexed_list_view: ^2.0.2
 
 dev_dependencies:
   flutter_launcher_icons: ^0.9.3

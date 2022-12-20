@@ -123,11 +123,10 @@ class _SelectBirthdayState extends State<SelectBirthday> {
                             MaterialPageRoute(
                               builder: (context) => CreateUsername(name: widget.name, birthDay: _selectedDate.toString(),),
                             ));
-                      }else{
+                      }
+                      else{
                         Fluttertoast.showToast(msg: "You are not eligible");
                       }
-
-
                     },
                     style:ElevatedButton.styleFrom(primary:Color.fromRGBO(248, 206, 97, 1),
                         shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(27)),

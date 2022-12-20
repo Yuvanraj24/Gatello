@@ -3166,7 +3166,6 @@ var peerName;
                                                                                                     }
                                                                                                   });
                                                                                                 },
-
                                                                                                 child: iconCreation(
                                                                                                     "assets/tabbar_icons/tab_view_main/chats_image/attachment_icon_container/audio_image.svg",
                                                                                                     "Audio"),
@@ -6402,7 +6401,9 @@ var peerName;
                                                         }
                                                       });
                                                     },
-                                                    icon: Icon(Icons.emoji_emotions_outlined)),
+                          icon: Icon(Icons.emoji_emotions_outlined,
+                          color: Color.fromRGBO(12, 16, 29, 1)),
+                                                ),
 
 
                                                   textStyle: GoogleFonts.poppins(

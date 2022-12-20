@@ -1,4 +1,3 @@
-
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
@@ -57,8 +56,6 @@ import '../status/status_test.dart';
 import 'Delete1Dialog.dart';
 import '/core/models/profile_detail.dart' as profileDetailsModel;
 import 'chats/personal_chat_screen/ChatPage.dart';
-
-
 class Tabbar extends StatefulWidget {
   var uid;
   Tabbar({this.uid});
@@ -103,7 +100,7 @@ class _TabState extends State<Tabbar> {
     }
     return contacts;// return contactList;
   }
-
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = [];
   List fBPhone=[];
   List contacts1 = [];
   List contacts2 = [];
@@ -305,16 +302,22 @@ class _TabState extends State<Tabbar> {
   final ScrollController storyScrollController = ScrollController();
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(
       Tuple4(0, exceptionFromJson(loading), "Loading", null));
-  Future profileDetailsApiCall() async {
-    print('dhina:${userId} ');
-    return await ApiHandler().apiHandler(
-      valueNotifier: profileDetailsValueNotifier,
-      jsonModel: profileDetailsModel.profileDetailsFromJson,
-      url: 'http://3.110.105.86:4000/view/profile',
-      requestMethod: 1,
-      body: {"user_id": (userId != null) ? userId : userId, "followee_id": ""},
-    );
-  }
+  // Future profileDetailsApiCall() async {
+  //   print('dhina3333:${userId} ');
+  //   return await ApiHandler().apiHandler(
+  //     valueNotifier: profileDetailsValueNotifier,
+  //     jsonModel: profileDetailsModel.profileDetailsFromJson,
+  //     url: 'http://3.110.105.86:4000/view/profile',
+  //     requestMethod: 1,
+  //     // body: {"user_id": (userId != null) ? userId : userId, "followee_id": ""},
+  //     body: {
+  //       "user_id": (widget.userId != null)
+  //           ? widget.userId
+  //           : userId,
+  //       "followee_id": ""
+  //     },
+  //   );
+  // }
 
   Future lifecycleInit() async {
     String? uid = userId;
@@ -364,9 +367,18 @@ class _TabState extends State<Tabbar> {
 
 
     var userSnap = instance.collection("user-detail").doc(widget.uid).snapshots();
-    return [data1, data2, data3, data4,userSnap,data5,data6];
+    return [data1, data3, data4,userSnap,data5,data6];
   }
-
+  Future profileDetailsApiCall() async {
+    print('dhina:${userId} ');
+    return await ApiHandler().apiHandler(
+      valueNotifier: profileDetailsValueNotifier,
+      jsonModel: profileDetailsModel.profileDetailsFromJson,
+      url: 'http://3.110.105.86:4000/view/profile',
+      requestMethod: 1,
+      body: {"user_id": (userId != null) ? userId : userId, "followee_id": ""},
+    );
+  }
   bool callBack() {
     print('working');
     setState(() {
@@ -388,6 +400,8 @@ class _TabState extends State<Tabbar> {
     userChatList(searchQuery: searchTextEditingController.text);
     _contacts = getContacts();
     getDataList();
+
+
     // PingsChatViewKey = GlobalKey<_PingsChatViewState>();
     // _pingsChatViewState=GlobalKey();
     super.initState();
@@ -416,10 +430,8 @@ class _TabState extends State<Tabbar> {
       sound: true,
     );
   }
-
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: FutureBuilder(
           future: _future,
@@ -429,8 +441,11 @@ class _TabState extends State<Tabbar> {
                 initialIndex: 0,
                 length: 3,
                 child: ResponsiveBuilder(builder: (context, sizingInformation) {
-                  var pic = profileDetailsValueNotifier
-                      .value.item2.result.profileDetails.profileUrl;
+                  var pic ='http://3.110.105.86:4000/${profileDetailsValueNotifier
+                      .value
+                      .item2.result
+                      .profileDetails
+                      .profileUrl.toString()}';
 
                   return Scaffold(
                       body: Container(
@@ -508,7 +523,7 @@ class _TabState extends State<Tabbar> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            Profile()
+                                                            Profile(userId:userId.toString())
 
                                                       //  feedsValueNotifier.value.item2.result[index].userId
 
@@ -565,7 +580,8 @@ class _TabState extends State<Tabbar> {
                                                         ),
                                                       ),
                                                 )
-                                                    : Container(
+                                                    :
+                                                Container(
                                                   width: 40.0,
                                                   height: 40.0,
                                                   decoration: BoxDecoration(
@@ -1019,7 +1035,10 @@ class _TabState extends State<Tabbar> {
                                     //   child: Text("Pops...!"),
                                     // ),
                                     Story(scrollController: storyScrollController),
-                                    Status(uid: userId.toString(), profilePic:profileDetailsValueNotifier.value.item2.result.profileDetails.profileUrl.toString(),),
+                                    Status(uid: userId.toString(), profilePic: pic,
+                                      // profilePic:profileDetailsValueNotifier.value.item2.result.
+                                      // profileDetails.profileUrl.toString(),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -2147,11 +2166,12 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                                                             'ffffffffffffffffffff');
                                                       }
                                                     });
-                                                Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(
-                                                    state: 0,
-                                                    uid: widget.uid,
-                                                    puid: docs[index].data()["members"]
-                                                    ["${widget.uid}"]["peeruid"])));
+                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(
+                                                //     state: 0,
+                                                //     uid: widget.uid,
+                                                //     puid: docs[index].data()["members"]
+                                                //     ["${widget.uid}"]["peeruid"])));
+                                                Navigator.pop(context);
                                               },
                                               child: Text(
                                                 'send',
@@ -2165,170 +2185,553 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                             }
                             if (peerN[name].toString().toLowerCase().contains(nameSearch.toLowerCase())) {
                               return Padding(
-                                padding: EdgeInsets.only(bottom: 2),
-                                child: ListTile(
-                                  selected: _isSelected[index],
-                                  tileColor: Colors.white,
-                                  selectedTileColor: Color.fromRGBO(248, 206, 97, 0.31),
-                                  onLongPress: () {
-                                    setState(() {
-                                      _isSelected[index] = !_isSelected[index];
-                                      if (isFirstTime) {
-                                        if (selectedItems!.isEmpty) {
-                                          widget.callBack!();
-                                          selectedItems!.add(index);
-                                          isFirstTime = false;
-                                          longPressedFlag = true;
-                                        }
-                                      } else {
-                                        if (selectedItems!.contains(index)) {
-                                          print("EXISTS So removing...");
-                                          selectedItems!.remove(index);
-                                          print("Selected$index");
-                                          print("Selected items$selectedItems");
-                                          if (selectedItems!.length == 0) {
-                                            widget.callBack!();
-                                          }
-                                        } else {
-                                          selectedItems!.add(index);
-                                          print("Selected$index");
-                                          print("Selected items$selectedItems");
-                                          print("Long Press Triggers");
-                                          longPressedFlag = true;
-                                        }
-
-                                        if (selectedItems!.isEmpty &&
-                                            isFirstTime == false) {
-                                          print("Deselect all");
-                                          isFirstTime = true;
-                                          longPressedFlag = false;
-                                        }
-                                      }
-                                    });
-                                  },
-                                  onTap: () {
-                                    print("Contact Loading ${peerN[name].toString()}");
-                                    print("Long Press Flag:${longPressedFlag}");
-                                    if (longPressedFlag) {
-                                      setState(() {
-                                        _isSelected[index] = !_isSelected[index];
-                                        if (selectedItems!.isEmpty) {
-                                          longPressedFlag = false;
-                                        } else {
-                                          print("Tapping...x");
-
-                                          if (selectedItems!.contains(index)) {
-                                            print("EXISTS So removing...");
-                                            selectedItems!.remove(index);
-                                            print("Selected$index");
-                                            print("Selected items$selectedItems");
-                                            if (selectedItems!.length == 0) {
+                                  padding: EdgeInsets.only(bottom: 2),
+                                  child: ListTile(
+                                      selected: _isSelected[index],
+                                      tileColor: Colors.white,
+                                      selectedTileColor:
+                                      Color.fromRGBO(248, 206, 97, 0.31),
+                                      onLongPress:(widget.isForward==false)? () {
+                                        setState(() {
+                                          _isSelected[index] = !_isSelected[index];
+                                          if (isFirstTime) {
+                                            if (selectedItems!.isEmpty) {
                                               widget.callBack!();
+                                              selectedItems!.add(index);
+                                              isFirstTime = false;
+                                              longPressedFlag = true;
                                             }
                                           } else {
-                                            selectedItems!.add(index);
-                                            print("Selected$index");
-                                            print("Selected items$selectedItems");
-                                            print("Tap Triggers");
-                                            longPressedFlag = true;
+                                            if (selectedItems!.contains(index)) {
+                                              print("EXISTS So removing...");
+                                              selectedItems!.remove(index);
+                                              print("Selected$index");
+                                              print("Selected items$selectedItems");
+                                              if (selectedItems!.length == 0) {
+                                                widget.callBack!();
+                                              }
+                                            } else {
+                                              selectedItems!.add(index);
+                                              print("Selected$index");
+                                              print("Selected items$selectedItems");
+                                              print("Long Press Triggers");
+                                              longPressedFlag = true;
+                                            }
+
+                                            if (selectedItems!.isEmpty &&
+                                                isFirstTime == false) {
+                                              print("Deselect all");
+                                              isFirstTime = true;
+                                              longPressedFlag = false;
+                                            }
                                           }
+                                        });
+
+                                        print('Lotus78${selectedItems?.length}');
+                                        selectedItems?.length.toString();
+                                      }:null,
+                                      onTap:(widget.isForward==false)?  () {
+                                        print("Long Press Flag:${longPressedFlag}");
+                                        if (longPressedFlag) {
+                                          setState(() {
+                                            _isSelected[index] = !_isSelected[index];
+                                            if (selectedItems!.isEmpty) {
+                                              longPressedFlag = false;
+                                            } else {
+                                              print("Tapping...x");
+
+                                              if (selectedItems!.contains(index)) {
+                                                print("EXISTS So removing...");
+                                                selectedItems!.remove(index);
+                                                print("Selected$index");
+                                                print("Selected items$selectedItems");
+                                                if (selectedItems!.length == 0) {
+                                                  widget.callBack!();
+                                                }
+                                              } else {
+                                                selectedItems!.add(index);
+                                                print("Selected$index");
+                                                print("Selected items$selectedItems");
+                                                print("Tap Triggers");
+                                                longPressedFlag = true;
+                                              }
+                                            }
+                                          });
+
+                                          if (selectedItems!.isEmpty &&
+                                              isFirstTime == false) {
+                                            print("Deselect all");
+                                            isFirstTime = true;
+                                            longPressedFlag = false;
+                                          }
+                                        } else {
+                                          print("Page Open");
+                                          Navigator.push(context, PageTransition(
+                                              duration: Duration(milliseconds: 120),
+                                              type: PageTransitionType.rightToLeft, child: ChatPage(
+                                              state: 0,
+                                              uid: widget.uid,
+                                              puid: docs[index].data()["members"]
+                                              ["${widget.uid}"]
+                                              ["peeruid"])));
                                         }
-                                      });
-
-                                      if (selectedItems!.isEmpty &&
-                                          isFirstTime == false) {
-                                        print("Deselect all");
-                                        isFirstTime = true;
-                                        longPressedFlag = false;
-                                      }
-                                    } else {
-                                      print("Page Open");
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ChatPage(
-                                                  state: 0,
-                                                  uid: widget.uid,
-                                                  puid: docs[index].data()["members"]
-                                                  ["${widget.uid}"]["peeruid"])));
-                                    }
-                                  },
-                                  contentPadding: EdgeInsets.only(
-                                      left: 10, right: 10, top: 4, bottom: 4),
-                                  leading: CircleAvatar(
-                                    radius: 25.5.h,
-                                    backgroundImage: NetworkImage(tileData[index].dp),
-                                  ),
-                                  title: SubstringHighlight(
-                                    caseSensitive: false,
-                                    textStyleHighlight:TextStyle(color:Colors.black),
-                                    text: (peerN[name].toString().contains('null'))?"Gatello User":(!peerN[name].toString().contains('null'))?peerN[name].toString():peerMob[name].toString(),
-                                    textStyle: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                            fontSize: 16.sp,
-                                            color: Color.fromRGBO(0, 0, 0, 1),
-                                            fontWeight: FontWeight.w700)),
-                                    term: searchChat.text,
-                                  ),
-                                  subtitle: SubstringHighlight(
-                                    textStyleHighlight:TextStyle(color:Colors.black),
-                                    text: docs[index].data()["lastMessage"],
-                                    textStyle: GoogleFonts.inter(
-                                        textStyle: TextStyle(
-                                            fontSize: 14.sp,
-                                            color: Color.fromRGBO(12, 16, 29, 0.6),
-                                            fontWeight: FontWeight.w400)),
-                                    term: searchChat.text,
-                                  ),
-                                  trailing: Padding(
-                                    padding: EdgeInsets.only(top: 8),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                            readTimestamp(int.parse(
-                                                docs[index].data()["timestamp"])),
-                                            style: GoogleFonts.inter(
-                                              textStyle: TextStyle(
-                                                  fontSize: 10.sp,
-                                                  color: Color.fromRGBO(0, 0, 0, 1),
-                                                  fontWeight: FontWeight.w400),
-                                            )),
-                                        SizedBox(height: 3.h),
-
-                                        // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
-                                        (docs[index].data()["members"]["${widget.uid}"]
-                                        ["unreadCount"] ==
-                                            0)
-                                            ? SizedBox()
-                                            : Container(
-                                            decoration: BoxDecoration(
-                                              //borderRadius: BorderRadius.circular(15),
-                                                border: Border.all(
-                                                  color: Color.fromRGBO(
-                                                      255, 202, 40, 1),
+                                      }: null,
+                                      contentPadding: EdgeInsets.only(
+                                          left: 10, right: 10, top: 4, bottom: 4),
+                                      leading: GestureDetector(
+                                        onTap:(widget.isForward==false)?  () {
+                                          showDialog(
+                                              barrierDismissible: true,
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(title:  ProfileDP(imgHero: heroImg, pername: peerN[name].toString()),titlePadding:
+                                                EdgeInsets.all(0),);
+                                              },
+                                              barrierColor: Colors.transparent);
+                                          heroImg = docs[index].data()["members"][
+                                          "${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]
+                                          ["pic"];
+                                        }: null,
+                                        child:
+                                        Container(
+                                          child: ((docs[index].data()["members"]["${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]["pic"] == null)||  (blockedByList.contains(docs[index].data()["members"]["${widget.uid}"]["peeruid"])))
+                                              ?  SvgPicture.asset(
+                                            (widget.state == 0)
+                                                ? "assets/invite_friends/profilepicture.svg"
+                                                : "assets/invite_friends/profilepicture.svg",
+                                            fit: BoxFit.cover,
+                                            height: 50.h,
+                                            width: 50.w,
+                                          ):
+                                          CachedNetworkImage(
+                                            imageUrl: docs[index]
+                                                .data()["members"][
+                                            "${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]
+                                            ["pic"],
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                Container(
+                                                  width: 50.w,
+                                                  height: 50.h,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover),
+                                                  ),
                                                 ),
-                                                shape: BoxShape.circle,
-                                                color: Color.fromRGBO(
-                                                    255, 202, 40, 1)),
-                                            width: 22.w,
-                                            height: 22.h,
-                                            child: Center(
-                                              child: Text(
-                                                  "${docs[index].data()["members"]["${widget.uid}"]["unreadCount"]}",
-                                                  style: GoogleFonts.inter(
-                                                    textStyle: TextStyle(
-                                                        fontSize: 11.sp,
+                                            placeholder: (context, url) =>
+                                                CircularProgressIndicator(),
+                                            errorWidget: (context, url, error) =>
+                                                Icon(Icons.error),
+                                          ),
+
+                                        ),
+                                      ),
+                                      title: SubstringHighlight(
+                                        textStyleHighlight:TextStyle(color:Colors.black),
+                                        caseSensitive     : false,
+                                        text: (peerN[name].toString().contains('null'))?"Gatello User":(!peerN[name].toString().contains('null'))?peerN[name].toString():peerMob[name].toString(),
+                                        textStyle: GoogleFonts.inter(
+                                            textStyle: TextStyle(
+                                                fontSize: 16.sp,
+                                                color: Color.fromRGBO(0, 0, 0, 1),
+                                                fontWeight: FontWeight.w700)),
+                                        term: searchChat.text,
+                                      ),
+                                      subtitle: SubstringHighlight(
+                                        textStyleHighlight:TextStyle(color:Colors.black),
+                                        text: docs[index].data()["lastMessage"],
+                                        textStyle: GoogleFonts.inter(
+                                            textStyle: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: Color.fromRGBO(12, 16, 29, 0.6),
+                                                fontWeight: FontWeight.w400)),
+                                        term: searchChat.text,
+                                      ),
+                                      trailing: (widget.state == null) ? Padding(
+                                        padding: EdgeInsets.only(top: 8),
+                                        child: Column(children: [
+                                          InkWell(
+                                            onTap: (){
+                                              print('Lotus77${docs[index].data()}');
+                                            },
+                                            child: Text(
+                                                readTimestamp(int.parse(docs[index]
+                                                    .data()["timestamp"])),
+                                                style: GoogleFonts.inter(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 10.sp,
+                                                      color: Color.fromRGBO(
+                                                          0, 0, 0, 1),
+                                                      fontWeight: FontWeight.w400),
+                                                )),
+                                          ),
+                                          SizedBox(height: 3.h),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              (docs[index].data()["members"][
+                                              "${docs[index].data()["members"]["${widget.uid}"]["peeruid"]}"]
+                                              ["mute"] ==
+                                                  true)
+                                                  ? Icon(
+                                                  Icons.volume_off_outlined)
+                                                  : SizedBox(),
+                                              // docs[index].data()["members"]["$uid"]["unreadCount"].toString(),
+                                              (docs[index].data()["members"]
+                                              ["${widget.uid}"]
+                                              ["unreadCount"] ==
+                                                  0)
+                                                  ? SizedBox()
+                                                  : Container(
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
                                                         color: Color.fromRGBO(
-                                                            0, 0, 0, 1),
-                                                        fontWeight:
-                                                        FontWeight.w400),
+                                                            255, 202, 40, 1),
+                                                      ),
+                                                      shape: BoxShape.circle,
+                                                      color: Color.fromRGBO(
+                                                          255, 202, 40, 1)),
+                                                  width: 22.w,
+                                                  height: 22.h,
+                                                  child: Center(
+                                                    child: Text(
+                                                        "${docs[index].data()["members"]["${widget.uid}"]["unreadCount"]}",
+                                                        style:
+                                                        GoogleFonts.inter(
+                                                          textStyle: TextStyle(
+                                                              fontSize: 11.sp,
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                  0,
+                                                                  0,
+                                                                  0,
+                                                                  1),
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w400),
+                                                        )),
                                                   )),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
+                                            ],
+                                          ),
+                                        ]),
+                                      ) : Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  elevation: 0,
+                                                  onPrimary: Colors.black,
+                                                  minimumSize: Size(60.w, 30.h),
+                                                  primary: Color.fromRGBO(
+                                                      248, 206, 97, 1),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(8),
+                                                  )),
+                                              onPressed: (widget.state == 0)
+                                                  ? () async {
+                                                print('Lotus1');
+                                                // if (id.length == 28) {
+                                                //   await writeUserShareMessage(type: 5, peerName: name, peerPic: pic, uid: uid!, puid: id);
+                                                // } else {
+                                                //   await writeGroupShareMessage(type: 5, groupName: name, groupPic: pic, members: members!, uid: uid!, puid: id);
+                                                // }
+                                                String storyUrl =
+                                                    postDetailsUrl +
+                                                        "?post_id=" +
+                                                        widget.postId!;
+                                                ShareableLink _shareableLink =
+                                                ShareableLink(
+                                                    widget.postTitle!,
+                                                    widget
+                                                        .postDescription!,
+                                                    storyUrl,
+                                                    (widget.postUrl!
+                                                        .contains(
+                                                        "mp4") ||
+                                                        widget
+                                                            .postUrl!
+                                                            .contains(
+                                                            "mpeg4"))
+                                                        ? null
+                                                        : widget.postUrl);
+                                                Uri _link =
+                                                await _shareableLink
+                                                    .createDynamicLink(
+                                                    short: false);
+                                                if (id.length == 28) {
+                                                  print('Lotus2');
+                                                  await writeUserMessage(
+                                                      type: 5,
+                                                      peerName: peerN[name],
+                                                      peerPic: pic,
+                                                      uid: widget.uid,
+                                                      puid: id,
+                                                      state: 0,
+                                                      forwardCount: 0,
+                                                      storyContentType: widget
+                                                          .storyContentType,
+                                                      storyContentUrl:
+                                                      widget.postUrl,
+                                                      storyDescription: widget
+                                                          .postDescription,
+                                                      storyUrl:
+                                                      _link.toString());
+                                                } else {
+                                                  print('Lotus3');
+                                                  await writeGroupMessage(
+                                                      type: 5,
+                                                      groupName: name,
+                                                      groupPic: pic,
+                                                      members: members!,
+                                                      uid: widget.uid,
+                                                      puid: id,
+                                                      forwardCount: 0,
+                                                      state: 1,
+                                                      storyContentType: widget
+                                                          .storyContentType,
+                                                      storyContentUrl:
+                                                      widget.postUrl,
+                                                      storyDescription: widget
+                                                          .postDescription,
+                                                      storyUrl:
+                                                      _link.toString());
+                                                }
+                                              }
+                                                  : () {
+                                                widget.messages!.forEach(
+                                                        (key, value) async {
+                                                      print('Lotus5');
+                                                      dev.log(key.toString());
+                                                      String getUrl(int type) {
+                                                        print('Lotus6');
+                                                        switch (type) {
+                                                          case 1:
+                                                            return value.data()![
+                                                            "data"]["image"];
+                                                          case 2:
+                                                            return value.data()![
+                                                            "data"]["video"];
+                                                          case 3:
+                                                            return value.data()![
+                                                            "data"]["audio"];
+                                                          case 4:
+                                                            return value.data()![
+                                                            "data"]
+                                                            ["document"];
+                                                          default:
+                                                            return "";
+                                                        }
+                                                      }
+                                                      String? getMessage(
+                                                          int type) {
+                                                        print('Lotus7');
+                                                        switch (type) {
+                                                          case 0:
+                                                            return value.data()![
+                                                            "data"]["text"];
+                                                          case 6:
+                                                            return value.data()![
+                                                            "data"]["gif"];
+                                                          case 7:
+                                                            return value.data()![
+                                                            "data"]
+                                                            ["location"];
+                                                          case 8:
+                                                            return value.data()![
+                                                            "data"]
+                                                            ["contact"];
+                                                          default:
+                                                            return null;
+                                                        }
+                                                      }
+
+                                                      Uint8List? file =
+                                                      await downloadToBytes(
+                                                          getUrl(dataTypeMap
+                                                              .inverse[
+                                                          value.data()![
+                                                          "type"]]!));
+                                                      if (!selectedDocs
+                                                          .contains(id)) {
+                                                        selectedDocs.add(id);
+
+                                                        if (id.length == 28) {
+                                                          print('works');
+                                                          await writeUserMessage(
+                                                            type: dataTypeMap
+                                                                .inverse[
+                                                            value.data()![
+                                                            "type"]]!,
+                                                            peerName: peerN[name],
+                                                            peerPic: pic,
+                                                            uid: widget.uid,
+                                                            puid: id,
+                                                            state: 0,
+                                                            forwardCount: value
+                                                                .data()![
+                                                            "forwardCount"],
+                                                            message: getMessage(
+                                                                dataTypeMap
+                                                                    .inverse[value
+                                                                    .data()![
+                                                                "type"]]!),
+                                                            file: file,
+                                                            // replyMap: (value.data()!["reply"] != null) ? Map.from(value.data()!["reply"]) : null,
+                                                            contentType: value
+                                                                .data()![
+                                                            "contentType"],
+                                                            storyContentType: (dataTypeMap
+                                                                .inverse[value
+                                                                .data()![
+                                                            "type"]] ==
+                                                                5)
+                                                                ? (value.data()![
+                                                            "data"]
+                                                            [
+                                                            "image"] !=
+                                                                null)
+                                                                ? 0
+                                                                : 1
+                                                                : null,
+                                                            storyContentUrl: (dataTypeMap
+                                                                .inverse[value
+                                                                .data()![
+                                                            "type"]] ==
+                                                                5)
+                                                                ? (value.data()![
+                                                            "data"]
+                                                            [
+                                                            "image"] !=
+                                                                null)
+                                                                ? value.data()![
+                                                            "data"]
+                                                            ["image"]
+                                                                : value.data()![
+                                                            "data"]
+                                                            ["video"]
+                                                                : null,
+                                                            storyDescription: (dataTypeMap
+                                                                .inverse[value
+                                                                .data()![
+                                                            "type"]] ==
+                                                                5)
+                                                                ? value.data()![
+                                                            "data"]
+                                                            ["text"]
+                                                                : null,
+                                                            storyUrl: (dataTypeMap
+                                                                .inverse[value
+                                                                .data()![
+                                                            "type"]] ==
+                                                                5)
+                                                                ? value.data()![
+                                                            "data"]
+                                                            ["story"]
+                                                                : null,
+                                                          );
+                                                        }
+                                                        else if (selectedDocs
+                                                            .contains(id)) {
+                                                          print(
+                                                              'Lotus77${selectedDocs}');
+                                                          print('Lotus9');
+                                                          await writeGroupMessage(
+                                                            type: dataTypeMap
+                                                                .inverse[
+                                                            value.data()![
+                                                            "type"]]!,
+                                                            groupName: name,
+                                                            groupPic: pic,
+                                                            members: members!,
+                                                            uid: widget.uid,
+                                                            puid: id,
+                                                            state: 1,
+                                                            // replyMap: (value.data()!["reply"]!=null)?Map.from(value.data()!["reply"]):null,
+                                                            forwardCount: value
+                                                                .data()![
+                                                            "forwardCount"],
+                                                            message: getMessage(
+                                                                dataTypeMap
+                                                                    .inverse[value
+                                                                    .data()![
+                                                                "type"]]!),
+                                                            file: file,
+                                                            contentType: value
+                                                                .data()![
+                                                            "contentType"],
+                                                            storyContentType: (dataTypeMap
+                                                                .inverse[value
+                                                                .data()![
+                                                            "type"]] ==
+                                                                5)
+                                                                ? (value.data()![
+                                                            "data"]
+                                                            [
+                                                            "image"] !=
+                                                                null)
+                                                                ? 0
+                                                                : 1
+                                                                : null,
+                                                            storyContentUrl: (dataTypeMap
+                                                                .inverse[value
+                                                                .data()![
+                                                            "type"]] ==
+                                                                5)
+                                                                ? (value.data()![
+                                                            "data"]
+                                                            [
+                                                            "image"] !=
+                                                                null)
+                                                                ? value.data()![
+                                                            "data"]
+                                                            ["image"]
+                                                                : value.data()![
+                                                            "data"]
+                                                            ["video"]
+                                                                : null,
+                                                            storyDescription: (dataTypeMap
+                                                                .inverse[value
+                                                                .data()![
+                                                            "type"]] ==
+                                                                5)
+                                                                ? value.data()![
+                                                            "data"]
+                                                            ["text"]
+                                                                : null,
+                                                            storyUrl: (dataTypeMap
+                                                                .inverse[value
+                                                                .data()![
+                                                            "type"]] ==
+                                                                5)
+                                                                ? value.data()![
+                                                            "data"]
+                                                            ["story"]
+                                                                : null,
+                                                          );
+                                                        }
+                                                      } else {
+                                                        print(
+                                                            'ffffffffffffffffffff');
+                                                      }
+                                                    });
+                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(
+                                                //     state: 0,
+                                                //     uid: widget.uid,
+                                                //     puid: docs[index].data()["members"]
+                                                //     ["${widget.uid}"]["peeruid"])));
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text(
+                                                'send',
+                                                style: GoogleFonts.poppins(
+                                                    textStyle:
+                                                    textStyle(fontSize: 10)),
+                                              )
+                                          )
+                                      )
+                                  ));
                             }
                             return Container();
                           });
@@ -2336,7 +2739,11 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                   );
                 }
               );
-            } else {
+            }
+            else if(chatRoomdetailsnap.connectionState == ConnectionState.waiting){
+              return CircleIndicator();
+            }
+            else {
               return Container(
                   padding: EdgeInsets.only(top: 110),
                   child: Center(
@@ -2487,7 +2894,6 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                                 barrierDismissible: true,
                                 context: context,
                                 builder: (BuildContext context) {
-
                                   return AlertDialog(title:groupDp(grpimg: pic, grpname:groupName),titlePadding:
                                   EdgeInsets.all(0),);
                                 },
@@ -2908,13 +3314,14 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                                         print('ffffffffffffffffffff');
                                       }
                                     });
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ChatPage(
-                                                state: 1,
-                                                uid: widget.uid,
-                                                puid: docs[index1].data()["gid"])));
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) => ChatPage(
+                                    //             state: 1,
+                                    //             uid: widget.uid,
+                                    //             puid: docs[index1].data()["gid"])));
+                                    Navigator.pop(context);
                                   },
                                   child: Text(
                                     'send',
@@ -3449,11 +3856,12 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
                                     //   }
                                     // });
                                     // print('Lotus1:${selectedDocs.toString()}');
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(
-                                        state: 0,
-                                        uid: widget.uid,
-                                        puid: docs[index].data()["members"]
-                                        ["${widget.uid}"]["peeruid"])));
+                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(
+                                    //     state: 0,
+                                    //     uid: widget.uid,
+                                    //     puid: docs[index].data()["members"]
+                                    //     ["${widget.uid}"]["peeruid"])));
+                                    Navigator.pop(context);
                                   },
                                   child: Text(
                                     'send',
@@ -4350,7 +4758,9 @@ class _PingsChatViewState extends State<PingsChatView> with SingleTickerProvider
         children: [
           Container( height:40.h,width:double.infinity,color:Color.fromRGBO(0, 0, 0, 0.20),
               padding:  EdgeInsets.only(left:25.w,top: 10.h),
-            child: Text(pername)),
+            // child: Text(peerN[name].toString())
+
+          ),
           GestureDetector(onTap:() => print("peername : ${peerName}"),
             child: Center(
                 child: Hero(

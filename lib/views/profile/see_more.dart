@@ -41,7 +41,7 @@ class _TextsuState extends State<SeeMoreText> {
     return await ApiHandler().apiHandler(
       valueNotifier: profileDetailsValueNotifier,
       jsonModel: profileDetailsModel.profileDetailsFromJson,
-      url: profileDetailsUrl,
+      url: 'http://3.110.105.86:4000/view/profile',
       requestMethod: 1,
       body: {"user_id": (widget.uid != null) ? widget.uid : widget.uid, "followee_id": ""},
     );
@@ -61,9 +61,30 @@ class _TextsuState extends State<SeeMoreText> {
       padding: EdgeInsets.only(right:30,left: 30),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.biog.contains('null')?'none':widget.biog,style: GoogleFonts.inter(
-              textStyle: TextStyle(fontSize:13.5.sp,fontWeight: FontWeight.w400,color:
-              Color.fromRGBO(0, 0, 0, 0.5))
+          Row(
+            children: [
+              Text('Biog',style:GoogleFonts.inter(textStyle: TextStyle(fontSize:14.sp,
+                  fontWeight: FontWeight.w700,color: Color.fromRGBO(0, 0, 0,1)))),
+              SizedBox(width:10.w),
+              GestureDetector(
+                onTap:(){
+         showDialog(context: context, builder: (context){
+            return AlertDialog(
+
+            );
+         });
+                },
+                child:  Container(height:20,width:20,
+                    child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
+            ],
+          ),
+          Text(widget.biog.contains('null')?'none':widget.biog,
+            style: GoogleFonts.inter(
+              textStyle: TextStyle(fontSize:13.5.sp,
+                  fontWeight: FontWeight.w400,color:
+              Color.fromRGBO(0, 0, 0, 0.5)
+              )
+
           ),),
 
           SizedBox(height:30.h),
@@ -260,7 +281,7 @@ class _TextsuState extends State<SeeMoreText> {
               GestureDetector(
                 onTap:(){
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>Link_Page(),));
+                      MaterialPageRoute(builder: (context) =>Link_Page(uid: widget.uid.toString()),));
                 },
                 child:  Container(height:20,width:20,
                     child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
@@ -311,7 +332,7 @@ class _TextsuState extends State<SeeMoreText> {
               GestureDetector(
                 onTap:(){
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>Work_Experience(),));
+                      MaterialPageRoute(builder: (context) =>Work_Experience(uid:widget.uid.toString()),));
                 },
                 child:   Container(height:20,width:20,
                     child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
@@ -392,7 +413,7 @@ class _TextsuState extends State<SeeMoreText> {
               GestureDetector(
                 onTap:(){
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>Skill_Page(),));
+                      MaterialPageRoute(builder: (context) =>Skill_Page(uid:widget.uid.toString()),));
                 },
                 child:  Container(height:20,width:20,
                     child: SvgPicture.asset('assets/profile_assets/Edit_tool.svg')),),
@@ -426,10 +447,7 @@ class _TextsuState extends State<SeeMoreText> {
                                   fontWeight: FontWeight.w700,
                                   color: Color.fromRGBO(0, 0, 0, 1))),
                         ),
-
-
                       ),
-
                     ],
                   ),
                 );

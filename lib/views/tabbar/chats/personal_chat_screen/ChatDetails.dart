@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -12,12 +13,15 @@ import 'package:gatello/views/tabbar/chats/personal_chat_screen/ChatPage.dart';
 import 'package:gatello/views/tabbar/pings_chat/select_contact/select_contact.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:tuple/tuple.dart';
 import '../../../../Authentication/Authentication.dart';
 import '../../../../Firebase.dart';
 import '../../../../Firebase/Writes.dart';
 import '../../../../Helpers/DateTimeHelper.dart';
 import '../../../../Helpers/GetContactHelper.dart';
+import '../../../../Others/Routers.dart';
 import '../../../../Others/components/LottieComposition.dart';
+import '../../../../Others/exception_string.dart';
 import '../../../../Others/lottie_strings.dart';
 import '../../../../Style/Colors.dart';
 import '../../../../Style/Text.dart';
@@ -26,6 +30,9 @@ import '../../../../components/ScaffoldDialog.dart';
 import '../../../../components/SimpleDialogBox.dart';
 import '../../../../components/SnackBar.dart';
 import '../../../../components/flatButton.dart';
+import '../../../../core/Models/Default.dart';
+import '../../../../core/models/exception/pops_exception.dart';
+import '../../../../handler/Network.dart';
 import '../../../../main.dart';
 import '../../tabbar_view.dart';
 import 'ChatDetailsUpdate.dart';
@@ -50,8 +57,10 @@ class _ChatDetailsState extends State<ChatDetails> {
     type: FileType.custom,
     allowedExtensions: ['jpg', 'jpeg'],
   );
+  ValueNotifier<Tuple4> profileDetailsUpdateValueNotifier = ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   var top = 0.0;
-
+  Uint8List? userPicture;
+  String? userPictureFileName;
   FirebaseFirestore instance = FirebaseFirestore.instance;
 
   Future changeClaim({
@@ -174,6 +183,7 @@ class _ChatDetailsState extends State<ChatDetails> {
   }
   var peerName;
   var fPhone;
+
   @override
   void initState() {
     instance.collection("user-detail").doc(widget.puid).get().then((doc) {
@@ -268,7 +278,10 @@ class _ChatDetailsState extends State<ChatDetails> {
                                 height:80.h,
                                 width: 80.w,
                               ),
-                              (widget.state == 0)?SizedBox():Positioned(right:0.w,top:1.h,
+                              (widget.state == 0)?
+                                  SizedBox()
+
+                          :Positioned(right:0.w,top:1.h,
                                 child: Container(
                                   height: 28.h,
                                   width: 28.w,

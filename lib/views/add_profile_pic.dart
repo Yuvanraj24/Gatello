@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gatello/views/otp_screen.dart';
 import 'package:gatello/views/tabbar/chats/personal_chat_screen/test_chat/test_chat.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -273,131 +274,130 @@ class _AddProfilePicState extends State<AddProfilePic> {
                                       fontSize: 18.sp,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black)),),
-                              Padding(
-                                padding: EdgeInsets.only(left:65.w,top:30.h),
-                                child: Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () async {
-                                        return await gallery().then((value) async {
-                                          if (value != null && value.files.first.size<52428800) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => AssetPageView(
-                                                      fileList: value.files,
-                                                      onPressed: () async {
-                                                        Navigator.pop(context);
-                                                        TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(
-                                                            file: value.files.first.bytes!,
-                                                            fileName: timestamp,
-                                                            contentType: "image/" + value.files.first.extension!, guid: '');
-                                                        String url = await taskSnapshot.ref.getDownloadURL();
-                                                        profileByte = value.files.first.bytes!;
-                                                        instance.collection("user-detail").doc(widget.uid).update({
-                                                          "uid": widget.uid,
-                                                          "pic": url,
+                              SizedBox(height: 30.h,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      return await gallery().then((value) async {
+                                        if (value != null && value.files.first.size<52428800) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => AssetPageView(
+                                                    fileList: value.files,
+                                                    onPressed: () async {
+                                                      Navigator.pop(context);
+                                                      TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(
+                                                          file: value.files.first.bytes!,
+                                                          fileName: timestamp,
+                                                          contentType: "image/" + value.files.first.extension!, guid: '');
+                                                      String url = await taskSnapshot.ref.getDownloadURL();
+                                                      profileByte = value.files.first.bytes!;
+                                                      instance.collection("user-detail").doc(widget.uid).update({
+                                                        "uid": widget.uid,
+                                                        "pic": url,
 
-                                                        });
+                                                      });
 
-                                                        profileDetailUpdateApiCallBody();
+                                                      profileDetailUpdateApiCallBody();
 
-                                                      },
-                                                    ))).whenComplete(() =>
-                                                Navigator.push(context,
+                                                    },
+                                                  ))).whenComplete(() =>
+                                              Navigator.push(context,
 
-                                                    MaterialPageRoute(
-                                                        builder: (context) => InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username, Getstarted: 'Sign up' ,)
-                                                    )));
-                                          } else {
-                                            final snackBar = snackbar(content: "File size is greater than 50MB");
-                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                          }
-                                        });
+                                                  MaterialPageRoute(
+                                                      builder: (context) => InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username, Getstarted: 'Sign up' ,)
+                                                  )));
+                                        } else {
+                                          final snackBar = snackbar(content: "File size is greater than 50MB");
+                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                        }
+                                      });
 
-                                      },
-                                      child: Column(children: [
-                                        SvgPicture.asset("assets/icons_assets/signup_gallery.svg",height:50.h,width:50.w,),
-                                        SizedBox(height:10.h,),
-                                        Text("Gallery",  style: GoogleFonts.inter(
-                                            textStyle: TextStyle(
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.black)),)
-                                      ],),
-                                    ),
+                                    },
+                                    child: Column(children: [
+                                      SvgPicture.asset("assets/icons_assets/signup_gallery.svg",height:50.h,width:50.w,),
+                                      SizedBox(height:10.h,),
+                                      Text("Gallery",  style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black)),)
+                                    ],),
+                                  ),
 
-                                    SizedBox(width:40.w,),
+                                  SizedBox(width:40.w,),
 
-                                    GestureDetector(
-                                      onTap: ()async{
-                                        return await pickimage().then((value) async {
-                                          if (value != null && value.files.first.size<52428800) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => AssetPageView(
-                                                      fileList: value.files,
-                                                      onPressed: () async {
-                                                        Navigator.pop(context);
-                                                        TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(
-                                                            file: value.files.first.bytes!,
-                                                            fileName: timestamp,
-                                                            contentType: "image/" + value.files.first.extension!, guid: '');
-                                                        String url = await taskSnapshot.ref.getDownloadURL();
-                                                        profileByte = value.files.first.bytes!;
-                                                        instance.collection("user-detail").doc(widget.uid).update({
-                                                          "uid": widget.uid,
-                                                          "pic": url,
+                                  GestureDetector(
+                                    onTap: ()async{
+                                      return await pickimage().then((value) async {
+                                        if (value != null && value.files.first.size<52428800) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => AssetPageView(
+                                                    fileList: value.files,
+                                                    onPressed: () async {
+                                                      Navigator.pop(context);
+                                                      TaskSnapshot taskSnapshot = await Write(uid: widget.uid).groupProfile(
+                                                          file: value.files.first.bytes!,
+                                                          fileName: timestamp,
+                                                          contentType: "image/" + value.files.first.extension!, guid: '');
+                                                      String url = await taskSnapshot.ref.getDownloadURL();
+                                                      profileByte = value.files.first.bytes!;
+                                                      instance.collection("user-detail").doc(widget.uid).update({
+                                                        "uid": widget.uid,
+                                                        "pic": url,
 
-                                                        });
+                                                      });
 
-                                                        profileDetailUpdateApiCallBody();
+                                                      profileDetailUpdateApiCallBody();
 
-                                                      },
-                                                    ))).whenComplete(() =>
-                                                Navigator.push(context,
+                                                    },
+                                                  ))).whenComplete(() =>
+                                              Navigator.push(context,
 
-                                                    MaterialPageRoute(
-                                                        builder: (context) => InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username, Getstarted: 'Sign up' ,)
-                                                    )));
-                                          } else {
-                                            final snackBar = snackbar(content: "File size is greater than 50MB");
-                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                          }
-                                        });
-                                      },
-                                      child: Column(children: [
-                                        SvgPicture.asset("assets/icons_assets/signup_camera.svg",height:50.h,width:50.w,),
-                                        SizedBox(height:10.h,),
-                                        Text("Camera",  style: GoogleFonts.inter(
-                                            textStyle: TextStyle(
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.black)),)
-                                      ],),
-                                    ),
-                                    SizedBox(width:40.w,),
-                                    GestureDetector(
-                                      onTap: (){
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => Avator(uid: widget.uid, mobileNo: widget.mobileNo, password: widget.password, username: widget.username, name: widget.name, birthDay: widget.birthDay, email: widget.email,)
-                                            ));
-                                      },
-                                      child: Column(children: [
-                                        SvgPicture.asset('assets/invite_friends/profilepicture.svg',height:50.h,width:50.w,),
-                                        SizedBox(height:10.h,),
-                                        Text("Avator",  style: GoogleFonts.inter(
-                                            textStyle: TextStyle(
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.black)),)
-                                      ],),
-                                    )
-                                  ],),
-                              ),
+                                                  MaterialPageRoute(
+                                                      builder: (context) => InviteFriends(state: 0,mobileNo: widget.mobileNo,password: widget.password ,username: widget.username, Getstarted: 'Sign up' ,)
+                                                  )));
+                                        } else {
+                                          final snackBar = snackbar(content: "File size is greater than 50MB");
+                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                        }
+                                      });
+                                    },
+                                    child: Column(children: [
+                                      SvgPicture.asset("assets/icons_assets/signup_camera.svg",height:50.h,width:50.w,),
+                                      SizedBox(height:10.h,),
+                                      Text("Camera",  style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black)),)
+                                    ],),
+                                  ),
+                                  SizedBox(width:40.w,),
+                                  GestureDetector(
+                                    onTap: (){
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Avator(uid: widget.uid, mobileNo: widget.mobileNo, password: widget.password, username: widget.username, name: widget.name, birthDay: widget.birthDay, email: widget.email,)
+                                          ));
+                                    },
+                                    child: Column(children: [
+                                      SvgPicture.asset('assets/invite_friends/profilepicture.svg',height:50.h,width:50.w,),
+                                      SizedBox(height:10.h,),
+                                      Text("Avatar",  style: GoogleFonts.inter(
+                                          textStyle: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black)),)
+                                    ],),
+                                  )
+                                ],),
                             ],
                           ),
                         );

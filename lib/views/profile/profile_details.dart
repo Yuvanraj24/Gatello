@@ -1,11 +1,13 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gatello/views/profile/editprofile.dart';
 import 'package:gatello/views/profile/profileformtest.dart';
-
+import '/core/models/default.dart' as defaultModel;
 
 import 'package:gatello/views/profile/see_more.dart';
 import 'package:gatello/views/tabbar/pops/circle_indicator.dart';
@@ -35,11 +37,15 @@ class Profile extends StatefulWidget {
   @override
   State<Profile> createState() => ProfileState();
 }
-
 class ProfileState extends State<Profile> {
+  final List<String> items = ['Public', 'Friends', 'Only me'];
+  String? selectedValue1;
   Future? _future;
   String? uid;
+  TextEditingController biogController=TextEditingController();
   String formatDate(DateTime date) => new DateFormat("dd-MM-yyyy").format(date);
+  ValueNotifier<Tuple4> profileDetailsUpdateValueNotifier =
+  ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null",null));
   ValueNotifier<Tuple4> myFeedsValueNotifier = ValueNotifier<Tuple4>(
       Tuple4(0, exceptionFromJson(loading), "Loading", null));
   ValueNotifier<Tuple4> profileDetailsValueNotifier = ValueNotifier<Tuple4>(
@@ -48,7 +54,6 @@ class ProfileState extends State<Profile> {
   ValueNotifier<Tuple4> feedsValueNotifier = ValueNotifier<Tuple4>(
       Tuple4(0, exceptionFromJson(loading), "Loading", null));
   int i = 0;
-
   Future profileDetailsApiCall() async {
     print('profile api called');
     print('dhina:${widget.userId} ');
@@ -65,7 +70,28 @@ class ProfileState extends State<Profile> {
       },
     );
   }
+  Future profileDetailUpdateApiCall() async {
+    print('editApi1 called');
+    // ByteData bytes = await rootBundle.load('assets/noProfile.jpg');
+    return await ApiHandler().apiHandler(
+        valueNotifier: profileDetailsUpdateValueNotifier,
+        jsonModel: defaultModel.defaultFromJson,
+        url: "http://3.110.105.86:4000/edit/profile",
+        requestMethod: 1,
+        body: {
+          "user_id": widget.userId,
+          "about": biogController.text,
 
+        });
+  }
+  updateFirestore(){
+    FirebaseFirestore instance =FirebaseFirestore.instance;
+    instance.collection('user-detail').doc(widget.userId).update({
+      "about":biogController.text,
+
+
+    });
+  }
   // @override
   // void initState() {
   //
@@ -105,23 +131,34 @@ class ProfileState extends State<Profile> {
   Future<dynamic> sendDatas() async {
     final data1=await _getUID();
     final data2 = await profileDetailsApiCall();
-    //  final data3 = await myFeedsApiCall();
-    return [data1,data2];
+      final data3 = await myFeedsApiCall();
+    return [data1,data2,data3];
   }
 
   void initState() {
     sendDatas();
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(animation:   Listenable.merge([profileDetailsValueNotifier]), builder: (context,_){
+    print('uid1${widget.userId}');
+    print('uid2${uid}');
+    return AnimatedBuilder(animation:
+    Listenable.merge([profileDetailsValueNotifier,myFeedsValueNotifier]),
+        builder: (context,_){
       if (profileDetailsValueNotifier.value.item1 == 1) {
-        String coverImg=  profileDetailsValueNotifier
-            .value.item2
-            .result.profileDetails
-            .coverUrl.toString();
+
+  String profilePic='http://3.110.105.86:4000/${profileDetailsValueNotifier
+      .value
+      .item2.result
+      .profileDetails
+      .profileUrl.toString()}';
+        String coverImg=  'http://3.110.105.86:4000/${
+            profileDetailsValueNotifier
+            .value
+            .item2.result
+            .profileDetails
+            .coverUrl.toString()}';
         String city=profileDetailsValueNotifier
             .value
             .item2.result
@@ -130,6 +167,9 @@ class ProfileState extends State<Profile> {
         String userName= profileDetailsValueNotifier
             .value.item2.result.profileDetails
             .username.toString();
+        String name=profileDetailsValueNotifier
+            .value.item2.result.profileDetails
+            .name.toString();
         String job= profileDetailsValueNotifier
             .value
             .item2.result
@@ -207,11 +247,11 @@ class ProfileState extends State<Profile> {
                         child: Center(
                           child: GestureDetector(
                             onTap: (){
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             ProfileForm(uid: widget.userId.toString())));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProfileForm(uid: widget.userId.toString())));
                             },
                             child: Text(
                               'Settings',
@@ -306,7 +346,9 @@ class ProfileState extends State<Profile> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          Edit_Profile()));
+                                          Edit_Profile(uid: widget.userId.toString(), company: company, coverPic: coverImg,
+                                            job: job, city: city, profilePic: profilePic,name: name,)
+                                  ));
                             },
                             child: Container(
                               height: 23.h,
@@ -337,10 +379,7 @@ class ProfileState extends State<Profile> {
                         Positioned(
                           top: 90.h,
                           left: 21,
-                          child:   (  profileDetailsValueNotifier
-                              .value.item2
-                              .result.profileDetails
-                              .profileUrl.toString()!= null)
+                          child:   (  profilePic!= null)
                               ? CachedNetworkImage(
                             imageBuilder:
                                 (context,
@@ -369,10 +408,7 @@ class ProfileState extends State<Profile> {
                                 child: CircularProgressIndicator(value: downloadProgress.progress),
                               ),
                             ),
-                            imageUrl:   profileDetailsValueNotifier
-                                .value.item2
-                                .result.profileDetails
-                                .profileUrl.toString(),
+                            imageUrl: profilePic,
                             errorWidget: (context, url, error) =>     Container(
                               width: 92.w,
                               height: 92.h,
@@ -416,7 +452,8 @@ class ProfileState extends State<Profile> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Edit_Profile()));
+                                            Edit_Profile(uid: widget.userId.toString(), company: company, coverPic: coverImg,
+                                              job: job, city: city, profilePic: profilePic,name: name,)));
                               },
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment
@@ -658,7 +695,8 @@ class ProfileState extends State<Profile> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                Edit_Profile()));
+                                                Edit_Profile(uid: widget.userId.toString(), company: company, coverPic: coverImg,
+                                                  job: job, city: city, profilePic: profilePic,name: name,)));
                                   },
                                   child: Row(
                                     children: [
@@ -873,17 +911,198 @@ class ProfileState extends State<Profile> {
                             SizedBox(width: 10.w),
                             GestureDetector(
                               onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        insetPadding: EdgeInsets.only(left: 12, right: 12),
+                                        titlePadding: EdgeInsets.all(0),
+                                        title: Container(
 
+                                          width:336.w,height:323.h,decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(8)
+                                        ),child: Column(children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(left:16,top:17,right:17),
+                                            child: Row(children: [
+                                              Text('Biog',  style: GoogleFonts.inter(
+                                                      textStyle: TextStyle(fontSize:20.sp,
+                                                          fontWeight: FontWeight.w700,
+                                                          color:
+                                                          Color.fromRGBO(0, 0, 0, 1))
+
+                                                  ),),
+                                              Spacer(),
+                                              DropdownButtonHideUnderline(
+                                                child: DropdownButton2(
+                                                  isExpanded: true,
+                                                  hint: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Padding(
+                                                          padding:  EdgeInsets.only(
+                                                              top: 7, left: 9, bottom: 6),
+                                                          child: Text(
+                                                            'Public',
+                                                            style: GoogleFonts.inter(
+                                                                textStyle: TextStyle(
+                                                                    fontWeight: FontWeight.w400,
+                                                                    fontSize: 10.sp,
+                                                                    color: Color.fromRGBO(0, 0, 0, 1))),
+                                                            // overflow: TextOverflow.ellipsis,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  items: items
+                                                      .map((item) => DropdownMenuItem<String>(
+                                                    value: item,
+                                                    child: Container(
+                                                      child: Center(
+                                                        child: Text(
+                                                            item,
+                                                            style: GoogleFonts.inter(
+                                                                textStyle: TextStyle(
+                                                                  fontSize: 10.sp,
+                                                                  fontWeight: FontWeight.w400,
+                                                                  color: Color.fromRGBO(0, 0, 0, 1),
+                                                                )
+                                                            )
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ))
+                                                      .toList(),
+                                                  value: selectedValue1,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      selectedValue1 = value as String;
+                                                    });
+                                                  },
+                                                  icon: Padding(
+                                                    padding:  EdgeInsets.only(right: 10),
+                                                    child: Icon(
+                                                      Icons.keyboard_arrow_down_rounded,
+                                                      size: 20,
+                                                      color: Color.fromRGBO(12, 16, 29, 1),
+                                                    ),
+                                                  ),
+                                                  iconSize: 14,
+                                                  buttonHeight: 30,
+                                                  buttonWidth: 90,
+                                                  buttonDecoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(2),
+                                                      color: Color.fromRGBO(248, 206, 97, 1)),
+                                                  itemHeight:30,
+                                                  dropdownMaxHeight: 130,
+                                                  dropdownWidth: 90,
+                                                  buttonElevation: 0,
+                                                  dropdownElevation: 0,
+                                                  dropdownDecoration: BoxDecoration(
+                                                    color: Color.fromRGBO(255, 255, 255, 1),
+                                                  ),
+                                                  scrollbarAlwaysShow: false,
+                                                ),
+                                              ),
+                                              SizedBox(width: 10.w,),
+                                              GestureDetector(onTap: (){
+                                                Navigator.pop(context);
+                                              },
+                                                child: Text('Cancel',style: GoogleFonts.inter(textStyle: TextStyle(
+                                                    fontSize:14.sp,fontWeight: FontWeight.w400,color: Color.fromRGBO(0, 163, 255, 1)
+                                                )),),
+                                              )
+                                            ],),
+                                          ),
+                                          Container(padding:EdgeInsets.only(left:18,top:40,right:18),
+                                            child: Column(
+                                              children: [
+                                                Text('Your professional ',style:GoogleFonts.inter(textStyle: TextStyle(fontSize:14.sp,
+                                                    fontWeight: FontWeight.w400,color: Color.fromRGBO(0, 0, 0,0.5)))),
+                                              TextField(
+                                                controller: biogController,
+cursorColor: Color.fromRGBO(102, 102, 102, 1),
+                                                keyboardType: TextInputType.multiline,
+                                                minLines: 1,//Normal textInputField will be displayed
+                                                maxLines: 5,//
+                                               decoration: InputDecoration(
+                                                  border: InputBorder.none,
+
+                                                ),// when user presses enter it will adapt to it
+                                              ),
+                                                // Row(
+                                                //   children: [
+                                                //     Text('Your professional ',style:GoogleFonts.inter(textStyle: TextStyle(fontSize:14.sp,
+                                                //         fontWeight: FontWeight.w400,color: Color.fromRGBO(0, 0, 0,0.5)))),
+                                                //
+                                                //
+                                                //     Container(
+                                                //       height:26.h,width:101.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
+                                                //       child:  Container(
+                                                //         color: Colors.blue,
+                                                //         height:25.h,width:130.w,
+                                                //         child: TextField(
+                                                //           autofocus: true,
+                                                //
+                                                //           cursorColor:Colors.black,
+                                                //           decoration: InputDecoration(
+                                                //
+                                                //             enabledBorder: OutlineInputBorder(
+                                                //                 borderSide: BorderSide(color: Colors.transparent),
+                                                //                 borderRadius: BorderRadius.circular(10)),
+                                                //             focusedBorder: OutlineInputBorder(
+                                                //                 borderSide: BorderSide(
+                                                //                     width: 1.w,
+                                                //                     color: Colors.transparent),
+                                                //                 borderRadius: BorderRadius.circular(10)),
+                                                //           ),),
+                                                //       ),)
+                                                //   ],
+                                                // ),
+                                                SizedBox(height:17.h),
+
+
+
+
+
+                                              ],
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Padding(
+                                            padding: EdgeInsets.only(bottom:17),
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(elevation: 0,
+                                                  shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                                  primary:Color.fromRGBO(248, 206, 97, 1),fixedSize: Size(302.w,36.h),
+                                                ),
+                                                onPressed: (){
+                                                            profileDetailUpdateApiCall();
+                                                            updateFirestore();
+                                                  Navigator.pop(context);
+                                                }, child: Text('Save',style: GoogleFonts.inter(
+                                                textStyle: TextStyle(
+                                                    color: Color.fromRGBO(0, 0, 0, 1),fontSize:20,fontWeight: FontWeight.w700
+                                                )
+                                            ),)),
+                                          ),
+                                        ],),
+                                        ),
+                                      );
+
+                                    });
                               },
                               child: Container(
+
                                   height: 20,
                                   width: 20,
                                   child: SvgPicture.asset(
                                       'assets/profile_assets/Edit_tool.svg',
-                                      color: i == 1
-                                          ? Color.fromRGBO(
-                                          0, 163, 255, 1)
-                                          : Colors.transparent)),
+                                      color:
+                                           Color.fromRGBO(
+                                          0, 163, 255, 1))),
                             ),
                           ],
                         ),
@@ -993,185 +1212,452 @@ class ProfileState extends State<Profile> {
                           Padding(
                             padding: const EdgeInsets.only(
                                 top: 20),
-                            child: GridView.builder(
-                                itemCount:5,
-                                //  feedsValueNotifier.value.item2.result.length,
-                                shrinkWrap:true,
-                                itemBuilder: ( context,index){
 
-                                  return InkWell(
-                                    onTap: (){
-                                      print('working');
-                                      //  print('dhina:${ feedsValueNotifier.value.item2.result[index].posts[index]}');
-                                    },
-                                    child: Image.network(
-                                      // feedsValueNotifier.value.item2.result[index].posts[index],
-                                        'https://wallpaperaccess.com/full/33115.jpg',
-                                        // 'https://z.com/full/33115.jpg',
-                                        fit:BoxFit.fill),
-                                  );},
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
-                                    crossAxisSpacing:3,mainAxisSpacing:3)),
-                            // child: GridView.builder(
-                            //   itemCount: myFeedsValueNotifier
-                            //       .value.item2.result.length,
-                            //   gridDelegate:
-                            //   SliverGridDelegateWithFixedCrossAxisCount(
-                            //       crossAxisCount: 3,
-                            //       mainAxisSpacing: 5,
-                            //       crossAxisSpacing: 5),
-                            //   physics: NeverScrollableScrollPhysics(),
-                            //   shrinkWrap: true,
-                            //   itemBuilder: (context, gridIndex) {
-                            //     return GestureDetector(
-                            //       behavior: HitTestBehavior
-                            //           .opaque,
-                            //       onTap: () {
-                            //         Navigator.push(
-                            //             context,
-                            //             MaterialPageRoute(
-                            //                 builder: (context) =>
-                            //                     Profile()));
-                            //       },
-                            //       child: Stack(
-                            //         alignment: Alignment.center,
-                            //         fit: StackFit.expand,
-                            //         children: [
-                            //           (myFeedsValueNotifier
-                            //               .value
-                            //               .item2
-                            //               .result[gridIndex]
-                            //               .posts[0]
-                            //               .toString()
-                            //               .contains("mp4") ||
-                            //               myFeedsValueNotifier
-                            //                   .value
-                            //                   .item2
-                            //                   .result[gridIndex]
-                            //                   .posts[0]
-                            //                   .toString()
-                            //                   .contains("mpeg4"))
-                            //               ? Stack(
-                            //             children: [
-                            //               Container(
-                            //                 color: Color(
-                            //                     materialBlack),
-                            //               ),
-                            //               Center(
-                            //                   child: Container(
-                            //                     height: 60.h,
-                            //                     width: 60.w,
-                            //                     child: Icon(
-                            //                       Icons
-                            //                           .play_arrow_rounded,
-                            //                       size: 45,
-                            //                       color:
-                            //                       Color.fromRGBO(
-                            //                           248,
-                            //                           206,
-                            //                           97,
-                            //                           1),
-                            //                     ),
-                            //                     decoration:
-                            //                     BoxDecoration(
-                            //                         shape: BoxShape
-                            //                             .circle,
-                            //                         color: Color
-                            //                             .fromRGBO(
-                            //                             255,
-                            //                             255,
-                            //                             255,
-                            //                             1)),
-                            //                   ))
-                            //             ],
-                            //           )
-                            //               : CachedNetworkImage(
-                            //             fit: BoxFit.cover,
-                            //             fadeInDuration:
-                            //             const Duration(
-                            //                 milliseconds:
-                            //                 400),
-                            //             progressIndicatorBuilder:
-                            //                 (context, url,
-                            //                 downloadProgress) =>
-                            //                 Center(
-                            //                   child: Container(
-                            //                     width: 20.0,
-                            //                     height: 20.0,
-                            //                     child: CircularProgressIndicator(
-                            //                         value:
-                            //                         downloadProgress
-                            //                             .progress),
-                            //                   ),
-                            //                 ),
-                            //             imageUrl:
-                            //             myFeedsValueNotifier
-                            //                 .value
-                            //                 .item2
-                            //                 .result[gridIndex]
-                            //                 .posts[0],
-                            //             errorWidget: (context,
-                            //                 url, error) =>
-                            //                 Image.asset(
-                            //                     "assets/noProfile.jpg",
-                            //                     fit:
-                            //                     BoxFit.cover),
-                            //           ),
-                            //           // : CachedNetworkImage(
-                            //           //     fadeInDuration: const Duration(milliseconds: 400),
-                            //           //     progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                            //           //       child: Container(
-                            //           //         width: 20.0,
-                            //           //         height: 20.0,
-                            //           //         child: CircularProgressIndicator(value: downloadProgress.progress),
-                            //           //       ),
-                            //           //     ),
-                            //           //     imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
-                            //           //     fit: BoxFit.cover,
-                            //           //     errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
-                            //           //   ),
-                            //           (myFeedsValueNotifier
-                            //               .value
-                            //               .item2
-                            //               .result[gridIndex]
-                            //               .posts
-                            //               .length >
-                            //               1)
-                            //               ? Positioned(
-                            //               top: 5,
-                            //               right: 5,
-                            //               child: Icon(
-                            //                 Icons
-                            //                     .collections_rounded,
-                            //                 color: Color(white),
-                            //                 size: 15,
-                            //               ))
-                            //               : Container()
-                            //         ],
-                            //       ),
-                            //     );
-                            //   },
-                            // ),
-                          ),
-                          GridView.builder(
-                              itemCount:5,
-                              //  feedsValueNotifier.value.item2.result.length,
-                              shrinkWrap:true,
-                              itemBuilder: ( context,index){
-
-                                return InkWell(
-                                  onTap: (){
-                                    print('working');
-                                    //  print('dhina:${ feedsValueNotifier.value.item2.result[index].posts[index]}');
+                            child:(myFeedsValueNotifier.value.item1 == 1)? GridView.builder(
+                              itemCount: myFeedsValueNotifier
+                                  .value.item2.result.length,
+                              gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  mainAxisSpacing: 5,
+                                  crossAxisSpacing: 5),
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, gridIndex) {
+                                return GestureDetector(
+                                  behavior: HitTestBehavior
+                                      .opaque,
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Profile()));
                                   },
-                                  child: Image.network(
-                                    // feedsValueNotifier.value.item2.result[index].posts[index],
-                                      'https://wallpaperaccess.com/full/33115.jpg',
-                                      // 'https://z.com/full/33115.jpg',
-                                      fit:BoxFit.fill),
-                                );},
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
-                                  crossAxisSpacing:3,mainAxisSpacing:3)),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    fit: StackFit.expand,
+                                    children: [
+                                      (myFeedsValueNotifier
+                                          .value
+                                          .item2
+                                          .result[gridIndex]
+                                          .posts[0]
+                                          .toString()
+                                          .contains("mp4") ||
+                                          myFeedsValueNotifier
+                                              .value
+                                              .item2
+                                              .result[gridIndex]
+                                              .posts[0]
+                                              .toString()
+                                              .contains("mpeg4"))
+                                          ? Stack(
+                                        children: [
+                                          Container(
+                                            color: Color(
+                                                materialBlack),
+                                          ),
+                                          Center(
+                                              child: Container(
+                                                height: 60.h,
+                                                width: 60.w,
+                                                child: Icon(
+                                                  Icons
+                                                      .play_arrow_rounded,
+                                                  size: 45,
+                                                  color:
+                                                  Color.fromRGBO(
+                                                      248,
+                                                      206,
+                                                      97,
+                                                      1),
+                                                ),
+                                                decoration:
+                                                BoxDecoration(
+                                                    shape: BoxShape
+                                                        .circle,
+                                                    color: Color
+                                                        .fromRGBO(
+                                                        255,
+                                                        255,
+                                                        255,
+                                                        1)),
+                                              ))
+                                        ],
+                                      )
+                                          : CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        fadeInDuration:
+                                        const Duration(
+                                            milliseconds:
+                                            400),
+                                        progressIndicatorBuilder:
+                                            (context, url,
+                                            downloadProgress) =>
+                                            Center(
+                                              child: Container(
+                                                width: 20.0,
+                                                height: 20.0,
+                                                child: CircularProgressIndicator(
+                                                    value:
+                                                    downloadProgress
+                                                        .progress),
+                                              ),
+                                            ),
+                                        imageUrl:
+                                        myFeedsValueNotifier
+                                            .value
+                                            .item2
+                                            .result[gridIndex]
+                                            .posts[0],
+                                        errorWidget: (context,
+                                            url, error) =>
+                                            Image.asset(
+                                                "assets/noProfile.jpg",
+                                                fit:
+                                                BoxFit.cover),
+                                      ),
+                                      // : CachedNetworkImage(
+                                      //     fadeInDuration: const Duration(milliseconds: 400),
+                                      //     progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                      //       child: Container(
+                                      //         width: 20.0,
+                                      //         height: 20.0,
+                                      //         child: CircularProgressIndicator(value: downloadProgress.progress),
+                                      //       ),
+                                      //     ),
+                                      //     imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
+                                      //     fit: BoxFit.cover,
+                                      //     errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
+                                      //   ),
+                                      (myFeedsValueNotifier
+                                          .value
+                                          .item2
+                                          .result[gridIndex]
+                                          .posts
+                                          .length >
+                                          1)
+                                          ? Positioned(
+                                          top: 5,
+                                          right: 5,
+                                          child: Icon(
+                                            Icons
+                                                .collections_rounded,
+                                            color: Color(white),
+                                            size: 15,
+                                          ))
+                                          : Container()
+                                    ],
+                                  ),
+                                );
+                              },
+                            )
+                                :(myFeedsValueNotifier.value.item1==2)?
+                            CircleIndicator() : CircleIndicator()
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 20),
+
+                              child:(myFeedsValueNotifier.value.item1 == 1)?
+                              GridView.builder(
+                                itemCount: myFeedsValueNotifier
+                                    .value.item2.result.length,
+                                gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    mainAxisSpacing: 5,
+                                    crossAxisSpacing: 5),
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, gridIndex) {
+                                  return GestureDetector(
+                                    behavior: HitTestBehavior
+                                        .opaque,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Profile()));
+                                    },
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      fit: StackFit.expand,
+                                      children: [
+                                        (myFeedsValueNotifier
+                                            .value
+                                            .item2
+                                            .result[gridIndex]
+                                            .posts[0]
+                                            .toString()
+                                            .contains("mp4"))
+                                            ? Stack(
+                                          children: [
+                                            Container(
+                                              color: Color(
+                                                  materialBlack),
+                                            ),
+                                            Center(
+                                                child: Container(
+                                                  height: 60.h,
+                                                  width: 60.w,
+                                                  child: Icon(
+                                                    Icons
+                                                        .play_arrow_rounded,
+                                                    size: 45,
+                                                    color:
+                                                    Color.fromRGBO(
+                                                        248,
+                                                        206,
+                                                        97,
+                                                        1),
+                                                  ),
+                                                  decoration:
+                                                  BoxDecoration(
+                                                      shape: BoxShape
+                                                          .circle,
+                                                      color: Color
+                                                          .fromRGBO(
+                                                          255,
+                                                          255,
+                                                          255,
+                                                          1)),
+                                                ))
+                                          ],
+                                        )
+                                            : CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          fadeInDuration:
+                                          const Duration(
+                                              milliseconds:
+                                              400),
+                                          progressIndicatorBuilder:
+                                              (context, url,
+                                              downloadProgress) =>
+                                              Center(
+                                                child: Container(
+                                                  width: 20.0,
+                                                  height: 20.0,
+                                                  child: CircularProgressIndicator(
+                                                      value:
+                                                      downloadProgress
+                                                          .progress),
+                                                ),
+                                              ),
+                                          imageUrl:
+                                          myFeedsValueNotifier
+                                              .value
+                                              .item2
+                                              .result[gridIndex]
+                                              .posts[0],
+                                          errorWidget: (context,
+                                              url, error) =>
+                                              Image.asset(
+                                                  "assets/noProfile.jpg",
+                                                  fit:
+                                                  BoxFit.cover),
+                                        ),
+                                        // : CachedNetworkImage(
+                                        //     fadeInDuration: const Duration(milliseconds: 400),
+                                        //     progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                        //       child: Container(
+                                        //         width: 20.0,
+                                        //         height: 20.0,
+                                        //         child: CircularProgressIndicator(value: downloadProgress.progress),
+                                        //       ),
+                                        //     ),
+                                        //     imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
+                                        //     fit: BoxFit.cover,
+                                        //     errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
+                                        //   ),
+                                        (myFeedsValueNotifier
+                                            .value
+                                            .item2
+                                            .result[gridIndex]
+                                            .posts
+                                            .length >
+                                            1)
+                                            ? Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: Icon(
+                                              Icons
+                                                  .collections_rounded,
+                                              color: Color(white),
+                                              size: 15,
+                                            ))
+                                            : Container()
+                                      ],
+                                    ),
+                                  );
+                                },
+                              )
+                                  :(myFeedsValueNotifier.value.item1==2)?
+                              CircleIndicator() : CircleIndicator()
+                          ),
+                          // Padding(
+                          //     padding: const EdgeInsets.only(
+                          //         top: 20),
+                          //
+                          //     child:(myFeedsValueNotifier.value.item1 == 1)?
+                          //     GridView.builder(
+                          //       itemCount: myFeedsValueNotifier
+                          //           .value.item2.result.length,
+                          //       gridDelegate:
+                          //       SliverGridDelegateWithFixedCrossAxisCount(
+                          //           crossAxisCount: 3,
+                          //           mainAxisSpacing: 5,
+                          //           crossAxisSpacing: 5),
+                          //       physics: NeverScrollableScrollPhysics(),
+                          //       shrinkWrap: true,
+                          //       itemBuilder: (context, gridIndex) {
+                          //         return GestureDetector(
+                          //           behavior: HitTestBehavior
+                          //               .opaque,
+                          //           onTap: () {
+                          //             Navigator.push(
+                          //                 context,
+                          //                 MaterialPageRoute(
+                          //                     builder: (context) =>
+                          //                         Profile()));
+                          //           },
+                          //           child: Stack(
+                          //             alignment: Alignment.center,
+                          //             fit: StackFit.expand,
+                          //             children: [
+                          //               (
+                          //                   myFeedsValueNotifier
+                          //                       .value
+                          //                       .item2
+                          //                       .result[gridIndex]
+                          //                       .posts[0]
+                          //                       .toString()
+                          //                       .contains("mpeg4"))
+                          //                   ? Stack(
+                          //                 children: [
+                          //                   Container(
+                          //                     color: Color(
+                          //                         materialBlack),
+                          //                   ),
+                          //                   Center(
+                          //                       child: Container(
+                          //                         height: 60.h,
+                          //                         width: 60.w,
+                          //                         child: Icon(
+                          //                           Icons
+                          //                               .play_arrow_rounded,
+                          //                           size: 45,
+                          //                           color:
+                          //                           Color.fromRGBO(
+                          //                               248,
+                          //                               206,
+                          //                               97,
+                          //                               1),
+                          //                         ),
+                          //                         decoration:
+                          //                         BoxDecoration(
+                          //                             shape: BoxShape
+                          //                                 .circle,
+                          //                             color: Color
+                          //                                 .fromRGBO(
+                          //                                 255,
+                          //                                 255,
+                          //                                 255,
+                          //                                 1)),
+                          //                       ))
+                          //                 ],
+                          //               )
+                          //                   : CachedNetworkImage(
+                          //                 fit: BoxFit.cover,
+                          //                 fadeInDuration:
+                          //                 const Duration(
+                          //                     milliseconds:
+                          //                     400),
+                          //                 progressIndicatorBuilder:
+                          //                     (context, url,
+                          //                     downloadProgress) =>
+                          //                     Center(
+                          //                       child: Container(
+                          //                         width: 20.0,
+                          //                         height: 20.0,
+                          //                         child: CircularProgressIndicator(
+                          //                             value:
+                          //                             downloadProgress
+                          //                                 .progress),
+                          //                       ),
+                          //                     ),
+                          //                 imageUrl:
+                          //                 myFeedsValueNotifier
+                          //                     .value
+                          //                     .item2
+                          //                     .result[gridIndex]
+                          //                     .posts[0],
+                          //                 errorWidget: (context,
+                          //                     url, error) =>
+                          //                     Image.asset(
+                          //                         "assets/noProfile.jpg",
+                          //                         fit:
+                          //                         BoxFit.cover),
+                          //               ),
+                          //               // : CachedNetworkImage(
+                          //               //     fadeInDuration: const Duration(milliseconds: 400),
+                          //               //     progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                          //               //       child: Container(
+                          //               //         width: 20.0,
+                          //               //         height: 20.0,
+                          //               //         child: CircularProgressIndicator(value: downloadProgress.progress),
+                          //               //       ),
+                          //               //     ),
+                          //               //     imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
+                          //               //     fit: BoxFit.cover,
+                          //               //     errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
+                          //               //   ),
+                          //               (myFeedsValueNotifier
+                          //                   .value
+                          //                   .item2
+                          //                   .result[gridIndex]
+                          //                   .posts
+                          //                   .length >
+                          //                   1)
+                          //                   ? Positioned(
+                          //                   top: 5,
+                          //                   right: 5,
+                          //                   child: Icon(
+                          //                     Icons
+                          //                         .collections_rounded,
+                          //                     color: Color(white),
+                          //                     size: 15,
+                          //                   ))
+                          //                   : Container()
+                          //             ],
+                          //           ),
+                          //         );
+                          //       },
+                          //     )
+                          //         :(myFeedsValueNotifier.value.item1==2)?
+                          //     CircleIndicator() : CircleIndicator()
+                          // ),
+                          // GridView.builder(
+                          //     itemCount:5,
+                          //     //  feedsValueNotifier.value.item2.result.length,
+                          //     shrinkWrap:true,
+                          //     itemBuilder: ( context,index){
+                          //
+                          //       return InkWell(
+                          //         onTap: (){
+                          //           print('working');
+                          //           //  print('dhina:${ feedsValueNotifier.value.item2.result[index].posts[index]}');
+                          //         },
+                          //         child: Image.network(
+                          //           // feedsValueNotifier.value.item2.result[index].posts[index],
+                          //             'https://wallpaperaccess.com/full/33115.jpg',
+                          //             // 'https://z.com/full/33115.jpg',
+                          //             fit:BoxFit.fill),
+                          //       );},
+                          //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
+                          //         crossAxisSpacing:3,mainAxisSpacing:3)),
 
 // GridView.builder(
 //     gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, crossAxisSpacing: 5),
@@ -1192,21 +1678,21 @@ class ProfileState extends State<Profile> {
 // );
 //
 //     }),
-                          GridView.builder(
-                              itemCount: 3,
-                              shrinkWrap: true,
-                              itemBuilder:
-                                  (BuildContext context,
-                                  int index) {
-                                return Image.network(
-                                    'https://wallpaperaccess.com/full/33115.jpg',
-                                    fit: BoxFit.fill);
-                              },
-                              gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 3,
-                                  mainAxisSpacing: 3)),
+//                           GridView.builder(
+//                               itemCount: 3,
+//                               shrinkWrap: true,
+//                               itemBuilder:
+//                                   (BuildContext context,
+//                                   int index) {
+//                                 return Image.network(
+//                                     'https://wallpaperaccess.com/full/33115.jpg',
+//                                     fit: BoxFit.fill);
+//                               },
+//                               gridDelegate:
+//                               SliverGridDelegateWithFixedCrossAxisCount(
+//                                   crossAxisCount: 3,
+//                                   crossAxisSpacing: 3,
+//                                   mainAxisSpacing: 3)),
 
 
                         ]),
