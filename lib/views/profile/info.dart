@@ -49,8 +49,8 @@ class _Info_PageState extends State<Info_Page> {
   String? userPictureFileName;
   bool loading = false;
    DateTime? selectedDate;
-  TextEditingController phoneTextEditingController=TextEditingController();
-  TextEditingController emailTextEditingController=TextEditingController();
+  TextEditingController phoneController=TextEditingController();
+  TextEditingController emailController=TextEditingController();
   TextEditingController _info=TextEditingController();
   TextEditingController _info1=TextEditingController();
   TextEditingController languageController=TextEditingController();
@@ -87,10 +87,10 @@ class _Info_PageState extends State<Info_Page> {
         body: {
           "user_id": widget.uid,
 
-         "dob":selectedDate.toString(),
-//"gender":genderTextEditingController.text
-          // "phone": phoneTextEditingController.text,
-          // "email":emailTextEditingController.text,
+        "dob":_selectedDate.toString(),
+       //    "gender":genderTextEditingController.text,
+       //      "phone": "+91${phoneController.text}",
+       //     "email":emailController.text,
 
 //"language":languageController.text
         });
@@ -100,6 +100,9 @@ class _Info_PageState extends State<Info_Page> {
     instance.collection('user-detail').doc(widget.uid).update({
 
       "dob":selectedDate.toString(),
+      // "email":emailController.text,
+      // "phone": phoneController.text,
+
 
 
 
@@ -448,9 +451,9 @@ class _Info_PageState extends State<Info_Page> {
                               "dd/MMMM/yyyy",
                               onChange: (DateTime newDate, a) {
                                 setState(() {
-                                  selectedDate = newDate;
+                                  _selectedDate = newDate;
                                 });
-                                print("this is date :${selectedDate}");
+                                print("this is date :${_selectedDate}");
                               },
                               pickerTheme: DateTimePickerTheme(confirmTextStyle:TextStyle(color: Colors.yellow),
                                 cancelTextStyle:TextStyle(color: Colors.yellow),
@@ -465,12 +468,12 @@ print('onpress called');
                               int monthDiff = currentDate.month - _selectedDate.month;
                               int dayDiff = currentDate.day - _selectedDate.day;
                               if(yearDiff > 16 || yearDiff == 16 && monthDiff >= 0 && dayDiff >= 0){
-                                profileDetailUpdateApiCall();
-                                print('you are eligible');
+                                  profileDetailUpdateApiCall();
+                                 updateFirestore();
+
                               }
-                              else{
-                                print('You are not eligible');
-                                Fluttertoast.showToast(msg: "You are not eligible");
+                            else{
+                              null;
                               }
 
                             }, child: Text('save'))
@@ -761,7 +764,7 @@ print('onpress called');
                           padding:  EdgeInsets.only(top:20),
                           child: TextField(autofocus: true,
                             cursorColor: Colors.black,cursorHeight:20.h,
-                            //  controller:phoneTextEditingController,
+                              controller:phoneController,
                             decoration: InputDecoration(
                               hintText: '',
                               enabledBorder: OutlineInputBorder(
@@ -886,7 +889,7 @@ print('onpress called');
                       height:30.h,width:200.w,color:Colors.transparent,
                       child:  TextField(
                         cursorColor: Colors.black,cursorHeight:20.h,
-                        controller:_info4,
+                        controller:emailController,
                         decoration: InputDecoration(
                           hintText: '',
                           enabledBorder: OutlineInputBorder(
@@ -911,26 +914,29 @@ print('onpress called');
                 primary:Color.fromRGBO(248, 206, 97, 1),fixedSize: Size(336.w,47.h),
               ),
               onPressed: ()async{
-                int yearDiff = currentDate.year - _selectedDate.year;
-                int monthDiff = currentDate.month - _selectedDate.month;
-                int dayDiff = currentDate.day - _selectedDate.day;
-                if(yearDiff > 16 || yearDiff == 16 && monthDiff >= 0 && dayDiff >= 0){
-                  profileDetailUpdateApiCall();
-                  print('you are eligible');
-                }
-                else{
-                  Fluttertoast.showToast(msg: "You are not eligible");
-                }
-
+print('onpress called');
+                // int yearDiff = currentDate.year - _selectedDate.year;
+                // int monthDiff = currentDate.month - _selectedDate.month;
+                // int dayDiff = currentDate.day - _selectedDate.day;
+                // if(yearDiff > 16 || yearDiff == 16 && monthDiff >= 0 && dayDiff >= 0){
+                //   profileDetailUpdateApiCall();
+                //   print('you are eligible');
+                // }
+                // else{
+                //   Fluttertoast.showToast(msg: "You are not eligible");
+                // }
+await  profileDetailUpdateApiCall();
+await updateFirestore();
                 // if (profileDetailsUpdateValueNotifier.value.item1 == 1) {
                 //   await  profileDetailUpdateApiCall();
-                // //  await updateFirestore();
+                //   await updateFirestore();
                 //   if (!mounted) return;
                 //   setState(() {
                 //     loading = false;
                 //   });
                 //   Navigator.pop(context, true);
-                // } else if (profileDetailsUpdateValueNotifier.value.item1 == 2 || profileDetailsUpdateValueNotifier.value.item1 == 3) {
+                // }
+                // else if (profileDetailsUpdateValueNotifier.value.item1 == 2 || profileDetailsUpdateValueNotifier.value.item1 == 3) {
                 //   if (!mounted) return;
                 //   setState(() {
                 //     loading = false;

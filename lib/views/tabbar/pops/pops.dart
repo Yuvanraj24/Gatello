@@ -147,15 +147,15 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
     uid = sharedPrefs.getString("userid");
     print("ShardPref ${uid}");
   }
-  Future<dynamic> sendData() async {
-    final data1 = await _getUID();
-    final data2 = await userDetailsApiCall();
-    final data3=await feedsApiCall(uid:uid.toString());
-    return [data1, data2, data3];
+sendData() async {
+   await _getUID();
+    await userDetailsApiCall();
+  await feedsApiCall(uid:uid.toString());
+
   }
   @override
   void initState() {
-    _future = sendData();
+   sendData();
     super.initState();
   }
   // _ondoubleTap() {
@@ -176,15 +176,16 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
     int nums=0;
     super.build(context);
 
-    return FutureBuilder(
-        future: _future,
-      builder: (context,_) {
+
         return AnimatedBuilder(
-          animation: Listenable.merge([feedsValueNotifier, likeValueNotifier, deleteValueNotifier, userDetailsValueNotifier]),
+          animation: Listenable.merge(
+              [feedsValueNotifier, likeValueNotifier, deleteValueNotifier, userDetailsValueNotifier]),
           builder: (context, _) {
             return ResponsiveBuilder(
               builder: (context, sizingInformation) {
                 if (feedsValueNotifier.value.item1 == 1 || feedsValueNotifier.value.item1 == 3) {
+
+
                   print('worked1');
                   return Scaffold(
                     resizeToAvoidBottomInset: false,
@@ -444,6 +445,7 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                  physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                                   itemCount: feedsValueNotifier.value.item2.result.length,
                                   itemBuilder: (context, index) {
+                                    var profileUrl='http://3.110.105.86:4000/${feedsValueNotifier.value.item2.result[index].profileUrl}';
                                     return container(
                                       border: true,
                                       radius: 0,
@@ -496,31 +498,68 @@ class _StoryState extends State<Story> with AutomaticKeepAliveClientMixin<Story>
                                                               'dhina:${feedsValueNotifier.value.item2.result.length}');
                                                         },
                                                         child:
+                                                        (profileUrl != null)
+                                                            ? CachedNetworkImage(
+                                                          fit: BoxFit.cover,
+                                                          fadeInDuration:
+                                                          const Duration(
+                                                              milliseconds:
+                                                              400),
+                                                          imageBuilder:
+                                                              (context,
+                                                              imageProvider) =>
+                                                              Container(
+                                                                width: 40.0,
+                                                                height: 40.0,
+                                                                decoration:
+                                                                BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  image: DecorationImage(
+                                                                      image:
+                                                                      imageProvider,
+                                                                      fit: BoxFit
+                                                                          .cover),
+                                                                ),
+                                                              ),
+                                                          progressIndicatorBuilder:
+                                                              (context, url,
+                                                              downloadProgress) =>
+                                                              Center(
+                                                                child: CircularProgressIndicator(
+                                                                    value: downloadProgress
+                                                                        .progress),
+                                                              ),
+                                                          imageUrl:profileUrl,
+                                                          errorWidget:
+                                                              (context, url,
+                                                              error) =>
+                                                              Container(
+                                                                width: 40.0,
+                                                                height: 40.0,
+                                                                decoration: BoxDecoration(
+                                                                    shape: BoxShape
+                                                                        .circle,
+                                                                    image: DecorationImage(
+                                                                        image: AssetImage(
+                                                                            "assets/noProfile.jpg")
+                                                                    )
+                                                                ),
+                                                              ),
+                                                        )
+                                                            :
                                                         Container(
-                                                          height:
-                                                          38.h,
-                                                          width:
-                                                          38.w,
-                                                          child: ClipOval(
-                                                              child: CachedNetworkImage(
-                                                                fit: BoxFit
-                                                                    .fill,
-                                                                fadeInDuration:
-                                                                const Duration(milliseconds: 400),
-                                                                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                                                                    Center(
-                                                                      child:
-                                                                      Container(
-                                                                        width: 20.0,
-                                                                        height: 20.0,
-                                                                        child: CircularProgressIndicator(value: downloadProgress.progress),
-                                                                      ),
-                                                                    ),
-                                                                imageUrl:feedsValueNotifier.value.item2
-                                                                    .result[index]
-                                                                    .profileUrl,
-                                                                errorWidget: (context, url, error) => SvgPicture.asset('assets/profile_assets/no_profile.svg',fit: BoxFit.fill)
-                                                              )),
+                                                          width: 40.0,
+                                                          height: 40.0,
+                                                          decoration: BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              image: DecorationImage(
+                                                                  image: AssetImage(
+                                                                      "assets/noProfile.jpg"),
+                                                                  fit: BoxFit
+                                                                      .cover)),
+                                                          //   child: Image.asset("assets/noProfile.jpg")
                                                         ),
                                                       ),
                                                       // CircleAvatar(
@@ -1275,8 +1314,7 @@ Spacer(),
             );
           },
         );
-      }
-    );
+
   }
 
 }

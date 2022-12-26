@@ -16,18 +16,31 @@ class Work_Experience extends StatefulWidget {
   Work_Experience({Key? key, required this.uid}) : super(key: key);
 
   @override
-  State<Work_Experience> createState() => _Work_ExperienceState();
+  State<Work_Experience> createState() => Work_ExperienceState();
 }
 
-class _Work_ExperienceState extends State<Work_Experience> {
+class Work_ExperienceState extends State<Work_Experience> {
   List<TextEditingController> workExController = [];
   ValueNotifier<Tuple4> profileDetailsUpdateValueNotifier =
   ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
   final List<String> items = ['Public', 'Friends', 'Only me'];
   String? selectedValue;
+  int _count=0;
+  List<Widget> widgetList=<Widget>[];
   bool isSwitched = false;
+  final _fromController=TextEditingController();
+  final _toController=TextEditingController();
+  List<TextEditingController> _positionController=[];
+  //final _positionController=TextEditingController();
+  final _companyController=TextEditingController();
+  final _locationController=TextEditingController();
   Future profileDetailUpdateApiCall() async {
+
     print('editApi called');
+    var jList=[];
+    for(int j=0; j<_positionController.length; j++){
+      jList.add(_positionController[j].text);
+    }
     // ByteData bytes = await rootBundle.load('assets/noProfile.jpg');
     return await ApiHandler().apiHandler(
         valueNotifier: profileDetailsUpdateValueNotifier,
@@ -36,10 +49,228 @@ class _Work_ExperienceState extends State<Work_Experience> {
         requestMethod: 1,
         body: {
           "user_id": widget.uid,
-          "work_experience": workExController[0].text,
+          "work_experience":[
+            {
+               "companyName":'ff',
+               "startDate":'gg',
+               "endDate":'kk',
+              "position":jList,
+               "location":'ll'
+
+            }
+          ]
+
         });
   }
+  showDialogFun(){
+    Future.delayed(Duration(seconds: 0),
+            () =>     showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              insetPadding: EdgeInsets.only(left: 12, right: 12),
+              titlePadding: EdgeInsets.all(0),
+              title: Container(
+                width:336.w,height:323.h,decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8)
+              ),child: Column(children: [
+                Padding(
+                  padding: EdgeInsets.only(left:16,top:17,right:17),
+                  child: Row(children: [
+                    Spacer(),
+                    GestureDetector(onTap: (){
+                      Navigator.pop(context);
+                    },
+                      child: Text('Cancel',style: GoogleFonts.inter(textStyle: TextStyle(
+                          fontSize:14.sp,fontWeight: FontWeight.w400,color: Color.fromRGBO(0, 163, 255, 1)
+                      )),),
+                    )
+                  ],),
+                ),
+                Container(padding:EdgeInsets.only(left:18,top:40,right:18),
+                  child: Column(
+                    children: [
+                      // Row(
+                      //   children: [
+                      //     Text('From',style: GoogleFonts.inter(textStyle: TextStyle(
+                      //         fontSize:14.sp,fontWeight: FontWeight.w700,color: Color.fromRGBO(0,0,0, 1)
+                      //     )),),SizedBox(width:9.w),
+                      //     Container(height:26.h,width:101.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
+                      //         child: Container(
+                      //           height:25.h,width:100.w,
+                      //           child: TextField(
+                      //             autofocus: true,
+                      //             controller:_fromController,
+                      //             onChanged: (val){
+                      //
+                      //             },
+                      //             cursorColor:Colors.black,
+                      //             decoration: InputDecoration(
+                      //               enabledBorder: OutlineInputBorder(
+                      //                   borderSide: BorderSide(color: Colors.transparent),
+                      //                   borderRadius: BorderRadius.circular(10)),
+                      //               focusedBorder: OutlineInputBorder(
+                      //                   borderSide: BorderSide(
+                      //                       width: 1.w,
+                      //                       color: Colors.transparent),
+                      //                   borderRadius: BorderRadius.circular(10)),
+                      //             ),),
+                      //         )
+                      //     ),
+                      //     Spacer(),
+                      //     Text('To',style: GoogleFonts.inter(textStyle: TextStyle(
+                      //         fontSize:14.sp,fontWeight: FontWeight.w700,color: Color.fromRGBO(0,0,0, 1)
+                      //     )),),SizedBox(width:9.w),
+                      //     Container(height:26.h,width:101.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
+                      //       child:  Container(
+                      //         height:25.h,width:100.w,
+                      //         child: TextField(
+                      //           autofocus: true,
+                      //           controller:_toController,
+                      //           cursorColor:Colors.black,
+                      //           decoration: InputDecoration(
+                      //
+                      //             enabledBorder: OutlineInputBorder(
+                      //                 borderSide: BorderSide(color: Colors.transparent),
+                      //                 borderRadius: BorderRadius.circular(10)),
+                      //             focusedBorder: OutlineInputBorder(
+                      //                 borderSide: BorderSide(
+                      //                     width: 1.w,
+                      //                     color: Colors.transparent),
+                      //                 borderRadius: BorderRadius.circular(10)),
+                      //           ),),
+                      //       ),)
+                      //   ],
+                      // ),
+                      // SizedBox(height:17.h),
+                      Row(
+                        children: [
+                          Text('Position',style: GoogleFonts.inter(textStyle: TextStyle(
+                              fontSize:14.sp,fontWeight: FontWeight.w700,color: Color.fromRGBO(0,0,0, 1)
+                          )),),SizedBox(width:11.w),
+                          Container(height:26.h,width:240.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
+                              child: Container(
+                                height:25.h,width:100.w,
+                                child: TextField(
+                                  autofocus: true,
+                                  controller:_positionController[_positionController.length-1],
+                                  cursorColor:Colors.black,
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.transparent),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1.w,
+                                            color: Colors.transparent),
+                                        borderRadius: BorderRadius.circular(10)),
+                                  ),),
+                              )
+                          ),
+                        ],
+                      ),
+                      SizedBox(height:17.h),
+                      // Row(
+                      //   children: [
+                      //     Text('Company',style: GoogleFonts.inter(textStyle: TextStyle(
+                      //         fontSize:14.sp,fontWeight: FontWeight.w700,color: Color.fromRGBO(0,0,0, 1)
+                      //     )),),SizedBox(width:11.w),
+                      //     Container(height:45.h,width:228.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
+                      //         child: Container(
+                      //           height:25.h,width:100.w,
+                      //           child: TextField(
+                      //             autofocus: true,
+                      //             controller:_companyController,
+                      //             cursorColor:Colors.black,
+                      //             decoration: InputDecoration(
+                      //               enabledBorder: OutlineInputBorder(
+                      //                   borderSide: BorderSide(color: Colors.transparent),
+                      //                   borderRadius: BorderRadius.circular(10)),
+                      //               focusedBorder: OutlineInputBorder(
+                      //                   borderSide: BorderSide(
+                      //                       width: 1.w,
+                      //                       color: Colors.transparent),
+                      //                   borderRadius: BorderRadius.circular(10)),
+                      //             ),),
+                      //         )
+                      //     ),
+                      //   ],
+                      // ),
+                      // SizedBox(height:17.h),
+                      // Row(
+                      //   children: [
+                      //     Text('Location',style: GoogleFonts.inter(textStyle: TextStyle(
+                      //         fontSize:14.sp,fontWeight: FontWeight.w700,color: Color.fromRGBO(0,0,0, 1)
+                      //     )),),SizedBox(width:11.w),
+                      //     Container(height:26.h,width:234.w,decoration: BoxDecoration(color:Color.fromRGBO(217, 217, 217, 1)),
+                      //         child: Container(
+                      //           height:25.h,width:100.w,
+                      //           child: TextField(
+                      //             autofocus: true,
+                      //             controller:_locationController,
+                      //             cursorColor:Colors.black,
+                      //             decoration: InputDecoration(
+                      //               enabledBorder: OutlineInputBorder(
+                      //                   borderSide: BorderSide(color: Colors.transparent),
+                      //                   borderRadius: BorderRadius.circular(10)),
+                      //               focusedBorder: OutlineInputBorder(
+                      //                   borderSide: BorderSide(
+                      //                       width: 1.w,
+                      //                       color: Colors.transparent),
+                      //                   borderRadius: BorderRadius.circular(10)),
+                      //             ),),
+                      //         )
+                      //     ),
+                      //   ],
+                      // ),
+                    ],
+                  ),
+                ),
+                Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(bottom:17),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(elevation: 0,
+                        shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                        primary:Color.fromRGBO(248, 206, 97, 1),fixedSize: Size(302.w,36.h),
+                      ),
+                      onPressed: (){
+                        profileDetailUpdateApiCall();
+                        // setState(() {
+                        //   _count++;
+                        //   listAdd();
+                        // });
 
+
+
+                        Navigator.pop(context);
+                      }, child: Text('Save',style: GoogleFonts.inter(
+                      textStyle: TextStyle(
+                          color: Color.fromRGBO(0, 0, 0, 1),fontSize:20,fontWeight: FontWeight.w700
+                      )
+                  ),)),
+                ),
+              ],),
+              ),
+            );
+          },
+        )
+
+    );
+  }
+listAdd(){
+    print('fun called');
+    for(int i=0;i<=_count;i++){
+      _positionController.add(TextEditingController());
+      widgetList.add(
+
+          showDialogFun()
+
+      );
+      break;
+    }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,8 +340,10 @@ class _Work_ExperienceState extends State<Work_Experience> {
                     SizedBox(width: 27.w),
                     IconButton(
                       onPressed: () {
-                        Future.delayed(Duration(seconds: 0),
-                                () => showConfirmationDialog2(context));
+_count++;
+listAdd();
+
+
                       },
                       icon: Icon(
                         Icons.add,
@@ -191,137 +424,115 @@ class _Work_ExperienceState extends State<Work_Experience> {
                   ],
                 ),
                 SizedBox(height: 33.h),
-                Row(
-                  children: [
-                    Container(
-                      height: 12.h,
-                      width: 12.w,
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(165, 165, 165, 0.9),
-                          shape: BoxShape.circle),
-                    ),
-                    SizedBox(width: 11.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 7.h),
-                        Text(
-                          "",
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color.fromRGBO(185, 185, 185, 1))),
-                        ),
-                      ],
-                    ),
-                  ],
+                Column(
+
+                    children:  widgetList
                 ),
-                SizedBox(height: 30.h),
-                Row(
-                  children: [
-                    Container(
-                      height: 12.h,
-                      width: 12.w,
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(165, 165, 165, 0.9),
-                          shape: BoxShape.circle),
-                    ),
-                    SizedBox(width: 11.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Marketing Executive',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color.fromRGBO(0, 0, 0, 1))),
-                        ),
-                        SizedBox(height: 7.h),
-                        Text(
-                          'May 2021 - june 2021',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color.fromRGBO(185, 185, 185, 1))),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 33.h),
-                Row(
-                  children: [
-                    Container(
-                      height: 12.h,
-                      width: 12.w,
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(165, 165, 165, 0.9),
-                          shape: BoxShape.circle),
-                    ),
-                    SizedBox(width: 11.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'UI UX designer - Tech 4 Lyf',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color.fromRGBO(0, 0, 0, 1))),
-                        ),
-                        SizedBox(height: 7.h),
-                        Text(
-                          'May 2022 - Present',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color.fromRGBO(185, 185, 185, 1))),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30.h),
-                Row(
-                  children: [
-                    Container(
-                      height: 12.h,
-                      width: 12.w,
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(165, 165, 165, 0.9),
-                          shape: BoxShape.circle),
-                    ),
-                    SizedBox(width: 11.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Marketing Executive',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color.fromRGBO(0, 0, 0, 1))),
-                        ),
-                        SizedBox(height: 7.h),
-                        Text(
-                          'May 2021 - june 2021',
-                          style: GoogleFonts.inter(
-                              textStyle: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color.fromRGBO(185, 185, 185, 1))),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                // SizedBox(height: 30.h),
+                // Row(
+                //   children: [
+                //     Container(
+                //       height: 12.h,
+                //       width: 12.w,
+                //       decoration: BoxDecoration(
+                //           color: Color.fromRGBO(165, 165, 165, 0.9),
+                //           shape: BoxShape.circle),
+                //     ),
+                //     SizedBox(width: 11.w),
+                //     Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Text(
+                //           'Marketing Executive',
+                //           style: GoogleFonts.inter(
+                //               textStyle: TextStyle(
+                //                   fontSize: 16.sp,
+                //                   fontWeight: FontWeight.w700,
+                //                   color: Color.fromRGBO(0, 0, 0, 1))),
+                //         ),
+                //         SizedBox(height: 7.h),
+                //         Text(
+                //           'May 2021 - june 2021',
+                //           style: GoogleFonts.inter(
+                //               textStyle: TextStyle(
+                //                   fontSize: 14.sp,
+                //                   fontWeight: FontWeight.w400,
+                //                   color: Color.fromRGBO(185, 185, 185, 1))),
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // ),
+                // SizedBox(height: 33.h),
+                // Row(
+                //   children: [
+                //     Container(
+                //       height: 12.h,
+                //       width: 12.w,
+                //       decoration: BoxDecoration(
+                //           color: Color.fromRGBO(165, 165, 165, 0.9),
+                //           shape: BoxShape.circle),
+                //     ),
+                //     SizedBox(width: 11.w),
+                //     Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Text(
+                //           'UI UX designer - Tech 4 Lyf',
+                //           style: GoogleFonts.inter(
+                //               textStyle: TextStyle(
+                //                   fontSize: 16.sp,
+                //                   fontWeight: FontWeight.w700,
+                //                   color: Color.fromRGBO(0, 0, 0, 1))),
+                //         ),
+                //         SizedBox(height: 7.h),
+                //         Text(
+                //           'May 2022 - Present',
+                //           style: GoogleFonts.inter(
+                //               textStyle: TextStyle(
+                //                   fontSize: 14.sp,
+                //                   fontWeight: FontWeight.w400,
+                //                   color: Color.fromRGBO(185, 185, 185, 1))),
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // ),
+                // SizedBox(height: 30.h),
+                // Row(
+                //   children: [
+                //     Container(
+                //       height: 12.h,
+                //       width: 12.w,
+                //       decoration: BoxDecoration(
+                //           color: Color.fromRGBO(165, 165, 165, 0.9),
+                //           shape: BoxShape.circle),
+                //     ),
+                //     SizedBox(width: 11.w),
+                //     Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Text(
+                //           'Marketing Executive',
+                //           style: GoogleFonts.inter(
+                //               textStyle: TextStyle(
+                //                   fontSize: 16.sp,
+                //                   fontWeight: FontWeight.w700,
+                //                   color: Color.fromRGBO(0, 0, 0, 1))),
+                //         ),
+                //         SizedBox(height: 7.h),
+                //         Text(
+                //           'May 2021 - june 2021',
+                //           style: GoogleFonts.inter(
+                //               textStyle: TextStyle(
+                //                   fontSize: 14.sp,
+                //                   fontWeight: FontWeight.w400,
+                //                   color: Color.fromRGBO(185, 185, 185, 1))),
+                //         ),
+                //       ],
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),
@@ -361,11 +572,3 @@ class _Work_ExperienceState extends State<Work_Experience> {
   }
 }
 
-showConfirmationDialog2(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return WorkDetailsDialog();
-    },
-  );
-}

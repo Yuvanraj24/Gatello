@@ -23,17 +23,20 @@ class _Skill_PageState extends State<Skill_Page> {
   ValueNotifier<Tuple4>(Tuple4(-1, exceptionFromJson(alert), "Null", null));
 
   final List<String> items = ['Public', 'Friends', 'Only me'];
-  List skillList=[];
+  //z List skillList=[];
   List<Widget> listWidget=<Widget>[];
   String? selectedValue;
   bool isSwitched = false;
   int _count = 0;
 
   listAdd(){
-
-    for(int i=0; i<=_count; i++){
+    for(int i = 0; i<_count; i++){
       print("Loop is called");
-      listWidget.add(Row(
+      skillController.add(TextEditingController());
+      print("len of TEC : ${skillController.length}");
+      print(i);
+      listWidget.add(
+          Row(
         children: [
           Container(
             height: 12.h,
@@ -45,7 +48,7 @@ class _Skill_PageState extends State<Skill_Page> {
           SizedBox(width: 14.w),
           Expanded(
               child: TextFormField(
-                controller: skillController[i],
+                controller: skillController[skillController.length - 1],
                 autofocus: true,
                 cursorColor: Colors.black,
                 decoration: InputDecoration(
@@ -58,13 +61,20 @@ class _Skill_PageState extends State<Skill_Page> {
               ))
         ],
       ));
+      print("len of TEC-2 : ${skillController.length}");
+      print("Length of listWidget... ${listWidget.length}");
+      break;
     }
   }
 
 
   Future profileDetailUpdateApiCall() async {
     print('editApi called');
-    // ByteData bytes = await rootBundle.load('assets/noProfile.jpg');
+    var llList = [];
+    for(int j=0; j<skillController.length;j++){
+      print("object ${skillController.length}");
+      llList.add(skillController[j].text);
+    }
     return await ApiHandler().apiHandler(
         valueNotifier: profileDetailsUpdateValueNotifier,
         jsonModel: defaultModel.defaultFromJson,
@@ -72,13 +82,16 @@ class _Skill_PageState extends State<Skill_Page> {
         requestMethod: 1,
         body: {
           "user_id": widget.uid,
-          "skills": skillController[0].text,
+          "skills": llList,
         });
+
+
   }
 
   @override
   void iniState() {
     super.initState();
+    listAdd();
   }
 
   Widget build(BuildContext context) {
@@ -199,8 +212,7 @@ class _Skill_PageState extends State<Skill_Page> {
                           ),
                         ))
                             .toList(),
-                        value: selectedValue,
-                        onChanged: (value) {
+                        value: selectedValue, onChanged: (value) {
                           setState(() {
                             selectedValue = value as String;
                           });
@@ -234,9 +246,9 @@ class _Skill_PageState extends State<Skill_Page> {
                   ],
                 ),
                 SizedBox(height: 30.h),
-             ListView(
-                    shrinkWrap: true,
-                    children: listWidget),
+                Column(
+                  children: listWidget,
+                )
                 // ListView.builder(
                 //     shrinkWrap: true,
                 //     itemCount: _count,
@@ -269,7 +281,7 @@ class _Skill_PageState extends State<Skill_Page> {
                 //         ],
                 //       );
                 //     }),
-                SizedBox(height: 30.h),
+                , SizedBox(height: 30.h),
               ],
             ),
           ),

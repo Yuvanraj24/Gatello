@@ -27,8 +27,6 @@ import '../../handler/Network.dart';
 import 'bio_dialog.dart';
 import '/core/models/profile_detail.dart'as profileDetailsModel ;
 import 'followers.dart';
-
-
 class Profile extends StatefulWidget {
   final String? userId;
 
@@ -54,6 +52,8 @@ class ProfileState extends State<Profile> {
   ValueNotifier<Tuple4> feedsValueNotifier = ValueNotifier<Tuple4>(
       Tuple4(0, exceptionFromJson(loading), "Loading", null));
   int i = 0;
+  List localVideoPostList=[];
+  List localImagePostList=[];
   Future profileDetailsApiCall() async {
     print('profile api called');
     print('dhina:${widget.userId} ');
@@ -139,22 +139,20 @@ class ProfileState extends State<Profile> {
     sendDatas();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     print('uid1${widget.userId}');
     print('uid2${uid}');
-    return AnimatedBuilder(animation:
-    Listenable.merge([profileDetailsValueNotifier,myFeedsValueNotifier]),
-        builder: (context,_){
-      if (profileDetailsValueNotifier.value.item1 == 1) {
 
+    return AnimatedBuilder(animation:   Listenable.merge([profileDetailsValueNotifier,myFeedsValueNotifier]), builder: (context,_){
+      if (profileDetailsValueNotifier.value.item1 == 1) {
   String profilePic='http://3.110.105.86:4000/${profileDetailsValueNotifier
       .value
       .item2.result
       .profileDetails
       .profileUrl.toString()}';
-        String coverImg=  'http://3.110.105.86:4000/${
-            profileDetailsValueNotifier
+        String coverImg=  'http://3.110.105.86:4000/${profileDetailsValueNotifier
             .value
             .item2.result
             .profileDetails
@@ -394,8 +392,7 @@ class ProfileState extends State<Profile> {
                                       image: DecorationImage(
                                           image:
                                           imageProvider,
-                                          fit: BoxFit
-                                              .cover),
+                                          fit: BoxFit.fill),
                                       border:Border.all(width:2.w,color:Color.fromRGBO(248, 206, 97, 1))
                                   ),
                                 ),
@@ -1209,6 +1206,7 @@ cursorColor: Color.fromRGBO(102, 102, 102, 1),
                       Container(
                         padding: EdgeInsets.only(top: 10),
                         child: TabBarView(children: <Widget>[
+
                           Padding(
                             padding: const EdgeInsets.only(
                                 top: 20),
@@ -1224,6 +1222,58 @@ cursorColor: Color.fromRGBO(102, 102, 102, 1),
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemBuilder: (context, gridIndex) {
+
+                                        if(myFeedsValueNotifier
+                                            .value
+                                            .item2
+                                            .result[gridIndex]
+                                            .posts[0]
+                                            .toString()
+                                            .contains("jpg")||
+                                            myFeedsValueNotifier
+                                                .value
+                                                .item2
+                                                .result[gridIndex]
+                                                .posts[0]
+                                                .toString()
+                                                .contains("png")
+                                           ) {
+                                      print('yeah its works');
+                                      localImagePostList.add(
+                                              myFeedsValueNotifier
+                                                  .value
+                                                  .item2
+                                                  .result[gridIndex]
+                                                  .posts[0]
+
+                                          );
+
+                                        }
+                                        if(myFeedsValueNotifier
+                                            .value
+                                            .item2
+                                            .result[gridIndex]
+                                            .posts[0]
+                                            .toString()
+                                            .contains("mp4")||myFeedsValueNotifier
+                                            .value
+                                            .item2
+                                            .result[gridIndex]
+                                            .posts[0]
+                                            .toString()
+                                            .contains("mpeg4")
+                                        ) {
+                                          print('yeah its works');
+                                          localVideoPostList.add(
+                                              myFeedsValueNotifier
+                                                  .value
+                                                  .item2
+                                                  .result[gridIndex]
+                                                  .posts[0]
+
+                                          );
+
+                                        }
                                 return GestureDetector(
                                   behavior: HitTestBehavior
                                       .opaque,
@@ -1362,8 +1412,7 @@ cursorColor: Color.fromRGBO(102, 102, 102, 1),
 
                               child:(myFeedsValueNotifier.value.item1 == 1)?
                               GridView.builder(
-                                itemCount: myFeedsValueNotifier
-                                    .value.item2.result.length,
+                                itemCount: localImagePostList.length,
                                 gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 3,
@@ -1372,6 +1421,7 @@ cursorColor: Color.fromRGBO(102, 102, 102, 1),
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (context, gridIndex) {
+
                                   return GestureDetector(
                                     behavior: HitTestBehavior
                                         .opaque,
@@ -1392,7 +1442,117 @@ cursorColor: Color.fromRGBO(102, 102, 102, 1),
                                             .result[gridIndex]
                                             .posts[0]
                                             .toString()
-                                            .contains("mp4"))
+                                            .contains("jpg") ||
+                                            myFeedsValueNotifier
+                                                .value
+                                                .item2
+                                                .result[gridIndex]
+                                                .posts[0]
+                                                .toString()
+                                                .contains("png"))
+
+                                            ? CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          fadeInDuration:
+                                          const Duration(
+                                              milliseconds:
+                                              400),
+                                          progressIndicatorBuilder:
+                                              (context, url,
+                                              downloadProgress) =>
+                                              Center(
+                                                child: Container(
+                                                  width: 20.0,
+                                                  height: 20.0,
+                                                  child: CircularProgressIndicator(
+                                                      value:
+                                                      downloadProgress
+                                                          .progress),
+                                                ),
+                                              ),
+                                          imageUrl:
+                                          myFeedsValueNotifier
+                                              .value
+                                              .item2
+                                              .result[gridIndex]
+                                              .posts[0],
+                                          errorWidget: (context,
+                                              url, error) =>
+                                              Image.asset(
+                                                  "assets/noProfile.jpg",
+                                                  fit:
+                                                  BoxFit.cover),
+                                        )
+                                            :SizedBox(),
+                                        // : CachedNetworkImage(
+                                        //     fadeInDuration: const Duration(milliseconds: 400),
+                                        //     progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                        //       child: Container(
+                                        //         width: 20.0,
+                                        //         height: 20.0,
+                                        //         child: CircularProgressIndicator(value: downloadProgress.progress),
+                                        //       ),
+                                        //     ),
+                                        //     imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
+                                        //     fit: BoxFit.cover,
+                                        //     errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
+                                        //   ),
+
+                                      ],
+                                    ),
+                                  );
+                                },
+                              )
+                                  :(myFeedsValueNotifier.value.item1==2)?
+                              CircleIndicator() : CircleIndicator()
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 20),
+
+                              child:(myFeedsValueNotifier.value.item1 == 1)?
+                              GridView.builder(
+                                itemCount: localVideoPostList.length,
+                                gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    mainAxisSpacing: 5,
+                                    crossAxisSpacing: 5),
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, gridIndex) {
+
+                                  return GestureDetector(
+                                    behavior: HitTestBehavior
+                                        .opaque,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Profile()));
+                                    },
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      fit: StackFit.expand,
+                                      children: [
+                                        (
+                                            myFeedsValueNotifier
+                                                .value
+                                                .item2
+                                                .result[gridIndex]
+                                                .posts[0]
+                                                .toString()
+                                                .contains("mp4")||
+
+                                                myFeedsValueNotifier
+                                                    .value
+                                                    .item2
+                                                    .result[gridIndex]
+                                                    .posts[0]
+                                                    .toString()
+                                                    .contains("mpeg4")
+                                        )
                                             ? Stack(
                                           children: [
                                             Container(
@@ -1427,38 +1587,7 @@ cursorColor: Color.fromRGBO(102, 102, 102, 1),
                                                 ))
                                           ],
                                         )
-                                            : CachedNetworkImage(
-                                          fit: BoxFit.cover,
-                                          fadeInDuration:
-                                          const Duration(
-                                              milliseconds:
-                                              400),
-                                          progressIndicatorBuilder:
-                                              (context, url,
-                                              downloadProgress) =>
-                                              Center(
-                                                child: Container(
-                                                  width: 20.0,
-                                                  height: 20.0,
-                                                  child: CircularProgressIndicator(
-                                                      value:
-                                                      downloadProgress
-                                                          .progress),
-                                                ),
-                                              ),
-                                          imageUrl:
-                                          myFeedsValueNotifier
-                                              .value
-                                              .item2
-                                              .result[gridIndex]
-                                              .posts[0],
-                                          errorWidget: (context,
-                                              url, error) =>
-                                              Image.asset(
-                                                  "assets/noProfile.jpg",
-                                                  fit:
-                                                  BoxFit.cover),
-                                        ),
+                                            : SizedBox(),
                                         // : CachedNetworkImage(
                                         //     fadeInDuration: const Duration(milliseconds: 400),
                                         //     progressIndicatorBuilder: (context, url, downloadProgress) => Center(
@@ -1497,167 +1626,6 @@ cursorColor: Color.fromRGBO(102, 102, 102, 1),
                                   :(myFeedsValueNotifier.value.item1==2)?
                               CircleIndicator() : CircleIndicator()
                           ),
-                          // Padding(
-                          //     padding: const EdgeInsets.only(
-                          //         top: 20),
-                          //
-                          //     child:(myFeedsValueNotifier.value.item1 == 1)?
-                          //     GridView.builder(
-                          //       itemCount: myFeedsValueNotifier
-                          //           .value.item2.result.length,
-                          //       gridDelegate:
-                          //       SliverGridDelegateWithFixedCrossAxisCount(
-                          //           crossAxisCount: 3,
-                          //           mainAxisSpacing: 5,
-                          //           crossAxisSpacing: 5),
-                          //       physics: NeverScrollableScrollPhysics(),
-                          //       shrinkWrap: true,
-                          //       itemBuilder: (context, gridIndex) {
-                          //         return GestureDetector(
-                          //           behavior: HitTestBehavior
-                          //               .opaque,
-                          //           onTap: () {
-                          //             Navigator.push(
-                          //                 context,
-                          //                 MaterialPageRoute(
-                          //                     builder: (context) =>
-                          //                         Profile()));
-                          //           },
-                          //           child: Stack(
-                          //             alignment: Alignment.center,
-                          //             fit: StackFit.expand,
-                          //             children: [
-                          //               (
-                          //                   myFeedsValueNotifier
-                          //                       .value
-                          //                       .item2
-                          //                       .result[gridIndex]
-                          //                       .posts[0]
-                          //                       .toString()
-                          //                       .contains("mpeg4"))
-                          //                   ? Stack(
-                          //                 children: [
-                          //                   Container(
-                          //                     color: Color(
-                          //                         materialBlack),
-                          //                   ),
-                          //                   Center(
-                          //                       child: Container(
-                          //                         height: 60.h,
-                          //                         width: 60.w,
-                          //                         child: Icon(
-                          //                           Icons
-                          //                               .play_arrow_rounded,
-                          //                           size: 45,
-                          //                           color:
-                          //                           Color.fromRGBO(
-                          //                               248,
-                          //                               206,
-                          //                               97,
-                          //                               1),
-                          //                         ),
-                          //                         decoration:
-                          //                         BoxDecoration(
-                          //                             shape: BoxShape
-                          //                                 .circle,
-                          //                             color: Color
-                          //                                 .fromRGBO(
-                          //                                 255,
-                          //                                 255,
-                          //                                 255,
-                          //                                 1)),
-                          //                       ))
-                          //                 ],
-                          //               )
-                          //                   : CachedNetworkImage(
-                          //                 fit: BoxFit.cover,
-                          //                 fadeInDuration:
-                          //                 const Duration(
-                          //                     milliseconds:
-                          //                     400),
-                          //                 progressIndicatorBuilder:
-                          //                     (context, url,
-                          //                     downloadProgress) =>
-                          //                     Center(
-                          //                       child: Container(
-                          //                         width: 20.0,
-                          //                         height: 20.0,
-                          //                         child: CircularProgressIndicator(
-                          //                             value:
-                          //                             downloadProgress
-                          //                                 .progress),
-                          //                       ),
-                          //                     ),
-                          //                 imageUrl:
-                          //                 myFeedsValueNotifier
-                          //                     .value
-                          //                     .item2
-                          //                     .result[gridIndex]
-                          //                     .posts[0],
-                          //                 errorWidget: (context,
-                          //                     url, error) =>
-                          //                     Image.asset(
-                          //                         "assets/noProfile.jpg",
-                          //                         fit:
-                          //                         BoxFit.cover),
-                          //               ),
-                          //               // : CachedNetworkImage(
-                          //               //     fadeInDuration: const Duration(milliseconds: 400),
-                          //               //     progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                          //               //       child: Container(
-                          //               //         width: 20.0,
-                          //               //         height: 20.0,
-                          //               //         child: CircularProgressIndicator(value: downloadProgress.progress),
-                          //               //       ),
-                          //               //     ),
-                          //               //     imageUrl: myFeedsValueNotifier.value.item2.result[gridIndex].posts[0],
-                          //               //     fit: BoxFit.cover,
-                          //               //     errorWidget: (context, url, error) => Image.asset("assets/errorImage.jpg", fit: BoxFit.cover),
-                          //               //   ),
-                          //               (myFeedsValueNotifier
-                          //                   .value
-                          //                   .item2
-                          //                   .result[gridIndex]
-                          //                   .posts
-                          //                   .length >
-                          //                   1)
-                          //                   ? Positioned(
-                          //                   top: 5,
-                          //                   right: 5,
-                          //                   child: Icon(
-                          //                     Icons
-                          //                         .collections_rounded,
-                          //                     color: Color(white),
-                          //                     size: 15,
-                          //                   ))
-                          //                   : Container()
-                          //             ],
-                          //           ),
-                          //         );
-                          //       },
-                          //     )
-                          //         :(myFeedsValueNotifier.value.item1==2)?
-                          //     CircleIndicator() : CircleIndicator()
-                          // ),
-                          // GridView.builder(
-                          //     itemCount:5,
-                          //     //  feedsValueNotifier.value.item2.result.length,
-                          //     shrinkWrap:true,
-                          //     itemBuilder: ( context,index){
-                          //
-                          //       return InkWell(
-                          //         onTap: (){
-                          //           print('working');
-                          //           //  print('dhina:${ feedsValueNotifier.value.item2.result[index].posts[index]}');
-                          //         },
-                          //         child: Image.network(
-                          //           // feedsValueNotifier.value.item2.result[index].posts[index],
-                          //             'https://wallpaperaccess.com/full/33115.jpg',
-                          //             // 'https://z.com/full/33115.jpg',
-                          //             fit:BoxFit.fill),
-                          //       );},
-                          //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
-                          //         crossAxisSpacing:3,mainAxisSpacing:3)),
 
 // GridView.builder(
 //     gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, crossAxisSpacing: 5),

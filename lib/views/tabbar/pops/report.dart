@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gatello/views/tabbar/pops/secondreport.dart';
-
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-
 class Report_Page extends StatefulWidget {
   const Report_Page({Key? key}) : super(key: key);
-
   @override
   State<Report_Page> createState() => _Report_PageState();
 }
-
 class _Report_PageState extends State<Report_Page> {
 
   @override

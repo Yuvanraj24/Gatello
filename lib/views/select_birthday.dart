@@ -26,7 +26,7 @@ class _SelectBirthdayState extends State<SelectBirthday> {
   late DateTime _selectedDate;
   late DateTime _myDateTime;
   DateTime currentDate = DateTime.now();
-  TextEditingController Datepick =TextEditingController();
+ TextEditingController Datepick =TextEditingController();
 
   @override
   void initState() {

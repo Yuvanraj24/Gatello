@@ -8,6 +8,7 @@ import 'package:gatello/views/profile/profile_details.dart';
 import 'package:gatello/views/profile/skill.dart';
 import 'package:gatello/views/profile/workexperience.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:tuple/tuple.dart';
 import '/core/models/profile_detail.dart' as profileDetailsModel;
 import '../../Others/Routers.dart';
@@ -53,7 +54,15 @@ class _TextsuState extends State<SeeMoreText> {
 
   @override
   Widget build(BuildContext context) {
+    var localDate = DateTime.parse(widget.dob).toLocal();
 
+
+    var inputFormat = DateFormat('yyyy-MM-dd 00:00:00.000');
+    var inputDate = inputFormat.parse(localDate.toString());
+
+
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputDate = outputFormat.format(inputDate);
     //   DateTime dateTime = dateFormat.parse("2019-07-19 8:40:23");
     print('uid for seemore${widget.uid}');
     // print('phnum${profileDetailsValueNotifier.value.item2.result.profileDetails.phone}');
@@ -172,7 +181,7 @@ class _TextsuState extends State<SeeMoreText> {
               SizedBox(width: 8.w),
               Text(
 
-                widget.dob.contains('null')?'none':widget.dob,
+                outputDate.contains('null')?'none':outputDate,
                 style: GoogleFonts.inter(
                     textStyle: TextStyle(
                         fontSize: 14.sp,

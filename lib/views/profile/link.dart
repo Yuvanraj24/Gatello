@@ -26,10 +26,48 @@ class _Link_PageState extends State<Link_Page> {
   final List<String> items = ['Public', 'Friends', 'Only me'];
   String? selectedValue;
   bool isSwitched = false;
-
+List<Widget> listWidget=<Widget>[];
   int _count = 0;
+  listAdd(){
+    for(int i=0; i<_count; i++){
+      webController.add(TextEditingController());
+      listWidget.add(Row(
+        children: [
+          Container(
+            height: 25.h,
+            width: 25.w,
+            decoration: BoxDecoration(
+                color: Color.fromRGBO(165, 165, 165, 0.9),
+                shape: BoxShape.circle),
+            child:Column(crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset('assets/profile_assets/profilelink.svg',height: 16.h,
+                    width:16.w),
+              ],
+            ),
+          ),
+          SizedBox(width:14.w),
+          Expanded(child: TextFormField(
+            controller:webController[webController.length-1] ,
+            autofocus:true,
+            cursorColor:Colors.black,
+            decoration:InputDecoration(
+                focusedBorder:OutlineInputBorder(borderSide:BorderSide(color:Colors.transparent)),
+                enabledBorder:OutlineInputBorder(borderSide:BorderSide(color:Colors.transparent))
+            ),
+          ))
+        ],
+      ));
+      break;
+    }
+  }
   Future profileDetailUpdateApiCall() async {
     print('editApi called');
+    var llist=[];
+    for(int j=0;j<webController.length; j++){
+      llist.add(webController[j].text);
+    }
     // ByteData bytes = await rootBundle.load('assets/noProfile.jpg');
     return await ApiHandler().apiHandler(
         valueNotifier: profileDetailsUpdateValueNotifier,
@@ -39,7 +77,7 @@ class _Link_PageState extends State<Link_Page> {
         body: {
           "user_id": widget.uid,
 
-          "website": webController[0].text,
+          "website": llist,
 
 
 
@@ -98,6 +136,7 @@ class _Link_PageState extends State<Link_Page> {
                     IconButton(onPressed: ()async{
                       setState(() {
                         _count++;
+                        listAdd();
                       });
                     }, icon:Icon(Icons.add,color: Colors.black,),),
                     Spacer(),
@@ -177,40 +216,43 @@ class _Link_PageState extends State<Link_Page> {
                   ],
                 ),
                 SizedBox(height:30.h),
-                ListView.builder(
-                    shrinkWrap:true,
-                    itemCount:_count,
-                    itemBuilder: (context,index){
-                      webController.add(new TextEditingController());
-                      return Row(
-                        children: [
-                          Container(
-                            height: 25.h,
-                            width: 25.w,
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(165, 165, 165, 0.9),
-                                shape: BoxShape.circle),
-                            child:Column(crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset('assets/profile_assets/profilelink.svg',height: 16.h,
-                                    width:16.w),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width:14.w),
-                          Expanded(child: TextFormField(
-                            controller:webController[index] ,
-                            autofocus:true,
-                            cursorColor:Colors.black,
-                            decoration:InputDecoration(
-                                focusedBorder:OutlineInputBorder(borderSide:BorderSide(color:Colors.transparent)),
-                                enabledBorder:OutlineInputBorder(borderSide:BorderSide(color:Colors.transparent))
-                            ),
-                          ))
-                        ],
-                      );
-                    }),
+                Column(
+                  children: listWidget,
+                ),
+                // ListView.builder(
+                //     shrinkWrap:true,
+                //     itemCount:_count,
+                //     itemBuilder: (context,index){
+                //       webController.add(new TextEditingController());
+                //       return Row(
+                //         children: [
+                //           Container(
+                //             height: 25.h,
+                //             width: 25.w,
+                //             decoration: BoxDecoration(
+                //                 color: Color.fromRGBO(165, 165, 165, 0.9),
+                //                 shape: BoxShape.circle),
+                //             child:Column(crossAxisAlignment: CrossAxisAlignment.center,
+                //               mainAxisAlignment: MainAxisAlignment.center,
+                //               children: [
+                //                 SvgPicture.asset('assets/profile_assets/profilelink.svg',height: 16.h,
+                //                     width:16.w),
+                //               ],
+                //             ),
+                //           ),
+                //           SizedBox(width:14.w),
+                //           Expanded(child: TextFormField(
+                //             controller:webController[index] ,
+                //             autofocus:true,
+                //             cursorColor:Colors.black,
+                //             decoration:InputDecoration(
+                //                 focusedBorder:OutlineInputBorder(borderSide:BorderSide(color:Colors.transparent)),
+                //                 enabledBorder:OutlineInputBorder(borderSide:BorderSide(color:Colors.transparent))
+                //             ),
+                //           ))
+                //         ],
+                //       );
+                //     }),
                 SizedBox(height:30.h),
               ],),
           ),
